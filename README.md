@@ -203,7 +203,7 @@ a folder with a `config.json` (and optionally a `wallpaper.jpg`) pushed to the T
 `tools/theme.sh themes/<name>`, which the launcher reads as an overlay over `config.xml`. Three ship
 in [`themes/`](themes/), and the keys are documented there. `tools/theme.sh --reset` goes back.
 
-**Language** follows the TV: English, German, Spanish, Catalan, Simplified Chinese and Thai so far. If your
+**Language** follows the TV: English, German, Spanish, Catalan, Russian, Simplified Chinese and Thai so far. If your
 TV doesn't offer yours system-wide, Android 13 and later can set it for the launcher alone, e.g. Catalan:
 `tools/tv.py 'cmd locale set-app-locales com.gathin.tvhome --locales ca'`.
 
