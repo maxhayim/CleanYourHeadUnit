@@ -79,11 +79,9 @@ install any launcher at all; their lists say so in the header.
 
 Tested lists from contributors, one folder per model in [`examples/`](examples/):
 
-**Xiaomi** 8 · **TCL** 7 · **Sony** 3 · BenQ · CHiQ · Chromecast with Google TV · Hisense · Insignia Fire TV ·
-**Xiaomi** 8 · **TCL** 8 · **Sony** 2 · BenQ · CHiQ · Chromecast with Google TV · Hisense · Insignia Fire TV ·
-NVIDIA Shield · OnePlus · Philips · RCA · SANYO · Toshiba Fire TV · Stellamore and XGIMI projectors
-**Xiaomi** 8 · **TCL** 7 · **Sony** 2 · BenQ · CHiQ · Chromecast with Google TV · Hisense · Insignia Fire TV ·
-NVIDIA Shield · OnePlus · Philips · RCA · SANYO · Skyworth · Toshiba Fire TV · Stellamore and XGIMI projectors
+**TCL** 11 · **Xiaomi** 11 · **Sony** 7 · **CHiQ** 2 · **Hisense** 2 · **Philips** 2 · BenQ ·
+Chromecast with Google TV · Hitachi · Insignia Fire TV · NVIDIA Shield · OnePlus · Panasonic · RCA · Redmi ·
+SANYO · Skyworth · Thomson · Toshiba Fire TV · Vu · Stellamore and XGIMI projectors
 
 <details>
 <summary><strong>The full list</strong></summary>
@@ -91,44 +89,56 @@ NVIDIA Shield · OnePlus · Philips · RCA · SANYO · Skyworth · Toshiba Fire 
 | TV | OS |
 |---|---|
 | BenQ E55-735 (Changhong AI PONT, DVB96BQ) | Google TV 14 |
+| CHiQ AI PONT (Changhong GTVU65, dangni, MediaTek mt5867) | Google TV 14 |
 | CHiQ AI PONT (DVB93CQ) | Android TV 11 |
 | Chromecast with Google TV 4K (sabrina) | Google TV 14 |
+| Hisense HiSmartTV A4 (xiaoyushan, MStar m7322), India | Android TV 9 |
 | Hisense SmartTV 4K FFM (huangshan, MediaTek) | Android TV 10 |
+| Hitachi 65QLEDSM20 (MTC, bangbae, MediaTek m7322), Australia | Android TV 11 |
 | Insignia 55" F30 4K Fire TV (NS-55F301NA25, AFTDCT31, duckie) | Fire OS 7 / Android 9 |
 | NVIDIA SHIELD TV Pro 2019 (P2897, mdarcy) | Android TV 11 |
 | OnePlus TV (D00, Dubai) | Google TV 14 |
+| Panasonic 4KTV-JUP (Jupiter_PA, MediaTek) | Android TV 11 |
+| Philips 50PUS8517/12 (TP Vision, PH1M_EA_9970A, MediaTek MT5895), Europe | Android TV 11 |
 | Philips Smart 4K TV (Skyworth, eleonas, MediaTek), India | Google TV 14 |
 | RCA AI PONT SA (Changhong, redwood, ISDB92RC; also sold as realme 40-inch) | Android 14 |
+| Redmi TV (MiTV-ANTL0, starwars) | Android 5.1.1 (not Android TV) |
 | SANYO ATV R2 (SCBC, Realtek RTD285O) | Android TV 9 |
-| Sony BRAVIA 4K GB (BRAVIA_ATV2_EU, BRAVIA_ATV2) | Android TV 9 |
 | Skyworth SWTV-21AE (sunnyvale, MediaTek) | Android TV 14 |
+| Sony BRAVIA 4K AE2 (BRAVIA_AE2, MediaTek MT5897), North America | Google TV 14 |
+| Sony BRAVIA 4K GB (BRAVIA_ATV2_EU, BRAVIA_ATV2) | Android TV 9 |
 | Sony BRAVIA 4K UR2 (BRAVIA_UR2_4K, MediaTek) | Android TV 10 |
-| Sony BRAVIA 9 II (K-65XR90M2, BRAVIA_AE3, MediaTek MT5838) | Google TV 14 |
 | Sony BRAVIA 4K VH2 (KD-55X80J, BRAVIA_VH2, MediaTek), EU | Google TV 12 |
-| Sony BRAVIA 4K AE2 (BRAVIA_AE2, MediaTek MT5897) | Google TV 14 |
+| Sony BRAVIA 9 II (K-65XR90M2, BRAVIA_AE3, MediaTek MT5838) | Google TV 14 |
+| Sony BRAVIA BF1 (BRAVIA 2 II class, BRAVIA_BF1_4K_A, MediaTek) | Google TV 12 |
 | Sony BRAVIA XBR-65X900E (2017, BRAVIA_ATV2) | Android TV 9 |
 | Stellamore T950S projector (Droidlogic be30a3, Amlogic txhd2) | Android 13 |
+| TCL 40S5400A (C06, C06_2K_GB, MediaTek MT9221, 1 GB) | Android TV 11 |
+| TCL 50EP680 (Europe, BeyondTV, Realtek rtd285o) | Android TV 11 |
 | TCL 55" 4K Google TV, 2023 (G10, G10_4K_US_NF) | Google TV 12 |
-| TCL 65C725 (Smart TV Pro, BeyondTV4) | Android TV 11 |
 | TCL 55Q10G Pro (China, tcl_mt5879_cn, MediaTek MT9952) | Android TV 11 |
+| TCL 65C725 (Smart TV Pro, BeyondTV4) | Android TV 11 |
 | TCL ak30a5 (China, Amlogic) | Android TV 9 |
 | TCL BeyondTV (India) | Android TV 9 |
+| TCL BeyondTV, EU/Nordic (Realtek RTD2851, V8-R851T02-LF1V606) | Android TV 9 |
+| TCL BeyondTV2 (Latin America / Brazil, Realtek RTD2851) | Android TV 9 |
 | TCL QM6K Pro, 2025 (G08, MediaTek tcl9618) | Google TV 14 |
-| TCL 40S5400A (C06_2K_GB, MediaTek MT9221) | Android TV 11 |
 | TCL Smart TV Pro (G05, G05_4K_US, MediaTek MT5889) | Google TV 11 |
 | Thomson 32HE5800 (TCL-built UnionTV, Realtek RT2841), Spain | Android TV 9 |
 | Toshiba Fire TV (AFTHA004, hazel) | Fire OS 7 / Android 9 |
+| Vu 4K (HVCL, lushan, MediaTek), India | Google TV 12 |
 | XGIMI Horizon S Pro projector (XK03H, xgimigalileo, MediaTek) | Android TV 11 |
 | Xiaomi Mi Box S (MIBOX4, oneday), streaming box | Android TV 9 |
 | Xiaomi Mi Box S 2nd gen (MiTV-AFKR0, jaws), streaming box | Google TV 11 |
 | Xiaomi Mi TV (MiTV-MOOQ0, croods) | Android TV 10 |
 | Xiaomi Mi TV 4A (MiTV-MOOQ1) | Android TV 10 |
 | Xiaomi MiTV-AESP0 stick (aquaman, 1 GB) | Android TV 9 |
+| Xiaomi MiTV-ASTP1 (maverick), China firmware 2.40.641.0514.cn, 1 GB RAM, 720p | Android TV 9 (CN build) |
 | Xiaomi MiTV-AXSO0 (dangal; Mi TV 4C Pro 2019 / 4A Pro) | Android TV 9 |
 | Xiaomi MiTV-MOOR2 (venom, MediaTek) | Google TV 11 |
+| Xiaomi MiTV-MOSR4 (irobot, MediaTek) | Google TV 11 |
 | Xiaomi MiTV-MSSP3 (machuca, MediaTek) | Android TV 11 |
 | Xiaomi TV A Pro 75" 2026 (MiTV-MZTU0, river, MediaTek) | Google TV 14 |
-| Redmi TV (MiTV-ANTL0, starwars) | Android 5.1.1 (not Android TV) |
 
 </details>
 
@@ -192,7 +202,6 @@ the install script finds `~/Android/Sdk` and the `java` on your PATH.
   `tools/tv.py 'settings put secure screensaver_components com.gathin.tvhome/.ClockDream; settings put secure screensaver_enabled 1'`
 - **Remote keys**: an optional accessibility service keeps the remote's Input button working on Google TV (`INPUT_KEY_SERVICE=1` at install), another fixes sticks whose Home key sends ALL_APPS (`HOME_KEY_SERVICE=1`).
 - **Navigation** is deliberate: Up and Down move one row, the top buttons never fall through to tiles and Down from them returns to the dock tile you came from, the last focused app is remembered, and installing or removing an app refreshes the tiles while Home is open.
-- **Navigation** is deliberate: Up and Down move one row, the top buttons never fall through to tiles, the last focused app is remembered, and installing or removing an app refreshes the tiles while Home is open.
 - **Artwork**: app banners load at xhdpi or better, so low-density TV UIs do not downsample them before the focus zoom.
 
 ## Restoring your TV
