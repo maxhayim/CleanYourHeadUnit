@@ -20,6 +20,7 @@ on that firmware, grouped and commented. These are starting points: comment out 
 | `tcl-g10-google-tv/` | TCL 55" 4K Google TV, 2023 (G10, G10_4K_US_NF) | Google TV 12 | TCL TV+, TCL Live, store demo, smartlink installer |
 | `tcl-65c725/` | TCL 65C725 (Smart TV Pro, BeyondTV4) | Android TV 11 | TCL analytics/promos, Google recommendation rows; voice off, OTA off by choice |
 | `tcl-ak30a5/` | TCL ak30a5 (China, Amlogic) | Android TV 9 | No Google services, TCL boot ad + analytics, no TvInputManager, installs via USB only; debloat only, third-party launchers cannot be installed on this firmware |
+| `tcl-q10g-pro/` | TCL 55Q10G Pro (China, tcl_mt5879_cn, MediaTek MT9952) | Android TV 11 | No Google services, TCL boot ad + analytics/BI, OTA and account services; ADB opens from Device info + UP/DOWN/LEFT/RIGHT, not the build number; debloat only, stock launcher cannot be replaced (signature check at install time) |
 | `tcl-beyondtv/` | TCL BeyondTV (India) | Android TV 9 | TCL analytics, content feed, TCL app store, Google recommendation rows; Jio/Airtel/Hotstar apps untouched |
 | `tcl-qm6k-google-tv/` | TCL QM6K Pro, 2025 (G08, MediaTek tcl9618) | Google TV 14 | Samba TV ACR (ttvs), TCL TV+, TCL Live, store/hotel demo; setupwraith must go for a custom launcher (also AU14, #23) |
 | `tcl-g05-google-tv/` | TCL Smart TV Pro (G05, G05_4K_US, MediaTek MT5889) | Google TV 11 | TCL Channel, waterfall, ttvs BI, TGuard; Quick Panel off by choice; setupwraith returned after a reboot, launcher half unverified |
