@@ -140,6 +140,7 @@ Lists that people have tested and contributed live in [`examples/`](examples/):
 | Xiaomi MiTV-AESP0 stick (aquaman, 1 GB) | Android TV 9 |
 | Xiaomi MiTV-AXSO0 (dangal; Mi TV 4C Pro 2019 / 4A Pro) | Android TV 9 |
 | Xiaomi MiTV-MOOR2 (venom, MediaTek) | Google TV 11 |
+| Xiaomi MiTV-MSSP3 (machuca, MediaTek) | Android TV 11 |
 | Xiaomi TV A Pro 75" 2026 (MiTV-MZTU0, river, MediaTek) | Google TV 14 |
 
 Your TV not here? The prompt works regardless, it discovers the bloat itself. If you add your
