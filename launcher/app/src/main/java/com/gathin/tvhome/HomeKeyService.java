@@ -2,6 +2,7 @@ package com.gathin.tvhome;
 
 import android.accessibilityservice.AccessibilityService;
 import android.content.Intent;
+import android.provider.Settings;
 import android.view.KeyEvent;
 import android.view.accessibility.AccessibilityEvent;
 
@@ -16,8 +17,30 @@ import android.view.accessibility.AccessibilityEvent;
  */
 public class HomeKeyService extends AccessibilityService {
 
+    /** Scancodes of remote buttons that should open Settings (config.xml, settings_key_scancodes). */
+    private int[] settingsScancodes = new int[0];
+
+    @Override
+    protected void onServiceConnected() {
+        super.onServiceConnected();
+        settingsScancodes = getResources().getIntArray(R.array.settings_key_scancodes);
+    }
+
+    private boolean isSettingsKey(KeyEvent event) {
+        if (event.getKeyCode() == KeyEvent.KEYCODE_SETTINGS) return true;
+        for (int code : settingsScancodes) if (event.getScanCode() == code) return true;
+        return false;
+    }
+
     @Override
     protected boolean onKeyEvent(KeyEvent event) {
+        // The stock launcher handled the remote's Settings button; with it disabled the button does nothing.
+        if (isSettingsKey(event)) {
+            if (event.getAction() == KeyEvent.ACTION_UP && !event.isCanceled()) {
+                startActivity(new Intent(Settings.ACTION_SETTINGS).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+            }
+            return true;
+        }
         if (event.getKeyCode() != KeyEvent.KEYCODE_ALL_APPS) return false;
         if (event.getAction() == KeyEvent.ACTION_UP && !event.isCanceled()) {
             Intent home = new Intent(Intent.ACTION_MAIN)

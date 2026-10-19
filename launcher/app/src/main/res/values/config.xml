@@ -40,6 +40,13 @@
          (XGIMI projectors: com.xgimi.action.hdmiPlayer). Leave empty to omit. -->
     <string name="input_action" translatable="false"></string>
 
+    <!-- Remote buttons that open Settings, by Linux scancode (HOME_KEY_SERVICE=1 build-and-install.sh). Remotes
+         that send KEYCODE_SETTINGS need no entry. Some send a code Android does not map: the Xiaomi/Fengmi
+         projector remote's gear button is scancode 384 (KEY_TAPE). Find yours with
+         `tools/tv.py 'getevent -lt'` while pressing the button. Leave empty to omit. -->
+    <integer-array name="settings_key_scancodes">
+    </integer-array>
+
     <!-- Show the Solar Hijri (Shamsi) date used in Iran and Afghanistan, e.g. "27 Mehr 1405", above the
          Gregorian date. -->
     <bool name="shamsi_date">false</bool>
