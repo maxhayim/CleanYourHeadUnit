@@ -19,6 +19,8 @@ do with screenshots pulled from the TV. Ask me before anything that depends on m
 
 Connect
 - Find the TV on my network (hostname, ARP table, or ask me for the IP) and connect over ADB on port 5555.
+  If the TV is in another home, I'll give you its Tailscale address instead (docs/REMOTE.md): use that,
+  don't scan my local network.
 - If the stock adb binary fails with "No route to host" on macOS even though the port is open, that is
   macOS Local Network privacy blocking adb. Don't debug it: use the Python `adb-shell` package in a venv
   as the ADB client instead. If its file push hangs on larger files, transfer files as base64 chunks
