@@ -253,6 +253,25 @@ tools/venv/bin/python -I tools/tv.py 'settings put secure screensaver_components
 It starts after the TV's "screen off" idle time (`settings get system screen_off_timeout`).
 </details>
 
+### Modules
+
+Any Android TV app can declare a **module card** for this launcher: its tile with a label of its
+choice, an optional caption and a glow colour, placed ahead of the alphabetical grid.
+Nothing changes until you say so. When a module is installed the launcher asks once, naming the
+app, its package and its signing key, with **Keep hidden** selected by default; Back keeps it hidden
+too. Keeping it hidden leaves the app's ordinary tile exactly as before. The answer is remembered for
+that app's signing key, so an update signed with a different key asks again.
+
+To change your mind, **hold OK on the Settings pill**: the Module cards list shows every installed
+card with its package and key, and OK toggles Shown and Hidden. At most eight cards are drawn, in
+label order; any further card you set to Shown is listed as over the limit and keeps its ordinary
+tile. Set `module_cards` to `false` in `config.xml` to turn the whole thing off.
+
+A card is only a different look for a tile. The launcher never installs or downloads anything,
+never loads code from a module, and launches a card exactly as it launches any app.
+
+To make one: [`docs/modules.md`](docs/modules.md). The contract: [`docs/specs/card.md`](docs/specs/card.md).
+
 ### Changing the default home from the TV
 
 Optional: set `show_home_settings_shortcut` to `true` in `config.xml` and a **Default home** tile
