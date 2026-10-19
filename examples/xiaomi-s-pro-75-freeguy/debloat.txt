@@ -16,8 +16,8 @@
 # HDMI3  com.mediatek.tvinput/.hdmi.HDMIInputService/HW7               input=25
 # Extra  com.mediatek.tvinput/.hdmi.HDMIInputService/HW8               no physical connector
 #
-# HDMI2 is the eARC port. With only a soundbar attached, getInputState can report CONNECTED and
-# the launcher can show a green dot. This means a reported connection, not a playable video signal.
+# HDMI2 is the eARC port. With a soundbar attached, the framework reported CONNECTED and the
+# launcher showed "Connected" and a green dot. This is appropriate for an audio-only eARC device.
 # No external video player/PC was connected during these checks; video playback was not verified.
 #
 # ---- TV/ATV, AV and DTMB: do not omit the non-HDMI inputs ----
@@ -66,15 +66,15 @@
 # Setting input_action alone still sends the channel URI: it does not add Xiaomi's integer extra.
 # The entry details here are adaptation data, not a claim that the current upstream code uses them.
 #
-# ---- Reported input state is not the same as a usable picture ----
+# ---- Input state labels ----
 # TvInputManager reports CONNECTED=0, CONNECTED_STANDBY=1, DISCONNECTED=2.
 # In the captured session HDMI1/HW5 and HDMI3/HW7 reported 1, HDMI2/HW6 reported 0, and AV/HW2
 # reported 2. The reference menu shows a green dot and "Connected" for 0, "Not connected" for 2,
 # and no state text for 1. It also hides HDMI state when every listed HDMI port reports 0.
 # This explains why AV can show "Not connected" while the unused HDMI rows have no state text.
-# A state of 1 must not be relabelled as a confirmed disconnection without additional evidence.
-# The tuner entries reported 0, but signal reception was not checked. The local test build hides
-# tuner state text; a tuner being available is not evidence of receiving a TV channel.
+# State 1 is the framework's standby state, distinct from DISCONNECTED.
+# The tuner entries reported 0. The local test build hides tuner state text; RF reception was
+# outside the scope of these checks.
 #
 # ---- Xiaomi settings entries ----
 # The generic android.settings.SETTINGS resolves to com.android.tv.settings/.MainSettings (AOSP),
