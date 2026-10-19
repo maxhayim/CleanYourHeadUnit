@@ -6,6 +6,9 @@
 # Usage: TV_HOST=192.168.1.50 tools/theme.sh themes/aurora
 #        TV_HOST=192.168.1.50 tools/theme.sh --reset        # remove the overlay, back to config.xml
 set -euo pipefail
+# Resolve the theme folder against the caller's directory before moving into tools/.
+THEME_ARG="${1:-}"
+case "$THEME_ARG" in --reset|"") ;; /*) ;; *) THEME_ARG="$PWD/$THEME_ARG" ;; esac
 cd "$(dirname "$0")"
 : "${TV_HOST:?set TV_HOST to the TV IP address, e.g. TV_HOST=192.168.1.50 $0 themes/aurora}"
 PY=venv/bin/python
@@ -20,7 +23,7 @@ if [ "${1:-}" = --reset ]; then
   tv "rm -f $DIR/config.json $DIR/wallpaper.jpg; am force-stop $PKG; am start -n $PKG/.MainActivity >/dev/null; echo reset" | tail -n 1
   exit 0
 fi
-THEME="${1:?usage: theme.sh <theme folder> | --reset}"
+THEME="${THEME_ARG:?usage: theme.sh <theme folder> | --reset}"
 [ -f "$THEME/config.json" ] || { echo "no config.json in $THEME" >&2; exit 1; }
 python3 -c 'import json,sys; json.load(open(sys.argv[1]))' "$THEME/config.json" 2>/dev/null \
   || { echo "$THEME/config.json is not valid JSON" >&2; exit 1; }

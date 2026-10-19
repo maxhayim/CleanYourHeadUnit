@@ -12,6 +12,8 @@ $ErrorActionPreference = 'Stop'
 $OutputEncoding = New-Object System.Text.UTF8Encoding $false
 if (-not $TvHost) { throw 'pass -TvHost <tv ip> or set $env:TV_HOST' }
 $env:TV_HOST = $TvHost
+# Resolve the theme folder against the caller's directory before moving into tools\.
+if ($Theme) { $Theme = (Resolve-Path $Theme).Path }
 Set-Location $PSScriptRoot
 $py = 'venv\Scripts\python.exe'
 if (-not (Test-Path $py)) { throw 'run: python -m venv tools\venv; tools\venv\Scripts\python.exe -m pip install -r tools\requirements.txt' }
