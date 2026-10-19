@@ -10,6 +10,7 @@ on that firmware, grouped and commented. These are starting points: comment out 
 | `chiq-gtvu65/` | CHiQ AI PONT (Changhong GTVU65, dangni, MediaTek mt5867) | Google TV 14 | Google ad services and auto-installs, Homwee store/help; 1 GB; setupwraith must go (RecoveryActivity component cannot be disabled alone); MediaTek partnercustomizer safe to disable (reboot-checked) |
 | `google-chromecast-gtv-4k/` | Chromecast with Google TV 4K (sabrina) | Google TV 14 | Google telemetry and ad services, ambient mode, launcherx + setupwraith; wireless-debugging pairing, YouTube button remap |
 | `hisense-smarttv-4k-ffm/` | Hisense SmartTV 4K FFM (huangshan, MediaTek) | Android TV 10 | ACR (evservice), VIDAA preload, store/hotel mode, OTA; smartsense must stay enabled |
+| `hitachi-65qledsm20/` | Hitachi 65QLEDSM20 (MTC, bangbae, MediaTek m7322), Australia | Android TV 11 | Anoki ACR and FAST channels, JVC auto-installs; the "demo" package handles the Input key and remote pairing; 1.3 GB |
 | `insignia-ns55f301na25/` | Insignia 55" F30 4K Fire TV (NS-55F301NA25, AFTDCT31, duckie) | Fire OS 7 / Android 9 | Amazon ACR telemetry, Fire TV ads/shopping, Alexa, OTA updates; AirPlay and TIF HDMI inputs kept |
 | `nvidia-shield-tv-pro-2019/` | NVIDIA SHIELD TV Pro 2019 (P2897, mdarcy) | Android TV 11 | NVIDIA telemetry, GameStream leftovers, sponsored rows, partner auto-installs |
 | `oneplus-tv-dubai/` | OnePlus TV (D00, Dubai) | Google TV 14 | HeyTap/OnePlus extras, OnePlus Connect, Smart Home |
