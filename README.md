@@ -19,13 +19,11 @@
   <a href="https://buymeacoffee.com/gathint"><img src="https://img.shields.io/badge/support-%E2%9D%A4-ff5e8a?style=flat&labelColor=15181e" alt="Support, buy me a coffee"></a>
 </p>
 
-<p align="center">
-  <b>52</b> TVs with tested lists &nbsp;·&nbsp; <b>22</b> brands &nbsp;·&nbsp; <b>11</b> languages &nbsp;·&nbsp; <b>280 KB</b> launcher &nbsp;·&nbsp; <b>0</b> apps uninstalled
-</p>
-
 Strip the bloatware from any Android TV or Google TV over Wi-Fi, and replace the ad-filled home
 screen with a clean launcher that looks like an Apple TV. **No root, no cable, nothing uninstalled,
 and a one-line restore if you change your mind.**
+
+<h3 align="center">52 TVs with tested lists &nbsp;·&nbsp; 22 brands &nbsp;·&nbsp; 11 languages &nbsp;·&nbsp; 280 KB launcher &nbsp;·&nbsp; 0 apps uninstalled</h3>
 
 ![Before: stock Google TV home with a sponsored ad. After: the Clean Your TV launcher](docs/stock-vs-new-side.jpg)
 
