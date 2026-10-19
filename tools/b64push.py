@@ -11,7 +11,9 @@ import sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import tv  # noqa: E402
 
-CHUNK = 48 * 1024  # raw bytes per shell command (base64 grows it by 4/3)
+CHUNK = 2048  # raw bytes per shell command (base64 grows it by 4/3).
+# 48 KB worked on Android 10+, but adbd before ~7 rejects ADB open payloads larger than 4096 bytes
+# by aborting the connection, so keep the base64 chunk under ~2.8 KB for Android 5.x TVs.
 
 
 def main():
