@@ -11,6 +11,14 @@
 # Undo:    TV_HOST=<tv ip> tools/restore.sh examples/hisense-hg9/debloat.txt com.google.android.tvlauncher
 # Everything is DISABLED, not uninstalled. Comment out any line you want to keep.
 #
+# Reboot-tested: the TV boots normally with this full list applied, including
+# com.hisense.tv.smartsense, com.vt.tv.smartsense.ui and
+# com.hisense.tv.smartservice all disabled (verified after a settings-reset
+# reboot, followed by a full evening of use: streaming, Store, launcher).
+# This differs from the #45 SmartTV 4K FFM (Android TV 10) report where the
+# smartsense pair sent that set to Recovery — model/firmware difference, HG9
+# on Android TV 9 is unaffected.
+#
 # Notes from this firmware:
 # - USB debugging alone does NOT open network ADB; the TV needs its explicit
 #   Network/Wireless debugging toggle too, plus a reboot before port 5555 opens.
