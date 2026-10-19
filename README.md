@@ -153,6 +153,7 @@ SANYO · Skyworth · Thomson · Toshiba Fire TV · Vu · Stellamore and XGIMI pr
 | Xiaomi MiTV-MOOR2 (venom, MediaTek) | Google TV 11 |
 | Xiaomi MiTV-MOSR4 (irobot, MediaTek) | Google TV 11 |
 | Xiaomi MiTV-MSSP3 (machuca, MediaTek) | Android TV 11 |
+| Xiaomi MiTV-MSSP3 (machuca, MediaTek), Android 9 firmware PI.7524 | Android TV 9 |
 | Xiaomi TV A Pro 75" 2026 (MiTV-MZTU0, river, MediaTek) | Google TV 14 |
 | Xiaomi TV Box S 3rd gen (MiTV-AFMU0, twilight, Amlogic), streaming box | Google TV 14 |
 
