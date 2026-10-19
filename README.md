@@ -82,6 +82,8 @@ Tested lists from contributors, one folder per model in [`examples/`](examples/)
 **Xiaomi** 8 · **TCL** 7 · **Sony** 3 · BenQ · CHiQ · Chromecast with Google TV · Hisense · Insignia Fire TV ·
 **Xiaomi** 8 · **TCL** 8 · **Sony** 2 · BenQ · CHiQ · Chromecast with Google TV · Hisense · Insignia Fire TV ·
 NVIDIA Shield · OnePlus · Philips · RCA · SANYO · Toshiba Fire TV · Stellamore and XGIMI projectors
+**Xiaomi** 8 · **TCL** 7 · **Sony** 2 · BenQ · CHiQ · Chromecast with Google TV · Hisense · Insignia Fire TV ·
+NVIDIA Shield · OnePlus · Philips · RCA · SANYO · Skyworth · Toshiba Fire TV · Stellamore and XGIMI projectors
 
 <details>
 <summary><strong>The full list</strong></summary>
@@ -99,6 +101,7 @@ NVIDIA Shield · OnePlus · Philips · RCA · SANYO · Toshiba Fire TV · Stella
 | RCA AI PONT SA (Changhong, redwood, ISDB92RC; also sold as realme 40-inch) | Android 14 |
 | SANYO ATV R2 (SCBC, Realtek RTD285O) | Android TV 9 |
 | Sony BRAVIA 4K GB (BRAVIA_ATV2_EU, BRAVIA_ATV2) | Android TV 9 |
+| Skyworth SWTV-21AE (sunnyvale, MediaTek) | Android TV 14 |
 | Sony BRAVIA 4K UR2 (BRAVIA_UR2_4K, MediaTek) | Android TV 10 |
 | Sony BRAVIA 9 II (K-65XR90M2, BRAVIA_AE3, MediaTek MT5838) | Google TV 14 |
 | Sony BRAVIA 4K VH2 (KD-55X80J, BRAVIA_VH2, MediaTek), EU | Google TV 12 |
