@@ -32,6 +32,7 @@ is ignored, and a file that doesn't parse is ignored as a whole, so a theme can 
 | `rows_below_dock` | 0 to 3 | Grid rows left visible under the dock |
 | `shamsi_date` | bool | Show the Solar Hijri date above the Gregorian one |
 | `module_cards` | bool | Look for module cards and ask about them (`true`); `false` turns the feature off |
+| `reduced_motion` | bool | Calmer motion for weak GPUs: stiff highlight spring, no tile overshoot, short fades, no entrance replay |
 | `vpn_app` | string | App the network pill opens when a VPN is configured; also shows a red "VPN off" badge while no VPN is up |
 | `show_home_settings_shortcut` | bool | The "Default home" tile, where the TV has a home picker |
 | `background_color` | `#RRGGBB` | Colour behind everything; black by default |
@@ -42,6 +43,17 @@ is ignored, and a file that doesn't parse is ignored as a whole, so a theme can 
 `wallpaper.jpg` is drawn full screen behind the launcher, centre-cropped. Keep it dark, 1920×1080 and
 under about 300 KB: the text, the hero name and the dock band are designed for black, and a 1 GB TV
 decodes the picture into memory on every Home start. Pictures larger than the screen are downsampled.
+
+## Reduced motion
+
+`"reduced_motion": true` keeps the look but calms the movement: the highlight spring is stiff instead
+of bouncing, tiles zoom without overshoot, fades are shorter, and Home does not replay the tile
+entrance when you come back to it. Use it on TVs whose GPU cannot keep up; a MediaTek MT5895 on
+Android 10 is the known case. The default, `false`, keeps the normal motion.
+
+```json
+{ "reduced_motion": true }
+```
 
 ## Adding a theme
 

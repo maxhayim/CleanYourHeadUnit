@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -14,11 +15,13 @@ import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.provider.Settings;
+import android.util.DisplayMetrics;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewOutlineProvider;
+import android.view.animation.DecelerateInterpolator;
 import android.view.animation.OvershootInterpolator;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -112,6 +115,8 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.Holder> {
     /** Never shown as tiles (res/values/config.xml, hidden_apps). */
     private final Set<String> hidden;
     private final boolean showHomeSettings;
+    /** Calmer motion for weak GPUs (config.xml, reduced_motion): no overshoot, shorter fades. */
+    private final boolean reducedMotion;
     private final List<Entry> items = new ArrayList<>();
 
     AppAdapter(Context ctx, TileListener listener, int dockSize, Config cfg) {
@@ -121,6 +126,7 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.Holder> {
         this.favourites = cfg.dockApps;
         this.hidden = new HashSet<>(cfg.hiddenApps);
         this.showHomeSettings = cfg.showHomeSettingsShortcut;
+        this.reducedMotion = cfg.reducedMotion;
         // Tiles keep their identity across reload(), so a focused tile stays on its app instead of
         // its view being rebound to whatever app now sits in that slot.
         setHasStableIds(true);
@@ -144,13 +150,14 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.Holder> {
             ComponentName component = new ComponentName(pkg, ri.activityInfo.name);
             Cards.Card card = cardByPkg.get(pkg);
             if (card != null && !card.component.equals(component)) continue;   // the card stands in for this tile
-            Drawable banner = ri.activityInfo.loadBanner(pm);
-            if (banner == null) banner = ri.activityInfo.applicationInfo.loadBanner(pm);
+            Drawable banner = loadBanner(pm, ri);
             Drawable icon = ri.loadIcon(pm);
             if (card != null) {
                 fresh.add(new Entry(Entry.CARD, card.label, component, banner, icon, card.caption, card.accent));
             } else {
-                fresh.add(new Entry(String.valueOf(ri.loadLabel(pm)), component, banner, icon));
+                // Same cleaner as the card prompt: an app label with a bidi override or line separator must not
+                // redraw the tile name as something else (#117).
+                fresh.add(new Entry(Cards.cleanLabel(String.valueOf(ri.loadLabel(pm)), pkg), component, banner, icon));
             }
         }
         Collections.sort(fresh, (a, b) -> {
@@ -177,6 +184,21 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.Holder> {
         notifyDataSetChanged();
     }
 
+    private Drawable loadBanner(PackageManager pm, ResolveInfo ri) {
+        int id = ri.activityInfo.banner;
+        if (id == 0) id = ri.activityInfo.applicationInfo.banner;
+        if (id != 0) {
+            try {
+                Resources resources = pm.getResourcesForApplication(ri.activityInfo.applicationInfo);
+                // Keep at least xhdpi detail rather than downsampling artwork before the focus zoom.
+                int density = Math.max(DisplayMetrics.DENSITY_XHIGH, ctx.getResources().getDisplayMetrics().densityDpi);
+                return resources.getDrawableForDensity(id, density, null);
+            } catch (PackageManager.NameNotFoundException | Resources.NotFoundException ignored) {
+            }
+        }
+        return ri.activityInfo.loadBanner(pm);
+    }
+
     @NonNull
     @Override
     public Holder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -195,7 +217,7 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.Holder> {
         nameLp.width = w;
         nameLp.topMargin = h + Math.round(7 * density);
         name.setLayoutParams(nameLp);
-        return new Holder(v, listener);
+        return new Holder(v, listener, reducedMotion);
     }
 
     @Override
@@ -339,14 +361,16 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.Holder> {
         final ImageView icon;
         final TextView label;
         final TextView name;
+        final boolean reducedMotion;
 
-        Holder(View v, TileListener listener) {
+        Holder(View v, TileListener listener, boolean reducedMotion) {
             super(v);
             card = v.findViewById(R.id.card);
             banner = v.findViewById(R.id.banner);
             icon = v.findViewById(R.id.icon);
             label = v.findViewById(R.id.label);
             name = v.findViewById(R.id.name);
+            this.reducedMotion = reducedMotion;
 
             final float density = v.getResources().getDisplayMetrics().density;
             card.setOutlineProvider(new ViewOutlineProvider() {
@@ -368,13 +392,26 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.Holder> {
 
             card.setOnFocusChangeListener((view, focused) -> {
                 float s = focused ? FOCUS_SCALE : 1.0f;
-                view.animate().scaleX(s).scaleY(s)
-                        .setDuration(focused ? 260 : 180)
-                        .setInterpolator(new OvershootInterpolator(focused ? 1.6f : 0f))
-                        .start();
-                name.animate().alpha(focused ? 1f : 0f)
-                        .translationY(focused ? density * 4f : -density * 6f)
-                        .setDuration(220).start();
+                view.animate().cancel();
+                name.animate().cancel();
+                if (reducedMotion) {
+                    // No overshoot: the extra frames redraw the banner and the dock band on a weak GPU.
+                    view.animate().scaleX(s).scaleY(s)
+                            .setDuration(focused ? 120 : 80)
+                            .setInterpolator(new DecelerateInterpolator())
+                            .withLayer()
+                            .start();
+                    name.animate().alpha(focused ? 1f : 0f).setDuration(100).start();
+                } else {
+                    view.animate().scaleX(s).scaleY(s)
+                            .setDuration(focused ? 260 : 180)
+                            .setInterpolator(new OvershootInterpolator(focused ? 1.6f : 0f))
+                            .withLayer()
+                            .start();
+                    name.animate().alpha(focused ? 1f : 0f)
+                            .translationY(focused ? density * 4f : -density * 6f)
+                            .setDuration(220).start();
+                }
                 int pos = getBindingAdapterPosition();
                 if (focused && listener != null && pos != RecyclerView.NO_POSITION) {
                     listener.onTileFocused(pos, view);

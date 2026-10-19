@@ -36,7 +36,7 @@ if ($LASTEXITCODE -ne 0) { throw 'Gradle build failed' }
 $py = '..\tools\venv\Scripts\python.exe'
 # Which app owns Home differs by build; ask the TV, but only accept a launcher we recognise (the answer
 # can also be Android's chooser "android", the setup wizard, or another third-party launcher).
-$knownStock = @('com.google.android.tvlauncher', 'com.google.android.apps.tv.launcherx', 'com.google.android.leanbacklauncher')
+$knownStock = @('com.google.android.tvlauncher', 'com.google.android.apps.tv.launcherx', 'com.google.android.leanbacklauncher', 'com.mitv.tvhome')
 if (-not $StockLauncher) {
     $homePkg = & $py -I ..\tools\tv.py 'cmd package resolve-activity --brief -a android.intent.action.MAIN -c android.intent.category.HOME' | Select-Object -Last 1
     if ($LASTEXITCODE -ne 0 -or -not $homePkg) { throw 'could not ask the TV which launcher owns Home; check -TvHost and the debugging prompt, or pass -StockLauncher <package>' }
