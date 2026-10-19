@@ -304,21 +304,15 @@ Things that bit us or contributors, so they don't bite you.
 - **Chained `pm` commands** (`pm disable a; pm disable b`) may silently stop after the first. Run
   one per shell call; `--batch` does exactly that.
 - **Large pushes hang** through the Python client. Use `tools/b64push.py` for APKs.
-- **Screenshots come out empty** while Live TV or an HDMI input is on screen, seen on TCL and
-  [Sony KDL-49W800G (Android TV 9)](https://github.com/Gathin23/tv-vibehack/issues/92).
-  On that Sony, `screencap -p` also returned zero bytes while Netflix was foregrounded, but worked
-  after returning Home. Press Home before capturing; empty output alone does not establish a
-  broken ADB connection or failed playback. Verify the input/app separately rather than treating
-  an empty capture as picture verification.
+- **Screenshots come out empty** while Live TV, an HDMI input or Netflix is on screen, seen on TCL
+  and a [Sony KDL-49W800G](https://github.com/Gathin23/cleanyourtv/issues/92). Press Home before
+  `screencap`. An empty capture means nothing about the ADB connection or playback; check those
+  separately.
 - **Disable the stock launcher only after the new one is installed**, or the Home button lands on
-  a factory test app. Manually launch and test the replacement first, then check where HOME
-  resolves after switching: on Sony KDL-49W800G (Android TV 9), the stock
-  `com.google.android.tvlauncher/.MainActivity` has priority 2, and `set-home-activity` reported
-  `Success` while HOME still selected it until the stock launcher was disabled. Also inspect actual
-  HOME handlers rather than guessing from package names: on that build,
-  `com.google.android.leanbacklauncher` exposes a boot receiver but no HOME activity and was left
-  enabled. These [same-session device observations](https://github.com/Gathin23/tv-vibehack/issues/92)
-  are not a multi-day-tested debloat list or a test of this repo's launcher.
+  a factory test app. Launch the replacement by hand first. `set-home-activity` can report
+  `Success` while HOME still resolves to the stock launcher (priority 2) until that one is disabled.
+  And check which packages actually handle HOME before disabling anything by name: on the Sony
+  above, `com.google.android.leanbacklauncher` has a boot receiver but no HOME activity.
 - **The new launcher still doesn't own Home** after the stock one is disabled, seen on Google TV
   (Xiaomi MiTV-MOOR2). Another system app answers HOME: `com.google.android.tungsten.setupwraith`,
   with `.MainActivity` at intent-filter priority 4 and `.RecoveryActivity` at priority 1. You
