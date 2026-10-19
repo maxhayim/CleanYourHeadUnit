@@ -9,10 +9,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.ApplicationInfo;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.RadialGradient;
 import android.graphics.Rect;
+import android.graphics.Shader;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.GradientDrawable;
 import android.media.tv.TvContract;
 import android.media.tv.TvInputInfo;
 import android.media.tv.TvInputManager;
@@ -83,8 +88,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
     private GlassView glass;
     private View ambient;
     private TextView heroName;
-    private GradientDrawable ambientGlow;
-    private int ambientColor;
+    private int ambientColor = -1;
     private boolean heroShown;
     private TextView greeting;
     private View btnInputs;
@@ -193,12 +197,6 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         glass = findViewById(R.id.glass);
         ambient = findViewById(R.id.ambient);
         heroName = findViewById(R.id.heroName);
-        ambientGlow = new GradientDrawable();
-        ambientGlow.setGradientType(GradientDrawable.RADIAL_GRADIENT);
-        ambientGlow.setGradientCenter(0.32f, 0.42f);
-        ambient.setBackground(ambientGlow);
-        ambient.addOnLayoutChangeListener((v, l, t, r, b, ol, ot, or, ob) ->
-                ambientGlow.setGradientRadius((r - l) * 0.62f));
         greeting = findViewById(R.id.greeting);
         btnWifi = findViewById(R.id.btnWifi);
         shamsiDate = findViewById(R.id.shamsiDate);
@@ -543,10 +541,30 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         }
     }
 
+    /**
+     * The glow used to be a full-screen radial GradientDrawable. On Android 10 that drawable is
+     * drawn on the CPU, so fading it for half a second redrew 1920×1080 every frame and the
+     * highlight looked like it was running at a few frames per second. A small bitmap stretched
+     * over the screen is one texture; changing apps only uploads it once.
+     */
     private void setAmbient(int color) {
+        if (color == ambientColor && ambient.getBackground() != null) return;
         ambientColor = color;
         int c = color & 0x00FFFFFF;
-        ambientGlow.setColors(new int[]{0x5C000000 | c, 0x26000000 | c, 0x00000000 | c});
+        int w = 480;
+        int h = 270;
+        Bitmap bmp = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bmp);
+        Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        paint.setShader(new RadialGradient(
+                w * 0.32f, h * 0.42f, w * 0.62f,
+                new int[]{0x5C000000 | c, 0x26000000 | c, 0x00000000 | c},
+                new float[]{0f, 0.45f, 1f},
+                Shader.TileMode.CLAMP));
+        canvas.drawRect(0, 0, w, h, paint);
+        BitmapDrawable drawable = new BitmapDrawable(getResources(), bmp);
+        drawable.setGravity(Gravity.FILL);
+        ambient.setBackground(drawable);
     }
 
     private void hideHero() {

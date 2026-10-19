@@ -368,10 +368,13 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.Holder> {
 
             card.setOnFocusChangeListener((view, focused) -> {
                 float s = focused ? FOCUS_SCALE : 1.0f;
+                view.animate().cancel();
                 view.animate().scaleX(s).scaleY(s)
                         .setDuration(focused ? 260 : 180)
                         .setInterpolator(new OvershootInterpolator(focused ? 1.6f : 0f))
+                        .withLayer()
                         .start();
+                name.animate().cancel();
                 name.animate().alpha(focused ? 1f : 0f)
                         .translationY(focused ? density * 4f : -density * 6f)
                         .setDuration(220).start();
