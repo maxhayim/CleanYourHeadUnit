@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="https://cleanyour.tv"><img src="docs/banner.png" alt="Clean Your TV. Your TV, minus the ads." width="800"></a>
+  <a href="https://cleanyour.tv"><img src="docs/banner.png?v=2" alt="CleanYourTV. Your TV, minus the ads." width="800"></a>
 </p>
 
 <p align="center">
