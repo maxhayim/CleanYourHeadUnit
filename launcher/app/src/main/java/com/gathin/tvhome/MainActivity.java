@@ -272,10 +272,10 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         btnInputs.setOnClickListener(v -> showInputs());
         btnWifi.setOnClickListener(v -> openNetworkPill());
         btnWifi.setOnLongClickListener(v -> {
-            open(new Intent(Settings.ACTION_WIFI_SETTINGS));
+            open(systemIntent(Settings.ACTION_WIFI_SETTINGS));
             return true;
         });
-        btnSettings.setOnClickListener(v -> open(new Intent(Settings.ACTION_SETTINGS)));
+        btnSettings.setOnClickListener(v -> open(systemIntent(Settings.ACTION_SETTINGS)));
         btnSettings.setOnLongClickListener(v -> {
             if (!moduleCards) return false;   // off: a long press does nothing, as before the feature
             showModuleCards();
@@ -699,7 +699,22 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
     private void openNetworkPill() {
         Intent i = vpnApp.isEmpty() ? null : getPackageManager().getLeanbackLaunchIntentForPackage(vpnApp);
         if (i == null && !vpnApp.isEmpty()) i = getPackageManager().getLaunchIntentForPackage(vpnApp);
-        open(i != null ? i : new Intent(Settings.ACTION_WIFI_SETTINGS));
+        open(i != null ? i : systemIntent(Settings.ACTION_WIFI_SETTINGS));
+    }
+
+
+    /**
+     * China-market MIUI TV firmware answers no standard Settings intents at all; open Xiaomi's own
+     * settings app (com.xiaomi.mitv.settings) there, so the Settings and Wi-Fi pills keep working.
+     * On firmware with a standard settings handler the behaviour is unchanged.
+     */
+    private Intent systemIntent(String standardAction) {
+        Intent i = new Intent(standardAction);
+        if (i.resolveActivity(getPackageManager()) != null) return i;
+        i = new Intent().setComponent(new ComponentName(
+                "com.xiaomi.mitv.settings", "com.xiaomi.mitv.settings.entry.MainActivity"));
+        if (i.resolveActivity(getPackageManager()) != null) return i;
+        return new Intent(standardAction);   // nothing found: let open() show the can't-open toast
     }
 
     /** Hides the Inputs pill when it would have nothing to list: streaming boxes have no HDMI-in, AV or tuner. */
