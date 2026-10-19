@@ -67,7 +67,10 @@ Launcher
   android.intent.category.HOME` and set the default with `cmd package set-home-activity`.
 - Before disabling the stock launcher, check which other apps claim HOME: on Google TV the setup wizard
   (`com.google.android.tungsten.setupwraith`) takes over even after the stock launcher is disabled, and
-  the matching `examples/` header says what to do.
+  the matching `examples/` header says what to do. Before disabling setupwraith, run
+  `dumpsys wifi | grep -o 'cname=[^ ]*'`: a Wi-Fi network saved during first setup belongs to it, and
+  Android deletes that network the moment it is disabled, which takes the TV off Wi-Fi and ADB. If it
+  does, ask me to forget the network and re-join it in Settings first.
 - On Android 11 and newer the launcher must declare `<queries>` for `android.intent.category.LEANBACK_LAUNCHER`,
   or package visibility silently hides every app and the grid comes up empty; target a recent SDK, some
   Google TV 14 sets refuse older targets at install.

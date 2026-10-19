@@ -55,6 +55,15 @@ Things that bit us or contributors, so they don't bite you. Commands use `tools/
   `com.google.android.tungsten.setupwraith` package is what frees the slot. It is the first-run
   setup wizard, so everyday use is unaffected, but re-enable it before a factory reset - list it in
   your `debloat.txt` and `tools/restore.sh` does that for you.
+- **The TV drops off Wi-Fi for good the moment setupwraith is disabled**, seen on Google TV 14 (Sony
+  BRAVIA 9 II, Philips R8G, Skyworth SWTV-24NA-4K NF). A Wi-Fi network saved during the first-run
+  wizard belongs to setupwraith, and Android deletes an app's saved networks when the app is disabled.
+  The TV is fine but offline, so ADB and the phone remote stop working, and a restart doesn't bring
+  the network back. Check before disabling it: `tools/tv.py "dumpsys wifi" | grep -o 'cname=[^ ]*'`.
+  If it names setupwraith, forget the network and join it again in Settings > Network & Internet (it
+  then belongs to `android.uid.system`), or use Ethernet. `tools/disable.sh` skips setupwraith while it
+  owns the network (`FORCE_SETUPWRAITH=1` overrides). Already offline? Rejoin from the TV with its own
+  remote or a USB keyboard, then turn Wireless debugging back on if it was in use.
 - **The TV drops off Wi-Fi every minute right after the install**, seen on Google TV 14 (Xiaomi
   MiTV-MZTU0): the same setupwraith `.RecoveryActivity` took Home and system_server crash-looped
   on it. The install script now starts the new launcher before disabling the stock one, sets the

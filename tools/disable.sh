@@ -13,7 +13,24 @@ PY=tools/venv/bin/python
 [ -x "$PY" ] || PY=tools/venv/Scripts/python.exe
 export MSYS_NO_PATHCONV=1
 [ -x "$PY" ] || { echo "run: python3 -m venv tools/venv && tools/venv/bin/pip install -r tools/requirements.txt"; exit 1; }
+PACKAGES="$(grep -vE '^\s*(#|$)' "$LIST" | sed -E 's/\s+#.*$//' | awk '{print $1}')"
+
+# A Wi-Fi network saved during the first-run wizard belongs to setupwraith, and Android deletes it the
+# moment setupwraith is disabled: the TV drops off Wi-Fi, and ADB and the phone remote go with it.
+# Skip it until the network has been forgotten and re-joined in Settings (it then belongs to
+# android.uid.system). FORCE_SETUPWRAITH=1 disables it anyway, e.g. on Ethernet.
+SETUP=com.google.android.tungsten.setupwraith
+if grep -qx "$SETUP" <<<"$PACKAGES" && [ -z "${FORCE_SETUPWRAITH:-}" ]; then
+  WIFI="$("$PY" -I tools/tv.py "dumpsys wifi" || true)"
+  if grep -o 'cname=[^ ]*' <<<"$WIFI" | grep -q setupwraith; then
+    echo "Skipping $SETUP: the saved Wi-Fi network belongs to it, and disabling it would delete that" >&2
+    echo "network and take the TV off Wi-Fi. On the TV, forget the network and join it again in" >&2
+    echo "Settings > Network & Internet, then run this again (or set FORCE_SETUPWRAITH=1 on Ethernet)." >&2
+    PACKAGES="$(grep -vx "$SETUP" <<<"$PACKAGES" || true)"
+  fi
+fi
+
 {
-  grep -vE '^\s*(#|$)' "$LIST" | sed -E 's/\s+#.*$//' | awk '{print "pm disable-user --user 0 " $1}'
+  awk 'NF {print "pm disable-user --user 0 " $1}' <<<"$PACKAGES"
   echo "pm list packages -d"
 } | "$PY" -I tools/tv.py --batch
