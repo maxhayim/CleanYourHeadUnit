@@ -110,6 +110,8 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
     private float density;
     /** Module cards (res/values/config.xml, module_cards): discovered on resume, shown only after the owner's Show. */
     private boolean moduleCards;
+    /** Calmer motion for weak GPUs (config.xml, reduced_motion): stiff spring, short fades, no replay. */
+    private boolean reducedMotion;
     /** hidden_apps as the adapter sees them (config.xml or a theme's config.json): a hidden app gets no card either. */
     private Set<String> hiddenApps = Collections.emptySet();
     private List<Cards.Card> cards = Collections.emptyList();
@@ -185,6 +187,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         // config.xml, overlaid by config.json from a pushed theme (see Config and tools/theme.sh).
         Config cfg = Config.load(this);
         COLUMNS = cfg.columns;
+        reducedMotion = cfg.reducedMotion;
         liveTvPkg = cfg.liveTvPackage;
         liveTvAction = cfg.liveTvAction;
         inputAction = cfg.inputAction;
@@ -216,8 +219,10 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         grid.setHasFixedSize(true);
         grid.setItemAnimator(null);
         grid.addItemDecoration(new DockDecoration(COLUMNS, density));
+        int enterAnim = reducedMotion ? R.anim.tile_enter_reduced : R.anim.tile_enter;
+        float enterDelay = reducedMotion ? 0f : 0.06f;
         grid.setLayoutAnimation(new LayoutAnimationController(
-                AnimationUtils.loadAnimation(this, R.anim.tile_enter), 0.06f));
+                AnimationUtils.loadAnimation(this, enterAnim), enterDelay));
         adapter = new AppAdapter(this, this, COLUMNS, cfg);
         grid.setAdapter(adapter);
 
@@ -262,7 +267,14 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
             }
         });
         for (SpringAnimation s : new SpringAnimation[]{springX, springY}) {
-            s.setSpring(new SpringForce().setStiffness(260f).setDampingRatio(0.58f));
+            if (reducedMotion) {
+                // Stiff and almost critically damped: settles in a few frames instead of oscillating,
+                // and stops once the highlight is within 1.5 px of its tile.
+                s.setSpring(new SpringForce().setStiffness(1400f).setDampingRatio(0.95f));
+                s.setMinimumVisibleChange(1.5f);
+            } else {
+                s.setSpring(new SpringForce().setStiffness(260f).setDampingRatio(0.58f));
+            }
         }
 
         btnInputs = findViewById(R.id.btnInputs);
@@ -376,7 +388,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
             ambient.setAlpha(0f);
         }
         reloadTiles();
-        if (animate) grid.scheduleLayoutAnimation();
+        if (animate && !reducedMotion) grid.scheduleLayoutAnimation();
 
         if (restoreFocus) {
             // Follow the same app, or the nearest remaining slot when it was removed.
@@ -486,7 +498,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
             springY.cancel();
             glass.setTranslationX(x);
             glass.setTranslationY(y);
-            glass.animate().alpha(1f).setDuration(180).start();
+            glass.animate().alpha(1f).setDuration(reducedMotion ? 100 : 180).start();
             glassShown = true;
         } else {
             springX.animateToFinalPosition(x);
@@ -497,13 +509,18 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
             // Dock: park it at the bottom of the screen and show the top shelf for this app.
             int decoratedTop = item.getTop() - (int) (6 * density);
             int dy = decoratedTop - grid.getPaddingTop();
-            if (Math.abs(dy) > 1) grid.smoothScrollBy(0, dy);
+            // A 1px mismatch used to start a scroll on every dock move. Only scroll when the row is
+            // actually off; reduced motion does it in one jump so it does not fight the highlight.
+            if (Math.abs(dy) > (int) (8 * density)) {
+                if (reducedMotion) grid.scrollBy(0, dy);
+                else grid.smoothScrollBy(0, dy);
+            }
             showHero(position, r.top - dy);
         } else {
             hideHero();
             // Scroll just enough so the whole glass (not only the tile) is visible.
             Rect want = new Rect(0, -(int) pad * 2, item.getWidth(), item.getHeight() + (int) pad);
-            grid.requestChildRectangleOnScreen(item, want, false);
+            grid.requestChildRectangleOnScreen(item, want, reducedMotion);
         }
     }
 
@@ -514,6 +531,23 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         int color = adapter.ambientColorAt(position);
         float y = dockTopInRoot - 14 * density - 26 * density - heroName.getHeight();
         boolean changed = !label.contentEquals(heroName.getText());
+
+        if (reducedMotion) {
+            // Snap the shelf instead of sliding and fading it: each of those frames repaints the
+            // full-screen panel, and this switch exists for the GPUs that cannot afford it.
+            heroName.animate().cancel();
+            heroName.setText(label);
+            heroName.setY(y);
+            heroName.setTranslationX(0f);
+            heroName.setAlpha(1f);
+            setAmbient(color);
+            if (!heroShown) {
+                ambient.setAlpha(0f);
+                ambient.animate().alpha(1f).setDuration(160).start();
+                heroShown = true;
+            }
+            return;
+        }
 
         if (!heroShown) {
             heroName.setText(label);
@@ -570,8 +604,8 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
     private void hideHero() {
         if (!heroShown) return;
         heroShown = false;
-        heroName.animate().alpha(0f).setDuration(160).start();
-        ambient.animate().alpha(0f).setDuration(300).start();
+        heroName.animate().alpha(0f).setDuration(reducedMotion ? 100 : 160).start();
+        ambient.animate().alpha(0f).setDuration(reducedMotion ? 140 : 300).start();
     }
 
     private void hideGlass() {
