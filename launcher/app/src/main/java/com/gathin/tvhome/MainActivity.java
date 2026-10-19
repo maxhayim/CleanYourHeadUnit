@@ -526,10 +526,10 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
     /** Shows the Wi-Fi network name on the button when we can read it, otherwise the connection type. */
     private void updateWifiLabel() {
         String text = getString(R.string.wifi);
-        boolean vpn = false;
+        boolean vpn = false, online = false;
         try {
             ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-            boolean online = false, wifi = false, ethernet = false;
+            boolean wifi = false, ethernet = false;
             // All networks, not just the active one: with a VPN up the active network is the VPN itself.
             for (Network net : cm != null ? cm.getAllNetworks() : new Network[0]) {
                 NetworkCapabilities caps = cm.getNetworkCapabilities(net);
@@ -559,10 +559,12 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
             }
         } catch (Exception ignored) {
         }
-        if (vpn) {
-            // Network name, then a green lock-and-VPN capsule drawn in place of the word "VPN".
-            String badge = getString(R.string.vpn);
-            VpnBadge span = new VpnBadge(getDrawable(R.drawable.ic_lock), density);
+        // With a VPN app configured, a VPN that is down matters too: show a red "VPN off" capsule then.
+        boolean vpnDown = !vpn && online && !vpnApp.isEmpty();
+        if (vpn || vpnDown) {
+            // Network name, then the green lock-and-VPN (or red "VPN off") capsule drawn in place of the word.
+            String badge = getString(vpn ? R.string.vpn : R.string.vpn_off);
+            VpnBadge span = new VpnBadge(vpn ? getDrawable(R.drawable.ic_lock) : null, density);
             // The pill has a maximum width and ellipsizes at the end, which would cut the badge off after
             // a long network name, so shorten the name to whatever room the badge leaves. The total paddings
             // include the Wi-Fi icon.
