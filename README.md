@@ -86,7 +86,7 @@ A home screen that is yours again:
 - **One floating glass highlight** that springs from tile to tile instead of each tile drawing its
   own border. The focused tile lifts slightly and shows its name.
 - **Three frosted buttons**: Inputs (a dropdown of HDMI ports, AV and Live TV), Wi-Fi (showing the
-  network you're on) and Settings.
+  network you're on, or Ethernet with its own icon when wired) and Settings.
 - **A greeting, a large thin clock and the date**, set in
   [Outfit](https://fonts.google.com/specimen/Outfit).
 - **A matching Clock screensaver**, optional, that drifts around the screen so nothing burns in.

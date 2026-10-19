@@ -522,6 +522,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
     private void updateWifiLabel() {
         String text = getString(R.string.wifi);
         boolean vpn = false;
+        int icon = R.drawable.ic_wifi;
         try {
             ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
             boolean online = false, wifi = false, ethernet = false;
@@ -543,6 +544,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
                 vpn = false;
             } else if (ethernet) {
                 text = getString(R.string.ethernet);
+                icon = R.drawable.ic_ethernet;
             } else if (wifi) {
                 WifiManager wm = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
                 WifiInfo info = wm != null ? wm.getConnectionInfo() : null;
@@ -564,6 +566,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         } else {
             btnWifi.setText(text);
         }
+        btnWifi.setCompoundDrawablesRelativeWithIntrinsicBounds(icon, 0, 0, 0);
     }
 
     /** The network pill opens the VPN app when one is configured and installed, otherwise Wi-Fi settings. */
