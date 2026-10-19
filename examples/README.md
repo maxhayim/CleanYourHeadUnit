@@ -15,6 +15,7 @@ on that firmware, grouped and commented. These are starting points: comment out 
 | `philips-smart-4k-google-tv/` | Philips Smart 4K TV (Skyworth, eleonas, MediaTek), India | Google TV 14 | Skyworth recommendations, after-sale/activation trackers, iCast; Chromecast, Assistant off by choice; wireless-debugging pairing, setupwraith |
 | `rca-ai-pont/` | RCA AI PONT SA (Changhong, redwood, ISDB92RC; also sold as realme 40-inch) | Android 14 | Homwee store and installers, Anoki ACR, FAST channels; 1 GB |
 | `sanyo-atv-r2/` | SANYO ATV R2 (SCBC, Realtek RTD285O) | Android TV 9 | S-Channels, E-SHOW demo, Vewd, TV Booster, SANYO OTA |
+| `skyworth-swtv-21ae/` | Skyworth SWTV-21AE (sunnyvale, MediaTek) | Android TV 14 | Skyworth home-row customizer, shop demo, e-manual; Google feedback; FAST channels, YouTube, ambient mode off by choice; port 5555 opens without pairing; 1 GB |
 | `sony-bravia-4k-ur2/` | Sony BRAVIA 4K UR2 (BRAVIA_UR2_4K, MediaTek) | Android TV 10 | Samba TV, Sony promos/Select, demo mode; Assistant, Chromecast, unused streaming apps off by choice |
 | `sony-xbr-x900e/` | Sony BRAVIA XBR-65X900E (2017, BRAVIA_ATV2) | Android TV 9 | Samba TV ACR, Sony Select, My BRAVIA promos, Discover, device agents; Chromecast, DLNA, mirroring off by choice |
 | `stellamore-t950s/` | Stellamore T950S projector (Droidlogic be30a3, Amlogic txhd2) | Android 13 | Zeasn App Store and stock launcher both bundle Google Ads (doubleclick); Zeasn device portal/OTA, Stellamore factory/test/guide; 1 GB; keystone correction must stay enabled |
