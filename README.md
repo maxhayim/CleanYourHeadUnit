@@ -187,7 +187,9 @@ TV_HOST=192.168.1.50 tools/restore.sh examples/<your tv>/debloat.txt com.google.
 ```
 
 It leaves the new launcher installed (remove it from the TV's Settings → Apps if you want it gone)
-and does not know about packages you disabled outside the list. If the TV is unreachable, its own
+and does not know about packages you disabled outside the list. To switch back later, run the
+install script again; it works out which launcher to disable even when Home has fallen back to
+Android's chooser. If the TV is unreachable, its own
 Settings → Apps page can re-enable packages too.
 
 ## When something goes wrong

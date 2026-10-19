@@ -77,3 +77,11 @@ Things that bit us or contributors, so they don't bite you. Commands use `tools/
   If the clock then jumps an hour ahead in spring, a fixed offset keeps it right:
   `tools/tv.py 'cmd alarm set-timezone GMT+03:30'`. The same applies to any country whose rules
   changed after the firmware was built.
+- **The network pill says "Wi-Fi" instead of the network name** after `pm clear com.gathin.tvhome`
+  or a reinstall from scratch: clearing the launcher's data also drops the location permission
+  Android 10 needs to read the SSID. `pm grant com.gathin.tvhome android.permission.ACCESS_FINE_LOCATION`
+  (the install script does this).
+- **Home is "Select a Home app"** after `tools/restore.sh` followed by re-applying a list: disabling a
+  package that also claims HOME (PatchWall on Xiaomi) makes Android drop the default. The install
+  script now picks the known stock launcher among the candidates by itself; otherwise choose one on
+  the TV or pass `STOCK_LAUNCHER=<package>`.

@@ -27,6 +27,22 @@ if [ -z "${STOCK_LAUNCHER:-}" ]; then
     *)
       if [ "$HOME_PKG" = com.gathin.tvhome ]; then
         STOCK_LAUNCHER=none; echo "Home already belongs to this launcher; nothing will be disabled."
+      elif [ "$HOME_PKG" = android ]; then
+        # Android's chooser: two or more launchers tie and no default is set, which is where a TV lands
+        # after tools/restore.sh followed by a re-applied list. Take the one known stock launcher among
+        # the HOME claimants, if there is exactly one.
+        CLAIMANTS=$("$PY" -I ../tools/tv.py 'cmd package query-activities --brief -a android.intent.action.MAIN -c android.intent.category.HOME' \
+          | tr -d '\r' | grep -o '[A-Za-z0-9_.]*/' | tr -d / | sort -u)
+        FOUND=""; N=0
+        for k in $KNOWN_STOCK_LAUNCHERS; do
+          if printf '%s\n' "$CLAIMANTS" | grep -qx "$k"; then FOUND=$k; N=$((N + 1)); fi
+        done
+        if [ "$N" -eq 1 ]; then
+          STOCK_LAUNCHER=$FOUND; echo "Home is Android's chooser; the stock launcher among the candidates is $STOCK_LAUNCHER."
+        else
+          echo "ERROR: Home is Android's launcher chooser and $N known stock launchers claim Home: pick a default on the TV first," >&2
+          echo "or run again with STOCK_LAUNCHER=<package to disable> or STOCK_LAUNCHER=none." >&2; exit 1
+        fi
       else
         echo "ERROR: Home currently resolves to '${HOME_PKG:-nothing}', which is not a stock launcher this script knows." >&2
         echo "  android                                  = Android's launcher chooser (two launchers tie); pick a default on the TV first" >&2
