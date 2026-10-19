@@ -230,6 +230,10 @@ and asks the TV to precompile it, so the first launch doesn't wait for the JIT.
 **Navigation** is deliberate: Up and Down move exactly one row, Up from the dock goes to the top
 buttons, the ends of the button row don't fall through to tiles, and the last focused app is
 remembered when you come back, even after the app list changes.
+Installing, updating, removing, enabling or disabling a TV app refreshes its tiles while Home is
+open. Focus follows the same app, or the nearest remaining tile if it was removed; when no apps
+remain, the network button receives focus. Package changes leave top-button focus alone, and
+changes made while another app is open are picked up when returning Home.
 
 <details>
 <summary><strong>Optional: the Clock screensaver</strong></summary>
