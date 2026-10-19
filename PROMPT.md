@@ -48,6 +48,10 @@ Debloat
 - Run `pm` commands one per shell call, chained commands may silently stop after the first.
 - Disable in small batches and screenshot between them: a batch can take something load-bearing with
   it and you cannot tell which.
+- Offer me ad-blocking DNS as an optional extra: on Android 9 and newer, Private DNS set to an
+  ad-blocking resolver (`settings put global private_dns_specifier dns.adguard-dns.com`, then
+  `settings put global private_dns_mode hostname`). Tell me it doesn't block YouTube ads, check an app
+  still plays afterwards, and note the undo (`private_dns_mode opportunistic`) in the README.
 
 Launcher
 - Check that the TV accepts APKs before building anything. Some China-market sets answer every
