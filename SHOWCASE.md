@@ -19,6 +19,7 @@ project's own issue tracker.
 | [Control Center](https://github.com/samdegan2311/tv-vibehack/tree/pr/control-center) | A sleep timer, turn-off button, memory cleaner and sound-output switch behind the Settings pill, on top of a dock editor | Xiaomi MSSP3, Android TV 11 | [samdegan2311](https://github.com/samdegan2311) |
 | [Navigation sounds](https://github.com/rocavence/tv-vibehack/tree/nav-sounds) | The launcher with its own soft click and select sounds, synthesised from a script | BenQ E55-735, Google TV 14 | [rocavence](https://github.com/rocavence) |
 | [AirPlay receiver installer](https://github.com/nguyenduchoai/tv-vibehack/tree/feat/airplay-receiver) | A script that builds and installs an open-source AirPlay receiver next to the launcher, for iPhone mirroring | Xiaomi MiTV-AESP0, Android TV 9 | [nguyenduchoai](https://github.com/nguyenduchoai) |
+| [CleanMyTCL-Android9](https://github.com/eddysangalli/CleanMyTCL-Android9) | A fork specialised for TCL televisions on Android TV 9: per-model device profiles with a protected-package list, a measured launcher (ultralight mode, on-TV settings, HDMI number keys), reversible debloat scripts, and published per-device benchmarks with the method and the launcher version each number came from | TCL BeyondTV2, Realtek RTD2851, Android TV 9 | [eddysangalli](https://github.com/eddysangalli) |
 
 ## Add yours
 
