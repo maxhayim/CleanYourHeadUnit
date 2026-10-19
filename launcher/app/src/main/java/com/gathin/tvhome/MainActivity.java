@@ -199,6 +199,9 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         if (cfg.wallpaper != null) showWallpaper(cfg.wallpaper);
         glass = findViewById(R.id.glass);
         ambient = findViewById(R.id.ambient);
+        // The glow is one bitmap, so its alpha can be applied while drawing it. Otherwise every frame of
+        // a fade renders it into a full-screen offscreen buffer first.
+        ambient.forceHasOverlappingRendering(false);
         heroName = findViewById(R.id.heroName);
         greeting = findViewById(R.id.greeting);
         btnWifi = findViewById(R.id.btnWifi);
@@ -599,26 +602,31 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
      * The glow used to be a full-screen radial GradientDrawable. On Android 10 that drawable is
      * drawn on the CPU, so fading it for half a second redrew 1920×1080 every frame and the
      * highlight looked like it was running at a few frames per second. A small bitmap stretched
-     * over the screen is one texture; changing apps only uploads it once.
+     * over the screen is one texture. It is painted once in white and tinted with the app's colour,
+     * so changing apps neither repaints it on the CPU (about 11 ms) nor uploads it again.
      */
     private void setAmbient(int color) {
         if (color == ambientColor && ambient.getBackground() != null) return;
         ambientColor = color;
-        int c = color & 0x00FFFFFF;
-        int w = 480;
-        int h = 270;
-        Bitmap bmp = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(bmp);
-        Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        paint.setShader(new RadialGradient(
-                w * 0.32f, h * 0.42f, w * 0.62f,
-                new int[]{0x5C000000 | c, 0x26000000 | c, 0x00000000 | c},
-                new float[]{0f, 0.45f, 1f},
-                Shader.TileMode.CLAMP));
-        canvas.drawRect(0, 0, w, h, paint);
-        BitmapDrawable drawable = new BitmapDrawable(getResources(), bmp);
-        drawable.setGravity(Gravity.FILL);
-        ambient.setBackground(drawable);
+        BitmapDrawable glow = (BitmapDrawable) ambient.getBackground();
+        if (glow == null) {
+            int w = 480;
+            int h = 270;
+            Bitmap bmp = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
+            Canvas canvas = new Canvas(bmp);
+            Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
+            paint.setShader(new RadialGradient(
+                    w * 0.32f, h * 0.42f, w * 0.62f,
+                    new int[]{0x5CFFFFFF, 0x26FFFFFF, 0x00FFFFFF},
+                    new float[]{0f, 0.45f, 1f},
+                    Shader.TileMode.CLAMP));
+            canvas.drawRect(0, 0, w, h, paint);
+            glow = new BitmapDrawable(getResources(), bmp);
+            glow.setGravity(Gravity.FILL);
+            ambient.setBackground(glow);
+        }
+        // The default tint mode, SRC_IN, keeps the mask's alpha and takes the colour from the tint.
+        glow.setTint(0xFF000000 | color);
     }
 
     private void hideHero() {
