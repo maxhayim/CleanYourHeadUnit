@@ -85,3 +85,50 @@ Things that bit us or contributors, so they don't bite you. Commands use `tools/
   package that also claims HOME (PatchWall on Xiaomi) makes Android drop the default. The install
   script now picks the known stock launcher among the candidates by itself; otherwise choose one on
   the TV or pass `STOCK_LAUNCHER=<package>`.
+
+## Accessibility helper enabled but the remote button does nothing
+
+The optional `HomeKeyService` and `InputKeyService` need Android to bind to them before they can
+filter remote keys. The installer's `enabled` message follows settings writes; it does not check
+live binding. Resolving the launcher as HOME is a separate check.
+
+With the intended TV selected through `TV_HOST`, read the current state without changing it:
+
+```sh
+tools/tv.py 'am get-current-user'
+tools/tv.py 'settings --user current get secure accessibility_enabled'
+tools/tv.py 'settings --user current get secure enabled_accessibility_services'
+tools/tv.py 'dumpsys accessibility'
+```
+
+Use the returned user ID when reading the dump; don't assume user 0. If the user changes during
+these checks, read them again. Check only the helper you opted into:
+
+| Helper | Component in the enabled-services list | Key code it filters |
+| --- | --- | --- |
+| Home button | `com.gathin.tvhome/.HomeKeyService` | `KEYCODE_ALL_APPS`, not ordinary `KEYCODE_HOME` |
+| Input button | `com.gathin.tvhome/.InputKeyService` | `KEYCODE_TV` |
+
+The class may also be written in full, for example
+`com.gathin.tvhome/com.gathin.tvhome.HomeKeyService`. Match the whole component, not just a class
+name substring. `accessibility_enabled=1` alone may mean that another app's service is enabled.
+
+- **Enabled configuration:** the requested component is in that user's colon-separated
+  `enabled_accessibility_services` list and accessibility is enabled. This records the request,
+  not a running service.
+- **Live binding:** inspect that same user's `Bound services` section (`services` on older Android
+  builds). An entry under `Enabled services` or `Binding services` is not proof of a completed
+  binding. Allow a few seconds after enabling, then read the dump again. Some dumps show service
+  labels rather than components; labels can be translated or shared with other services. A match
+  for the word `Home` is not enough to identify our helper. If the format or identity is unclear,
+  treat binding as unknown rather than declaring success or failure.
+- **Remote behavior:** ask the person at the TV to press the relevant physical button from another
+  app. Injected HOME and a launcher screenshot can confirm navigation, but do not prove that the
+  remote sends the key this helper filters, or that the accessibility filter received it.
+
+If the component is enabled but clearly absent from the bound services, inspect local logs for a
+binding failure, crash or firmware startup restriction before changing settings. One firmware
+observation is in the [TCL G08 notes](../examples/tcl-qm6k-google-tv/debloat.txt). Do not overwrite
+the enabled-services list, grant app-ops on every TV, or disable more packages as a generic fix.
+When reporting a failure, include the model, build, current user and only the relevant redacted
+settings/dump/log excerpts; keep raw device logs private.

@@ -87,6 +87,9 @@ Launcher
 Verify
 - After each change, inject remote key presses over ADB, take a screenshot from the TV and look at it.
   Fix what you see before moving on.
+- If using an accessibility helper for a remote button, check both its enabled setting and live
+  binding for the current Android user, then ask me to press the physical button; an injected HOME
+  key is not proof that the helper works (see `docs/TROUBLESHOOTING.md`, accessibility helpers).
 - When done, give me a restore script, a build-and-install script, and a README that explains how to
   re-enable any app and how to change the dock order or the wallpaper.
 

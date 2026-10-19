@@ -22,6 +22,16 @@
 #   runs first-time setup). While Home was blank the TV fell back to HDMI 1 and woke a console over CEC.
 # - Soundbar on optical (S/PDIF) can't be powered or volume-controlled by the TV. Use HDMI 4 (eARC) and
 #   `cmd hdmi_control cec_setting set system_audio_control 1` (it ships 0 here).
+#
+# Additional accessibility observation (maam00, 2026-10-17/18): Smart TV Pro G08_4K_US/G08,
+# Android 14, tcl9618-user 14 UTT2.250416.001 AU14 release-keys.
+# A separate sideloaded remote-button companion was enabled but not bound. TclAppBoot logged
+# "callee doesn't have OP_AUTO_START permission". On that build, allowing its AUTO_START app-op
+# and rebinding its service restored binding, also confirmed after reboot. Stock Google TV home
+# was retained; this was NOT a test of CleanYourTV's launcher or accessibility services.
+# Diagnose enabled vs bound first (docs/TROUBLESHOOTING.md); do not apply that app-op to every TCL.
+# Session report: https://github.com/humblemuzzu/dumbtv/blob/main/catalog/devices/androidtv-tcl-g08.yaml
+# Related G05 / Android 11 report: https://github.com/Gathin23/cleanyourtv/pull/73
 
 # TCL tracking and analytics
 com.tcl.ttvs                           # Samba TV ACR viewing tracking, TCL "BI" analytics, Alexa core, T-Cast
