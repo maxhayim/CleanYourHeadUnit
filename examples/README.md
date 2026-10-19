@@ -24,6 +24,7 @@ on that firmware, grouped and commented. These are starting points: comment out 
 | `tcl-qm6k-google-tv/` | TCL QM6K Pro, 2025 (G08, MediaTek tcl9618) | Google TV 14 | Samba TV ACR (ttvs), TCL TV+, TCL Live, store/hotel demo; setupwraith must go for a custom launcher |
 | `rca-ai-pont/` | RCA AI PONT SA (Changhong, redwood, ISDB92RC) | Android 14 | Homwee store and installers, Anoki ACR, FAST channels; 1 GB |
 | `chiq-ai-pont/` | CHiQ AI PONT (DVB93CQ) | Android TV 11 | Anoki ACR, FAST channels, AI PONT, Homwee services |
+| `redmi-mitv-antl0/` | Redmi TV (MiTV-ANTL0, starwars) | Android TV 5.1.1 | Mi push/web-content/cloud-control ads, TV Taobao, stock screensaver, OTA; needs `pm hide` instead of `pm disable-user`, boot ad is a `setprop` |
 
 To add your TV, see [CONTRIBUTING.md](../CONTRIBUTING.md). The quickest way to get a list is to
 run the prompt in [PROMPT.md](../PROMPT.md) and copy the packages your assistant disabled.

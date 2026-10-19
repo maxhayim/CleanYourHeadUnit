@@ -124,6 +124,7 @@ Lists that people have tested and contributed live in [`examples/`](examples/):
 | TCL QM6K Pro, 2025 (G08, MediaTek tcl9618) | Google TV 14 |
 | RCA AI PONT SA (Changhong, redwood, ISDB92RC) | Android 14 |
 | CHiQ AI PONT (DVB93CQ) | Android TV 11 |
+| Redmi TV (MiTV-ANTL0, starwars) | Android TV 5.1.1 |
 
 Your TV not here? The prompt works regardless, it discovers the bloat itself. If you add your
 list afterwards, the next person with your model skips that step. See
