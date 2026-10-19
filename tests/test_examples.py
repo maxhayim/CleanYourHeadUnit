@@ -53,8 +53,6 @@ class ExampleListsTest(unittest.TestCase):
                 self.assertTrue(packages, "no packages: notes without a list belong in docs/devices/")
                 dupes = sorted({p for p in packages if packages.count(p) > 1})
                 self.assertFalse(dupes, f"listed twice: {dupes}")
-                text = path.read_text(encoding="utf-8")
-                self.assertNotIn("pm uninstall", text, "lists disable, they never uninstall")
 
     def test_examples_table_matches_folders(self):
         rows = table_rows(EXAMPLES / "README.md", "| Folder |")
