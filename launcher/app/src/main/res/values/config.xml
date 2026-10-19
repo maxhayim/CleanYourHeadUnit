@@ -35,6 +35,11 @@
     <string name="source_panel_service" translatable="false"></string>
     <string name="source_panel_action" translatable="false"></string>
 
+    <!-- Inputs menu: HDMI and AV rows normally open with ACTION_VIEW on the input's channel URI, which the
+         Live TV app handles. Where nothing answers that, this action is sent with the same URI instead
+         (XGIMI projectors: com.xgimi.action.hdmiPlayer). Leave empty to omit. -->
+    <string name="input_action" translatable="false"></string>
+
     <!-- Show the Solar Hijri (Shamsi) date used in Iran and Afghanistan, e.g. "27 Mehr 1405", above the
          Gregorian date. -->
     <bool name="shamsi_date">false</bool>

@@ -17,6 +17,7 @@ import android.net.ConnectivityManager;
 import android.net.Network;
 import android.net.NetworkCapabilities;
 import android.net.NetworkRequest;
+import android.net.Uri;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
@@ -25,6 +26,8 @@ import android.os.Looper;
 import android.provider.Settings;
 import android.text.SpannableString;
 import android.text.Spanned;
+import android.text.TextPaint;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
@@ -63,6 +66,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
     private static final long MINUTE_MS = 60_000L;
     private String liveTvPkg;
     private String liveTvAction;
+    private String inputAction;
     private String sourcePanelService;
     private String sourcePanelAction;
 
@@ -150,6 +154,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         COLUMNS = cfg.columns;
         liveTvPkg = cfg.liveTvPackage;
         liveTvAction = cfg.liveTvAction;
+        inputAction = cfg.inputAction;
         sourcePanelService = cfg.sourcePanelService;
         sourcePanelAction = cfg.sourcePanelAction;
 
@@ -559,9 +564,16 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         if (vpn) {
             // Network name, then a green lock-and-VPN capsule drawn in place of the word "VPN".
             String badge = getString(R.string.vpn);
+            VpnBadge span = new VpnBadge(getDrawable(R.drawable.ic_lock), density);
+            // The pill has a maximum width and ellipsizes at the end, which would cut the badge off after
+            // a long network name, so shorten the name to whatever room the badge leaves. The total paddings
+            // include the Wi-Fi icon.
+            TextPaint paint = btnWifi.getPaint();
+            float room = btnWifi.getMaxWidth() - btnWifi.getTotalPaddingStart() - btnWifi.getTotalPaddingEnd()
+                    - span.getSize(paint, badge, 0, badge.length(), null) - paint.measureText(" ") - 2 * density;
+            text = TextUtils.ellipsize(text, paint, Math.max(0, room), TextUtils.TruncateAt.END).toString();
             SpannableString label = new SpannableString(text + " " + badge);
-            label.setSpan(new VpnBadge(getDrawable(R.drawable.ic_lock), density),
-                    text.length() + 1, label.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            label.setSpan(span, text.length() + 1, label.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             btnWifi.setText(label);
         } else {
             btnWifi.setText(text);
@@ -621,6 +633,25 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         }
     }
 
+    /** Switches to a passthrough input (HDMI, AV). The standard way is ACTION_VIEW on its channel URI,
+     *  which the Live TV app handles; where nothing takes that, the configured `input_action` is sent
+     *  with the same URI instead (XGIMI's HDMI player only answers com.xgimi.action.hdmiPlayer). */
+    private void openInput(String inputId) {
+        Uri uri = TvContract.buildChannelUriForPassthroughInput(inputId);
+        Intent view = new Intent(Intent.ACTION_VIEW).setDataAndType(uri, "vnd.android.cursor.item/channel")
+                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        try {
+            startActivity(view);
+            return;
+        } catch (ActivityNotFoundException e) {
+            if (inputAction.isEmpty()) {
+                Toast.makeText(this, R.string.not_available, Toast.LENGTH_SHORT).show();
+                return;
+            }
+        }
+        open(new Intent(inputAction).setDataAndType(uri, "vnd.android.cursor.item/channel"));
+    }
+
     /** Dropdown menu under the Inputs pill: HDMI ports (with connection state), AV and Live TV. */
     private void showInputs() {
         View anchor = findViewById(R.id.btnInputs);
@@ -677,8 +708,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
                 if (!hdmi && rows.getChildCount() > 0 && !sawNonHdmi) addSeparator(rows);
                 if (!hdmi) sawNonHdmi = true;
                 addInputRow(rows, popup, hdmi ? R.drawable.ic_input : R.drawable.ic_av, label, state,
-                        () -> open(new Intent(Intent.ACTION_VIEW).setDataAndType(
-                                TvContract.buildChannelUriForPassthroughInput(id), "vnd.android.cursor.item/channel")));
+                        () -> openInput(id));
             }
         }
         // Nothing to list where there is no TvInputManager: the TV's own source panel switches inputs.
