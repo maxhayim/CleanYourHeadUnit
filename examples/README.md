@@ -35,6 +35,7 @@ on that firmware, grouped and commented. These are starting points: comment out 
 | `xiaomi-mitv-moor2/` | Xiaomi MiTV-MOOR2 (venom, MediaTek) | Google TV 11 | Mi ad row and PatchWall, Mi analytics, MiLink, store demo; setup wizard off so a third-party launcher can own Home |
 | `xiaomi-mitv-mssp3/` | Xiaomi MiTV-MSSP3 (machuca, MediaTek) | Android TV 11 | PatchWall, Mi analytics, Netflix observer; Chromecast, screensavers, unused streaming apps off by choice |
 | `xiaomi-tv-a-pro-2026/` | Xiaomi TV A Pro 75" 2026 (MiTV-MZTU0, river, MediaTek) | Google TV 14 | PatchWall/Mi Home tab, Mi analytics, TV Manager, updaters; setup wizard off, launcherx crash-loop notes |
+| `xiaomi-s-pro-75-freeguy/` | Xiaomi TV S Pro Mini LED 75 (China, MiTV-MFTR0, freeguy, MT9653) | Android 14 | Compatibility notes only: HDMI/AV/TV/DTMB routes and state labels, Xiaomi settings, regular-launcher app discovery; no tested debloat entries |
 
 To add your TV, see [CONTRIBUTING.md](../CONTRIBUTING.md). The quickest way to get a list is to
 run the prompt in [PROMPT.md](../PROMPT.md) and copy the packages your assistant disabled.
