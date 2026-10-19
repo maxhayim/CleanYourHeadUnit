@@ -18,9 +18,12 @@ export MSYS_NO_PATHCONV=1
 PKG=com.gathin.tvhome
 DIR=/sdcard/Android/data/$PKG/files
 tv() { "$PY" -I tv.py "$@"; }
+# Restart Home so it rereads the theme. Android drops a force-stopped app's accessibility services from the
+# enabled list, which would switch off InputKeyService/HomeKeyService, so put the list back if it had ours.
+RESTART="a=\$(settings get secure enabled_accessibility_services); am force-stop $PKG; case \"\$a\" in *$PKG*) settings put secure enabled_accessibility_services \"\$a\" ;; esac; am start -n $PKG/.MainActivity >/dev/null"
 
 if [ "${1:-}" = --reset ]; then
-  tv "rm -f $DIR/config.json $DIR/wallpaper.jpg; am force-stop $PKG; am start -n $PKG/.MainActivity >/dev/null; echo reset" | tail -n 1
+  tv "rm -f $DIR/config.json $DIR/wallpaper.jpg; $RESTART; echo reset" | tail -n 1
   exit 0
 fi
 THEME="${THEME_ARG:?usage: theme.sh <theme folder> | --reset}"
@@ -35,5 +38,5 @@ if [ -f "$THEME/wallpaper.jpg" ]; then
 else
   tv "rm -f $DIR/wallpaper.jpg" >/dev/null
 fi
-tv "am force-stop $PKG; am start -n $PKG/.MainActivity >/dev/null; echo applied" | tail -n 1
+tv "$RESTART; echo applied" | tail -n 1
 echo "Theme $(basename "$THEME") is on the TV. Undo with: tools/theme.sh --reset"
