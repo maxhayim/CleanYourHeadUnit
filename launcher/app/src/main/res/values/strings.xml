@@ -30,7 +30,8 @@
     <string name="card_prompt_title">New card from %1$s</string>
     <string name="card_prompt_body">%1$s can show a card on your home screen. Keeping it hidden leaves the app\'s normal tile as it is.</string>
     <string name="card_prompt_names">The card is named \'%1$s\'. The app is \'%2$s\'.</string>
-    <string name="card_prompt_resigned">%1$s was updated with a different signing key. Show its card again?</string>
+    <string name="card_prompt_resigned">%1$s was updated with a different signing key, so your earlier answer no longer applies. Decide again for its card.</string>
+    <string name="card_prompt_relabelled">%1$s changed the name of its card since you decided. Decide again for it.</string>
     <string name="card_prompt_hint">You can change this later: hold OK on Settings.</string>
     <string name="card_prompt_identity">%1$s, key %2$s</string>
     <string name="card_keep_hidden">Keep hidden</string>
@@ -44,4 +45,5 @@
     <string name="card_state_hidden">Hidden</string>
     <string name="card_state_new">New</string>
     <string name="card_state_new_key">New key</string>
+    <string name="card_state_new_label">New name</string>
 </resources>

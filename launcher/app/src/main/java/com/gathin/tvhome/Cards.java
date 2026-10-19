@@ -78,7 +78,7 @@ final class Cards {
     private static final String[] RESERVED_ANYWHERE = {"verified", "official"};
     /** Names the launcher's own UI renders (pills, tiles, the Inputs menu): rejected as a whole label. */
     private static final Set<String> RESERVED_EXACT = new HashSet<>(Arrays.asList(
-            "tvvibehack", "settings", "inputs", "livetv", "home", "defaulthome", "wifi", "av"));
+            "tvvibehack", "cleanyourtv", "settings", "inputs", "livetv", "home", "defaulthome", "wifi", "av"));
     /** "HDMI", "HDMI 1", "HDMI2"... */
     private static final String RESERVED_PREFIX = "hdmi";
 
@@ -87,6 +87,8 @@ final class Cards {
         NEW,
         /** The record was made for a different signing key: it no longer applies and the prompt is due. */
         RESIGNED,
+        /** The card's label changed since the owner decided: the decision was for another name, the prompt is due. */
+        RELABELLED,
         SHOWN,
         HIDDEN
     }
@@ -119,21 +121,27 @@ final class Cards {
         }
 
         boolean pending() {
-            return state == State.NEW || state == State.RESIGNED;
+            return state == State.NEW || state == State.RESIGNED || state == State.RELABELLED;
         }
     }
 
-    /** The owner's decision for one package, valid only while the package is signed with this key. */
+    /**
+     * The owner's decision for one package, valid only while the package is signed with this key and
+     * its card keeps the name (folded) it had when the owner decided.
+     */
     static final class Record {
         final String pkg;
         final String digest;
+        /** The card's label as {@link #fold} wrote it at decision time. */
+        final String label;
         final String decision;
         final long firstSeen;
         final long decidedAt;
 
-        Record(String pkg, String digest, String decision, long firstSeen, long decidedAt) {
+        Record(String pkg, String digest, String label, String decision, long firstSeen, long decidedAt) {
             this.pkg = pkg;
             this.digest = digest;
+            this.label = label;
             this.decision = decision;
             this.firstSeen = firstSeen;
             this.decidedAt = decidedAt;
@@ -297,16 +305,19 @@ final class Cards {
         if (d.spec != SPEC_SUPPORTED) throw new CardException("spec " + d.spec + " is not supported (this launcher reads spec " + SPEC_SUPPORTED + ")");
 
         String digest = digest(pm, pkg);
+        String folded = fold(d.label);
         Record r = records.get(pkg);
         State state;
         if (r == null) state = State.NEW;
         else if (!r.digest.equals(digest)) state = State.RESIGNED;
+        else if (!r.label.equals(folded)) state = State.RELABELLED;   // the owner said yes to another name
         else state = DECISION_SHOW.equals(r.decision) ? State.SHOWN : State.HIDDEN;
-        boolean pending = state == State.NEW || state == State.RESIGNED;
+        boolean pending = state == State.NEW || state == State.RESIGNED || state == State.RELABELLED;
 
         // Reserved words are policy and always apply. Name collisions only matter while the prompt is
         // due: they stop a newcomer from borrowing a name, and never undo a decision the owner made.
-        String folded = fold(d.label);
+        // A decided card that changes its label becomes pending again (RELABELLED), so it cannot take
+        // another app's name on an update either.
         if (isReserved(folded, uiNames)) throw new CardException("label '" + d.label + "' is reserved");
         if (pending && isTaken(folded, pkg, names)) throw new CardException("label '" + d.label + "' is the name of another installed app");
         String appLabel = cleanLabel(String.valueOf(ai.applicationInfo.loadLabel(pm)), pkg);
@@ -440,6 +451,8 @@ final class Cards {
         if (isReference(caption)) return "caption is a resource reference; write the text itself";
         if (!isText(caption)) return "caption has characters outside A-Z a-z 0-9 space . & + ' -";
         if (caption.charAt(0) == ' ' || caption.charAt(caption.length() - 1) == ' ') return "caption starts or ends with a space";
+        String folded = fold(caption);
+        for (String word : RESERVED_ANYWHERE) if (folded.contains(word)) return "caption claims endorsement ('" + word + "')";
         return null;
     }
 
@@ -577,6 +590,16 @@ final class Cards {
         return s != null && s.length() == 64 && isHex(s, true);
     }
 
+    /** A label exactly as {@link #fold} writes it: 1 to LABEL_MAX characters from a-z 0-9. */
+    static boolean isFolded(String s) {
+        if (s == null || s.isEmpty() || s.length() > LABEL_MAX) return false;
+        for (int i = 0; i < s.length(); i++) {
+            char c = s.charAt(i);
+            if (!((c >= 'a' && c <= 'z') || (c >= '0' && c <= '9'))) return false;
+        }
+        return true;
+    }
+
     static String hex(byte[] bytes) {
         char[] digits = "0123456789abcdef".toCharArray();
         char[] out = new char[bytes.length * 2];
@@ -682,7 +705,7 @@ final class Cards {
         Record old = records.get(card.pkg);
         long now = System.currentTimeMillis();
         long firstSeen = old != null && old.digest.equals(card.digest) ? old.firstSeen : now;
-        records.put(card.pkg, new Record(card.pkg, card.digest, show ? DECISION_SHOW : DECISION_HIDE, firstSeen, now));
+        records.put(card.pkg, new Record(card.pkg, card.digest, fold(card.label), show ? DECISION_SHOW : DECISION_HIDE, firstSeen, now));
         return save(file, records);
     }
 
@@ -693,10 +716,11 @@ final class Cards {
         return file.renameTo(bad) || file.delete();
     }
 
-    private static final String HEADER = "{\"version\":1,\"records\":[";
+    private static final String HEADER = "{\"version\":2,\"records\":[";
     private static final String FOOTER = "]}";
     private static final String F_PACKAGE = "{\"package\":\"";
     private static final String F_DIGEST = "\",\"signer_sha256\":\"";
+    private static final String F_LABEL = "\",\"label\":\"";
     private static final String F_DECISION = "\",\"decision\":\"";
     private static final String F_FIRST_SEEN = "\",\"first_seen\":";
     private static final String F_DECIDED_AT = ",\"decided_at\":";
@@ -743,7 +767,9 @@ final class Cards {
         String pkg = until(line, at, '"');
         if (pkg == null || !isPackageName(pkg) || !take(line, at, F_DIGEST)) return null;
         String digest = until(line, at, '"');
-        if (digest == null || !isDigest(digest) || !take(line, at, F_DECISION)) return null;
+        if (digest == null || !isDigest(digest) || !take(line, at, F_LABEL)) return null;
+        String label = until(line, at, '"');
+        if (label == null || !isFolded(label) || !take(line, at, F_DECISION)) return null;
         String decision = until(line, at, '"');
         if (decision == null || !(DECISION_SHOW.equals(decision) || DECISION_HIDE.equals(decision))) return null;
         if (!take(line, at, F_FIRST_SEEN)) return null;
@@ -753,7 +779,7 @@ final class Cards {
         String decidedAt = until(line, at, '}');
         if (decidedAt == null || decidedAt.length() > 18 || !isDigits(decidedAt)) return null;
         if (!take(line, at, "}") || at[0] != line.length()) return null;
-        return new Record(pkg, digest, decision, Long.parseLong(firstSeen), Long.parseLong(decidedAt));
+        return new Record(pkg, digest, label, decision, Long.parseLong(firstSeen), Long.parseLong(decidedAt));
     }
 
     /** Consumes the literal at the cursor, or returns false. */
@@ -784,12 +810,12 @@ final class Cards {
         for (int i = 0; i < list.size(); i++) {
             Record r = list.get(i);
             // Every field is validated before it gets here, so no JSON escaping is ever needed.
-            if (!isPackageName(r.pkg) || !isDigest(r.digest)
+            if (!isPackageName(r.pkg) || !isDigest(r.digest) || !isFolded(r.label)
                     || !(DECISION_SHOW.equals(r.decision) || DECISION_HIDE.equals(r.decision))
                     || r.firstSeen < 0 || r.decidedAt < 0) {
                 throw new IllegalArgumentException("record for " + r.pkg + " is not valid");
             }
-            b.append(F_PACKAGE).append(r.pkg).append(F_DIGEST).append(r.digest).append(F_DECISION).append(r.decision)
+            b.append(F_PACKAGE).append(r.pkg).append(F_DIGEST).append(r.digest).append(F_LABEL).append(r.label).append(F_DECISION).append(r.decision)
                     .append(F_FIRST_SEEN).append(r.firstSeen).append(F_DECIDED_AT).append(r.decidedAt).append('}');
             if (i < list.size() - 1) b.append(',');
             b.append('\n');
@@ -825,7 +851,7 @@ final class Cards {
         if (!isPackageName("io.example.a") || isPackageName("example")) bad.add("package name");
         Map<String, Record> one = new TreeMap<>();
         String digest = hex(new byte[32]);
-        one.put("io.example.a", new Record("io.example.a", digest, DECISION_SHOW, 1, 2));
+        one.put("io.example.a", new Record("io.example.a", digest, "a", DECISION_SHOW, 1, 2));
         Map<String, Record> back = decode(encode(one));
         if (back == null || back.size() != 1 || back.get("io.example.a").decidedAt != 2) bad.add("store round trip");
         if (decode("{}") != null) bad.add("bad store accepted");

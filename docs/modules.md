@@ -38,8 +38,10 @@ Then create `res/xml/module_card.xml`:
 - `label`: 1 to 24 characters, letters, digits, space and `. & + ' -`. Keep it short; it is the
   name on the tile and in the top shelf. Words like "verified" or "official", the launcher's own UI
   names and input names such as HDMI are refused, and so is a new card whose label (or whose app
-  label) is the name of another app installed on the TV (the full list is in the spec).
+  label) is the name of another app installed on the TV (the full list is in the spec). Changing
+  the label in an update makes the owner decide again, so pick it once.
 - `caption`: optional, up to 32 characters, shown after the label while the card is focused. The
+  endorsement words refused in labels are refused here too. The
   name line under the tile is one line; label and caption together show about 26 characters on a
   4 column grid, so keep the caption to a few words.
 - `accent`: optional `#RRGGBB`, the glow colour behind the card while it is focused in the dock.

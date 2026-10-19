@@ -210,7 +210,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
             date.setPadding(0, (int) (4 * density), 0, 0);
         }
         vpnApp = cfg.vpnApp;
-        moduleCards = getResources().getBoolean(R.bool.module_cards);
+        moduleCards = cfg.moduleCards;
         hiddenApps = new HashSet<>(cfg.hiddenApps);
 
         grid = findViewById(R.id.grid);
@@ -277,6 +277,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         });
         btnSettings.setOnClickListener(v -> open(new Intent(Settings.ACTION_SETTINGS)));
         btnSettings.setOnLongClickListener(v -> {
+            if (!moduleCards) return false;   // off: a long press does nothing, as before the feature
             showModuleCards();
             return true;
         });
@@ -925,6 +926,8 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         ((TextView) panel.findViewById(R.id.title)).setText(getString(R.string.card_prompt_title, card.appLabel));
         ((TextView) panel.findViewById(R.id.body)).setText(card.state == Cards.State.RESIGNED
                 ? getString(R.string.card_prompt_resigned, card.appLabel)
+                : card.state == Cards.State.RELABELLED
+                ? getString(R.string.card_prompt_relabelled, card.appLabel)
                 : getString(R.string.card_prompt_body, card.appLabel));
         TextView names = panel.findViewById(R.id.names);
         if (Cards.fold(card.label).equals(Cards.fold(card.appLabel))) names.setVisibility(View.GONE);
@@ -951,10 +954,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
             decided[0] = true;
             cardPrompt = null;
             dialog.dismiss();
-            CardFeature.run(() -> {
-                decideCard(card, v.getId() == R.id.btnShow);
-                return null;
-            }, null);
+            decideCard(card, v.getId() == R.id.btnShow);   // guards its own card calls; the tile reload stays outside
             restoreFocus();   // the tiles changed under the prompt; this also chains the next prompt
         };
         keep.setOnClickListener(choose);
@@ -1062,6 +1062,8 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
                 return getString(R.string.card_state_hidden);
             case RESIGNED:
                 return getString(R.string.card_state_new_key);
+            case RELABELLED:
+                return getString(R.string.card_state_new_label);
             default:
                 return getString(R.string.card_state_new);
         }

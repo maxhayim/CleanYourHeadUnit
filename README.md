@@ -260,12 +260,13 @@ choice, an optional caption and a glow colour, placed ahead of the alphabetical 
 Nothing changes until you say so. When a module is installed the launcher asks once, naming the
 app, its package and its signing key, with **Keep hidden** selected by default; Back keeps it hidden
 too. Keeping it hidden leaves the app's ordinary tile exactly as before. The answer is remembered for
-that app's signing key, so an update signed with a different key asks again.
+that app's signing key and that card name, so an update signed with a different key, or one that
+renames its card, asks again.
 
 To change your mind, **hold OK on the Settings pill**: the Module cards list shows every installed
 card with its package and key, and OK toggles Shown and Hidden. At most eight cards are drawn, in
 label order; any further card you set to Shown is listed as over the limit and keeps its ordinary
-tile. Set `module_cards` to `false` in `config.xml` to turn the whole thing off.
+tile. Set `module_cards` to `false` in `config.xml` or a theme's `config.json` to turn the whole thing off.
 
 A card is only a different look for a tile. The launcher never installs or downloads anything,
 never loads code from a module, and launches a card exactly as it launches any app.

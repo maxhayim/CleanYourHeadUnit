@@ -273,7 +273,7 @@ public class CardsTest {
         for (int i = 0; i < pkgAndFirstSeen.length; i += 2) {
             String pkg = (String) pkgAndFirstSeen[i];
             long seen = ((Number) pkgAndFirstSeen[i + 1]).longValue();
-            m.put(pkg, new Cards.Record(pkg, DIGEST_A, "show", seen, seen));
+            m.put(pkg, new Cards.Record(pkg, DIGEST_A, "games", "show", seen, seen));
         }
         return m;
     }
@@ -382,10 +382,11 @@ public class CardsTest {
     @Test
     public void decodeRecordIsExact() {
         String line = "{\"package\":\"io.example.a\",\"signer_sha256\":\"" + DIGEST_A
-                + "\",\"decision\":\"show\",\"first_seen\":1,\"decided_at\":2}";
+                + "\",\"label\":\"retro\",\"decision\":\"show\",\"first_seen\":1,\"decided_at\":2}";
         Cards.Record r = Cards.decodeRecord(line);
         assertNotNull(r);
         assertEquals("io.example.a", r.pkg);
+        assertEquals("retro", r.label);
         assertEquals(1L, r.firstSeen);
         assertEquals(2L, r.decidedAt);
         assertNull(Cards.decodeRecord(line + " "));
@@ -394,6 +395,9 @@ public class CardsTest {
         assertNull(Cards.decodeRecord(line.replace("\"decided_at\":2", "\"decided_at\":")));
         assertNull(Cards.decodeRecord(line.replace("\"decided_at\":2", "\"decided_at\":1234567890123456789")));
         assertNull(Cards.decodeRecord(line.replace("signer_sha256", "signer")));
+        assertNull(Cards.decodeRecord(line.replace("\"label\":\"retro\"", "\"label\":\"Retro\"")));   // not folded
+        assertNull(Cards.decodeRecord(line.replace("\"label\":\"retro\"", "\"label\":\"\"")));
+        assertNull(Cards.decodeRecord(line.replace("\"label\":\"retro\",", "")));
         assertNull(Cards.decodeRecord(""));
         assertNull(Cards.decodeRecord("{"));
     }
@@ -403,17 +407,18 @@ public class CardsTest {
     @Test
     public void storeRoundTrip() {
         Map<String, Cards.Record> in = new TreeMap<>();
-        in.put("io.github.udhaykumarbala.retro", new Cards.Record("io.github.udhaykumarbala.retro", DIGEST_B, "show", 1700000000000L, 1700000001000L));
-        in.put("io.example.spoof", new Cards.Record("io.example.spoof", DIGEST_A, "hide", 1700000002000L, 1700000003000L));
+        in.put("io.github.udhaykumarbala.retro", new Cards.Record("io.github.udhaykumarbala.retro", DIGEST_B, "retro", "show", 1700000000000L, 1700000001000L));
+        in.put("io.example.spoof", new Cards.Record("io.example.spoof", DIGEST_A, "netflix", "hide", 1700000002000L, 1700000003000L));
         String text = Cards.encode(in);
-        assertEquals("{\"version\":1,\"records\":[\n"
-                + "{\"package\":\"io.example.spoof\",\"signer_sha256\":\"" + DIGEST_A + "\",\"decision\":\"hide\",\"first_seen\":1700000002000,\"decided_at\":1700000003000},\n"
-                + "{\"package\":\"io.github.udhaykumarbala.retro\",\"signer_sha256\":\"" + DIGEST_B + "\",\"decision\":\"show\",\"first_seen\":1700000000000,\"decided_at\":1700000001000}\n"
+        assertEquals("{\"version\":2,\"records\":[\n"
+                + "{\"package\":\"io.example.spoof\",\"signer_sha256\":\"" + DIGEST_A + "\",\"label\":\"netflix\",\"decision\":\"hide\",\"first_seen\":1700000002000,\"decided_at\":1700000003000},\n"
+                + "{\"package\":\"io.github.udhaykumarbala.retro\",\"signer_sha256\":\"" + DIGEST_B + "\",\"label\":\"retro\",\"decision\":\"show\",\"first_seen\":1700000000000,\"decided_at\":1700000001000}\n"
                 + "]}\n", text);
         Map<String, Cards.Record> out = Cards.decode(text);
         assertNotNull(out);
         assertEquals(2, out.size());
         assertEquals("show", out.get("io.github.udhaykumarbala.retro").decision);
+        assertEquals("retro", out.get("io.github.udhaykumarbala.retro").label);
         assertEquals(DIGEST_B, out.get("io.github.udhaykumarbala.retro").digest);
         assertEquals(1700000000000L, out.get("io.github.udhaykumarbala.retro").firstSeen);
         assertEquals(1700000003000L, out.get("io.example.spoof").decidedAt);
@@ -422,7 +427,7 @@ public class CardsTest {
     @Test
     public void emptyStoreRoundTrip() {
         String text = Cards.encode(new TreeMap<>());
-        assertEquals("{\"version\":1,\"records\":[\n]}\n", text);
+        assertEquals("{\"version\":2,\"records\":[\n]}\n", text);
         Map<String, Cards.Record> out = Cards.decode(text);
         assertNotNull(out);
         assertTrue(out.isEmpty());
@@ -441,13 +446,13 @@ public class CardsTest {
         assertNull(Cards.decode(good.replace("io.example.a", "io.example.a\",\"x\":\"")));
         assertNull(Cards.decode(good.replace("io.example.a", "example")));          // no dot
         assertNull(Cards.decode(good.replace("io.example.a", "io.1example.a")));   // bad segment
-        assertNull(Cards.decode(good.replace("\"version\":1", "\"version\":2")));
+        assertNull(Cards.decode(good.replace("\"version\":2", "\"version\":1")));   // the old format, without labels
         assertNull(Cards.decode(good.replace("]}", "")));
         assertNull(Cards.decode(good.replace("1700", "-170")));
         assertNull(Cards.decode(good + "garbage"));
         // Missing comma between records, and the same package twice.
         Map<String, Cards.Record> two = one("io.example.a", DIGEST_A, "show");
-        two.put("io.example.b", new Cards.Record("io.example.b", DIGEST_B, "hide", 1, 2));
+        two.put("io.example.b", new Cards.Record("io.example.b", DIGEST_B, "b", "hide", 1, 2));
         String pair = Cards.encode(two);
         assertNotNull(Cards.decode(pair));
         assertNull(Cards.decode(pair.replace("},\n", "}\n")));
@@ -459,7 +464,7 @@ public class CardsTest {
         Map<String, Cards.Record> many = new TreeMap<>();
         for (int i = 0; i < Cards.MAX_RECORDS + 1; i++) {
             String pkg = "io.example.p" + i;
-            many.put(pkg, new Cards.Record(pkg, DIGEST_A, "hide", i, i));
+            many.put(pkg, new Cards.Record(pkg, DIGEST_A, "card" + i, "hide", i, i));
         }
         String text = Cards.encode(many);                 // encode drops the oldest beyond the cap
         Map<String, Cards.Record> out = Cards.decode(text);
@@ -513,9 +518,38 @@ public class CardsTest {
         assertTrue(bad.delete() && dir.delete());
     }
 
+    @Test
+    public void captionCannotClaimEndorsement() {
+        assertNull(Cards.checkCaption("NES games"));
+        assertNotNull(Cards.checkCaption("Official Netflix app"));
+        assertNotNull(Cards.checkCaption("VERIFIED by Google"));
+        assertNotNull(Cards.checkCaption("ver-ified"));   // folding removes the hyphen
+    }
+
+    @Test
+    public void relabelledCardIsPendingAgain() {
+        // A card the owner decided on, whose label then changed, is treated like a new card: it does
+        // not win a name clash, and the clash rule drops both undecided cards.
+        Cards.Card renamed = card("io.example.retro", "Netflix", Cards.State.RELABELLED);
+        Cards.Card other = card("io.example.other", "netflix", Cards.State.NEW);
+        assertTrue(renamed.pending());
+        assertTrue(Cards.resolveClashes(Arrays.asList(renamed, other), recordsFor("io.example.retro", 100)).isEmpty());
+        assertEquals(renamed, Cards.firstPending(Arrays.asList(card("io.example.a", "A", Cards.State.SHOWN), renamed)));
+    }
+
+    @Test
+    public void isFoldedIsStrict() {
+        assertTrue(Cards.isFolded("retro"));
+        assertTrue(Cards.isFolded("nes2"));
+        assertFalse(Cards.isFolded(""));
+        assertFalse(Cards.isFolded("Retro"));
+        assertFalse(Cards.isFolded("re tro"));
+        assertFalse(Cards.isFolded("abcdefghijklmnopqrstuvwxy"));   // 25
+    }
+
     private static Map<String, Cards.Record> one(String pkg, String digest, String decision) {
         Map<String, Cards.Record> m = new TreeMap<>();
-        m.put(pkg, new Cards.Record(pkg, digest, decision, 1700000000000L, 1700000000000L));
+        m.put(pkg, new Cards.Record(pkg, digest, "a", decision, 1700000000000L, 1700000000000L));
         return m;
     }
 

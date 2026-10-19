@@ -70,15 +70,17 @@ and digits removed. "Live TV", "live-tv" and "LIVETV" are the same name.
 A label is rejected when:
 
 - it contains `verified` or `official` anywhere: words that imply endorsement are reserved, and
-  nothing a module declares is ever presented as endorsed;
+  nothing a module declares is ever presented as endorsed (the same two words are refused in the
+  caption);
 - it is one of the names the launcher's own UI uses, in English or in the TV's language:
-  `Home`, `Settings`, `Inputs`, `Wi-Fi`, `Live TV`, `Default home`, `Clock`, `tv-vibehack`;
+  `Home`, `Settings`, `Inputs`, `Wi-Fi`, `Live TV`, `Default home`, `Clock`, `cleanyourtv`, `tv-vibehack`;
 - it names an input the Inputs menu shows: `HDMI` and anything starting with it, `AV`;
-- while the prompt is due (a new card, or one whose signing key changed): it equals the label of
+- while the prompt is due (a new card, or one whose signing key or label changed): it equals the label of
   another app installed on this TV (the names on the home screen), or the app's own label equals
   another installed app's label. The module's own app label is fine: a card named "Retro" from an
   app named "Retro" is the normal case. Once the owner has answered, the name stays with that card:
-  an app installed afterwards with the same label does not displace it;
+  an app installed afterwards with the same label does not displace it. The answer is for that name:
+  a card that changes its label on an update is pending again and goes through these checks anew;
 - two cards share a label: the one the owner already decided on keeps the name (the oldest
   decision wins), the other is dropped; when neither has a decision, both are dropped and nobody is
   asked about a contested name.
@@ -111,11 +113,12 @@ any violation drops that one card, with a log line and no other effect.
    digest"). On Android 9 and newer the launcher reads the current signer; on Android 8 it reads
    the package's signature. A package signed with more than one certificate is rejected.
 3. Decision record. The owner's decision is stored per package in the launcher's private storage
-   (`files/cards.json`): package, signer digest, decision (`show` or `hide`), first seen, decided
-   at. The file is written atomically and validated strictly when read; a file that does not
+   (`files/cards.json`, format version 2): package, signer digest, the card's folded label, decision
+   (`show` or `hide`), first seen, decided at. The file is written atomically and validated strictly when read; a file that does not
    validate is moved to `cards.json.bad` and the launcher continues as if no decision had been made.
    The record never leaves the TV (backups are off for the launcher).
-4. Prompt. A card with no record, or whose signer digest differs from its record, is not shown. Once
+4. Prompt. A card with no record, or whose signer digest or folded label differs from its record, is
+   not shown. Once
    the grid is laid out and the home screen has focus, with no menu open, the launcher shows one
    prompt. It names the app by its own label (control and formatting characters removed, at most 40
    characters) and package and the key by the first twelve hex characters of the digest; when the
@@ -126,11 +129,14 @@ any violation drops that one card, with a log line and no other effect.
 5. Signer change. A package whose signer digest differs from its record is treated as new: the card
    is not shown, and the prompt says the app was updated with a different signing key. The record is
    replaced only by the owner's answer, never by the detection alone.
+   Label change. A card whose folded label differs from its record is treated the same way: not
+   shown, and the prompt says the card changed its name. A decision is for one name under one key.
 6. Placement. A shown card stands in for every tile of its package: the ordinary tile is not shown
    next to it. A package in `hidden_apps` (`config.xml`) shows neither a tile nor a card. A package in
    `dock_apps` gets its card in that dock slot. Other cards sort right after the configured dock apps
    and before the alphabetical grid, by label. On the default configuration, four dock apps and four
-   columns, that is the first grid tile. In the dock, the top shelf shows the label and the glow uses
+   columns, that is the first grid tile. With fewer `dock_apps` than columns, a shown card fills the
+   empty dock slot, since the dock is simply the first row. In the dock, the top shelf shows the label and the glow uses
    the accent; in the grid, the name line under the focused tile shows the label and the caption,
    as far as they fit on one line. A card uses the app's own banner (or icon) for its artwork.
 7. Hide. A hidden card leaves the app's ordinary tile exactly as before: hiding a card never
@@ -142,7 +148,7 @@ any violation drops that one card, with a log line and no other effect.
 9. Launch. A card launches the declaring activity by explicit component with no extras and no data,
    the same way every tile is launched. No field of a card can name an intent, a URI, a class or a
    package. Holding OK on a card opens the app's App info page, like any tile.
-10. Off switch. `module_cards` in `config.xml` (default `true`). When `false` the launcher never looks
+10. Off switch. `module_cards` in `config.xml` or the `config.json` theme overlay (default `true`). When `false` the launcher never looks
     for cards, never asks, and the Module cards list only says that none are installed.
 
 ## Security
