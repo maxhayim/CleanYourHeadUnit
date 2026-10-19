@@ -57,5 +57,7 @@ on that firmware, grouped and commented. These are starting points: comment out 
 | `xiaomi-tv-a-pro-2026/` | Xiaomi TV A Pro 75" 2026 (MiTV-MZTU0, river, MediaTek) | Google TV 14 | PatchWall/Mi Home tab, Mi analytics, TV Manager, updaters; setup wizard off, launcherx crash-loop notes |
 | `redmi-mitv-antl0/` | Redmi TV (MiTV-ANTL0, starwars) | Android 5.1.1 (not Android TV) | Mi push/web-content/cloud-control ads, TV Taobao, stock screensaver, OTA; needs `pm hide` instead of `pm disable-user`, boot ad is a `setprop` |
 
+Notes for a model that has no tested list yet live in [`docs/devices/`](../docs/devices/) (Xiaomi MiTV-MFTR0 "freeguy", China, Android 14: inputs, Xiaomi settings intents, app discovery).
+
 To add your TV, see [CONTRIBUTING.md](../CONTRIBUTING.md). The quickest way to get a list is to
 run the prompt in [PROMPT.md](../PROMPT.md) and copy the packages your assistant disabled.
