@@ -1,117 +1,88 @@
-# Clean Your TV
-
-**Your TV, minus the ads.** Website: [cleanyour.tv](https://cleanyour.tv). This repo was called tv-vibehack until 19 October 2026; old links still work.
-
-Strip the bloatware from any Android TV or Google TV over Wi-Fi, and replace the ad-filled home
-screen with a clean launcher that looks like an Apple TV.
-
-**No root, no cable, nothing uninstalled, and a one-line restore if you change your mind.**
-
-![Before: stock Google TV home with a sponsored ad. After: the cleanyourtv launcher](docs/stock-vs-new-side.jpg)
-
-It started as an afternoon fixing my parents' Mi TV, which showed them an advert before they
-could reach Netflix. The whole thing was done with Claude Code talking to the real TV, and the
-prompt that did it is in this repo so you can do the same with yours. The replies to the
-[tweet below](https://x.com/gathint/status/2111379569030939102) are where most of the TV lists in
-this repo came from.
-
 <p align="center">
-  <a href="https://x.com/gathint/status/2111379569030939102"><img src="docs/tweet.png" alt="The tweet: Vibe coded my parents' TV this afternoon. Before and after screenshots." width="380"></a>
+  <a href="https://cleanyour.tv"><img src="docs/banner.png" alt="Clean Your TV. Your TV, minus the ads." width="800"></a>
 </p>
 
----
+<p align="center">
+  <a href="https://cleanyour.tv">cleanyour.tv</a> ·
+  <a href="PROMPT.md">The prompt</a> ·
+  <a href="examples/">30 TV lists</a> ·
+  <a href="SHOWCASE.md">Made with it</a> ·
+  <a href="https://x.com/gathint/status/2111379569030939102">The tweet</a>
+</p>
 
-## Table of contents
+<p align="center">
+  <a href="https://github.com/Gathin23/cleanyourtv/stargazers"><img src="https://img.shields.io/github/stars/Gathin23/cleanyourtv?style=flat&color=cfffcf&labelColor=15181e" alt="Stars"></a>
+  <a href="https://github.com/Gathin23/cleanyourtv/pulls?q=is%3Amerged"><img src="https://img.shields.io/github/issues-pr-closed/Gathin23/cleanyourtv?style=flat&label=merged%20PRs&color=cfffcf&labelColor=15181e" alt="Merged PRs"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/licence-MIT-cfffcf?style=flat&labelColor=15181e" alt="MIT"></a>
+</p>
 
-- [How it works](#how-it-works)
-- [Quick start](#quick-start)
-- [What you get](#what-you-get)
-- [Supported TVs](#supported-tvs)
-- [Doing it by hand](#doing-it-by-hand)
-- [The launcher](#the-launcher)
-- [Restoring your TV](#restoring-your-tv)
-- [Troubleshooting](#troubleshooting)
-- [Questions people ask](#questions-people-ask)
-- [Contributing](#contributing)
-- [Made with cleanyourtv](SHOWCASE.md)
-- [Licence](#licence)
+Strip the bloatware from any Android TV or Google TV over Wi-Fi, and replace the ad-filled home
+screen with a clean launcher that looks like an Apple TV. **No root, no cable, nothing uninstalled,
+and a one-line restore if you change your mind.**
 
----
+![Before: stock Google TV home with a sponsored ad. After: the Clean Your TV launcher](docs/stock-vs-new-side.jpg)
+
+> Vibe coded my parents' TV this afternoon! It was showing a sponsored ad before you could even get
+> to Netflix. Gave Claude Code the model number, it found the TV on wifi, removed 25 Xiaomi packages
+> and wrote a new launcher. Looks like an Apple TV now lol.
+>
+> [@gathint, 17 October 2026](https://x.com/gathint/status/2111379569030939102). The replies are where
+> most of the TV lists here came from. The repo was called tv-vibehack until the 19th; old links work.
 
 ## How it works
 
-Android TVs have the same debug bridge as Android phones. Once you switch on USB debugging in the
-TV's developer options, the TV listens on your Wi-Fi and asks you once to allow your computer.
-After that, everything is standard Android tooling:
+Android TVs have the same debug bridge as Android phones. Switch on USB debugging in the TV's
+developer options, allow your computer once, and the rest is standard Android tooling:
 
 1. **Back up** the list of installed packages and settings.
 2. **Disable** the manufacturer's telemetry, ad services, content rows and preloaded junk with
    `pm disable-user`. Nothing is uninstalled, so a restore script can undo every step.
 3. **Install** a small native launcher and make it the default home screen.
 
-The bloat differs by brand, which is why the prompt asks your coding assistant to discover it
-on your TV and ask you before touching anything you might use.
+The bloat differs by brand, so the prompt has your coding assistant discover it on your TV and ask
+before touching anything you might use.
 
 ## Quick start
 
 You need a computer on the same Wi-Fi as the TV and a coding assistant with shell access
-(Claude Code, or anything similar).
+(Claude Code or similar).
 
-**1. On the TV**
-Settings → Device Preferences → About → press OK on **Build** seven times → go back →
-Developer options → turn on **USB debugging**. Some TVs also show a Network or ADB debugging
-toggle; turn it on too. Keep the TV switched on.
+| | |
+|---|---|
+| **1. On the TV** | Settings → Device Preferences → About → press OK on **Build** seven times → back → Developer options → **USB debugging** on. If you see a Network or ADB debugging toggle, turn that on too. Keep the TV on. |
+| **2. On your computer** | Paste [`PROMPT.md`](PROMPT.md) into your assistant and fill in your TV model. |
+| **3. Follow along** | Accept "Allow USB debugging?" on the TV, then answer the checklist: which apps you use, which four go in the dock, whether to keep the voice assistant, Chromecast and updates. |
 
-**2. On your computer**
-Open your assistant, paste the prompt from [`PROMPT.md`](PROMPT.md), and fill in your TV model.
-
-**3. Follow along**
-Accept the "Allow USB debugging?" prompt when it appears on the TV, then answer the checklist
-questions: which streaming apps you use, which four go in the dock, whether to keep the voice
-assistant, Chromecast and firmware updates.
-
-That's it. The assistant backs up, debloats, builds and installs the launcher, and checks every
-step with screenshots pulled from the TV. On a 1 GB Mi TV the whole thing took one afternoon the
-first time; with this repo as context, people report about fifteen minutes.
+The assistant backs up, debloats, builds and installs the launcher, and checks each step with
+screenshots pulled from the TV. With this repo as context it takes about fifteen minutes.
 
 ## What you get
 
-A home screen that is yours again:
-
-- **Pitch-black background** and a dock of your four favourite apps at the bottom, in a lighter
-  rounded band, exactly where Apple TV puts it.
-- **A top shelf** showing the focused app's name in large type, with an ambient glow in a colour
-  taken from the app's own artwork.
+- **A pitch-black home** with a dock of your four favourite apps in a rounded band, where Apple TV puts it.
+- **A top shelf** naming the focused app in large type, with an ambient glow in a colour taken from its artwork.
 - **The rest of your apps in a grid** that slides up when you press Down.
-- **One floating glass highlight** that springs from tile to tile instead of each tile drawing its
-  own border. The focused tile lifts slightly and shows its name.
-- **Three frosted buttons**: Inputs (a dropdown of HDMI ports, AV and Live TV), Wi-Fi (showing the
-  network you're on, or Ethernet with its own icon when wired) and Settings.
-- **A greeting, a large thin clock and the date**, set in
-  [Outfit](https://fonts.google.com/specimen/Outfit).
-- **A matching Clock screensaver**, optional, that drifts around the screen so nothing burns in.
-- **The remote's Input button can keep working.** On Google TV the stock launcher handled it; an
-  optional accessibility service maps it (`KEYCODE_TV`) to the system input switcher in any app.
-  Install with `INPUT_KEY_SERVICE=1` to turn it on.
+- **One floating glass highlight** that springs from tile to tile. The focused tile lifts and shows its name.
+- **Three frosted buttons**: Inputs (HDMI ports, AV, Live TV), Wi-Fi or Ethernet with the network name, Settings.
+- **A greeting, a thin clock and the date** in [Outfit](https://fonts.google.com/specimen/Outfit), and a matching Clock screensaver.
+- **Themes** that change colours, wallpaper, dock and columns without a rebuild, and **module cards** that let other apps plug a tile in, only with your say-so.
 
 And a TV that stops working against you: no sponsored rows, no "Discover" nags, no analytics
 phoning home, no apps you never asked for.
 
 ## Supported TVs
 
-Anything running **Android TV** or **Google TV**: Xiaomi and Redmi, TCL, Hisense, Sony, OnePlus,
-Realme, Nvidia Shield and most others.
+Anything running **Android TV** or **Google TV**. Samsung (Tizen) and LG (webOS) run different
+systems; see [SHOWCASE.md](SHOWCASE.md) for a webOS port. **Fire TV** takes the debloat half only,
+since Fire OS will not hand Home to a third-party launcher. A few China-market TCL sets refuse to
+install any launcher at all; their lists say so in the header.
 
-Not supported: Samsung (Tizen) and LG (webOS), which run different systems. Amazon Fire TV
-(Fire OS) takes the debloat half only: Fire OS won't let a third-party launcher take over Home,
-so the Fire TV lists below are about removing Amazon's ads and telemetry, not the home screen.
+Tested lists from contributors, one folder per model in [`examples/`](examples/):
 
-Some China-market TCL firmware is stricter still: Android TV 9 sets (ak30a5 at least) refuse to
-install any APK that declares `android.intent.category.HOME` unless it is signed with TCL's own
-key, so there the debloat half works and the launcher half is impossible. Its
-[example list](examples/tcl-ak30a5/debloat.txt) says so in the header.
+**Xiaomi** 8 · **TCL** 7 · **Sony** 2 · BenQ · CHiQ · Chromecast with Google TV · Hisense · Insignia Fire TV ·
+NVIDIA Shield · OnePlus · Philips · RCA · SANYO · Toshiba Fire TV · Stellamore and XGIMI projectors
 
-Lists that people have tested and contributed live in [`examples/`](examples/):
+<details>
+<summary><strong>The full list</strong></summary>
 
 | TV | OS |
 |---|---|
@@ -146,9 +117,10 @@ Lists that people have tested and contributed live in [`examples/`](examples/):
 | Xiaomi MiTV-MSSP3 (machuca, MediaTek) | Android TV 11 |
 | Xiaomi TV A Pro 75" 2026 (MiTV-MZTU0, river, MediaTek) | Google TV 14 |
 
-Your TV not here? The prompt works regardless, it discovers the bloat itself. If you add your
-list afterwards, the next person with your model skips that step. See
-[Contributing](#contributing).
+</details>
+
+Your TV not here? The prompt discovers the bloat itself. Add your list afterwards and the next
+person with your model skips that step: [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## Doing it by hand
 
@@ -159,270 +131,102 @@ python3 -m venv tools/venv && tools/venv/bin/pip install -r tools/requirements.t
 export TV_HOST=192.168.1.50                                   # your TV's IP address
 
 tools/venv/bin/python -I tools/tv.py --probe                 # model, Android version, firmware
-tools/venv/bin/python -I tools/tv.py 'pm list packages'      # run one shell command on the TV
-printf 'cmd1\ncmd2\n' | tools/venv/bin/python -I tools/tv.py --batch   # several, one connection
-
+tools/venv/bin/python -I tools/tv.py 'pm list packages'      # one shell command on the TV
 tools/disable.sh examples/xiaomi-mi-tv-4a/debloat.txt        # apply a debloat list
-tools/restore.sh examples/xiaomi-mi-tv-4a/debloat.txt        # undo it and restore the stock launcher
+tools/restore.sh examples/xiaomi-mi-tv-4a/debloat.txt        # undo it, stock launcher back
+TV_HOST=192.168.1.50 launcher/build-and-install.sh           # build the launcher and make it Home
+tools/theme.sh themes/aurora                                 # push a theme; --reset removes it
 ```
 
 | Tool | What it does |
 |---|---|
-| [`tools/tv.py`](tools/tv.py) | A pure-Python ADB client: shell, batch, push, pull. Works where the stock `adb` binary is blocked. |
-| [`tools/b64push.py`](tools/b64push.py) | Uploads larger files such as APKs as base64 chunks and verifies the checksum. |
-| [`tools/disable.sh`](tools/disable.sh) / [`tools/restore.sh`](tools/restore.sh) | Apply or undo a debloat list. PowerShell versions sit next to them. |
-| [`tools/theme.sh`](tools/theme.sh) | Push a theme folder from [`themes/`](themes/) to the launcher and restart Home; `--reset` removes it. PowerShell version next to it. |
+| [`tools/tv.py`](tools/tv.py) | Pure-Python ADB client: shell, batch, push, pull. Works where the stock `adb` binary is blocked. |
+| [`tools/b64push.py`](tools/b64push.py) | Uploads large files such as APKs in base64 chunks and verifies the checksum. |
+| [`tools/disable.sh`](tools/disable.sh), [`restore.sh`](tools/restore.sh) | Apply or undo a debloat list. |
+| [`tools/theme.sh`](tools/theme.sh) | Push a folder from [`themes/`](themes/) to the launcher and restart Home. |
+| [`launcher/build-and-install.sh`](launcher/build-and-install.sh) | Builds a shrunk release (about 250 KB), installs it, switches Home, and rolls back if Home does not land on it. |
 
-### Windows
-
-The PowerShell scripts work without WSL or Git Bash. With Android Studio installed nothing else
-is needed: the install script uses Android Studio's bundled JDK and the default SDK location.
+Every script has a PowerShell twin next to it. On Windows with Android Studio installed nothing
+else is needed:
 
 ```powershell
 python -m venv tools\venv; tools\venv\Scripts\python.exe -m pip install -r tools\requirements.txt
 powershell -ExecutionPolicy Bypass -File launcher\build-and-install.ps1 -TvHost 192.168.1.50
 powershell -ExecutionPolicy Bypass -File tools\disable.ps1 -TvHost 192.168.1.50 examples\xiaomi-mi-tv-4a\debloat.txt
-powershell -ExecutionPolicy Bypass -File tools\restore.ps1 -TvHost 192.168.1.50 examples\xiaomi-mi-tv-4a\debloat.txt
 ```
 
-Both install scripts ask the TV which launcher owns Home and only disable one they recognise
-(Google's `tvlauncher` or `launcherx`); pass `STOCK_LAUNCHER=<package>` (or `-StockLauncher`) to
-override, or `none` to leave it alone. After the switch they check where Home actually resolves and
-put the stock launcher back if it is not the new one. Git Bash also works; the `.sh` scripts detect a
-Windows venv and disable MSYS path rewriting themselves.
+The install scripts ask the TV which launcher owns Home and only disable one they recognise
+(`tvlauncher` or `launcherx`); pass `STOCK_LAUNCHER=<package>` (`-StockLauncher`) to override, or
+`none` to leave it alone.
 
 ## The launcher
 
-A small native Android TV app (`com.gathin.tvhome`, about 250 KB installed), written in plain Java with
-AndroidX RecyclerView and nothing heavier. It is built for sets with 1 GB of RAM: no blur, no
-video, no network, no background services.
+A small native Android TV app (`com.gathin.tvhome`, about 250 KB installed) in plain Java with
+AndroidX RecyclerView and nothing heavier. Built for sets with 1 GB of RAM: no blur, no video, no
+network, no background services. It needs JDK 17 and Android SDK platform 34 to build; on macOS,
+`brew install openjdk@17 android-commandlinetools` and `sdkmanager "platforms;android-34" "build-tools;34.0.0"`.
 
-**Configure** it in [`launcher/app/src/main/res/values/config.xml`](launcher/app/src/main/res/values/config.xml):
-the dock order, apps to hide, your TV's Live TV package, the number of columns (tiles shrink to fit
-from 5 columns up), and how many grid rows stay visible under the dock (`rows_below_dock`). The Inputs button hides itself on sticks and
-boxes that have no HDMI or tuner.
-
-**Themes** change the same settings, plus a background colour and a wallpaper, without a rebuild:
-a folder with a `config.json` (and optionally a `wallpaper.jpg`) pushed to the TV with
-`tools/theme.sh themes/<name>`, which the launcher reads as an overlay over `config.xml`. Three ship
-in [`themes/`](themes/), and the keys are documented there. `tools/theme.sh --reset` goes back.
-
-**Language** follows the TV: English, German, Spanish, Catalan, French, Russian, Simplified Chinese and Thai so far. If your
-TV doesn't offer yours system-wide, Android 13 and later can set it for the launcher alone, e.g. Catalan:
-`tools/tv.py 'cmd locale set-app-locales com.gathin.tvhome --locales ca'`.
-
-**Build and install** with one command:
-
-```bash
-TV_HOST=192.168.1.50 launcher/build-and-install.sh
-```
-
-It needs JDK 17 and the Android SDK (platform 34, build-tools 34.0.0). On macOS:
-
-```bash
-brew install openjdk@17 android-commandlinetools
-sdkmanager "platforms;android-34" "build-tools;34.0.0"
-# newer command-line tools (sdkmanager forwards to the "android" CLI) take this form instead:
-# android sdk install platforms/android-34 build-tools/34.0.0
-```
-
-Without Homebrew, the script also finds a JDK 17 known to `/usr/libexec/java_home` and an SDK in
-`~/Library/Android/sdk`, Android Studio's default. The script installs a shrunk release build
-(about 250 KB instead of 1.6 MB, signed with the debug key so it installs over an older build)
-and asks the TV to precompile it, so the first launch doesn't wait for the JIT.
-
-**Navigation** is deliberate: Up and Down move exactly one row, Up from the dock goes to the top
-buttons, the ends of the button row don't fall through to tiles, and the last focused app is
-remembered when you come back, even after the app list changes.
-Installing, updating, removing, enabling or disabling a TV app refreshes its tiles while Home is
-open. Focus follows the same app, or the nearest remaining tile if it was removed; when no apps
-remain, the network button receives focus. Package changes leave top-button focus alone, and
-changes made while another app is open are picked up when returning Home.
-
-<details>
-<summary><strong>Optional: the Clock screensaver</strong></summary>
-
-A large thin clock and the date over an ambient glow, in the launcher's style. Every minute the
-clock drifts to a new spot and the glow shifts colour. The system runs it only while the TV is
-idle. Turn it on over ADB, or pick "Clock" in the TV's screensaver settings:
-
-```bash
-tools/venv/bin/python -I tools/tv.py 'settings put secure screensaver_components com.gathin.tvhome/.ClockDream; settings put secure screensaver_enabled 1'
-```
-
-It starts after the TV's "screen off" idle time (`settings get system screen_off_timeout`).
-</details>
-
-### Modules
-
-Any Android TV app can declare a **module card** for this launcher: its tile with a label of its
-choice, an optional caption and a glow colour, placed ahead of the alphabetical grid.
-Nothing changes until you say so. When a module is installed the launcher asks once, naming the
-app, its package and its signing key, with **Keep hidden** selected by default; Back keeps it hidden
-too. Keeping it hidden leaves the app's ordinary tile exactly as before. The answer is remembered for
-that app's signing key and that card name, so an update signed with a different key, or one that
-renames its card, asks again.
-
-To change your mind, **hold OK on the Settings pill**: the Module cards list shows every installed
-card with its package and key, and OK toggles Shown and Hidden. At most eight cards are drawn, in
-label order; any further card you set to Shown is listed as over the limit and keeps its ordinary
-tile. Set `module_cards` to `false` in `config.xml` or a theme's `config.json` to turn the whole thing off.
-
-A card is only a different look for a tile. The launcher never installs or downloads anything,
-never loads code from a module, and launches a card exactly as it launches any app.
-
-To make one: [`docs/modules.md`](docs/modules.md). The contract: [`docs/specs/card.md`](docs/specs/card.md).
-
-### Changing the default home from the TV
-
-Optional: set `show_home_settings_shortcut` to `true` in `config.xml` and a **Default home** tile
-appears at the end of the grid, opening Android's own home-screen picker so you can switch
-launchers from the sofa. Most Android TV firmware has no such page, and then the tile stays
-hidden. The stock launcher has to be enabled before it can be picked, see the restore instructions.
+- **Configure** in [`config.xml`](launcher/app/src/main/res/values/config.xml): dock order, hidden apps, the Live TV package, columns (tiles shrink from 5 up), rows under the dock, an optional VPN app for the network pill.
+- **Themes** set the same keys plus a background colour and a wallpaper from a `config.json` pushed to the TV, no rebuild. Three ship in [`themes/`](themes/), documented there.
+- **Language** follows the TV: English, German, Spanish, Catalan, French, Russian, Simplified Chinese, Thai. Android 13+ can set it for the launcher alone: `tools/tv.py 'cmd locale set-app-locales com.gathin.tvhome --locales ca'`.
+- **Module cards** let any TV app declare its own tile (label, caption, glow). The launcher asks you once per app, Keep hidden by default, and remembers the answer for that app's signing key and card name. Hold OK on Settings to change your mind. How to make one: [`docs/modules.md`](docs/modules.md); the contract: [`docs/specs/card.md`](docs/specs/card.md).
+- **Clock screensaver**: a drifting clock over the glow, so nothing burns in. Pick "Clock" in the TV's screensaver settings, or over ADB:
+  `tools/tv.py 'settings put secure screensaver_components com.gathin.tvhome/.ClockDream; settings put secure screensaver_enabled 1'`
+- **Remote keys**: an optional accessibility service keeps the remote's Input button working on Google TV (`INPUT_KEY_SERVICE=1` at install), another fixes sticks whose Home key sends ALL_APPS (`HOME_KEY_SERVICE=1`).
+- **Navigation** is deliberate: Up and Down move one row, the top buttons never fall through to tiles, the last focused app is remembered, and installing or removing an app refreshes the tiles while Home is open.
 
 ## Restoring your TV
 
-Keep the list you applied: the restore script re-enables exactly those packages, then re-enables and
-re-selects the stock launcher, and resets the three animation scales.
+Keep the list you applied. The restore script re-enables exactly those packages, puts the stock
+launcher back as Home and resets the animation scales:
 
 ```bash
-TV_HOST=192.168.1.50 tools/restore.sh examples/<your tv>/debloat.txt                 # Android TV
-TV_HOST=192.168.1.50 tools/restore.sh examples/<your tv>/debloat.txt com.google.android.apps.tv.launcherx   # Google TV
+TV_HOST=192.168.1.50 tools/restore.sh examples/<your tv>/debloat.txt                                    # Android TV
+TV_HOST=192.168.1.50 tools/restore.sh examples/<your tv>/debloat.txt com.google.android.apps.tv.launcherx  # Google TV
 ```
 
-The second argument is the stock launcher package; it defaults to Google's `tvlauncher`, so pass
-`launcherx` on Google TV (on Windows: `-Stock`). What restore does not do: it leaves the new launcher
-installed (uninstall it from the TV's settings if you want it gone), it does not know about packages
-you disabled outside the list, and it does not undo the optional accessibility services or a changed
-screensaver. Those are one `settings` command each, see Troubleshooting. If the TV is unreachable,
-the TV's own Settings → Apps page can re-enable apps too.
+It leaves the new launcher installed (remove it from the TV's Settings → Apps if you want it gone)
+and does not know about packages you disabled outside the list. If the TV is unreachable, its own
+Settings → Apps page can re-enable packages too.
 
-## Troubleshooting
+## When something goes wrong
 
-Things that bit us or contributors, so they don't bite you.
+The full list of things that bit us is in [docs/TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md). The
+three that matter most:
 
-**Connecting**
-
-- **macOS: `adb connect` says "No route to host"** although the port is open. Recent macOS treats
-  the Google-signed `adb` as its own app under Local Network privacy and silently blocks it.
-  `tools/tv.py` avoids the binary entirely.
-- **No "wireless debugging" toggle** on some TVs, Xiaomi among them. USB debugging alone opens
-  network ADB on port 5555.
-- **USB debugging never opens port 5555** on some Google TV sets (a Skyworth-built Philips among
-  them). Pair once through Wireless debugging with the stock `adb` (`adb pair <ip>:<port> <code>`,
-  then `adb connect`), run `adb tcpip 5555`, and `tools/tv.py` works from then on.
-- **USB devices go dead while USB debugging is on**, seen on the Xiaomi Mi Box S: its firmware
-  switches the USB port to ADB device mode, which cuts the power to a USB speaker or drive. Switch
-  USB debugging off when you're done; the launcher doesn't need it.
-- **Windows PowerShell 5.1 adds a byte-order mark** to text piped into a program, which turned the
-  first batch command into gibberish. `tv.py` now strips it, and the `.ps1` scripts pipe clean UTF-8.
-- **"Allow USB debugging?" comes back** although `adb devices` already works: `tv.py` used its own
-  key next to the one platform-tools had registered. It now reuses `~/.android/adbkey` when that
-  exists. Every attempt with an unaccepted key queues one more prompt on the TV, so dismiss them all
-  (Back) before testing with key presses.
-- **Git Bash rewrites paths** like `/data/local/tmp` into Windows paths. The scripts set
-  `MSYS_NO_PATHCONV=1` for you. Set `JAVA_HOME` and `ANDROID_HOME` before building there.
-
-**Working on the TV**
-
-- **Chained `pm` commands** (`pm disable a; pm disable b`) may silently stop after the first. Run
-  one per shell call; `--batch` does exactly that.
-- **Large pushes hang** through the Python client. Use `tools/b64push.py` for APKs.
-- **`adb exec-out screencap -p` gives a broken PNG** on some MediaTek Xiaomi sets: the binary prints
-  `Init wrapper sys mutex successful` on stdout first. Save on the TV and pull the file instead:
-  `screencap -p /data/local/tmp/s.png`.
-- **Play Protect blocked the launcher** ("unsafe app blocked, built for an older version of Android")
-  and `pm install` hung, then failed with `INSTALL_FAILED_VERIFICATION_FAILURE`, while it targeted
-  SDK 29. It targets 34 now; if you built an old checkout, rebuild.
-- **Screenshots come out empty** while Live TV, an HDMI input or Netflix is on screen, seen on TCL
-  and a [Sony KDL-49W800G](https://github.com/Gathin23/cleanyourtv/issues/92). Press Home before
-  `screencap`. An empty capture means nothing about the ADB connection or playback; check those
-  separately.
-- **Disable the stock launcher only after the new one is installed**, or the Home button lands on
-  a factory test app. Launch the replacement by hand first. `set-home-activity` can report
-  `Success` while HOME still resolves to the stock launcher (priority 2) until that one is disabled.
-  And check which packages actually handle HOME before disabling anything by name: on the Sony
-  above, `com.google.android.leanbacklauncher` has a boot receiver but no HOME activity.
-- **The new launcher still doesn't own Home** after the stock one is disabled, seen on Google TV
-  (Xiaomi MiTV-MOOR2). Another system app answers HOME: `com.google.android.tungsten.setupwraith`,
-  with `.MainActivity` at intent-filter priority 4 and `.RecoveryActivity` at priority 1. You
-  cannot outrank it, and the obvious workarounds don't help: Android ignores `android:priority` on
-  HOME filters for apps that aren't on the system image, `cmd package set-home-activity` prints
-  `Success` without changing anything (not even after a reboot), and `pm disable-user` on one of
-  setupwraith's components is refused with a SecurityException. Disabling the whole
-  `com.google.android.tungsten.setupwraith` package is what frees the slot. It is the first-run
-  setup wizard, so everyday use is unaffected, but re-enable it before a factory reset - list it in
-  your `debloat.txt` and `tools/restore.sh` does that for you.
-- **The TV drops off Wi-Fi every minute right after the install**, seen on Google TV 14 (Xiaomi
-  MiTV-MZTU0): the same setupwraith `.RecoveryActivity` took Home and system_server crash-looped
-  on it. The install script now starts the new launcher before disabling the stock one, sets the
-  home preference last (Android drops it whenever the set of HOME apps changes), then checks where
-  Home resolves and re-enables the stock launcher if it is not the new one. Disable setupwraith as
-  above. To confirm it is this bug: `logcat -b crash` shows `FATAL EXCEPTION IN SYSTEM PROCESS:
-  android.display`, and the main log shows `setupwraith/.RecoveryActivity` being started every
-  200 ms or so. If you're already in the loop:
-  `tools/tv.py 'pm enable --user 0 com.google.android.apps.tv.launcherx'`.
-- **No on-screen keyboard** after switching launchers, seen on Xiaomi: the default input method
-  pointed at a Baidu keyboard that isn't installed. Fix:
-  `tools/tv.py 'ime set com.google.android.inputmethod.latin/com.android.inputmethod.latin.LatinIME'`
-- **Third-party launchers** often charge for basics like a custom wallpaper. That's why this repo
-  has its own.
-- **Wrong time zone, clock off by 30 or 60 minutes**, seen on Xiaomi in Iran: the TV picked a
-  neighbouring zone, and older firmware ships time zone data from before Iran dropped daylight
-  saving in 2022 (on Android 10 and newer, check with
-  `tools/tv.py 'cat /apex/com.android.tzdata/etc/tz/tz_version'`). Set the zone yourself:
-  `tools/tv.py 'settings put global auto_time_zone 0; cmd alarm set-timezone Asia/Tehran'`.
-  If the clock then jumps an hour ahead in spring, a fixed offset keeps it right:
-  `tools/tv.py 'cmd alarm set-timezone GMT+03:30'`. The same applies to any country whose rules
-  changed after the firmware was built.
+- **macOS blocks `adb connect`** ("No route to host") under Local Network privacy. `tools/tv.py` avoids the binary.
+- **Disable the stock launcher only after the new one is installed and running**, or Home lands on a factory test app. The install script orders this for you.
+- **On Google TV the setup wizard** (`com.google.android.tungsten.setupwraith`) can take Home and crash-loop the system after the stock launcher is disabled. Disable it too, and list it in your `debloat.txt` so restore brings it back. Stuck already? `tools/tv.py 'pm enable --user 0 com.google.android.apps.tv.launcherx'`.
 
 ## Questions people ask
 
-**Is this safe? Can it brick the TV?**
-Nothing is flashed, rooted or deleted, so the firmware itself is never at risk: packages are
-disabled for the user profile, which lives in the data partition. What can go wrong is disabling
-something the TV leans on. One Hisense booted to Android Recovery until "Try again" was pressed,
-and on Google TV disabling the stock launcher without the setup wizard sent Home into a crash
-loop (both are in Troubleshooting, with the way out). So: apply a list in small batches, keep
-the backup folder the assistant makes, and have `tools/restore.sh` ready. Even without the tools,
-the TV's own Settings → Apps page can re-enable packages, and a factory reset is the last resort,
-not the first.
+**Is this safe? Can it brick the TV?** Nothing is flashed, rooted or deleted; packages are disabled
+in the user profile. The risk is disabling something the TV leans on, which is why lists are
+applied in small batches with a restore script ready. The TV's own Settings → Apps page can
+re-enable packages even without the tools.
 
-**What about firmware updates?**
-Most lists disable the manufacturer's update service, so updates only arrive when you re-enable
-it on purpose. If an update does land, the worst case is that a package comes back enabled and
-you re-run the script.
+**What about firmware updates?** Most lists disable the update service, so updates arrive only when
+you re-enable it. If one lands, the worst case is a package coming back and you re-run the script.
 
-**Won't the apps break as their APIs change?**
-The streaming apps still update through the Play Store, which is left alone. The launcher
-doesn't talk to them; it lists what's installed and launches it, using Android launcher intents
-that have been stable for over a decade.
+**Won't the apps break?** Streaming apps still update through the Play Store, which is left alone.
+The launcher just lists what is installed and launches it with intents that have been stable for a decade.
 
-**How did it get access? Isn't that a security hole?**
-Through the Android Debug Bridge, with one explicit "allow this computer" tap on the TV, the same
-as developing an Android app. The TV only trusts the key you approved. You can switch USB
-debugging off again afterwards and the launcher keeps working.
+**Isn't ADB access a security hole?** It is one explicit "allow this computer" tap on the TV, the
+same as developing an Android app. Switch USB debugging off afterwards; the launcher keeps working.
 
-**Can the TV receive AirPlay?**
-Not with anything in this repo. Chromecast built-in covers Android phones and most TVs keep it. For
-iPhones, [jqssun/android-airplay-server](https://github.com/jqssun/android-airplay-server) (GPL-3, built
-on UxPlay) is an ad-free receiver that runs as a background service; nguyenduchoai's install script
-for it is in [PR #84](https://github.com/Gathin23/cleanyourtv/pull/84) if you want to try it. DRM
-apps such as Netflix and Apple TV+ won't mirror.
+**AirPlay?** Not from this repo. Chromecast built-in stays for Android phones. For iPhones,
+[jqssun/android-airplay-server](https://github.com/jqssun/android-airplay-server) works; an install
+script for it is in [PR #84](https://github.com/Gathin23/cleanyourtv/pull/84).
 
-**Can I just download the launcher APK?**
-Build it yourself with the one-line script above; it takes about a minute and you control what
-goes on your TV. We don't publish prebuilt binaries.
+**Can I just download the APK?** Build it with the one-line script; it takes a minute and you
+control what goes on your TV. No prebuilt binaries.
 
 ## Contributing
 
-The most useful contribution is your TV's debloat list, so the next person with that model
-doesn't have to rediscover it. Launcher improvements and sharper prompt wording are welcome too.
-See [CONTRIBUTING.md](CONTRIBUTING.md) for the format and the testing we ask for.
-
-Built your own launcher or a port with the prompt? Add it to [SHOWCASE.md](SHOWCASE.md), the list of
-things people made on top of this repo: a Stremio shelf, a webOS port, a Fire TV fork, an Aurora
-screensaver and more.
+The most useful contribution is your TV's debloat list, so the next person with that model does
+not have to rediscover it. Launcher improvements and sharper prompt wording are welcome too.
+[CONTRIBUTING.md](CONTRIBUTING.md) has the format and the testing we ask for. Built something on
+top, a launcher, a port, a theme? Add it to [SHOWCASE.md](SHOWCASE.md).
 
 ## Licence
 
