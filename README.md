@@ -175,6 +175,7 @@ network, no background services. It needs JDK 17 and Android SDK platform 34 to 
   `tools/tv.py 'settings put secure screensaver_components com.gathin.tvhome/.ClockDream; settings put secure screensaver_enabled 1'`
 - **Remote keys**: an optional accessibility service keeps the remote's Input button working on Google TV (`INPUT_KEY_SERVICE=1` at install), another fixes sticks whose Home key sends ALL_APPS (`HOME_KEY_SERVICE=1`).
 - **Navigation** is deliberate: Up and Down move one row, the top buttons never fall through to tiles, the last focused app is remembered, and installing or removing an app refreshes the tiles while Home is open.
+- **Artwork** loads each app's banner at at least xhdpi (320 dpi), avoiding unnecessary downsampling on low-density TV interfaces before the focus zoom. Activity banners retain priority over application banners, vectors stay vectors, and resource failures use the normal package-manager fallback. No downloaded artwork, extra permission or display-resolution override.
 
 ## Restoring your TV
 
