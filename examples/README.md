@@ -7,6 +7,7 @@ on that firmware, grouped and commented. These are starting points: comment out 
 |---|---|---|---|
 | `benq-e55-735/` | BenQ E55-735 (Changhong AI PONT, DVB96BQ) | Google TV 14 | Homwee store/help, Anoki ACR, Google TV recommendations; wireless-debugging pairing, setupwraith, deep-standby notes |
 | `chiq-ai-pont/` | CHiQ AI PONT (DVB93CQ) | Android TV 11 | Anoki ACR, FAST channels, AI PONT, Homwee services |
+| `chiq-gtvu65/` | CHiQ AI PONT (Changhong GTVU65, dangni, MediaTek mt5867) | Google TV 14 | Google ad services and auto-installs, Homwee store/help; 1 GB; setupwraith must go (RecoveryActivity component cannot be disabled alone); MediaTek partnercustomizer safe to disable (reboot-checked) |
 | `google-chromecast-gtv-4k/` | Chromecast with Google TV 4K (sabrina) | Google TV 14 | Google telemetry and ad services, ambient mode, launcherx + setupwraith; wireless-debugging pairing, YouTube button remap |
 | `hisense-smarttv-4k-ffm/` | Hisense SmartTV 4K FFM (huangshan, MediaTek) | Android TV 10 | ACR (evservice), VIDAA preload, store/hotel mode, OTA; smartsense must stay enabled |
 | `insignia-ns55f301na25/` | Insignia 55" F30 4K Fire TV (NS-55F301NA25, AFTDCT31, duckie) | Fire OS 7 / Android 9 | Amazon ACR telemetry, Fire TV ads/shopping, Alexa, OTA updates; AirPlay and TIF HDMI inputs kept |
