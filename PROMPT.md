@@ -50,6 +50,12 @@ Debloat
   it and you cannot tell which.
 
 Launcher
+- Check that the TV accepts APKs before building anything. Some China-market sets answer every
+  sideload with `INSTALL_FAILED_VERIFICATION_FAILURE` — `adb install`, `pm install`, a hand-started
+  installer and even the manufacturer's own APKs all fail — and others refuse any package that
+  declares `android.intent.category.HOME` unless it carries the manufacturer's signature. If you
+  hit either, do the debloat half, say plainly that the launcher half is impossible here, and stop
+  retrying installs. The matching `examples/` header says which case your TV is.
 - Don't install a third-party launcher that charges for basics like wallpapers. Build a small native
   Android TV launcher instead (Java, AndroidX RecyclerView, minSdk matching the TV, debug build is fine),
   install it over ADB, set it as the default home and disable the stock launcher. If several apps claim
