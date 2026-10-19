@@ -15,6 +15,7 @@ on that firmware, grouped and commented. These are starting points: comment out 
 | `nvidia-shield-tv-pro-2019/` | NVIDIA SHIELD TV Pro 2019 (P2897, mdarcy) | Android TV 11 | NVIDIA telemetry, GameStream leftovers, sponsored rows, partner auto-installs |
 | `oneplus-tv-dubai/` | OnePlus TV (D00, Dubai) | Google TV 14 | HeyTap/OnePlus extras, OnePlus Connect, Smart Home |
 | `panasonic-4ktv-jup/` | Panasonic 4KTV-JUP (Jupiter_PA, MediaTek) | Android TV 11 | Google recommendation rows and screensaver, Panasonic demo/hotel/help apps, calendar/print/backup leftovers; streaming apps off by choice; keep `com.mediatek.*` |
+| `philips-50pus8517/` | Philips 50PUS8517/12 (TP Vision, PH1M_EA_9970A, MediaTek MT5895), Europe | Android TV 11 | First `org.droidtv` TP Vision list: DAC analytics uploader (AWS Firehose), Top Picks, Smart TV Collection; Assistant, DLNA, IP control off by choice; `disable-user` persists ~10 s late; Chromecast re-enables every boot |
 | `philips-smart-4k-google-tv/` | Philips Smart 4K TV (Skyworth, eleonas, MediaTek), India | Google TV 14 | Skyworth recommendations, after-sale/activation trackers, iCast; Chromecast, Assistant off by choice; wireless-debugging pairing, setupwraith |
 | `rca-ai-pont/` | RCA AI PONT SA (Changhong, redwood, ISDB92RC; also sold as realme 40-inch) | Android 14 | Homwee store and installers, Anoki ACR, FAST channels; 1 GB |
 | `sanyo-atv-r2/` | SANYO ATV R2 (SCBC, Realtek RTD285O) | Android TV 9 | S-Channels, E-SHOW demo, Vewd, TV Booster, SANYO OTA |
