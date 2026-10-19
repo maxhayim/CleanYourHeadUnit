@@ -13,9 +13,11 @@
 # - Netflix and Prime Video come back at every reboot even when disabled. The cause is
 #   com.mstar.netflixobserver: it is a PERSISTENT app with the system uid, so Android starts it at boot even
 #   when it is disabled, and it re-enables both (it even re-installed them after pm uninstall --user 0).
-#   Disabling it is not enough. What worked here (tested across a reboot), at your own judgement, since it
-#   goes beyond disabling:  pm uninstall --user 0 com.mstar.netflixobserver
-#   Undo:  cmd package install-existing com.mstar.netflixobserver   (the remote's Netflix button needs it)
+#   Disabling it is not enough. This list only disables it, like everything else in this repo.
+#   Beyond what this repo does, and your own call: removing it for user 0 worked here across a reboot
+#     pm uninstall --user 0 com.mstar.netflixobserver
+#   and is undone with
+#     cmd package install-existing com.mstar.netflixobserver   (the remote's Netflix button needs it)
 # - Device admin is not supported on this firmware (no android.software.device_admin).
 
 # Xiaomi + Google telemetry

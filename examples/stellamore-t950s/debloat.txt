@@ -24,7 +24,10 @@
 # --- Zeasn adware / vendor cloud ---
 zeasn.open.technical.tv.store.stellamore.tv      # "App Store" home tile - ships Google Ads (doubleclick)
 com.zeasn.deviceportal.asdprovider.xym_hisi351   # device portal/OTA (ASDMainService -> smarttv.zeasn.tv)
-com.zeasn.whale.saas                             # stock launcher - also ships Google Ads (doubleclick)
+# com.zeasn.whale.saas                           # stock launcher - also ships Google Ads (doubleclick).
+#                                                # Left to build-and-install.sh, which disables it only once
+#                                                # the new launcher is installed; uncomment if another
+#                                                # launcher already owns Home on your unit.
 
 # --- Stellamore factory / test / guide junk ---
 com.stm                                          # STMFeaturesTest
