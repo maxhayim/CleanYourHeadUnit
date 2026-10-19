@@ -1,13 +1,13 @@
-# tv-vibehack
+# cleanyourtv
 
-**Your TV, minus the ads.**
+**Your TV, minus the ads.** Website: [cleanyour.tv](https://cleanyour.tv). This repo was called tv-vibehack until 19 October 2026; old links still work.
 
 Strip the bloatware from any Android TV or Google TV over Wi-Fi, and replace the ad-filled home
 screen with a clean launcher that looks like an Apple TV.
 
 **No root, no cable, nothing uninstalled, and a one-line restore if you change your mind.**
 
-![Before: stock Google TV home with a sponsored ad. After: the tv-vibehack launcher](docs/stock-vs-new-side.jpg)
+![Before: stock Google TV home with a sponsored ad. After: the cleanyourtv launcher](docs/stock-vs-new-side.jpg)
 
 It started as an afternoon fixing my parents' Mi TV, which showed them an advert before they
 could reach Netflix. The whole thing was done with Claude Code talking to the real TV, and the
@@ -33,7 +33,7 @@ this repo came from.
 - [Troubleshooting](#troubleshooting)
 - [Questions people ask](#questions-people-ask)
 - [Contributing](#contributing)
-- [Made with tv-vibehack](SHOWCASE.md)
+- [Made with cleanyourtv](SHOWCASE.md)
 - [Licence](#licence)
 
 ---
@@ -364,7 +364,7 @@ debugging off again afterwards and the launcher keeps working.
 Not with anything in this repo. Chromecast built-in covers Android phones and most TVs keep it. For
 iPhones, [jqssun/android-airplay-server](https://github.com/jqssun/android-airplay-server) (GPL-3, built
 on UxPlay) is an ad-free receiver that runs as a background service; nguyenduchoai's install script
-for it is in [PR #84](https://github.com/Gathin23/tv-vibehack/pull/84) if you want to try it. DRM
+for it is in [PR #84](https://github.com/Gathin23/cleanyourtv/pull/84) if you want to try it. DRM
 apps such as Netflix and Apple TV+ won't mirror.
 
 **Can I just download the launcher APK?**

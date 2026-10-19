@@ -1,4 +1,4 @@
-# Made with tv-vibehack
+# Made with cleanyourtv
 
 Launchers, ports and add-ons people built on top of this repo, or with its prompt, that live in
 their own repositories. The launcher in `launcher/` stays small on purpose; this page is where the
