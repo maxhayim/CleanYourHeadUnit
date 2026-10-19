@@ -79,7 +79,7 @@ install any launcher at all; their lists say so in the header.
 
 Tested lists from contributors, one folder per model in [`examples/`](examples/):
 
-**TCL** 11 · **Xiaomi** 11 · **Sony** 7 · **CHiQ** 2 · **Hisense** 2 · **Philips** 2 · BenQ ·
+**Xiaomi** 12 · **TCL** 11 · **Sony** 7 · **CHiQ** 2 · **Hisense** 2 · **Philips** 2 · BenQ ·
 Chromecast with Google TV · Hitachi · Insignia Fire TV · NVIDIA Shield · OnePlus · Panasonic · RCA · Redmi ·
 SANYO · Skyworth · Thomson · Toshiba Fire TV · Vu · Stellamore and XGIMI projectors
 
