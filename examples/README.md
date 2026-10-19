@@ -5,6 +5,7 @@ on that firmware, grouped and commented. These are starting points: comment out 
 
 | Folder | TV | OS | Notes |
 |---|---|---|---|
+| `amazon-fire-tv-stick-4k-2018/` | Amazon Fire TV Stick 4K, 1st gen 2018 (AFTMM, mantis) | Fire OS 6.7.1.1 / Android 7.1 | First Fire OS 6 list: Amazon telemetry, ad/recommendation feeders, Live tab and Fire TV Channels, Shopping, Kids, Music/Photos/Silk, whole-home audio, Alexa extras; unused streaming apps off by choice; ten protected packages noted; voice search, OTA, casting kept; debloat only, sponsored rows need DNS blocking |
 | `benq-e55-735/` | BenQ E55-735 (Changhong AI PONT, DVB96BQ) | Google TV 14 | Homwee store/help, Anoki ACR, Google TV recommendations; wireless-debugging pairing, setupwraith, deep-standby notes |
 | `chiq-gtvu65/` | CHiQ AI PONT (Changhong GTVU65, dangni, MediaTek mt5867) | Google TV 14 | Google ad services and auto-installs, Homwee store/help; 1 GB; setupwraith must go (RecoveryActivity component cannot be disabled alone); MediaTek partnercustomizer safe to disable (reboot-checked) |
 | `chiq-ai-pont/` | CHiQ AI PONT (DVB93CQ) | Android TV 11 | Anoki ACR, FAST channels, AI PONT, Homwee services |
