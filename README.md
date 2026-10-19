@@ -79,7 +79,7 @@ install any launcher at all; their lists say so in the header.
 
 Tested lists from contributors, one folder per model in [`examples/`](examples/):
 
-**Xiaomi** 8 · **TCL** 7 · **Sony** 2 · BenQ · CHiQ · Chromecast with Google TV · Hisense · Insignia Fire TV ·
+**Xiaomi** 8 · **TCL** 8 · **Sony** 2 · BenQ · CHiQ · Chromecast with Google TV · Hisense · Insignia Fire TV ·
 NVIDIA Shield · OnePlus · Philips · RCA · SANYO · Toshiba Fire TV · Stellamore and XGIMI projectors
 
 <details>
@@ -106,6 +106,7 @@ NVIDIA Shield · OnePlus · Philips · RCA · SANYO · Toshiba Fire TV · Stella
 | TCL ak30a5 (China, Amlogic) | Android TV 9 |
 | TCL BeyondTV (India) | Android TV 9 |
 | TCL QM6K Pro, 2025 (G08, MediaTek tcl9618) | Google TV 14 |
+| TCL 40S5400A (C06_2K_GB, MediaTek MT9221) | Android TV 11 |
 | TCL Smart TV Pro (G05, G05_4K_US, MediaTek MT5889) | Google TV 11 |
 | Toshiba Fire TV (AFTHA004, hazel) | Fire OS 7 / Android 9 |
 | XGIMI Horizon S Pro projector (XK03H, xgimigalileo, MediaTek) | Android TV 11 |
