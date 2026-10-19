@@ -6,7 +6,7 @@
   <a href="https://cleanyour.tv">cleanyour.tv</a> ·
   <a href="PROMPT.md">The prompt</a> ·
   <a href="examples/">54 TV lists</a> ·
-  <a href="SHOWCASE.md">11 built on it</a> ·
+  <a href="SHOWCASE.md">12 built on it</a> ·
   <a href="https://x.com/gathint/status/2111379569030939102">The tweet</a>
 </p>
 
