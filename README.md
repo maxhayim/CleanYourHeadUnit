@@ -5,16 +5,22 @@
 <p align="center">
   <a href="https://cleanyour.tv">cleanyour.tv</a> ·
   <a href="PROMPT.md">The prompt</a> ·
-  <a href="examples/">31 TV lists</a> ·
-  <a href="SHOWCASE.md">Made with it</a> ·
+  <a href="examples/">52 TV lists</a> ·
+  <a href="SHOWCASE.md">11 built on it</a> ·
   <a href="https://x.com/gathint/status/2111379569030939102">The tweet</a>
 </p>
 
 <p align="center">
   <a href="https://github.com/Gathin23/cleanyourtv/stargazers"><img src="https://img.shields.io/github/stars/Gathin23/cleanyourtv?style=flat&color=cfffcf&labelColor=15181e" alt="Stars"></a>
   <a href="https://github.com/Gathin23/cleanyourtv/pulls?q=is%3Amerged"><img src="https://img.shields.io/github/issues-pr-closed/Gathin23/cleanyourtv?style=flat&label=merged%20PRs&color=cfffcf&labelColor=15181e" alt="Merged PRs"></a>
+  <a href="https://github.com/Gathin23/cleanyourtv/network/members"><img src="https://img.shields.io/github/forks/Gathin23/cleanyourtv?style=flat&color=cfffcf&labelColor=15181e" alt="Forks"></a>
+  <a href="https://github.com/Gathin23/cleanyourtv/graphs/contributors"><img src="https://img.shields.io/github/contributors/Gathin23/cleanyourtv?style=flat&color=cfffcf&labelColor=15181e" alt="Contributors"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/licence-MIT-cfffcf?style=flat&labelColor=15181e" alt="MIT"></a>
   <a href="https://buymeacoffee.com/gathint"><img src="https://img.shields.io/badge/support-%E2%9D%A4-ff5e8a?style=flat&labelColor=15181e" alt="Support, buy me a coffee"></a>
+</p>
+
+<p align="center">
+  <b>52</b> TVs with tested lists &nbsp;·&nbsp; <b>22</b> brands &nbsp;·&nbsp; <b>11</b> languages &nbsp;·&nbsp; <b>280 KB</b> launcher &nbsp;·&nbsp; <b>0</b> apps uninstalled
 </p>
 
 Strip the bloatware from any Android TV or Google TV over Wi-Fi, and replace the ad-filled home
@@ -69,6 +75,15 @@ screenshots pulled from the TV. With this repo as context it takes about fifteen
 
 And a TV that stops working against you: no sponsored rows, no "Discover" nags, no analytics
 phoning home, no apps you never asked for.
+
+| | |
+|---|---|
+| ![The top shelf names the focused app over an ambient glow in its colour](docs/focus-2-up-netflix.png) | ![The Inputs popup: HDMI ports with what is connected, AV and Live TV](docs/inputs-menu.jpg) |
+| *Top shelf and ambient glow* | *Inputs: HDMI with connection state, AV, Live TV* |
+| ![The grid with the glass highlight on a tile and its name beneath](docs/focus-1-fancode.png) | ![The Clock screensaver: a thin clock drifting over the glow](docs/clock-screensaver.png) |
+| *The grid, one glass highlight, the tile's name* | *Clock screensaver, drifts so nothing burns in* |
+| ![The aurora theme: a wallpaper and tinted pills, pushed without a rebuild](docs/theme-aurora.jpg) | ![Six columns and a six-app dock from a theme's config.json](docs/theme-six-columns.jpg) |
+| *Aurora theme, pushed with `tools/theme.sh`* | *Six columns and a six-app dock, same launcher* |
 
 ## Supported TVs
 
@@ -168,7 +183,7 @@ tools/theme.sh themes/aurora                                 # push a theme; --r
 | [`tools/b64push.py`](tools/b64push.py) | Uploads large files such as APKs in base64 chunks and verifies the checksum. |
 | [`tools/disable.sh`](tools/disable.sh), [`restore.sh`](tools/restore.sh) | Apply or undo a debloat list. |
 | [`tools/theme.sh`](tools/theme.sh) | Push a folder from [`themes/`](themes/) to the launcher and restart Home. |
-| [`launcher/build-and-install.sh`](launcher/build-and-install.sh) | Builds a shrunk release (about 250 KB), installs it, switches Home, and rolls back if Home does not land on it. |
+| [`launcher/build-and-install.sh`](launcher/build-and-install.sh) | Builds a shrunk release (about 280 KB), installs it, switches Home, and rolls back if Home does not land on it. |
 
 Debloat list paths passed to `disable.sh` and `restore.sh` are relative to the directory you run
 from, so your own lists can live outside the repository. Absolute paths also work.
@@ -188,7 +203,7 @@ The install scripts ask the TV which launcher owns Home and only disable one the
 
 ## The launcher
 
-A small native Android TV app (`com.gathin.tvhome`, about 250 KB installed) in plain Java with
+A small native Android TV app (`com.gathin.tvhome`, about 280 KB installed) in plain Java with
 AndroidX RecyclerView and nothing heavier. Built for sets with 1 GB of RAM: no blur, no video, no
 network, no background services. It needs JDK 17 and Android SDK platform 34 to build; on macOS,
 `brew install openjdk@17 android-commandlinetools` and `sdkmanager "platforms;android-34" "build-tools;34.0.0"`. On Linux
@@ -272,7 +287,19 @@ control what goes on your TV. No prebuilt binaries.
 The most useful contribution is your TV's debloat list, so the next person with that model does
 not have to rediscover it. Launcher improvements and sharper prompt wording are welcome too.
 [CONTRIBUTING.md](CONTRIBUTING.md) has the format and the testing we ask for. Built something on
-top, a launcher, a port, a theme? Add it to [SHOWCASE.md](SHOWCASE.md).
+top, a launcher, a port, a theme? Add it to [SHOWCASE.md](SHOWCASE.md), where eleven projects already
+live: a webOS port for LG, a Stremio shelf, a Hisense restyle, Fire TV launchers, an AirPlay installer.
+
+The people whose work is in this repo:
+
+<a href="https://github.com/Gathin23/cleanyourtv/graphs/contributors"><img src="https://contrib.rocks/image?repo=Gathin23/cleanyourtv&columns=16" alt="Contributors"></a>
+
+<details>
+<summary><strong>Star history</strong></summary>
+
+<a href="https://star-history.com/#Gathin23/cleanyourtv&Date"><img src="https://api.star-history.com/svg?repos=Gathin23/cleanyourtv&type=Date" alt="Star history chart" width="640"></a>
+
+</details>
 
 ## Licence
 
