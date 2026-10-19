@@ -185,6 +185,8 @@ the install script finds `~/Android/Sdk` and the `java` on your PATH.
   `tools/tv.py 'settings put secure screensaver_components com.gathin.tvhome/.ClockDream; settings put secure screensaver_enabled 1'`
 - **Remote keys**: an optional accessibility service keeps the remote's Input button working on Google TV (`INPUT_KEY_SERVICE=1` at install), another fixes sticks whose Home key sends ALL_APPS (`HOME_KEY_SERVICE=1`).
 - **Navigation** is deliberate: Up and Down move one row, the top buttons never fall through to tiles and Down from them returns to the dock tile you came from, the last focused app is remembered, and installing or removing an app refreshes the tiles while Home is open.
+- **Navigation** is deliberate: Up and Down move one row, the top buttons never fall through to tiles, the last focused app is remembered, and installing or removing an app refreshes the tiles while Home is open.
+- **Artwork**: app banners load at xhdpi or better, so low-density TV UIs do not downsample them before the focus zoom.
 
 ## Restoring your TV
 

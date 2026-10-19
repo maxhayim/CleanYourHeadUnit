@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -14,6 +15,7 @@ import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.provider.Settings;
+import android.util.DisplayMetrics;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -144,8 +146,7 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.Holder> {
             ComponentName component = new ComponentName(pkg, ri.activityInfo.name);
             Cards.Card card = cardByPkg.get(pkg);
             if (card != null && !card.component.equals(component)) continue;   // the card stands in for this tile
-            Drawable banner = ri.activityInfo.loadBanner(pm);
-            if (banner == null) banner = ri.activityInfo.applicationInfo.loadBanner(pm);
+            Drawable banner = loadBanner(pm, ri);
             Drawable icon = ri.loadIcon(pm);
             if (card != null) {
                 fresh.add(new Entry(Entry.CARD, card.label, component, banner, icon, card.caption, card.accent));
@@ -175,6 +176,21 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.Holder> {
         items.clear();
         items.addAll(fresh);
         notifyDataSetChanged();
+    }
+
+    private Drawable loadBanner(PackageManager pm, ResolveInfo ri) {
+        int id = ri.activityInfo.banner;
+        if (id == 0) id = ri.activityInfo.applicationInfo.banner;
+        if (id != 0) {
+            try {
+                Resources resources = pm.getResourcesForApplication(ri.activityInfo.applicationInfo);
+                // Keep at least xhdpi detail rather than downsampling artwork before the focus zoom.
+                int density = Math.max(DisplayMetrics.DENSITY_XHIGH, ctx.getResources().getDisplayMetrics().densityDpi);
+                return resources.getDrawableForDensity(id, density, null);
+            } catch (PackageManager.NameNotFoundException | Resources.NotFoundException ignored) {
+            }
+        }
+        return ri.activityInfo.loadBanner(pm);
     }
 
     @NonNull
