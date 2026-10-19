@@ -20,6 +20,11 @@
 #   set-home-activity` reports Success but does not take effect until setupwraith is disabled too.
 # - Right after disabling setupwraith, Wi-Fi dropped for about 20 seconds and the box asked for the Wi-Fi
 #   password again. Once it was re-entered, it stayed saved across a reboot.
+# - After living with it: Wi-Fi, USB playback (with debugging off), Google Home, the phone remote,
+#   Chromecast from a Pixel and Google Assistant all still work.
+# - The remote's shortcut buttons (Netflix, YouTube, Prime Video, Xiaomi TV+, Apps) all do nothing once
+#   launcherx is disabled. Prime Video and Xiaomi TV+ are disabled anyway; Netflix, YouTube and Apps were
+#   handled by launcherx, as on the Chromecast with Google TV (see that list for a Key Mapper remap).
 #
 # Kept on purpose: Google Assistant (katniss), Chromecast (mediashell), phone remote (tv.remote.service),
 # YouTube Music, Xiaomi USB media apps (mimusic2, mitv.gallery, mediaexplorer, mitv.videoplayer),
