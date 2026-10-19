@@ -287,6 +287,11 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         View.OnKeyListener pillKeys = (v, keyCode, event) -> {
             if (event.getAction() != KeyEvent.ACTION_DOWN) return false;
             if (keyCode == KeyEvent.KEYCODE_DPAD_UP) return true;
+            if (keyCode == KeyEvent.KEYCODE_DPAD_DOWN) {
+                // Back to the dock tile Up came from, not wherever the focus finder lands.
+                focusTile(lastFocused % COLUMNS);
+                return true;
+            }
             if (keyCode == KeyEvent.KEYCODE_DPAD_LEFT) {
                 // The left end is Inputs, or Wi-Fi on a box without inputs.
                 return v.getId() == R.id.btnInputs
