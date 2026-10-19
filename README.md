@@ -1,4 +1,4 @@
-# cleanyourtv
+# Clean Your TV
 
 **Your TV, minus the ads.** Website: [cleanyour.tv](https://cleanyour.tv). This repo was called tv-vibehack until 19 October 2026; old links still work.
 
