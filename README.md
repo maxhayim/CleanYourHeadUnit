@@ -217,6 +217,19 @@ The launcher just lists what is installed and launches it with intents that have
 **Isn't ADB access a security hole?** It is one explicit "allow this computer" tap on the TV, the
 same as developing an Android app. Switch USB debugging off afterwards; the launcher keeps working.
 
+**Can it block ads inside apps too?** Partly, with Android's Private DNS (Android 9 and newer). Point
+it at an ad-blocking resolver such as [AdGuard DNS](https://adguard-dns.io) and every app's ad and
+tracker domains stop resolving, system-wide, surviving reboots:
+
+```bash
+tools/tv.py 'settings put global private_dns_specifier dns.adguard-dns.com'
+tools/tv.py 'settings put global private_dns_mode hostname'
+```
+
+It does not remove YouTube ads, which come from the same servers as the videos. If an app stops
+playing or the TV reports "No internet" (the resolver is down or unreachable), switch back with
+`tools/tv.py 'settings put global private_dns_mode opportunistic'`.
+
 **AirPlay?** Not from this repo. Chromecast built-in stays for Android phones. For iPhones,
 [jqssun/android-airplay-server](https://github.com/jqssun/android-airplay-server) works; an install
 script for it is in [PR #84](https://github.com/Gathin23/cleanyourtv/pull/84).
