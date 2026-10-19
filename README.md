@@ -108,6 +108,7 @@ NVIDIA Shield · OnePlus · Philips · RCA · SANYO · Toshiba Fire TV · Stella
 | TCL BeyondTV (India) | Android TV 9 |
 | TCL QM6K Pro, 2025 (G08, MediaTek tcl9618) | Google TV 14 |
 | TCL Smart TV Pro (G05, G05_4K_US, MediaTek MT5889) | Google TV 11 |
+| Thomson 32HE5800 (TCL-built UnionTV, Realtek RT2841), Spain | Android TV 9 |
 | Toshiba Fire TV (AFTHA004, hazel) | Fire OS 7 / Android 9 |
 | XGIMI Horizon S Pro projector (XK03H, xgimigalileo, MediaTek) | Android TV 11 |
 | Xiaomi Mi Box S (MIBOX4, oneday), streaming box | Android TV 9 |
