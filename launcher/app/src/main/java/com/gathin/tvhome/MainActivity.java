@@ -2,9 +2,11 @@ package com.gathin.tvhome;
 
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
+import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.ApplicationInfo;
 import android.graphics.Color;
 import android.graphics.Rect;
@@ -19,6 +21,7 @@ import android.net.NetworkCapabilities;
 import android.net.NetworkRequest;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -129,6 +132,16 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         @Override
         public void onLost(@NonNull Network network) {
             handler.post(MainActivity.this::updateWifiLabel);
+        }
+    };
+    private final IntentFilter packageFilter = new IntentFilter();
+    private final BroadcastReceiver packageReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            // Updates send REMOVED followed by ADDED; keep the tile until the new APK is ready.
+            if (Intent.ACTION_PACKAGE_REMOVED.equals(intent.getAction())
+                    && intent.getBooleanExtra(Intent.EXTRA_REPLACING, false)) return;
+            reloadApps(false);
         }
     };
     private final Runnable minuteTick = new Runnable() {
@@ -263,6 +276,11 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
             if (!onTile) hideGlass();
         });
 
+        packageFilter.addAction(Intent.ACTION_PACKAGE_ADDED);
+        packageFilter.addAction(Intent.ACTION_PACKAGE_REMOVED);
+        packageFilter.addAction(Intent.ACTION_PACKAGE_CHANGED);
+        packageFilter.addDataScheme("package");
+
         ConnectivityManager cm = getSystemService(ConnectivityManager.class);
         TvInputManager tim = (TvInputManager) getSystemService(TV_INPUT_SERVICE);
         if (tim != null) tim.registerCallback(inputCallback, handler);
@@ -304,32 +322,52 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
     @Override
     protected void onResume() {
         super.onResume();
-        glassShown = false;
-        glass.setAlpha(0f);
-        heroShown = false;
-        heroName.setAlpha(0f);
-        ambient.setAlpha(0f);
-        // Read these before reload(): rebinding can move focus to the first tile and overwrite them.
-        final String returnKey = lastFocusedKey;
-        final int returnSlot = lastFocused;
-        adapter.reload();
-        grid.scheduleLayoutAnimation();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            registerReceiver(packageReceiver, packageFilter, Context.RECEIVER_NOT_EXPORTED);
+        } else {
+            registerReceiver(packageReceiver, packageFilter);
+        }
+        reloadApps(true);
         updateGreeting();
         updateWifiLabel();
         updateInputsButton();
         handler.postDelayed(minuteTick, MINUTE_MS);
+    }
 
-        // Return to the app we left from, or the same slot if that app is gone. Always refocus: after
-        // reload() the view that holds focus may no longer show the app it had.
-        grid.post(() -> {
+    private void reloadApps(boolean animate) {
+        // Capture the app before rebinding can move focus and overwrite its key.
+        final String returnKey = lastFocusedKey;
+        final int returnSlot = lastFocused;
+        final boolean restoreFocus = animate || grid.hasFocus();
+        if (restoreFocus) {
+            glassShown = false;
+            glass.setAlpha(0f);
+            heroShown = false;
+            heroName.setAlpha(0f);
+            ambient.setAlpha(0f);
+        }
+        adapter.reload();
+        if (animate) grid.scheduleLayoutAnimation();
+
+        if (restoreFocus) {
+            // Follow the same app, or the nearest remaining slot when it was removed.
+            grid.post(() -> {
+                int pos = adapter.positionOf(returnKey);
+                focusTile(pos >= 0 ? pos : returnSlot);
+            });
+        } else {
+            // A package change must not steal focus from a top button or the Inputs popup.
             int pos = adapter.positionOf(returnKey);
-            focusTile(pos >= 0 ? pos : returnSlot);
-        });
+            lastFocused = Math.max(0, Math.min(pos >= 0 ? pos : returnSlot, adapter.getItemCount() - 1));
+            lastFocusedKey = adapter.keyAt(lastFocused);
+            if (pos < 0) hideHero();
+        }
     }
 
     @Override
     protected void onPause() {
         super.onPause();
+        unregisterReceiver(packageReceiver);
         handler.removeCallbacks(minuteTick);
     }
 
@@ -480,7 +518,10 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
     }
 
     private void focusTile(int position) {
-        if (adapter.getItemCount() == 0) return;
+        if (adapter.getItemCount() == 0) {
+            btnWifi.requestFocus();
+            return;
+        }
         final int pos = Math.max(0, Math.min(position, adapter.getItemCount() - 1));
         RecyclerView.ViewHolder vh = grid.findViewHolderForAdapterPosition(pos);
         if (vh != null) {
