@@ -207,7 +207,7 @@ a folder with a `config.json` (and optionally a `wallpaper.jpg`) pushed to the T
 `tools/theme.sh themes/<name>`, which the launcher reads as an overlay over `config.xml`. Three ship
 in [`themes/`](themes/), and the keys are documented there. `tools/theme.sh --reset` goes back.
 
-**Language** follows the TV: English, German, Spanish, Catalan, Russian, Simplified Chinese and Thai so far. If your
+**Language** follows the TV: English, German, Spanish, Catalan, French, Russian, Simplified Chinese and Thai so far. If your
 TV doesn't offer yours system-wide, Android 13 and later can set it for the launcher alone, e.g. Catalan:
 `tools/tv.py 'cmd locale set-app-locales com.gathin.tvhome --locales ca'`.
 
@@ -316,6 +316,10 @@ Things that bit us or contributors, so they don't bite you.
   USB debugging off when you're done; the launcher doesn't need it.
 - **Windows PowerShell 5.1 adds a byte-order mark** to text piped into a program, which turned the
   first batch command into gibberish. `tv.py` now strips it, and the `.ps1` scripts pipe clean UTF-8.
+- **"Allow USB debugging?" comes back** although `adb devices` already works: `tv.py` used its own
+  key next to the one platform-tools had registered. It now reuses `~/.android/adbkey` when that
+  exists. Every attempt with an unaccepted key queues one more prompt on the TV, so dismiss them all
+  (Back) before testing with key presses.
 - **Git Bash rewrites paths** like `/data/local/tmp` into Windows paths. The scripts set
   `MSYS_NO_PATHCONV=1` for you. Set `JAVA_HOME` and `ANDROID_HOME` before building there.
 
@@ -324,6 +328,12 @@ Things that bit us or contributors, so they don't bite you.
 - **Chained `pm` commands** (`pm disable a; pm disable b`) may silently stop after the first. Run
   one per shell call; `--batch` does exactly that.
 - **Large pushes hang** through the Python client. Use `tools/b64push.py` for APKs.
+- **`adb exec-out screencap -p` gives a broken PNG** on some MediaTek Xiaomi sets: the binary prints
+  `Init wrapper sys mutex successful` on stdout first. Save on the TV and pull the file instead:
+  `screencap -p /data/local/tmp/s.png`.
+- **Play Protect blocked the launcher** ("unsafe app blocked, built for an older version of Android")
+  and `pm install` hung, then failed with `INSTALL_FAILED_VERIFICATION_FAILURE`, while it targeted
+  SDK 29. It targets 34 now; if you built an old checkout, rebuild.
 - **Screenshots come out empty** while Live TV, an HDMI input or Netflix is on screen, seen on TCL
   and a [Sony KDL-49W800G](https://github.com/Gathin23/cleanyourtv/issues/92). Press Home before
   `screencap`. An empty capture means nothing about the ADB connection or playback; check those
