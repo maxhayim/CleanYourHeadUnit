@@ -95,6 +95,8 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
     private TextView btnWifi;
     private TextView shamsiDate;
     private boolean shamsi;
+    /** Optional time-of-day backdrop (config.xml, sky_intensity); 0 keeps it hidden. */
+    private SkyView sky;
     private String vpnApp;
     private SpringAnimation springX, springY;
     private float glassTargetX, glassTargetY;
@@ -175,6 +177,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         public void run() {
             updateGreeting();
             updateWifiLabel();
+            sky.update();
             handler.postDelayed(this, MINUTE_MS);
         }
     };
@@ -197,6 +200,8 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         root = findViewById(R.id.root);
         root.setBackgroundColor(cfg.backgroundColor);
         if (cfg.wallpaper != null) showWallpaper(cfg.wallpaper);
+        sky = findViewById(R.id.sky);
+        sky.setIntensity(cfg.skyIntensity);
         glass = findViewById(R.id.glass);
         ambient = findViewById(R.id.ambient);
         heroName = findViewById(R.id.heroName);
@@ -390,6 +395,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         updateGreeting();
         updateWifiLabel();
         updateInputsButton();
+        sky.update();
         handler.postDelayed(minuteTick, MINUTE_MS);
     }
 
