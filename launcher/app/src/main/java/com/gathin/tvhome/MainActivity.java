@@ -362,6 +362,20 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         }
     }
 
+    /**
+     * Home pressed while Home is already in front: singleTask delivers it here, then onResume runs.
+     * Back to the top with the first dock tile focused, like the stock launcher. Back from an app
+     * never comes this way, so returning to the app you left from is unchanged (#118).
+     */
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        if (intent == null || !intent.hasCategory(Intent.CATEGORY_HOME)) return;
+        grid.scrollToPosition(0);
+        lastFocused = 0;
+        lastFocusedKey = adapter.getItemCount() > 0 ? adapter.keyAt(0) : null;
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
