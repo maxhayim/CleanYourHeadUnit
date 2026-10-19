@@ -147,6 +147,9 @@ tools/theme.sh themes/aurora                                 # push a theme; --r
 | [`tools/theme.sh`](tools/theme.sh) | Push a folder from [`themes/`](themes/) to the launcher and restart Home. |
 | [`launcher/build-and-install.sh`](launcher/build-and-install.sh) | Builds a shrunk release (about 250 KB), installs it, switches Home, and rolls back if Home does not land on it. |
 
+Debloat list paths passed to `disable.sh` and `restore.sh` are relative to the directory you run
+from, so your own lists can live outside the repository. Absolute paths also work.
+
 Every script has a PowerShell twin next to it. On Windows with Android Studio installed nothing
 else is needed:
 
