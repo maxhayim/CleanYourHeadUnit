@@ -57,9 +57,15 @@ if [ "$STOCK_LAUNCHER" = none ]; then DISABLE_STOCK="echo stock launcher left al
 else DISABLE_STOCK="pm disable-user --user 0 $STOCK_LAUNCHER"; fi
 APK=app/build/outputs/apk/release/app-release.apk
 "$PY" -I ../tools/b64push.py "$APK" /data/local/tmp/tvhome.apk
+# Install on its own: in the batch below a failed install (e.g. "not enough space" on a full /data)
+# would not stop the stock launcher from being disabled.
+OUT=$("$PY" -I ../tools/tv.py 'pm install -r /data/local/tmp/tvhome.apk; rm -f /data/local/tmp/tvhome.apk')
+echo "$OUT"
+case "$OUT" in
+  *Success*) ;;
+  *) echo "ERROR: pm install failed; the stock launcher was left untouched." >&2; exit 1 ;;
+esac
 printf '%s\n' \
-  "pm install -r /data/local/tmp/tvhome.apk" \
-  "rm -f /data/local/tmp/tvhome.apk" \
   "pm grant com.gathin.tvhome android.permission.ACCESS_FINE_LOCATION 2>/dev/null; echo location-granted" \
   "cmd package compile -m speed -f com.gathin.tvhome" \
   "am start -W -n com.gathin.tvhome/.MainActivity | grep -E '^(Status|Error)'" \
