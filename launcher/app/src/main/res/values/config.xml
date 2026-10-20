@@ -14,6 +14,9 @@
         <item>com.google.android.youtube.tv</item>
         <item>in.startv.hotstar</item>
     </string-array>
+    <!-- With fewer dock_apps than columns, the free dock slots stay empty. true fills them with the first
+         grid apps instead, as older versions did. -->
+    <bool name="fill_dock">false</bool>
 
     <!-- Apps never shown as tiles (e.g. the Live TV app, which the Inputs menu already covers). -->
     <string-array name="hidden_apps">

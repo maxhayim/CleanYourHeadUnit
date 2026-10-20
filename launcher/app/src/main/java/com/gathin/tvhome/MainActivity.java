@@ -757,7 +757,9 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         // Horizontal: swallow the key at a row's ends so focus never wraps to the next row or
         // escapes up into the top bar. Mid-row moves fall through to the default focus search.
         if (keyCode == KeyEvent.KEYCODE_DPAD_LEFT || keyCode == KeyEvent.KEYCODE_DPAD_RIGHT) {
-            return GridNavigation.atHorizontalEdge(position, count, COLUMNS,
+            // In the dock, the last app is the row's end: the empty slots after it take no focus.
+            int rowCount = position < COLUMNS ? Math.min(count, adapter.dockFilled()) : count;
+            return GridNavigation.atHorizontalEdge(position, rowCount, COLUMNS,
                     rtlAppGrid, keyCode == KeyEvent.KEYCODE_DPAD_LEFT);
         }
         if (keyCode == KeyEvent.KEYCODE_DPAD_UP) {
@@ -777,7 +779,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
             btnWifi.requestFocus();
             return;
         }
-        final int pos = Math.max(0, Math.min(position, adapter.getItemCount() - 1));
+        final int pos = adapter.focusablePosition(Math.max(0, Math.min(position, adapter.getItemCount() - 1)));
         RecyclerView.ViewHolder vh = grid.findViewHolderForAdapterPosition(pos);
         if (vh != null) {
             View card = vh.itemView.findViewById(R.id.card);
