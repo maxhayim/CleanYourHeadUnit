@@ -46,9 +46,10 @@ Things that bit us or contributors, so they don't bite you. Commands use `tools/
 - **Chained `pm` commands** (`pm disable a; pm disable b`) may silently stop after the first. Run
   one per shell call; `--batch` does exactly that.
 - **Large pushes hang** through the Python client. Use `tools/b64push.py` for APKs.
-- **`adb exec-out screencap -p` gives a broken PNG** on some MediaTek Xiaomi sets: the binary prints
-  `Init wrapper sys mutex successful` on stdout first. Save on the TV and pull the file instead:
-  `screencap -p /data/local/tmp/s.png`.
+- **`adb exec-out screencap -p` gives a broken PNG** on some MediaTek sets (Xiaomi, and Amazon's
+  own Fire TV smart TVs): the binary prints `Init wrapper sys mutex successful` on stdout first.
+  Save on the TV and pull the file instead: `screencap -p /data/local/tmp/s.png`, or cut
+  everything before the `\x89PNG` header.
 - **Play Protect blocked the launcher** ("unsafe app blocked, built for an older version of Android")
   and `pm install` hung, then failed with `INSTALL_FAILED_VERIFICATION_FAILURE`, while it targeted
   SDK 29. It targets 34 now; if you built an old checkout, rebuild.

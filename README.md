@@ -116,7 +116,7 @@ Tested lists from contributors, one folder per model in [`examples/`](examples/)
 
 **TCL** 20 · **Sony** 17 · **Xiaomi** 15 · **Philips** 7 · **Hisense** 6 · **Panasonic** 3 ·
 **Amazon Fire TV Stick** 2 · **BenQ** 2 · **CHiQ** 2 · **Haier** 2 · **Hitachi** 2 · **NVIDIA Shield** 2 ·
-**Skyworth** 2 · **Vu** 2 · AiPro2K · AIWA · Chromecast with Google TV · FFalcon · Freebox · Insignia Fire TV ·
+**Skyworth** 2 · **Vu** 2 · AiPro2K · AIWA · Amazon Fire TV · Chromecast with Google TV · FFalcon · Freebox · Insignia Fire TV ·
 Kalley · MTC · OnePlus · onn · PRISM+ · RCA · Redmi · SANYO · Thomson · Toshiba Fire TV · Vidda ·
 BYINTEK, JMGO, Portronics, Stellamore, Wanbo and XGIMI projectors
 
@@ -127,6 +127,7 @@ BYINTEK, JMGO, Portronics, Stellamore, Wanbo and XGIMI projectors
 |---|---|
 | AiPro2K (Expressluck, dongnae; Changhong AI PONT family) | Android TV 14 |
 | AIWA AI PONT SA (Changhong, osaka, ISDB86AW) | Google TV 14 |
+| Amazon Fire TV 50" 4K smart TV (AFTTIFF43, brandenburg) | Fire OS 7.7.1.7 / Android 9 |
 | Amazon Fire TV Stick 4K, 1st gen 2018 (AFTMM, mantis) | Fire OS 6.7.1.1 / Android 7.1 |
 | Amazon Fire TV Stick Lite, 1st gen 2020 (AFTSS, sheldon) | Fire OS 7.7.1.7 / Android 9 |
 | BenQ E55-735 (Changhong AI PONT, DVB96BQ) | Google TV 14 |
