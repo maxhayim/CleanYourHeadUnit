@@ -32,9 +32,9 @@
   </a>
 </p>
 
-Strip the bloatware from an Android TV or Google TV over Wi-Fi, and on Android 8.0 (API 26) or newer,
-replace the ad-filled home screen with a clean launcher that looks like an Apple TV. **No root, no
-cable, nothing uninstalled, and a restore script if you change your mind.**
+Strip the bloatware from any Android TV or Google TV over Wi-Fi, and replace the ad-filled home
+screen with a clean launcher that looks like an Apple TV. **No root, no cable, nothing uninstalled,
+and a one-line restore if you change your mind.**
 
 <h3 align="center">93 TV models &nbsp;·&nbsp; 31 brands &nbsp;·&nbsp; 17 languages &nbsp;·&nbsp; 370 KB launcher</h3>
 
@@ -71,8 +71,7 @@ cable, nothing uninstalled, and a restore script if you change your mind.**
 Android TVs have the same debug bridge as Android phones. Switch on USB debugging in the TV's
 developer options, allow your computer once, and the rest is standard Android tooling:
 
-1. **Back up** the list of installed packages and settings. The prompt asks your assistant for a full
-   snapshot; `tools/disable.sh` records only the state needed to undo its debloat list.
+1. **Back up** the list of installed packages and settings.
 2. **Disable** the manufacturer's telemetry, ad services, content rows and preloaded junk with
    `pm disable-user`. Nothing is uninstalled, so a restore script can undo every step.
 3. **Install** a small native launcher and make it the default home screen.
@@ -101,8 +100,8 @@ screenshots pulled from the TV. With this repo as context it takes about fifteen
 - **A top shelf** naming the focused app in large type, with an ambient glow in a colour taken from its artwork.
 - **The rest of your apps in a grid** that slides up when you press Down.
 - **One floating glass highlight** that springs from tile to tile. The focused tile lifts and shows its name.
-- **Frosted buttons**: Wi-Fi or Ethernet with the network name, and Settings. Inputs (HDMI ports under the names you gave them in the TV's settings, AV, Live TV) appears when the TV has a usable input, Live TV app or configured source panel; it is hidden on streaming boxes with none of these.
-- **A greeting, a thin clock and the date** in [Outfit](https://fonts.google.com/specimen/Outfit), and a matching Clock screensaver. Set `show_stats` in config or a theme for one line under the clock: CPU when the TV allows it, free memory and free storage. It stays off unless you turn it on, and it refreshes only while Home is on screen.
+- **Three frosted buttons**: Inputs (HDMI ports under the names you gave them in the TV's settings, AV, Live TV), Wi-Fi or Ethernet with the network name, Settings.
+- **A greeting, a thin clock and the date** in [Outfit](https://fonts.google.com/specimen/Outfit), and a matching Clock screensaver. Set `show_stats` in config or a theme for one line under the clock: CPU, free memory and free storage. It stays off unless you turn it on, and it refreshes only while Home is on screen.
 - **Themes** that change colours, wallpaper, dock and columns without a rebuild, and **module cards** that let other apps plug a tile in, only with your say-so.
 
 And a TV that stops working against you: no sponsored rows, no "Discover" nags, no analytics
@@ -119,12 +118,10 @@ phoning home, no apps you never asked for.
 
 ## Supported TVs
 
-The launcher requires **Android TV** or **Google TV** on Android 8.0 (API 26) or newer. A model's
-debloat list does not guarantee the launcher can be installed; the list below includes older TVs.
-Samsung (Tizen) and LG (webOS) run different systems; see [SHOWCASE.md](SHOWCASE.md) for a webOS port.
-**Fire TV** lists are for adapting the debloat steps manually: the [prompt](PROMPT.md) does not cover
-Fire TV, and Fire OS will not hand Home to this launcher. Some China-market TVs refuse sideloaded
-APKs or third-party Home apps; the known TCL cases are examples, not the only possible ones.
+Anything running **Android TV** or **Google TV**. Samsung (Tizen) and LG (webOS) run different
+systems; see [SHOWCASE.md](SHOWCASE.md) for a webOS port. **Fire TV** takes the debloat half only,
+since Fire OS will not hand Home to a third-party launcher. A few China-market TCL sets refuse to
+install any launcher at all; their lists say so in the header.
 
 Tested lists from contributors, one folder per model in [`examples/`](examples/):
 
@@ -239,9 +236,7 @@ person with your model skips that step: [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## Doing it by hand
 
-Everything the assistant does, you can run yourself. The ADB tools need Python 3. `tools/tv.py`
-connects to classic TCP ADB on port 5555 by default; if your TV only offers paired Wireless debugging,
-follow the connection steps in [PROMPT.md](PROMPT.md) to pair and enable port 5555 first.
+Everything the assistant does, you can run yourself. The tools need Python 3 and nothing else.
 
 ```bash
 python3 -m venv tools/venv && tools/venv/bin/pip install -r tools/requirements.txt
@@ -276,12 +271,9 @@ powershell -ExecutionPolicy Bypass -File launcher\build-and-install.ps1 -TvHost 
 powershell -ExecutionPolicy Bypass -File tools\disable.ps1 -TvHost 192.168.1.50 examples\xiaomi-mi-tv-4a\debloat.txt
 ```
 
-The install scripts ask the TV which launcher owns Home and automatically disable only one of four
-known stock packages (`tvlauncher`, `launcherx`, `leanbacklauncher` or `mitv.tvhome`); pass
-`STOCK_LAUNCHER=<package>` (`-StockLauncher` on Windows) after checking your TV to override, or
-`none` to leave the stock launcher enabled. Both forms still set CleanYourTV as Home. The shell script
-checks that the new launcher starts before changing Home; the current PowerShell script requests the
-Home change before that startup check, so keep ADB recovery available on Windows.
+The install scripts ask the TV which launcher owns Home and only disable one they recognise
+(`tvlauncher` or `launcherx`); pass `STOCK_LAUNCHER=<package>` (`-StockLauncher`) to override, or
+`none` to leave it alone.
 
 ## The launcher
 
@@ -296,22 +288,21 @@ the install script finds `~/Android/Sdk` and the `java` on your PATH.
 - **On-TV launcher settings:** click Settings for the TV's system settings, or hold OK on Settings and choose Launcher settings to set 4, 5, 6 or 7 apps per row, turn animations on or off, and opt into advanced effects. The advanced option adds tile lift, icon zoom and smooth ambient-colour transitions; it may use more memory. Use Follow theme to clear on-TV choices. Pushing or resetting a theme also clears them.
 - **Change the default home:** Launcher settings and the optional Default-home tile (`show_home_settings_shortcut`) open Android's home picker. Choose the original launcher to stop using CleanYourTV as Home, or CleanYourTV to return. The original launcher must be enabled. If the install script disabled it, use the restore script below first. Some TVs provide no home picker.
 - **Themes** set the same keys plus a background colour and a wallpaper from a `config.json` pushed to the TV, no rebuild. Four ship in [`themes/`](themes/), documented there.
-- **Language** follows the TV: English, German, Spanish, Catalan, French, Russian, Serbian (Latin), Polish, Portuguese, Turkish, Arabic, Hebrew, Simplified Chinese, Traditional Chinese (Taiwan), Thai, Finnish, Vietnamese. Android 13+ can set it for the launcher alone: `tools/venv/bin/python -I tools/tv.py 'cmd locale set-app-locales com.gathin.tvhome --locales ca'`.
+- **Language** follows the TV: English, German, Spanish, Catalan, French, Russian, Serbian (Latin), Polish, Portuguese, Turkish, Arabic, Hebrew, Simplified Chinese, Traditional Chinese (Taiwan), Thai, Finnish, Vietnamese. Android 13+ can set it for the launcher alone: `tools/tv.py 'cmd locale set-app-locales com.gathin.tvhome --locales ca'`.
   Hebrew places the menu buttons on the left and the date and clock on the right, with the greeting above the clock. The Clock screensaver right-aligns its date and time, and Hebrew dates include the month prefix ב (for example, 19 באוקטובר). Hebrew dock and app-grid rows start on the right, with matching left/right remote navigation. The Hebrew input selector places icons and labels on the right, status on the left, and aligns the dropdown with the Inputs button’s right edge. Other languages keep their original layouts.
   Russian includes the module-card approval and management screens and the VPN-off badge.
 - **Module cards** let any TV app declare its own tile (label, caption, glow). The launcher asks you once per app, Keep hidden by default, and remembers the answer for that app's signing key and card name. Hold OK on Settings and choose Module cards to change your mind. How to make one: [`docs/modules.md`](docs/modules.md); the contract: [`docs/specs/card.md`](docs/specs/card.md).
 - **Clock screensaver**: a drifting clock over the glow, so nothing burns in. Pick "Clock" in the TV's screensaver settings, or over ADB:
-  `tools/venv/bin/python -I tools/tv.py 'settings put secure screensaver_components com.gathin.tvhome/.ClockDream; settings put secure screensaver_enabled 1'`
-- **Remote keys**: an optional accessibility service keeps the remote's Input button working on Google TV (`INPUT_KEY_SERVICE=1` at shell install, `-InputKeyService` on Windows), another fixes sticks whose Home key sends ALL_APPS and opens Settings from the remote's gear button, even one Android does not map (`HOME_KEY_SERVICE=1` or `-HomeKeyService`, scancodes or keycodes in `config.xml`). Pass these options again on reinstall. With `settings_key_panel` the gear opens a [small quick settings panel](docs/quick-settings-panel.jpg) instead, over Home or any app: TV settings, Display, Network, Apps and Launcher settings.
+  `tools/tv.py 'settings put secure screensaver_components com.gathin.tvhome/.ClockDream; settings put secure screensaver_enabled 1'`
+- **Remote keys**: an optional accessibility service keeps the remote's Input button working on Google TV (`INPUT_KEY_SERVICE=1` at install), another fixes sticks whose Home key sends ALL_APPS and opens Settings from the remote's gear button, even one Android does not map (`HOME_KEY_SERVICE=1`, scancodes or keycodes in `config.xml`). With `settings_key_panel` the gear opens a [small quick settings panel](docs/quick-settings-panel.jpg) instead, over Home or any app: TV settings, Display, Network, Apps and Launcher settings.
 - **Navigation** is deliberate: Up and Down move one row, the top buttons never fall through to tiles and Down from them returns to the dock tile you came from, the last focused app is remembered, and installing or removing an app refreshes the tiles while Home is open.
 - **Artwork**: app banners load at xhdpi or better, so low-density TV UIs do not downsample them before the focus zoom.
 
 ## Restoring your TV
 
-Before `tools/disable.sh` changes anything it records the state of each package in the list, the
-package and component that owned Home, and the three animation scales. It does not save a full package
-or settings snapshot; the [prompt](PROMPT.md) asks your assistant to do that separately. The recovery
-record lives in `~/.cleanyourtv/`, one file per TV and list, and
+Before `tools/disable.sh` changes anything it writes down what the TV looked like: for every package
+in the list whether it was enabled, already disabled or not installed, which component owned Home,
+and the three animation scales. That record lives in `~/.cleanyourtv/`, one file per TV and list, and
 a second run of the same list keeps the first record instead of saving the cleaned-up state over it.
 If you added packages to the list since, that run adds them to the record before disabling them.
 
@@ -323,11 +314,10 @@ TV_HOST=192.168.1.50 tools/restore.sh examples/<your tv>/debloat.txt            
 TV_HOST=192.168.1.50 tools/restore.sh examples/<your tv>/debloat.txt com.google.android.apps.tv.launcherx  # Google TV
 ```
 
-The `stock launcher` argument selects a fallback Home when nothing answered HOME at the time or this
-project's launcher owned it; with a recorded previous Home, that component gets the preference back.
-Restore also tries to enable the fallback stock package (by default `com.google.android.tvlauncher`).
-Packages recorded as disabled stay disabled, but if the fallback package was not recorded, the script
-cannot know whether you had disabled it earlier. Check that package before restoring.
+The `stock launcher` argument is only a fallback: with a record, the launcher that actually owned Home
+is the one that gets it back, and the argument is used only when nothing answered HOME at the time
+or this project's launcher owned it. The stock launcher is enabled again either way, unless it was
+already disabled when the record was taken.
 Without a record (an older run, or a record you deleted) the script says so and falls back to
 enabling the whole list and resetting the scales to `1.0`, which is what it used to do.
 
@@ -343,8 +333,8 @@ The full list of things that bit us is in [docs/TROUBLESHOOTING.md](docs/TROUBLE
 three that matter most:
 
 - **macOS blocks `adb connect`** ("No route to host") under Local Network privacy. `tools/tv.py` avoids the binary.
-- **Disable the stock launcher only after the new one is installed and running**, or Home can land on a factory test app. The shell install script orders this for you; see the PowerShell order above.
-- **On Google TV the setup wizard** (`com.google.android.tungsten.setupwraith`) can take Home and crash-loop the system after the stock launcher is disabled. Disable it too, and list it in your `debloat.txt` so restore brings it back. But check `dumpsys wifi | grep -o 'cname=[^ ]*'` first: if the Wi-Fi network was saved during setup it belongs to setupwraith, and disabling it deletes the network (forget it and re-join it in Settings first; `tools/disable.sh` skips setupwraith until you do). Stuck already? `tools/venv/bin/python -I tools/tv.py 'pm enable --user 0 com.google.android.apps.tv.launcherx'`.
+- **Disable the stock launcher only after the new one is installed and running**, or Home lands on a factory test app. The install script orders this for you.
+- **On Google TV the setup wizard** (`com.google.android.tungsten.setupwraith`) can take Home and crash-loop the system after the stock launcher is disabled. Disable it too, and list it in your `debloat.txt` so restore brings it back. But check `dumpsys wifi | grep -o 'cname=[^ ]*'` first: if the Wi-Fi network was saved during setup it belongs to setupwraith, and disabling it deletes the network (re-join it in Settings first; `tools/disable.sh` skips setupwraith until you do). Stuck already? `tools/tv.py 'pm enable --user 0 com.google.android.apps.tv.launcherx'`.
 
 ## Questions people ask
 
@@ -365,7 +355,7 @@ TV at their home routing to it. Never by opening the ADB port on their router. S
 [docs/REMOTE.md](docs/REMOTE.md).
 
 **Isn't ADB access a security hole?** It is one explicit "allow this computer" tap on the TV, the
-same as developing an Android app. Classic TCP ADB is plaintext on port 5555, and on firmware with
+same as developing an Android app. Network ADB is plaintext on port 5555, and on firmware with
 `ro.adb.secure=0` any device on the LAN gets a shell, so close it when you are done:
 
 1. On the TV: Developer options → turn **USB debugging** and **Network/ADB debugging** off, and
@@ -380,13 +370,13 @@ tracker domains stop resolving, system-wide, surviving reboots. The trade-off: t
 sees every DNS query the TV makes.
 
 ```bash
-tools/venv/bin/python -I tools/tv.py 'settings put global private_dns_specifier dns.adguard-dns.com'
-tools/venv/bin/python -I tools/tv.py 'settings put global private_dns_mode hostname'
+tools/tv.py 'settings put global private_dns_specifier dns.adguard-dns.com'
+tools/tv.py 'settings put global private_dns_mode hostname'
 ```
 
 It does not remove YouTube ads, which come from the same servers as the videos. If an app stops
 playing or the TV reports "No internet" (the resolver is down or unreachable), switch back with
-`tools/venv/bin/python -I tools/tv.py 'settings put global private_dns_mode opportunistic'`.
+`tools/tv.py 'settings put global private_dns_mode opportunistic'`.
 
 **AirPlay?** Not from this repo. Chromecast built-in stays for Android phones. For iPhones,
 [jqssun/android-airplay-server](https://github.com/jqssun/android-airplay-server) works; an install
