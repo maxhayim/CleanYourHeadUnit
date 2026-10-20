@@ -36,6 +36,8 @@ final class Config {
     private static final String THEME_SIGNATURE_KEY = "theme_signature";
 
     final List<String> dockApps;
+    /** Grid apps fill the dock slots dock_apps leaves free (config.xml, fill_dock); on by default, false leaves the slots empty. */
+    final boolean fillDock;
     final List<String> hiddenApps;
     final String liveTvPackage;
     final String liveTvAction;
@@ -63,13 +65,14 @@ final class Config {
     /** Festive skin from a theme (festival, festival_until, greeting, accent_color); {@link Festival#NONE} if none. */
     final Festival festival;
 
-    private Config(List<String> dockApps, List<String> hiddenApps, String liveTvPackage, String liveTvAction,
-                   String sourcePanelService, String sourcePanelAction, String inputAction,
+    private Config(List<String> dockApps, boolean fillDock, List<String> hiddenApps, String liveTvPackage,
+                   String liveTvAction, String sourcePanelService, String sourcePanelAction, String inputAction,
                    int columns, int rowsBelowDock, boolean animations, boolean advancedEffects,
                    boolean shamsiDate, boolean moduleCards, boolean reducedMotion, String vpnApp,
                    boolean showHomeSettingsShortcut, int backgroundColor, int skyIntensity,
                    File wallpaper, boolean overlayApplied, Festival festival) {
         this.dockApps = Collections.unmodifiableList(dockApps);
+        this.fillDock = fillDock;
         this.hiddenApps = Collections.unmodifiableList(hiddenApps);
         this.liveTvPackage = liveTvPackage;
         this.liveTvAction = liveTvAction;
@@ -100,6 +103,7 @@ final class Config {
     static Config load(Context ctx) {
         Resources res = ctx.getResources();
         List<String> dock = new ArrayList<>(Arrays.asList(res.getStringArray(R.array.dock_apps)));
+        boolean fillDock = res.getBoolean(R.bool.fill_dock);
         List<String> hidden = new ArrayList<>(Arrays.asList(res.getStringArray(R.array.hidden_apps)));
         String liveTv = res.getString(R.string.live_tv_package).trim();
         String liveTvAction = res.getString(R.string.live_tv_action).trim();
@@ -125,6 +129,7 @@ final class Config {
         if (json != null) {
             applied = true;
             dock = stringList(json, "dock_apps", dock);
+            fillDock = bool(json, "fill_dock", fillDock);
             hidden = stringList(json, "hidden_apps", hidden);
             liveTv = string(json, "live_tv_package", liveTv);
             liveTvAction = string(json, "live_tv_action", liveTvAction);
@@ -159,7 +164,7 @@ final class Config {
         Festival festival = json == null ? Festival.NONE : Festival.parse(string(json, "festival", ""),
                 string(json, "festival_until", ""), string(json, "greeting", ""), string(json, "accent_color", ""));
 
-        return new Config(dock, hidden, liveTv, liveTvAction, panelService, panelAction, inputAction,
+        return new Config(dock, fillDock, hidden, liveTv, liveTvAction, panelService, panelAction, inputAction,
                 Math.max(1, columns), Math.max(0, rowsBelow), animations, advancedEffects,
                 shamsi, moduleCards, reducedMotion, vpn, homeSettings, background,
                 Math.max(0, Math.min(100, skyIntensity)), wallpaper, applied, festival);
