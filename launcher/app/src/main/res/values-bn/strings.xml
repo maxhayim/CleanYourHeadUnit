@@ -67,6 +67,9 @@
     <string name="card_state_new_key">নতুন কি</string>
     <string name="card_state_new_label">নতুন নাম</string>
     <string name="reorder">অ্যাপ সাজান</string>
+    <string name="dock_edit">ডক সম্পাদনা</string>
+    <string name="dock_edit_hint">যে ডক-স্থানটি বদলাতে চান সেটি বেছে OK চাপুন। শেষ করতে Back চাপুন।</string>
+    <string name="dock_edit_pick_app">এবার সেখানে যে অ্যাপটি রাখতে চান সেটি বেছে OK চাপুন। অন্য স্থান বাছতে Back চাপুন।</string>
     <string name="reorder_hint">OK দিয়ে অ্যাপ তুলুন, তীর দিয়ে সরান, Back দিয়ে বসান। শেষ করতে আবার Back চাপুন।</string>
     <string name="reorder_not_saved">নতুন ক্রম সেভ করা যায়নি</string>
     <string name="app_library">অ্যাপ লাইব্রেরি</string>
