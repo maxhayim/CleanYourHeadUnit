@@ -5,7 +5,7 @@
 <p align="center">
   <a href="https://cleanyour.tv">cleanyour.tv</a> ·
   <a href="PROMPT.md">The prompt</a> ·
-  <a href="examples/">67 TV lists</a> ·
+  <a href="examples/">66 TV lists</a> ·
   <a href="SHOWCASE.md">15 built on it</a> ·
   <a href="https://x.com/gathint/status/2111379569030939102">The tweet</a>
 </p>
@@ -23,7 +23,7 @@ Strip the bloatware from any Android TV or Google TV over Wi-Fi, and replace the
 screen with a clean launcher that looks like an Apple TV. **No root, no cable, nothing uninstalled,
 and a one-line restore if you change your mind.**
 
-<h3 align="center">67 TV models &nbsp;·&nbsp; 26 brands &nbsp;·&nbsp; 14 languages &nbsp;·&nbsp; 300 KB launcher</h3>
+<h3 align="center">66 TV models &nbsp;·&nbsp; 25 brands &nbsp;·&nbsp; 14 languages &nbsp;·&nbsp; 300 KB launcher</h3>
 
 ![Before: stock Google TV home with a sponsored ad. After: the Clean Your TV launcher](docs/stock-vs-new-side.jpg)
 
@@ -93,7 +93,7 @@ install any launcher at all; their lists say so in the header.
 Tested lists from contributors, one folder per model in [`examples/`](examples/):
 
 **TCL** 14 · **Xiaomi** 14 · **Sony** 9 · **Philips** 4 · **Hisense** 3 · **CHiQ** 2 · **Skyworth** 2 ·
-AiPro2K · Amazon Fire TV Stick · BenQ · Chromecast with Google TV · Hitachi · Insignia Fire TV ·
+AiPro2K · Amazon Fire TV Stick · BenQ · Chromecast with Google TV · Haier · Hitachi · Insignia Fire TV ·
 NVIDIA Shield · OnePlus · Panasonic · PRISM+ · RCA · Redmi · SANYO · Thomson · Toshiba Fire TV · Vu ·
 Stellamore and XGIMI projectors
 
@@ -108,6 +108,7 @@ Stellamore and XGIMI projectors
 | CHiQ AI PONT (Changhong GTVU65, dangni, MediaTek mt5867) | Google TV 14 |
 | CHiQ AI PONT (DVB93CQ) | Android TV 11 |
 | Chromecast with Google TV 4K (sabrina) | Google TV 14 |
+| Haier H32S80EFX (MatrixTV CE, HRT56EU, deto, MediaTek), Thailand | Google TV 14 |
 | Hisense HiSmartTV A4 (xiaoyushan, MStar m7322), India | Android TV 9 |
 | Hisense SmartTV 4K FFM (huangshan, MediaTek) | Android TV 10 |
 | Hisense U75 (hengshan, MediaTek), Latin America | Google TV 12 |
