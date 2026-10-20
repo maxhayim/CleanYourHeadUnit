@@ -43,6 +43,7 @@ import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.SoundEffectConstants;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.animation.AnimationUtils;
@@ -799,6 +800,9 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
             target = Math.min(position + COLUMNS, count - 1);
         }
         focusTile(target);
+        // The default focus search clicks for Left/Right; Up/Down are handled here, so click for them too.
+        grid.playSoundEffect(keyCode == KeyEvent.KEYCODE_DPAD_UP
+                ? SoundEffectConstants.NAVIGATION_UP : SoundEffectConstants.NAVIGATION_DOWN);
         return true;
     }
 
