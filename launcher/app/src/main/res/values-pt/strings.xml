@@ -49,6 +49,9 @@
     <string name="card_state_new">Novo</string>
     <string name="card_state_new_key">Nova chave</string>
     <string name="card_state_new_label">Novo nome</string>
+    <string name="dock_edit">Editar a dock</string>
+    <string name="dock_edit_hint">Escolha o lugar da dock a mudar e prima OK. Voltar para terminar.</string>
+    <string name="dock_edit_pick_app">Agora escolha a app a colocar lá e prima OK. Voltar para escolher outro lugar.</string>
     <string name="reorder">Reordenar apps</string>
     <string name="reorder_hint">OK pega numa app, as setas movem-na, Voltar pousa-a. Voltar outra vez para terminar.</string>
     <string name="reorder_not_saved">Não foi possível guardar a nova ordem</string>

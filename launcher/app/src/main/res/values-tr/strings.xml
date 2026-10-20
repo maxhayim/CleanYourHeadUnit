@@ -61,6 +61,9 @@
     <string name="on">Açık</string>
     <string name="off">Kapalı</string>
     <string name="enable">Etkinleştir</string>
+    <string name="dock_edit">Dock\'u düzenle</string>
+    <string name="dock_edit_hint">Değiştirilecek dock yerini seçip Tamam\'a basın. Bitirmek için Geri.</string>
+    <string name="dock_edit_pick_app">Şimdi oraya konacak uygulamayı seçip Tamam\'a basın. Başka bir yer seçmek için Geri.</string>
     <string name="reorder">Uygulamaları sırala</string>
     <string name="reorder_hint">Tamam bir uygulamayı alır, oklar taşır, Geri bırakır. Bitirmek için tekrar Geri.</string>
     <string name="reorder_not_saved">Yeni sıra kaydedilemedi</string>
