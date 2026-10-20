@@ -399,6 +399,12 @@ The people whose work is in this repo:
 
 </details>
 
+## Contact
+
+Questions about your TV: [GitHub Discussions](https://github.com/Gathin23/cleanyourtv/discussions).
+Press and partnerships: [hello@itsgathin.com](mailto:hello@itsgathin.com).
+Security issues: report them privately through the [Security tab](https://github.com/Gathin23/cleanyourtv/security), see [`SECURITY.md`](SECURITY.md).
+
 ## Licence
 
 MIT, see [`LICENSE`](LICENSE). The Outfit typeface is under the SIL Open Font License, see
