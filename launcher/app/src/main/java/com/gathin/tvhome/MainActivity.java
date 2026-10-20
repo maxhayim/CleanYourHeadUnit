@@ -124,6 +124,9 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
     private float density;
     /** Module cards (res/values/config.xml, module_cards): discovered on resume, shown only after the owner's Show. */
     private boolean moduleCards;
+    /** config settings_key_keycodes / settings_key_panel, so the Settings button works on Home without HomeKeyService. */
+    private int[] settingsKeycodes = new int[0];
+    private boolean settingsKeyPanel;
     /** Calmer motion for weak GPUs (config.xml, reduced_motion): stiff spring, short fades, no replay. */
     private boolean reducedMotion;
     /** Festive skin from the theme (see Festival); applied while it is active today. */
@@ -212,6 +215,8 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         density = getResources().getDisplayMetrics().density;
         // config.xml, overlaid by config.json from a pushed theme (see Config and tools/theme.sh).
         Config cfg = Config.load(this);
+        settingsKeycodes = cfg.settingsKeycodes;
+        settingsKeyPanel = cfg.settingsKeyPanel;
         COLUMNS = cfg.columns;
         animations = cfg.animations;
         advancedEffects = cfg.animations && cfg.advancedEffects;
@@ -621,6 +626,25 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
             cm.unregisterNetworkCallback(networkCallback);
             cm.unregisterNetworkCallback(vpnCallback);
         }
+    }
+
+    /**
+     * A Settings button sent as a keycode (settings_key_keycodes, e.g. 83 on TCL Google TV remotes) opens the same
+     * thing HomeKeyService would. While that service runs it consumes the key first; without it (not enabled,
+     * or switched off by a force-stop) the stock launcher that used to handle the key is gone, and the button did
+     * nothing even on Home.
+     */
+    @Override
+    public boolean dispatchKeyEvent(KeyEvent event) {
+        for (int code : settingsKeycodes) {
+            if (event.getKeyCode() != code) continue;
+            if (event.getAction() == KeyEvent.ACTION_UP && !event.isCanceled()) {
+                open(settingsKeyPanel ? new Intent(this, QuickSettingsActivity.class)
+                        : systemIntent(Settings.ACTION_SETTINGS));
+            }
+            return true;
+        }
+        return super.dispatchKeyEvent(event);
     }
 
     @Override
