@@ -10,7 +10,6 @@ project's own issue tracker.
 
 | Project | What it is | Built on | By |
 |---|---|---|---|
-| [cleanyourtv for Haier](https://github.com/abuhasanrumi/cleanyourtv-haier) ([issues](https://github.com/abuhasanrumi/cleanyourtv-haier/issues)) | A fork for Haier's MediaTek sets: a common Haier list merged from the two tested Haier lists, reduced motion and no module cards by default, a wallpaper that is let go when Android is short of memory, and four themes with three generated dark wallpapers, one a cosy valley with a lit cottage after Cosy Home | Haier Android TV / Google TV (MediaTek, CVTE); not yet tested on a TV | [abuhasanrumi](https://github.com/abuhasanrumi) |
 | [Stremio shelf, peek dock and calendar](https://github.com/benfirad/tv-vibehack) | A fork of the launcher with a Stremio poster shelf, a dock that peeks over playing content, a frosted settings panel and a calendar overlay | Android TV | [benfirad](https://github.com/benfirad) |
 | [Hisense restyle](https://github.com/YouLop009/tv-vibehack/tree/style-modifications) | A six-column restyle with an app menu, a Wi-Fi picker in the header, daily greetings and four glass finishes | Hisense SmartTV 4K FFM, Android 12 | [YouLop009](https://github.com/YouLop009) |
 | [webOS launcher](https://github.com/OmkarK97/webos-vibehack) | The same Apple TV-style home rebuilt as a webOS web app for LG TVs, installed through LG's Developer Mode, with a Home-button watcher that runs on another device | LG OLED C6, webOS 26 | [OmkarK97](https://github.com/OmkarK97) |
@@ -33,6 +32,7 @@ project's own issue tracker.
 | [TidyTV](https://github.com/jolan94/tidytv) ([site](https://tidytv.winkle.dev)) | An Android phone app that applies this repo's per-model lists with no computer and no AI agent: backup first, `pm disable-user` only, an optional launcher install with rollback, and a one-tap restore. The lists are bundled from `examples/` and credited | TCL 32S5400, Android TV | [jolan94](https://github.com/jolan94) |
 | [Clean Your TV Companion](https://github.com/gethari/clean-your-tv-companion) | A Windows, macOS and Linux app that connects to an Android TV or Google TV over ADB, checks its setup and compares the installed apps with the community lists. Runs locally, no account; the preview only inspects, changes are on its roadmap | Android TV / Google TV; tested on TCL Q6K | [gethari](https://github.com/gethari) |
 | [Glass and day/night on a Polytron](https://github.com/andikatuluspangestu/cleanyourtv/tree/polytron-glass-launcher) | The launcher with a frosted-glass dock over a blurred wallpaper, day and night wallpapers that crossfade at set hours, a Recents tool and a Wi-Fi panel. No internet permission | Polytron 2K (MediaTek mt5867), Android TV 11 | [andikatuluspangestu](https://github.com/andikatuluspangestu) |
+| [cleanyourtv for Haier](https://github.com/abuhasanrumi/cleanyourtv-haier) ([issues](https://github.com/abuhasanrumi/cleanyourtv-haier/issues)) | A fork for Haier's MediaTek sets with a common Haier app list, reduced motion by default and four themes | Haier Android TV / Google TV (MediaTek, CVTE) | [abuhasanrumi](https://github.com/abuhasanrumi) |
 
 ## Add yours
 
