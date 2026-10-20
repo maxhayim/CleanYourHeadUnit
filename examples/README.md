@@ -93,6 +93,7 @@ on that firmware, grouped and commented. These are starting points: comment out 
 | `toshiba-fire-tv-aftha004/` | Toshiba Fire TV (AFTHA004, hazel) | Fire OS 7 / Android 9 | Amazon ACR, metrics, shopping, tutorials, Miracast sink; streaming preloads off by choice; debloat only |
 | `vidda-mt9653/` | Vidda VIDAA_TV (Hisense sub-brand; device MT9653, board mt5879), China JuUI | Android TV 11 | First JuUI-namespace list (`com.jamdeo.*`): telemetry, Alibaba/CIBN shopping and ad services, operator widget rows, retail/hotel/factory, the 拍信创意 ad screensaver, and two vendor homes (`com.jamdeo.tv.vod`, `com.keylab.speech.view.vidaa` secondscreen, which boots by component name and can only be disabled as a package); `com.hisense.tv.tiletransition` must stay or input switching silently stops working; Home key arrives as KEYCODE_F12 (scancode 102); source panel is the only input path (no TvInputManager); `ro.adb.secure=0`; 3.8 GB |
 | `vu-4k-lushan/` | Vu 4K (HVCL, lushan, MediaTek), India | Google TV 12 | Vu/Hisense ACR (evservice), store mode, Alexa, Vu preloads, partner auto-installs; smartsense/aiot kept, setupwraith off for the launcher |
+| `vu-premium-fhd-43-hamamatsucho/` | Vu Premium FHD 43-inch (Smart 2K ATV4, hamamatsucho), India | Android TV 9 | CVTE partner apps, Google recommendation rows and retail demo; tested on one set |
 | `wanbo-x5-pro/` | Wanbo X5 Pro projector (built-in Google TV stick: SkyworthDigital YYT, Amlogic), Australia | Google TV 14 | Google feedback, Privacy Sandbox ad services, xCPE remote-management agent, Skyworth device-info and factory test apps; projector observer, remote pairing and hot keys kept; Assistant, YouTube Music, TalkBack off by choice; launcherx + setupwraith (setupwraith owned the Wi-Fi saved at setup); port 5555 opens without pairing |
 | `xgimi-horizon-s-pro/` | XGIMI Horizon S Pro projector (XK03H, xgimigalileo, MediaTek) | Android TV 11 | First projector: keystone/autofocus/HDMI player kept, factory and burn-in tools, bug-report uploader, Google preloads; HDMI needs `input_action`; voice, Chromecast off by choice |
 | `xiaomi-mi-box-s/` | Xiaomi Mi Box S (MIBOX4, oneday), streaming box | Android TV 9 | PatchWall, Mi analytics, Alphonso ad tracking, MiLink; voice, casting, phone remote off by choice |
@@ -115,6 +116,8 @@ Notes for models that have no tested list yet live in [`docs/devices/`](../docs/
 
 - [TCL `75c63b`](../docs/devices/tcl-75c63b.md), owner-reported retail model, `Smart TV Pro` / `BeyondTV4`, Android 11, `V8-R51MT05-LF1V652`: launcher-only installation, HOME priorities and component restrictions, correct Live TV player package, restoration and explicit test limits.
 - [Xiaomi MiTV-MFTR0 "freeguy"](../docs/devices/xiaomi-mitv-mftr0-freeguy.txt), China, Android 14: inputs, Xiaomi settings intents, app discovery.
+
+Notes for a model that has no tested list yet live in [`docs/devices/`](../docs/devices/) (Xiaomi MiTV-MFTR0 "freeguy", China, Android 14: inputs, Xiaomi settings intents, app discovery).
 
 
 To add your TV, see [CONTRIBUTING.md](../CONTRIBUTING.md). The quickest way to get a list is to
