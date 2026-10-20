@@ -65,9 +65,31 @@ back something from `debloat.txt`) and Launcher settings. Back or the gear again
 
 - Gear opens the TV's Settings instead: set `"settings_key_panel": false` in `theme/config.json` and
   push the theme.
+- Gear (and the app buttons below) stop working after a restart: TCL's boot blocker (`TclAppBoot`,
+  log line `callee_does't_have_OP_AUTO_START_permission`) refused to start the service. `install.ps1`
+  allows it for the launcher only:
+  `tools\venv\Scripts\python.exe -I tools\tv.py "appops set com.gathin.tvhome APP_AUTO_START allow"`.
+  Without a computer: Settings > System > Accessibility > Home button, switch it off and on again.
 - Gear stops working after a reinstall: the service was switched off. Run `install.ps1` again, or check
   it with `tools\venv\Scripts\python.exe -I tools\tv.py "settings get secure enabled_accessibility_services"`
   (it should list `com.gathin.tvhome/.HomeKeyService`).
+
+## The remote's app buttons
+
+They send TCL keycodes only the stock home understood, so the same service opens the apps instead.
+`app_keys` in `theme/config.json` maps each button to an app; the Pluto TV button opens Tubi here:
+
+| Button | Keycode | Opens |
+|---|---|---|
+| Netflix | 4062 | `com.netflix.ninja` |
+| Prime Video | 4099 | `com.amazon.amazonvideo.livingroom` |
+| YouTube | 4065 | `com.google.android.youtube.tv` |
+| Apple TV | 4160 | `com.apple.atve.androidtv.appletv` |
+| Pluto TV | 4163 | `com.tubitv` (Tubi) |
+| TCLtv+ | (system) | TCLtv+, handled by the TV itself and not remappable here |
+
+To point a button at another app, change its package and push the theme (see below). Remove a line
+to leave that button alone.
 
 ## Change the dock order
 

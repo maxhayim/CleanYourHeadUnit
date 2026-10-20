@@ -21,4 +21,7 @@ if ($wifi -match 'cname=[^ ]*setupwraith') { throw 'the saved Wi-Fi network belo
 # -HomeKeyService: the remote's gear button (keycode 83) opens the quick settings panel, see theme\config.json.
 & "$repo\launcher\build-and-install.ps1" -TvHost $TvHost -HomeKeyService
 if (-not $?) { throw 'launcher install failed' }
+# TCL's boot blocker (TclAppBoot) refuses to start the key service after a restart unless the launcher
+# may auto-start; without this the gear and app buttons die at every boot until the service is toggled.
+& $py -I "$repo\tools\tv.py" 'appops set com.gathin.tvhome APP_AUTO_START allow; appops get com.gathin.tvhome APP_AUTO_START'
 & "$repo\tools\theme.ps1" -TvHost $TvHost "$PSScriptRoot\theme"

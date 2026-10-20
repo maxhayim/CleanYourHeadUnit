@@ -12,5 +12,12 @@
   "background_color": "#000000",
   "wallpaper": false,
   "settings_key_keycodes": [83],
-  "settings_key_panel": true
+  "settings_key_panel": true,
+  "app_keys": {
+    "4062": "com.netflix.ninja",
+    "4099": "com.amazon.amazonvideo.livingroom",
+    "4065": "com.google.android.youtube.tv",
+    "4160": "com.apple.atve.androidtv.appletv",
+    "4163": "com.tubitv"
+  }
 }
