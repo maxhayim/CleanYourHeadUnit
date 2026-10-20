@@ -13,7 +13,7 @@
 
 # Zeasn ads and store
 # The ad service is a persistent system app with permission to install apps silently: Android starts it
-# at boot even when disabled. Hiding it (root, see README) is what keeps it from running.
+# at boot even when disabled. Hiding it (optional, needs root, see README) is what keeps it from running.
 com.zeasn.deviceportal.asdprovider.skyworth_hisi352   # ad/portal service for the Whale launcher
 zeasn.open.technical.tv.store                         # Zeasn app store; Google Play stays
 

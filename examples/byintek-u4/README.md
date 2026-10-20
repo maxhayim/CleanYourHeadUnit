@@ -44,9 +44,15 @@ TV_HOST=<projector-ip> STOCK_LAUNCHER=com.zeasn.whale.saas launcher/build-and-in
 TV_HOST=<projector-ip> tools/theme.sh examples/byintek-u4
 ```
 
+That is the whole install: everything in the list is disabled with `pm disable-user`, as everywhere
+else in this repo.
+
+### Optional, this firmware only: hide the Zeasn ad service
+
 The Zeasn ad service is a persistent system app that may install apps silently, and Android starts
-persistent apps at boot even when disabled. Hiding it keeps it from starting; that needs root (above),
-then:
+persistent apps at boot even when they are disabled. Hiding it keeps it from starting. That goes
+further than the rest of the repo: it needs root (above), and only `pm unhide`, again as root, undoes
+it. Skip it if you'd rather not:
 
 ```bash
 TV_HOST=<projector-ip> tools/venv/bin/python -I tools/tv.py 'pm hide com.zeasn.deviceportal.asdprovider.skyworth_hisi352'
@@ -61,7 +67,8 @@ TV_HOST=<projector-ip> tools/restore.sh examples/byintek-u4/debloat.txt com.zeas
 TV_HOST=<projector-ip> tools/venv/bin/python -I tools/tv.py 'pm unhide com.zeasn.deviceportal.asdprovider.skyworth_hisi352'
 ```
 
-The second line needs root, like `pm hide`. The launcher stays installed but is no longer Home.
+The second line is only needed if you hid the ad service, and needs root like `pm hide`. The launcher
+stays installed but is no longer Home.
 
 ## What stays
 
