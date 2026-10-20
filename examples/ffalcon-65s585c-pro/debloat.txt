@@ -18,11 +18,10 @@
 # Packages are enabled one group at a time: uncomment a group and run disable.sh again. The recovery
 # record keeps the state from before the first run and adds names that join the list later.
 #
-# Tested 2026-10-20 on a real unit, then a full `reboot`: Home, HDMI inputs and no crash-buffer entries.
-# The first two groups (15 packages) stay disabled across the reboot. Every OPTIONAL package below is
-# reset to enabled by system_server during the boot-time package scan (before any app starts), so a
-# disable only lasts until the next full power cycle; standby keeps it. Re-run this script after a
-# power cut if you want them off again.
+# Tested 2026-10-20 on a real unit, then two full `reboot`s: Home, HDMI inputs and no crash-buffer
+# entries, and all packages below stayed disabled.
+# Wait at least 10 seconds after disable.sh before rebooting: PackageManager writes the new states to
+# disk after a short delay, and a reboot inside that window brings the packages back enabled.
 
 # Ad and telemetry reporting (tested on tcl-q10g-pro, same firmware)
 com.tcl.bootadservice                    # full-screen ad before Home
