@@ -146,6 +146,7 @@ BYINTEK, JMGO, Portronics, Stellamore, Wanbo and XGIMI projectors
 | BYINTEK T5 Max projector (built-in Google TV stick: SkyworthDigital YYT, Amlogic), Brazil | Google TV 14 |
 | CHiQ AI PONT (Changhong GTVU65, dangni, MediaTek mt5867) | Google TV 14 |
 | CHiQ AI PONT (DVB93CQ) | Android TV 11 |
+| Cecotec VQU10065S 65" QLED (Vestel-built, shandao, MediaTek), Spain | Android TV 14 |
 | Chromecast with Google TV 4K (sabrina) | Google TV 14 |
 | Compac ATV R2 (SCBC R2, Realtek RTD285O) | Android TV 9 |
 | EKO 2K Google TV (MTC-built, tennoji, MediaTek mt5867 / T56) | Google TV 14 |
