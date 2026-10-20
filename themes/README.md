@@ -50,6 +50,8 @@ is ignored, and a file that doesn't parse is ignored as a whole, so a theme can 
 | `background_color` | `#RRGGBB` | Colour behind everything; black by default |
 | `sky_intensity` | 0 to 100 | Time-of-day backdrop: a dark gradient that follows the clock, 0 hides it (default) |
 | `wallpaper` | bool | Show `wallpaper.jpg` from the theme folder (`true`), or ignore it (`false`) |
+| `wallpaper_rotation_minutes` | 0 to 1440 | Randomly rotate images in the theme's `wallpapers/` folder at this interval; 0 keeps the single-image behaviour |
+| `wallpaper_dim` | 0 to 90 | Black overlay over wallpaper images, in percent; 0 by default |
 | `festival` | string | Turns on a festive skin: the network pill becomes a diya whose flame follows the connection, Inputs a temple bell, Settings a marigold, and the first Home of the day gets a petal shower. `dussehra` and `diwali` have built-in greetings |
 | `festival_until` | `YYYY-MM-DD` | Last day the festive skin shows; it switches itself off after that. A malformed date turns it off |
 | `greeting` | string | Replaces the time-of-day greeting while the festive skin is on |
@@ -63,6 +65,24 @@ is ignored, and a file that doesn't parse is ignored as a whole, so a theme can 
 under about 300 KB: the text, the hero name and the dock band are designed for black, and a 1 GB TV
 decodes the picture into memory on every Home start. Pictures larger than the screen are scaled down to
 it; a picture that is still over 4K (about 8.4 million pixels) after it is sampled down to the screen is not shown at all, and the plain colour stays.
+
+For an offline collection, put JPEG, PNG or WebP files in `wallpapers/` beside `config.json` and set:
+
+```json
+{ "wallpaper": true, "wallpaper_rotation_minutes": 30, "wallpaper_dim": 40 }
+```
+
+Both theme-push scripts copy that folder's images. Use filenames containing only letters, digits,
+underscores, dots and hyphens. A new theme replaces the previous collection. The launcher considers
+up to 100 nonempty images, at most 10 MB each, skips unreadable files and keeps the last good background.
+An empty collection falls back to `wallpaper.jpg`, or the background colour if no image is available.
+`"wallpaper": false` disables both single-image and collection backgrounds.
+
+Selection is random without an immediate repeat when alternatives exist. The current image and its
+change time survive app/process restarts. Rotation runs only while Home is visible; on return from
+another app, an overdue background changes then. Images are decoded on a worker thread and bounded
+to the screen size. There is no download service, Internet permission or computer-side scheduler.
+The original system idle screensaver is left unchanged.
 
 ## Reduced motion
 
