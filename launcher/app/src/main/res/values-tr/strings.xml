@@ -19,6 +19,10 @@
     <string name="not_available">Bu TV’de kullanılamıyor</string>
     <string name="cant_open">%1$s açılamıyor</string>
     <string name="date_format">d MMMM EEEE</string>
+    <string name="stats_cpu">CPU %1$d%%</string>
+    <string name="stats_cpu_unknown">CPU —</string>
+    <string name="stats_memory">Bellek %1$d MB boş</string>
+    <string name="stats_storage">Depolama %1$s boş</string>
     <string name="dream_name">Saat</string>
     <string name="vpn">VPN</string>
     <string name="vpn_off">VPN Kapalı</string>

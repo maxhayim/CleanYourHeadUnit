@@ -21,6 +21,10 @@
     <string name="date_format">EEEE  d MMMM</string>
     <!-- Date next to the clock on Home; a locale can split it over two lines with \n. -->
     <string name="date_format_home" translatable="false">@string/date_format</string>
+    <string name="stats_cpu">CPU %1$d%%</string>
+    <string name="stats_cpu_unknown">CPU —</string>
+    <string name="stats_memory">Memory %1$d MB free</string>
+    <string name="stats_storage">Storage %1$s free</string>
     <string name="dream_name">Clock</string>
     <string name="vpn">VPN</string>
     <string name="vpn_off">VPN off</string>
