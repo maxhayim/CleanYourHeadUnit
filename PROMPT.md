@@ -60,6 +60,11 @@ Debloat
   still unclear.
 - Before touching streaming apps, voice assistant, Chromecast, Miracast or the update service, ask me
   which ones I use with a checklist question and disable only what I don't tick.
+- When I ask whether the TV is listening, run `tools/privacy.py` (it needs the venv, like the other
+  Python tools) and report what it found: the packages, what each one does, and whether `appops`
+  shows the microphone was used. Never say a package records or listens — the audit shows what the
+  firmware and the packages declare, and on many sets the microphone is in the remote. `--write`
+  gives me a list `tools/disable.sh` and `tools/restore.sh` already handle.
 - Run `pm` commands one per shell call, chained commands may silently stop after the first.
 - If `pm disable-user` is refused for every package, stop and tell me: some firmware (Fire OS 5 on a
   Fire TV Box, for one) refuses `pm disable-user` with a `SecurityException`, `pm uninstall --user 0`
