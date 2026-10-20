@@ -157,6 +157,7 @@ SANYO · Thomson · Toshiba Fire TV · Vidda · Vu · JMGO, Portronics, Stellamo
 | AIWA AI PONT SA (Changhong, osaka, ISDB86AW) | Google TV 14 |
 | BenQ E55-735 (Changhong AI PONT, DVB96BQ) | Google TV 14 |
 | BenQ E55-750 (Changhong AI PONT, DVB96BQ) | Google TV (Android 11) |
+| BYINTEK T5 Max projector (built-in Google TV stick: SkyworthDigital YYT, Amlogic), Brazil | Google TV 14 |
 | CHiQ AI PONT (Changhong GTVU65, dangni, MediaTek mt5867) | Google TV 14 |
 | CHiQ AI PONT (DVB93CQ) | Android TV 11 |
 | Chromecast with Google TV 4K (sabrina) | Google TV 14 |
