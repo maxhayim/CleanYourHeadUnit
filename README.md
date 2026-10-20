@@ -24,6 +24,7 @@ screen with a clean launcher that looks like an Apple TV. **No root, no cable, n
 and a one-line restore if you change your mind.**
 
 <h3 align="center">55 TVs with tested lists &nbsp;·&nbsp; 23 brands &nbsp;·&nbsp; 12 languages &nbsp;·&nbsp; 280 KB launcher</h3>
+<h3 align="center">55 TVs with tested lists &nbsp;·&nbsp; 24 brands &nbsp;·&nbsp; 12 languages &nbsp;·&nbsp; 280 KB launcher</h3>
 
 ![Before: stock Google TV home with a sponsored ad. After: the Clean Your TV launcher](docs/stock-vs-new-side.jpg)
 
@@ -93,6 +94,7 @@ install any launcher at all; their lists say so in the header.
 Tested lists from contributors, one folder per model in [`examples/`](examples/):
 
 **Xiaomi** 12 · **TCL** 11 · **Sony** 8 · **Philips** 3 · **CHiQ** 2 · **Hisense** 2 · Amazon Fire TV Stick · BenQ ·
+**Xiaomi** 12 · **TCL** 11 · **Sony** 8 · **CHiQ** 2 · **Hisense** 2 · **Philips** 2 · AiPro2K · Amazon Fire TV Stick · BenQ ·
 Chromecast with Google TV · Hitachi · Insignia Fire TV · NVIDIA Shield · OnePlus · Panasonic · RCA · Redmi ·
 SANYO · Skyworth · Thomson · Toshiba Fire TV · Vu · Stellamore and XGIMI projectors
 
@@ -101,6 +103,7 @@ SANYO · Skyworth · Thomson · Toshiba Fire TV · Vu · Stellamore and XGIMI pr
 
 | TV | OS |
 |---|---|
+| AiPro2K (Expressluck, dongnae; Changhong AI PONT family) | Android TV 14 |
 | Amazon Fire TV Stick 4K, 1st gen 2018 (AFTMM, mantis) | Fire OS 6.7.1.1 / Android 7.1 |
 | BenQ E55-735 (Changhong AI PONT, DVB96BQ) | Google TV 14 |
 | CHiQ AI PONT (Changhong GTVU65, dangni, MediaTek mt5867) | Google TV 14 |
