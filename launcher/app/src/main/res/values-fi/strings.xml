@@ -63,4 +63,5 @@
     <string name="card_state_new">Uusi</string>
     <string name="card_state_new_key">Uusi avain</string>
     <string name="card_state_new_label">Uusi nimi</string>
+    <string name="greeting_with_name">%1$s, %2$s</string>
 </resources>
