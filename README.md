@@ -122,9 +122,9 @@ install any launcher at all; their lists say so in the header.
 Tested lists from contributors, one folder per model in [`examples/`](examples/):
 
 **TCL** 18 · **Sony** 16 · **Xiaomi** 15 · **Philips** 6 · **Hisense** 5 · **BenQ** 2 · **CHiQ** 2 ·
-**Haier** 2 · **Hitachi** 2 · **Panasonic** 2 · **Skyworth** 2 · AiPro2K · Amazon Fire TV Stick ·
-Chromecast with Google TV · Insignia Fire TV · Kalley · NVIDIA Shield · OnePlus · onn · PRISM+ · RCA · Redmi ·
-SANYO · Thomson · Toshiba Fire TV · Vu · JMGO, Portronics, Stellamore, Wanbo and XGIMI projectors
+**Haier** 2 · **Hitachi** 2 · **NVIDIA Shield** 2 · **Panasonic** 2 · **Skyworth** 2 · AiPro2K ·
+Amazon Fire TV Stick · Chromecast with Google TV · Insignia Fire TV · Kalley · OnePlus · onn · PRISM+ · RCA ·
+Redmi · SANYO · Thomson · Toshiba Fire TV · Vu · JMGO, Portronics, Stellamore, Wanbo and XGIMI projectors
 
 <details>
 <summary><strong>The full list</strong></summary>
