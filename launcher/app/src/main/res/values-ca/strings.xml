@@ -53,4 +53,5 @@
         <item quantity="one">%1$d aplicació</item>
         <item quantity="other">%1$d aplicacions</item>
     </plurals>
+    <string name="greeting_with_name">%1$s, %2$s</string>
 </resources>

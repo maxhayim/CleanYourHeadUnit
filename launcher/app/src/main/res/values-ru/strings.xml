@@ -82,4 +82,5 @@
         <item quantity="many">%1$d приложений</item>
         <item quantity="other">%1$d приложения</item>
     </plurals>
+    <string name="greeting_with_name">%1$s, %2$s</string>
 </resources>
