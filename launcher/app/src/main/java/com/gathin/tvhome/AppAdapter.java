@@ -189,6 +189,10 @@ public class AppAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private final boolean showHomeSettings;
     /** Calmer motion for weak GPUs (config.xml, reduced_motion): no overshoot, shorter fades. */
     private final boolean reducedMotion;
+    /** Package to the action its tile sends instead of the start screen (config.xml, launch_actions). */
+    private final Map<String, String> launchActions;
+    /** Tile names and bundled banners that replace the app's own (config.xml, app_labels and app_banners). */
+    private final Map<String, String> appLabels, appBanners;
     private final List<Entry> items = new ArrayList<>();
 
     AppAdapter(Context ctx, TileListener listener, int dockSize, Config cfg) {
@@ -206,6 +210,9 @@ public class AppAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         this.rowsBelowDock = cfg.rowsBelowDock;
         this.dockTitle = cfg.dockTitle;
         this.dockRow = cfg.dockRow;
+        this.launchActions = cfg.launchActions;
+        this.appLabels = cfg.appLabels;
+        this.appBanners = cfg.appBanners;
         // Tiles keep their identity across reload(), so a focused tile stays on its app instead of
         // its view being rebound to whatever app now sits in that slot.
         setHasStableIds(true);
@@ -248,9 +255,11 @@ public class AppAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             if (card != null && !card.component.equals(component)) continue;   // the card stands in for this tile
             // Same cleaner as the card prompt: an app label with a bidi override or line separator must not
             // redraw the tile name as something else (#117).
-            String label = card != null ? card.label : Cards.cleanLabel(String.valueOf(ri.loadLabel(pm)), pkg);
+            String label = card != null ? card.label : Cards.cleanLabel(
+                    appLabels.containsKey(pkg) ? appLabels.get(pkg) : String.valueOf(ri.loadLabel(pm)), pkg);
             if (!seen.add(pkg + '\n' + label)) continue;
-            Drawable banner = loadBanner(pm, ri);
+            Drawable banner = bundledBanner(appBanners.get(pkg));
+            if (banner == null) banner = loadBanner(pm, ri);
             Drawable icon = ri.loadIcon(pm);
             if (card != null) {
                 fresh.add(new Entry(Entry.CARD, label, component, banner, icon, card.caption, card.accent));
@@ -290,6 +299,13 @@ public class AppAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         items.clear();
         items.addAll(fresh);
         notifyDataSetChanged();
+    }
+
+    /** A banner_* drawable bundled with the launcher, or null for none or a name that is not one. */
+    private Drawable bundledBanner(String name) {
+        if (name == null || !name.startsWith("banner_")) return null;
+        int id = ctx.getResources().getIdentifier(name, "drawable", ctx.getPackageName());
+        return id != 0 ? ctx.getDrawable(id) : null;
     }
 
     private Drawable loadBanner(PackageManager pm, ResolveInfo ri) {
@@ -424,6 +440,12 @@ public class AppAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         // TV apps launch with the same leanback intent as from the stock launcher or the remote, so an app
         // already running resumes instead of restarting; only phone apps added from the library use plain MAIN.
         if (leanbackPackages.contains(e.pkg)) i.addCategory(Intent.CATEGORY_LEANBACK_LAUNCHER);
+        String action = launchActions.get(e.pkg);
+        if (action != null) {
+            Intent byAction = new Intent(action).setPackage(e.pkg)
+                    .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
+            if (ctx.getPackageManager().resolveActivity(byAction, 0) != null) i = byAction;
+        }
         try {
             ctx.startActivity(i);
             if (advancedEffects && ctx instanceof Activity) {

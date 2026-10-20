@@ -16,7 +16,9 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * The launcher's settings: the values in res/values/config.xml, with an optional overlay read from
@@ -41,6 +43,12 @@ final class Config {
     final List<String> hiddenApps;
     final String liveTvPackage;
     final String liveTvAction;
+    /** Package to the action its tile sends instead of opening the start screen (config.xml, launch_actions). */
+    final Map<String, String> launchActions;
+    /** Package to the name its tile shows instead of the app's label (config.xml, app_labels). */
+    final Map<String, String> appLabels;
+    /** Package to a bundled banner_* drawable its tile shows instead of the app's art (config.xml, app_banners). */
+    final Map<String, String> appBanners;
     final String sourcePanelService;
     final String sourcePanelAction;
     final String inputAction;
@@ -92,7 +100,8 @@ final class Config {
     final Festival festival;
 
     private Config(List<String> dockApps, boolean fillDock, List<String> hiddenApps, String liveTvPackage,
-                   String liveTvAction, String sourcePanelService, String sourcePanelAction, String inputAction,
+                   String liveTvAction, Map<String, String> launchActions, Map<String, String> appLabels,
+                   Map<String, String> appBanners, String sourcePanelService, String sourcePanelAction, String inputAction,
                    int columns, int rowsBelowDock, boolean animations, boolean advancedEffects,
                    boolean shamsiDate, String greetingName, boolean moduleCards, boolean reducedMotion, boolean dockTitle, boolean dockRow, boolean reorderButton, String vpnApp,
                    boolean showHomeSettingsShortcut, boolean showStats, boolean appLibrary, int backgroundColor, int skyIntensity,
@@ -106,6 +115,9 @@ final class Config {
         this.hiddenApps = Collections.unmodifiableList(hiddenApps);
         this.liveTvPackage = liveTvPackage;
         this.liveTvAction = liveTvAction;
+        this.launchActions = Collections.unmodifiableMap(launchActions);
+        this.appLabels = Collections.unmodifiableMap(appLabels);
+        this.appBanners = Collections.unmodifiableMap(appBanners);
         this.sourcePanelService = sourcePanelService;
         this.sourcePanelAction = sourcePanelAction;
         this.inputAction = inputAction;
@@ -149,6 +161,9 @@ final class Config {
         List<String> hidden = new ArrayList<>(Arrays.asList(res.getStringArray(R.array.hidden_apps)));
         String liveTv = res.getString(R.string.live_tv_package).trim();
         String liveTvAction = res.getString(R.string.live_tv_action).trim();
+        List<String> launchActions = new ArrayList<>(Arrays.asList(res.getStringArray(R.array.launch_actions)));
+        List<String> appLabels = new ArrayList<>(Arrays.asList(res.getStringArray(R.array.app_labels)));
+        List<String> appBanners = new ArrayList<>(Arrays.asList(res.getStringArray(R.array.app_banners)));
         String panelService = res.getString(R.string.source_panel_service).trim();
         String panelAction = res.getString(R.string.source_panel_action).trim();
         String inputAction = res.getString(R.string.input_action).trim();
@@ -185,6 +200,9 @@ final class Config {
             hidden = stringList(json, "hidden_apps", hidden);
             liveTv = string(json, "live_tv_package", liveTv);
             liveTvAction = string(json, "live_tv_action", liveTvAction);
+            launchActions = stringList(json, "launch_actions", launchActions);
+            appLabels = stringList(json, "app_labels", appLabels);
+            appBanners = stringList(json, "app_banners", appBanners);
             panelService = string(json, "source_panel_service", panelService);
             panelAction = string(json, "source_panel_action", panelAction);
             inputAction = string(json, "input_action", inputAction);
@@ -234,7 +252,9 @@ final class Config {
         Festival festival = json == null ? Festival.NONE : Festival.parse(string(json, "festival", ""),
                 string(json, "festival_until", ""), string(json, "greeting", ""), string(json, "accent_color", ""));
 
-        return new Config(dock, fillDock, hidden, liveTv, liveTvAction, panelService, panelAction, inputAction,
+        return new Config(dock, fillDock, hidden, liveTv, liveTvAction, packageMap(launchActions), packageMap(appLabels),
+                packageMap(appBanners), panelService,
+                panelAction, inputAction,
                 Math.max(1, columns), Math.max(0, rowsBelow), animations, advancedEffects,
                 shamsi, greetingName, moduleCards, reducedMotion, dockTitle, dockRow, reorderButton, vpn, homeSettings, showStats, library, background,
                 Math.max(0, Math.min(100, skyIntensity)), settingsKeycodes, settingsKeyPanel, wallpaperEnabled, wallpaper,
@@ -334,6 +354,18 @@ final class Config {
             if (!(item instanceof Number)) return fallback;
             out[i] = ((Number) item).intValue();
             if (out[i] < 1) return fallback;
+        }
+        return out;
+    }
+
+    /** "package=value" entries; an entry without both halves is skipped, and a later entry for a package wins. */
+    static Map<String, String> packageMap(List<String> entries) {
+        Map<String, String> out = new HashMap<>();
+        for (String entry : entries) {
+            int eq = entry.indexOf('=');
+            if (eq <= 0) continue;
+            String pkg = entry.substring(0, eq).trim(), value = entry.substring(eq + 1).trim();
+            if (!pkg.isEmpty() && !value.isEmpty()) out.put(pkg, value);
         }
         return out;
     }
