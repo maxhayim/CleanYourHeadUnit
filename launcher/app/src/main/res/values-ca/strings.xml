@@ -31,4 +31,5 @@
     <string name="on">Activat</string>
     <string name="off">Desactivat</string>
     <string name="enable">Activa</string>
+    <string name="greeting_with_name">%1$s, %2$s</string>
 </resources>

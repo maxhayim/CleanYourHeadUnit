@@ -32,4 +32,5 @@
     <string name="on">Sí</string>
     <string name="off">No</string>
     <string name="enable">Activar</string>
+    <string name="greeting_with_name">%1$s, %2$s</string>
 </resources>

@@ -39,4 +39,5 @@
     <string name="on">Uklj.</string>
     <string name="off">Isklj.</string>
     <string name="enable">Uključi</string>
+    <string name="greeting_with_name">%1$s, %2$s</string>
 </resources>
