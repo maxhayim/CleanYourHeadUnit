@@ -24,6 +24,22 @@ if [ -n "$BAD" ]; then
   { echo "refusing $LIST: not a package name:"; printf '%s\n' "$BAD" | sed 's/^/  /'; } >&2
   exit 1
 fi
+# A Wi-Fi network saved during the first-run wizard belongs to setupwraith, and Android deletes it the
+# moment setupwraith is disabled: the TV drops off Wi-Fi, and ADB and the phone remote go with it.
+# Skip it until the network has been forgotten and re-joined in Settings (it then belongs to
+# android.uid.system). FORCE_SETUPWRAITH=1 disables it anyway, e.g. on Ethernet.
+SETUP=com.google.android.tungsten.setupwraith
+if printf '%s\n' "$PKGS" | grep -x "$SETUP" >/dev/null && [ -z "${FORCE_SETUPWRAITH:-}" ]; then
+  WIFI="$("$PY" -I tools/tv.py "dumpsys wifi" || true)"
+  # no grep -q here: with pipefail its early exit would SIGPIPE the grep before it and fail open
+  if printf '%s\n' "$WIFI" | grep -o 'cname=[^ ]*' | grep setupwraith >/dev/null; then
+    echo "Skipping $SETUP: the saved Wi-Fi network belongs to it, and disabling it would delete that" >&2
+    echo "network and take the TV off Wi-Fi. On the TV, forget the network and join it again in" >&2
+    echo "Settings > Network & Internet, then run this again (or set FORCE_SETUPWRAITH=1 on Ethernet)." >&2
+    PKGS="$(printf '%s\n' "$PKGS" | grep -vx "$SETUP" || true)"
+  fi
+fi
+
 {
   [ -n "$PKGS" ] && printf '%s\n' "$PKGS" | sed 's/^/pm disable-user --user 0 /'
   echo "pm list packages -d"
