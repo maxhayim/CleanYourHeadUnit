@@ -116,7 +116,7 @@ Tested lists from contributors, one folder per model in [`examples/`](examples/)
 
 **TCL** 20 · **Sony** 17 · **Xiaomi** 15 · **Philips** 7 · **Hisense** 6 · **Panasonic** 3 ·
 **Amazon Fire TV Stick** 2 · **BenQ** 2 · **CHiQ** 2 · **Haier** 2 · **Hitachi** 2 · **NVIDIA Shield** 2 ·
-**Skyworth** 2 · **Vu** 2 · AiPro2K · AIWA · Chromecast with Google TV · FFalcon · Freebox · Insignia Fire TV ·
+**Skyworth** 2 · **Vu** 2 · AiPro2K · AIWA · Chromecast with Google TV · Compac · FFalcon · Freebox · Insignia Fire TV ·
 Kalley · MTC · OnePlus · onn · PRISM+ · RCA · Redmi · SANYO · Thomson · Toshiba Fire TV · Vidda ·
 BYINTEK, JMGO, Portronics, Stellamore, Wanbo and XGIMI projectors
 
@@ -135,6 +135,7 @@ BYINTEK, JMGO, Portronics, Stellamore, Wanbo and XGIMI projectors
 | CHiQ AI PONT (Changhong GTVU65, dangni, MediaTek mt5867) | Google TV 14 |
 | CHiQ AI PONT (DVB93CQ) | Android TV 11 |
 | Chromecast with Google TV 4K (sabrina) | Google TV 14 |
+| Compac ATV R2 (SCBC R2, Realtek RTD285O) | Android TV 9 |
 | FFalcon (雷鸟) 鹤6 PRO 65S585C Pro (China, tcl_mt5879_cn, MediaTek MT9653) | Android TV 11 |
 | Freebox Player POP (Free, fbx8am, Amlogic), IPTV/DVB-T box | Android TV 10 |
 | Haier Android TV DVB2K (broadway, HaierATVT56DVB) | Android TV 11 |
