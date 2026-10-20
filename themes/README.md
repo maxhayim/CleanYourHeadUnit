@@ -66,14 +66,15 @@ under about 300 KB: the text, the hero name and the dock band are designed for b
 decodes the picture into memory on every Home start. Pictures larger than the screen are scaled down to
 it; a picture that is still over 4K (about 8.4 million pixels) after it is sampled down to the screen is not shown at all, and the plain colour stays.
 
-For an offline collection, put JPEG, PNG or WebP files in `wallpapers/` beside `config.json` and set:
+For a wallpaper collection, place JPEG, PNG or WebP files in the theme’s `wallpapers/` folder beside `config.json`, then set:
 
 ```json
 { "wallpaper": true, "wallpaper_rotation_minutes": 30, "wallpaper_dim": 40 }
 ```
 
-Both theme-push scripts copy that folder's images. Use filenames containing only letters, digits,
-underscores, dots and hyphens. A new theme replaces the previous collection. The launcher considers
+When you apply a theme, its collection replaces the one already on the TV. Use filenames containing
+only letters, digits, underscores, dots and hyphens. Images can come from any source; check that you
+have permission to use them. The launcher considers
 up to 100 nonempty images, at most 10 MB each, skips unreadable files and keeps the last good background.
 An empty collection falls back to `wallpaper.jpg`, or the background colour if no image is available.
 `"wallpaper": false` disables both single-image and collection backgrounds.
