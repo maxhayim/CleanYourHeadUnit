@@ -8,7 +8,7 @@
   <a href="https://cleanyour.tv">cleanyour.tv</a> ·
   <a href="PROMPT.md">The prompt</a> ·
   <a href="examples/">107 TV lists</a> ·
-  <a href="SHOWCASE.md">19 built on it</a> ·
+  <a href="SHOWCASE.md">22 built on it</a> ·
   <a href="https://x.com/gathint/status/2111379569030939102">The tweet</a> ·
   <a href="README.zh-CN.md">简体中文</a>
 </p>
@@ -401,7 +401,7 @@ control what goes on your TV. No prebuilt binaries.
 The most useful contribution is your TV's debloat list, so the next person with that model does
 not have to rediscover it. Launcher improvements and sharper prompt wording are welcome too.
 [CONTRIBUTING.md](CONTRIBUTING.md) has the format and the testing we ask for. Built something on
-top, a launcher, a port, a theme? Add it to [SHOWCASE.md](SHOWCASE.md), where eighteen projects already
+top, a launcher, a port, a theme? Add it to [SHOWCASE.md](SHOWCASE.md), where twenty-two projects already
 live: a webOS port for LG, a Stremio shelf, a Hisense restyle, Fire TV launchers, an AirPlay installer.
 
 The people whose work is in this repo:
