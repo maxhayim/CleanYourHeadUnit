@@ -126,7 +126,10 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
     // How far the grid has scrolled the glass. springY works without it, in grid content space, so a
     // scroll moves the glass in lockstep with its tile instead of becoming a moving spring target.
     private float glassScrollShift;
+    private int glassCardW;   // width of the tile the glass was last fitted to
     private boolean glassShown;
+    private final Rect tileRect = new Rect();
+    private final Rect revealRect = new Rect();
     // Static so they survive the activity being destroyed while another app is open (low-memory TVs,
     // or Developer options → "Don't keep activities"); they only reset when the process dies.
     private static int lastFocused = 0;
@@ -387,6 +390,9 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
             if (grid.getPaddingTop() != want) {
                 grid.setPadding(grid.getPaddingLeft(), want, grid.getPaddingRight(), grid.getPaddingBottom());
             }
+            // Cold start or column count > 4: the first focus can run before the grid has its final width or
+            // padding, leaving the glass at the XML design size until a key is pressed.
+            grid.post(this::refitGlass);
         });
 
         // Keep the glass glued to its tile while the grid scrolls.
@@ -991,8 +997,17 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
     public void onTileFocused(int position, View card) {
         lastFocused = position;
         lastFocusedKey = adapter.keyAt(position);
+        // Focus restored before the first layout (cold start): the tile has no size yet, and the glass
+        // would be sized to 2*pad. Run again once the tile is laid out.
+        if (card.getWidth() == 0) {
+            card.post(() -> {
+                if (card.isFocused() && card.getWidth() > 0) onTileFocused(position, card);
+            });
+            return;
+        }
         // Tile rect in root coordinates, using layout positions (ignores the scale animation).
-        Rect r = new Rect(0, 0, card.getWidth(), card.getHeight());
+        Rect r = tileRect;
+        r.set(0, 0, card.getWidth(), card.getHeight());
         root.offsetDescendantRectToMyCoords(card, r);
         float pad = 6f * density;        // matches GlassView's glow inset
         float scale = adapter.focusScale();
@@ -1002,13 +1017,14 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         float y = r.exactCenterY() - h / 2f - (advancedEffects ? 4f * density : 0f);
 
         ViewGroup.LayoutParams lp = glass.getLayoutParams();
-        if (lp.width != (int) w || lp.height != (int) h) {
+        if (lp.width != (int) w || lp.height != (int) h || card.getWidth() != glassCardW) {
             lp.width = (int) w;
             lp.height = (int) h;
             glass.setLayoutParams(lp);
             // GlassView draws its slab inset by pad, i.e. exactly over the zoomed tile: same corners as the tile.
             glass.setRadius(AppAdapter.cornerRadius(card.getWidth(), density) * scale);
         }
+        glassCardW = card.getWidth();
         glassTargetX = x;
         glassTargetY = y;
         if (!glassShown) {
@@ -1046,8 +1062,24 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
             if (dockRow) hideHero();
             else showGlowOnly(position);
             // Scroll just enough so the whole glass (not only the tile) is visible.
-            Rect want = new Rect(0, -(int) pad * 2, item.getWidth(), item.getHeight() + (int) pad);
-            grid.requestChildRectangleOnScreen(item, want, reducedMotion);
+            revealRect.set(0, -(int) pad * 2, item.getWidth(), item.getHeight() + (int) pad);
+            grid.requestChildRectangleOnScreen(item, revealRect, reducedMotion);
+        }
+    }
+
+    /** Refits the glass to the focused holder once the grid layout and tile dimensions settle. */
+    private void refitGlass() {
+        if (isDestroyed() || adapter.appCount() == 0 || libraryFocusPending) return;
+        int pos = Math.max(0, Math.min(lastFocused, adapter.appCount() - 1));
+        RecyclerView.ViewHolder vh = grid.findViewHolderForAdapterPosition(pos);
+        View card = vh == null ? null : vh.itemView.findViewById(R.id.card);
+        if (card == null || card.getWidth() <= 0 || !card.isFocused()) return;
+        float pad = 6f * density;
+        float scale = adapter.focusScale();
+        int w = (int) (card.getWidth() * scale + 2 * pad);
+        int h = (int) (card.getHeight() * scale + 2 * pad);
+        if (!glassShown || card.getWidth() != glassCardW || glass.getWidth() != w || glass.getHeight() != h) {
+            onTileFocused(pos, card);
         }
     }
 
