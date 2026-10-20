@@ -24,8 +24,9 @@ $revision = [guid]::NewGuid().ToString('N')
 # enabled list (asynchronously, so wait a second), which would switch off InputKeyService/HomeKeyService;
 # put the list back if it had ours. Writing the same list back is not enough: the force-stop also turns
 # accessibility_enabled off, and the service only binds again once the list changes. So restart first, then
-# clear the list, write it back and switch accessibility on again.
-$restart = "a=`$(settings get secure enabled_accessibility_services); am force-stop $pkg; am start -n $pkg/.MainActivity >/dev/null; case `"`$a`" in *$pkg*) sleep 1; settings put secure enabled_accessibility_services ''; settings put secure enabled_accessibility_services `"`$a`"; settings put secure accessibility_enabled 1 ;; esac"
+# clear the list, switch accessibility off (some TVs keep the service "crashed" and unbound otherwise), write
+# the list back and switch accessibility on again.
+$restart = "a=`$(settings get secure enabled_accessibility_services); am force-stop $pkg; am start -n $pkg/.MainActivity >/dev/null; case `"`$a`" in *$pkg*) sleep 1; settings put secure enabled_accessibility_services ''; settings put secure accessibility_enabled 0; sleep 1; settings put secure enabled_accessibility_services `"`$a`"; settings put secure accessibility_enabled 1 ;; esac"
 
 # Some firmware (TCL G07, Android 11) locks the shell out of Android/data. Files are staged in
 # /data/local/tmp and copied in, or written through the launcher's ThemeProvider when that is refused.
