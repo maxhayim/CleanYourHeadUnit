@@ -20,7 +20,6 @@
     <string name="cant_open">Не удалось открыть %1$s</string>
     <string name="date_format">EEEE, d MMMM</string>
     <string name="stats_cpu">CPU %1$d%%</string>
-    <string name="stats_cpu_unknown">CPU —</string>
     <string name="stats_memory">Память %1$d МБ свободно</string>
     <string name="stats_storage">Накопитель %1$s свободно</string>
     <string name="dream_name">Часы</string>
@@ -62,6 +61,9 @@
     <string name="on">Вкл.</string>
     <string name="off">Выкл.</string>
     <string name="enable">Включить</string>
+    <string name="dock_edit">Изменить док</string>
+    <string name="dock_edit_hint">Выберите место в доке и нажмите ОК. Назад — готово.</string>
+    <string name="dock_edit_pick_app">Теперь выберите приложение для этого места и нажмите ОК. Назад — выбрать другое место.</string>
     <string name="reorder">Изменить порядок приложений</string>
     <string name="reorder_hint">ОК — взять приложение, стрелки — переместить, Назад — поставить. Ещё раз Назад — готово.</string>
     <string name="reorder_not_saved">Не удалось сохранить новый порядок</string>
@@ -82,4 +84,5 @@
         <item quantity="many">%1$d приложений</item>
         <item quantity="other">%1$d приложения</item>
     </plurals>
+    <string name="greeting_with_name">%1$s, %2$s</string>
 </resources>

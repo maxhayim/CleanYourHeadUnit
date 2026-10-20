@@ -7,8 +7,9 @@
 #        TV_HOST=192.168.1.50 tools/theme.sh --reset        # remove the overlay, back to config.xml
 set -euo pipefail
 # Resolve the theme folder against the caller's directory before moving into tools/.
+# Git Bash's pwd says /c/Users/..., which the Windows Python cannot open; pwd -W gives C:/Users/... (as in disable.sh).
 THEME_ARG="${1:-}"
-case "$THEME_ARG" in --reset|"") ;; /*) ;; *) THEME_ARG="$PWD/$THEME_ARG" ;; esac
+case "$THEME_ARG" in --reset|"") ;; /*) ;; *) THEME_ARG="$(pwd -W 2>/dev/null || pwd)/$THEME_ARG" ;; esac
 cd "$(dirname "$0")"
 : "${TV_HOST:?set TV_HOST to the TV IP address, e.g. TV_HOST=192.168.1.50 $0 themes/aurora}"
 PY=venv/bin/python
@@ -44,6 +45,18 @@ if [ -f "$THEME/wallpaper.jpg" ]; then
   "$PY" -I b64push.py "$THEME/wallpaper.jpg" "$DIR/wallpaper.jpg"
 else
   tv "rm -f $DIR/wallpaper.jpg" >/dev/null
+fi
+tv "mkdir -p $DIR/wallpapers; rm -f $DIR/wallpapers/*.jpg $DIR/wallpapers/*.jpeg $DIR/wallpapers/*.png $DIR/wallpapers/*.webp $DIR/wallpapers/*.JPG $DIR/wallpapers/*.JPEG $DIR/wallpapers/*.PNG $DIR/wallpapers/*.WEBP" >/dev/null
+if [ -d "$THEME/wallpapers" ]; then
+  for IMAGE in "$THEME"/wallpapers/*; do
+    [ -f "$IMAGE" ] || continue
+    case "$IMAGE" in
+      *.jpg|*.jpeg|*.png|*.webp|*.JPG|*.JPEG|*.PNG|*.WEBP)
+        NAME=$(basename "$IMAGE")
+        [[ "$NAME" =~ ^[A-Za-z0-9_.-]+$ ]] || { echo "unsupported wallpaper filename: $NAME" >&2; exit 1; }
+        "$PY" -I b64push.py "$IMAGE" "$DIR/wallpapers/$NAME" ;;
+    esac
+  done
 fi
 tv "printf '%s' '$REVISION' > $DIR/theme_revision" >/dev/null
 tv "$RESTART; echo applied" | tail -n 1

@@ -39,6 +39,7 @@ is ignored, and a file that doesn't parse is ignored as a whole, so a theme can 
 | `reorder_button` | bool | A reorder button in the top bar (`false` by default); reordering is always in the Settings button's long-press menu |
 | `app_library` | bool | An App library pill after the last Home row: every installed app, add one to Home or take it off (`false` by default). The choices stay on the TV when a theme is pushed or reset; see [docs/app-library.md](../docs/app-library.md) |
 | `shamsi_date` | bool | Show the Solar Hijri date above the Gregorian one |
+| `greeting_name` | string | A name after the greeting, e.g. `"Mr. Trịnh"` for GOOD MORNING, MR. TRỊNH; empty for the greeting alone |
 | `module_cards` | bool | Look for module cards and ask about them (`true`); `false` turns the feature off |
 | `reduced_motion` | bool | Calmer motion for weak GPUs: stiff highlight spring, no tile overshoot, short fades, no entrance replay |
 | `vpn_app` | string | App the network pill opens when a VPN is configured; also shows a red "VPN off" badge while no VPN is up |
@@ -49,12 +50,16 @@ is ignored, and a file that doesn't parse is ignored as a whole, so a theme can 
 | `background_color` | `#RRGGBB` | Colour behind everything; black by default |
 | `sky_intensity` | 0 to 100 | Time-of-day backdrop: a dark gradient that follows the clock, 0 hides it (default) |
 | `wallpaper` | bool | Show `wallpaper.jpg` from the theme folder (`true`), or ignore it (`false`) |
+| `wallpaper_rotation_minutes` | 0 to 1440 | Randomly rotate images in the theme's `wallpapers/` folder at this interval; 0 keeps the single-image behaviour |
+| `wallpaper_dim` | 0 to 90 | Black overlay over wallpaper images, in percent; 0 by default |
 | `festival` | string | Turns on a festive skin: the network pill becomes a diya whose flame follows the connection, Inputs a temple bell, Settings a marigold, and the first Home of the day gets a petal shower. `dussehra` and `diwali` have built-in greetings |
 | `festival_until` | `YYYY-MM-DD` | Last day the festive skin shows; it switches itself off after that. A malformed date turns it off |
 | `greeting` | string | Replaces the time-of-day greeting while the festive skin is on |
 | `accent_color` | `#RRGGBB` | Colour of the focus glow while the festive skin is on; diya gold if not set |
 | `settings_key_keycodes` | list of keycodes | Remote buttons that open Settings, for `HomeKeyService` (TCL Google TV gear: `[83]`) |
 | `settings_key_panel` | bool | Those buttons open a small quick settings panel (TV settings, Display, Network, Apps, Launcher settings) instead of the TV's Settings |
+| `input_key_keycodes` | list of keycodes | More remote buttons that open the input switcher, for `InputKeyService` (`KEYCODE_TV` and `KEYCODE_TV_INPUT` always do) |
+| `app_keys` | list of strings | Remote buttons that open an app, as `"190:com.google.android.youtube.tv"` or `"KEYCODE_BUTTON_3:com.google.android.youtube.tv"`, for `InputKeyService` or `HomeKeyService` |
 
 ## Wallpapers
 
@@ -62,6 +67,25 @@ is ignored, and a file that doesn't parse is ignored as a whole, so a theme can 
 under about 300 KB: the text, the hero name and the dock band are designed for black, and a 1 GB TV
 decodes the picture into memory on every Home start. Pictures larger than the screen are scaled down to
 it; a picture that is still over 4K (about 8.4 million pixels) after it is sampled down to the screen is not shown at all, and the plain colour stays.
+
+For a wallpaper collection, place JPEG, PNG or WebP files in the theme’s `wallpapers/` folder beside `config.json`, then set:
+
+```json
+{ "wallpaper": true, "wallpaper_rotation_minutes": 30, "wallpaper_dim": 40 }
+```
+
+When you apply a theme, its collection replaces the one already on the TV. Use filenames containing
+only letters, digits, underscores, dots and hyphens. Images can come from any source; check that you
+have permission to use them. The launcher considers
+up to 100 nonempty images, at most 10 MB each, skips unreadable files and keeps the last good background.
+An empty collection falls back to `wallpaper.jpg`, or the background colour if no image is available.
+`"wallpaper": false` disables both single-image and collection backgrounds.
+
+Selection is random without an immediate repeat when alternatives exist. The current image and its
+change time survive app/process restarts. Rotation runs only while Home is visible; on return from
+another app, an overdue background changes then. Images are decoded on a worker thread and bounded
+to the screen size. There is no download service, Internet permission or computer-side scheduler.
+The original system idle screensaver is left unchanged.
 
 ## Reduced motion
 

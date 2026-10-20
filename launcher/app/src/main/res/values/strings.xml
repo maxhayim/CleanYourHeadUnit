@@ -22,7 +22,6 @@
     <!-- Date next to the clock on Home; a locale can split it over two lines with \n. -->
     <string name="date_format_home" translatable="false">@string/date_format</string>
     <string name="stats_cpu">CPU %1$d%%</string>
-    <string name="stats_cpu_unknown">CPU —</string>
     <string name="stats_memory">Memory %1$d MB free</string>
     <string name="stats_storage">Storage %1$s free</string>
     <string name="dream_name">Clock</string>
@@ -68,6 +67,9 @@
     <string name="card_state_new">New</string>
     <string name="card_state_new_key">New key</string>
     <string name="card_state_new_label">New name</string>
+    <string name="dock_edit">Edit dock</string>
+    <string name="dock_edit_hint">Choose the dock place to change and press OK. Back to finish.</string>
+    <string name="dock_edit_pick_app">Now choose the app to put there and press OK. Back to choose another place.</string>
     <string name="reorder">Reorder apps</string>
     <string name="reorder_hint">OK picks up an app, arrows move it, Back places it. Back again to finish.</string>
     <string name="reorder_not_saved">Couldn\'t save the new order</string>
@@ -86,4 +88,6 @@
         <item quantity="one">%1$d app</item>
         <item quantity="other">%1$d apps</item>
     </plurals>
+    <!-- The greeting, then greeting_name: "Good morning, Mr. Trịnh". -->
+    <string name="greeting_with_name">%1$s, %2$s</string>
 </resources>

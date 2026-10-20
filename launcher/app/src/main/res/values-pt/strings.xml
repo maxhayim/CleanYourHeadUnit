@@ -20,7 +20,6 @@
     <string name="cant_open">Não foi possível abrir %1$s</string>
     <string name="date_format">EEE  d \'de\' MMMM</string>
     <string name="stats_cpu">CPU %1$d%%</string>
-    <string name="stats_cpu_unknown">CPU —</string>
     <string name="stats_memory">Memória %1$d MB livres</string>
     <string name="stats_storage">Armazenamento %1$s livre</string>
     <string name="dream_name">Relógio</string>
@@ -50,6 +49,9 @@
     <string name="card_state_new">Novo</string>
     <string name="card_state_new_key">Nova chave</string>
     <string name="card_state_new_label">Novo nome</string>
+    <string name="dock_edit">Editar a dock</string>
+    <string name="dock_edit_hint">Escolha o lugar da dock a mudar e prima OK. Voltar para terminar.</string>
+    <string name="dock_edit_pick_app">Agora escolha a app a colocar lá e prima OK. Voltar para escolher outro lugar.</string>
     <string name="reorder">Reordenar apps</string>
     <string name="reorder_hint">OK pega numa app, as setas movem-na, Voltar pousa-a. Voltar outra vez para terminar.</string>
     <string name="reorder_not_saved">Não foi possível guardar a nova ordem</string>
@@ -68,4 +70,5 @@
         <item quantity="one">%1$d app</item>
         <item quantity="other">%1$d apps</item>
     </plurals>
+    <string name="greeting_with_name">%1$s, %2$s</string>
 </resources>
