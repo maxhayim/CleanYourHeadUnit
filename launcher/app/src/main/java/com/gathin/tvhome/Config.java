@@ -35,6 +35,7 @@ final class Config {
     static final String WALLPAPER_NAME = "wallpaper.jpg";
     static final String SETTINGS_NAME = "launcher_settings";
     static final String ROWS_BELOW_DOCK_KEY = "rows_below_dock";
+    static final String WALLPAPER_CHOICE_KEY = "wallpaper_choice";
     private static final String THEME_REVISION_NAME = "theme_revision";
     private static final String THEME_SIGNATURE_KEY = "theme_signature";
 
@@ -251,6 +252,25 @@ final class Config {
             wallpapers.addAll(WallpaperRotation.images(new File(dir, "wallpapers")));
         }
         if (wallpapers.isEmpty() && wallpaper != null) wallpapers.add(wallpaper);
+        // An on-TV wallpaper pick overrides the theme: a filename from the wallpapers/
+        // collection, or "none". Unset means the theme decides (off by default).
+        String wallpaperChoice = choices.getString(WALLPAPER_CHOICE_KEY, null);
+        if ("none".equals(wallpaperChoice)) {
+            wallpapers.clear();
+            wallpaper = null;
+            wallpaperEnabled = false;
+        } else if (wallpaperChoice != null && dir != null) {
+            File picked = WallpaperRotation.find(
+                    WallpaperRotation.images(new File(dir, "wallpapers")), wallpaperChoice);
+            if (picked == null && wallpaperChoice.equals(
+                    wallpaper != null ? wallpaper.getName() : "")) picked = wallpaper;
+            if (picked != null) {
+                wallpapers.clear();
+                wallpapers.add(picked);
+                wallpaper = picked;
+                wallpaperEnabled = true;
+            }
+        }
         // A festive skin comes only from a theme; config.xml has no festival.
         Festival festival = json == null ? Festival.NONE : Festival.parse(string(json, "festival", ""),
                 string(json, "festival_until", ""), string(json, "greeting", ""), string(json, "accent_color", ""));
@@ -275,11 +295,12 @@ final class Config {
             // explicit theme push or reset by the updated tools.
             SharedPreferences.Editor editor = choices.edit();
             if (!"absent".equals(token)) editor.remove("columns").remove("animations")
-                    .remove("advanced_effects").remove(ROWS_BELOW_DOCK_KEY);
+                    .remove("advanced_effects").remove(ROWS_BELOW_DOCK_KEY).remove(WALLPAPER_CHOICE_KEY);
             editor.putString(THEME_SIGNATURE_KEY, signature).commit();
         } else if (!seen.equals(signature)) {
             choices.edit().remove("columns").remove("animations").remove("advanced_effects")
-                    .remove(ROWS_BELOW_DOCK_KEY).putString(THEME_SIGNATURE_KEY, signature).commit();
+                    .remove(ROWS_BELOW_DOCK_KEY).remove(WALLPAPER_CHOICE_KEY)
+                    .putString(THEME_SIGNATURE_KEY, signature).commit();
         }
     }
 

@@ -91,6 +91,10 @@ another app, an overdue background changes then. Images are decoded on a worker 
 to the screen size. There is no download service, Internet permission or computer-side scheduler.
 The original system idle screensaver is left unchanged.
 
+On the TV, Launcher settings has a Wallpaper row: pick one picture from the collection (or the theme's
+`wallpaper.jpg`), or None. A pick shows that one picture and stops the rotation until you choose Theme
+default, press Follow theme, or push a theme again.
+
 ## Reduced motion
 
 `"reduced_motion": true` keeps the look but calms the movement: the highlight spring is stiff instead
