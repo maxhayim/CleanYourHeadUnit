@@ -283,11 +283,14 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
                 if (getPosition(child) < COLUMNS) return false;
                 int top = child.getTop() + rect.top;
                 int bottom = top + rect.height();
+                // A row already fully on screen stays put, even inside the bottom padding (the last row
+                // rows_below_dock leaves visible ends there; nudging it up was the bug). A row that has to scroll
+                // in still stops at the padding line, clear of the screen edge, as before.
                 int limitBottom = getHeight() - getPaddingBottom();
                 int dy;
                 if (top < 0) dy = top;
-                else if (bottom > limitBottom) dy = Math.min(top, bottom - limitBottom);
-                else dy = 0;
+                else if (bottom <= getHeight()) dy = 0;
+                else dy = Math.min(top, bottom - limitBottom);
                 if (dy == 0) return false;
                 if (immediate || reducedMotion || !animations) parent.scrollBy(0, dy);
                 else parent.smoothScrollBy(0, dy);
