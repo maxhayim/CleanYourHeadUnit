@@ -2,17 +2,6 @@
   <a href="https://cleanyour.tv"><img src="https://raw.githubusercontent.com/Gathin23/cleanyourtv/main/docs/banner.png" alt="CleanYourTV. Your TV, minus the ads." width="800"></a>
 </p>
 
-<h3 align="center">123 TV models &nbsp;·&nbsp; 42 brands &nbsp;·&nbsp; 19 languages &nbsp;·&nbsp; 390 KB launcher</h3>
-
-<p align="center">
-  <a href="https://cleanyour.tv">cleanyour.tv</a> ·
-  <a href="PROMPT.md">The prompt</a> ·
-  <a href="examples/">123 TV lists</a> ·
-  <a href="SHOWCASE.md">25 built on it</a> ·
-  <a href="https://x.com/gathint/status/2111379569030939102">The tweet</a> ·
-  <a href="README.zh-CN.md">简体中文</a>
-</p>
-
 <p align="center">
   <a href="https://github.com/Gathin23/cleanyourtv/stargazers"><img src="https://img.shields.io/github/stars/Gathin23/cleanyourtv?style=flat&cacheSeconds=1800&color=cfffcf&labelColor=15181e" alt="Stars"></a>
   <a href="https://github.com/Gathin23/cleanyourtv/pulls?q=is%3Amerged"><img src="https://img.shields.io/github/issues-pr-closed/Gathin23/cleanyourtv?style=flat&cacheSeconds=1800&label=merged%20PRs&color=cfffcf&labelColor=15181e" alt="Merged PRs"></a>
@@ -21,6 +10,24 @@
   <a href="LICENSE"><img src="https://img.shields.io/badge/licence-MIT-cfffcf?style=flat&labelColor=15181e" alt="MIT"></a>
   <a href="https://buymeacoffee.com/gathint"><img src="https://img.shields.io/badge/support-%E2%9D%A4-ff5e8a?style=flat&labelColor=15181e" alt="Support, buy me a coffee"></a>
   <a href="https://www.producthunt.com/products/cleanyourtv"><img src="https://img.shields.io/badge/Product%20Hunt-launching%20Oct%2021-da552f?style=flat&logo=producthunt&logoColor=white&labelColor=15181e" alt="CleanYourTV on Product Hunt"></a>
+</p>
+
+<div align="center">
+<table>
+  <tr>
+    <td align="center"><h3>123</h3><sub>TV MODELS</sub></td>
+    <td align="center"><h3>42</h3><sub>BRANDS</sub></td>
+    <td align="center"><h3>19</h3><sub>LANGUAGES</sub></td>
+    <td align="center"><h3>390 KB</h3><sub>LAUNCHER</sub></td>
+  </tr>
+</table>
+</div>
+
+<p align="center">
+  <a href="https://cleanyour.tv">cleanyour.tv</a> ·
+  <a href="PROMPT.md">The prompt</a> ·
+  <a href="SHOWCASE.md">Showcase</a> ·
+  <a href="README.zh-CN.md">简体中文</a>
 </p>
 
 Strip the bloatware from any Android TV or Google TV over Wi-Fi, and replace the ad-filled home
