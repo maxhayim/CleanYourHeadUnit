@@ -16,6 +16,7 @@ powershell -ExecutionPolicy Bypass -File tools\theme.ps1 -TvHost 192.168.1.50 th
 |---|---|
 | `default/` | The built-in look written out as JSON, as a starting point for your own |
 | `aurora/` | A dark aurora wallpaper (teal and violet on navy, darker at the bottom) with a matching background colour |
+| `dussehra/` | A festive night sky warming to an ember glow, sparks and a row of diyas along the bottom, for Dussehra and Diwali |
 | `six-columns/` | Six smaller tiles per row and one grid row visible under the dock |
 
 ## Keys
