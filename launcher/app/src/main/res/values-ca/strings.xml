@@ -31,4 +31,7 @@
     <string name="on">Activat</string>
     <string name="off">Desactivat</string>
     <string name="enable">Activa</string>
+    <string name="reorder">Reordena les aplicacions</string>
+    <string name="reorder_hint">D\'acord agafa una aplicació, les fletxes la mouen, Enrere la deixa. Torna a prémer Enrere per acabar.</string>
+    <string name="reorder_not_saved">No s\'ha pogut desar el nou ordre</string>
 </resources>
