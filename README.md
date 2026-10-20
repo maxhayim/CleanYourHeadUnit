@@ -68,8 +68,9 @@ before touching anything you might use.
 
 ## Quick start
 
-You need a computer on the same Wi-Fi as the TV and a coding assistant with shell access
-(Claude Code or similar).
+You need a computer on the same Wi-Fi as the TV and a coding assistant with shell access.
+Suggested: Claude Code on [0G Private Computer](https://pc.0g.ai), one API key for 100+ models.
+Claude Code with an Anthropic plan, Codex or Gemini CLI work too.
 
 | | |
 |---|---|
