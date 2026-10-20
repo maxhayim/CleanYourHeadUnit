@@ -106,10 +106,38 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.Holder> {
 
     /** Height of one grid item: the tile, the name label under it and the item's own padding. */
     static int itemHeightPx(int tileHeightPx, float density) {
-        return tileHeightPx + Math.round(45 * density);
+        return tileHeightPx + Math.round(ITEM_EXTRA_DP * density);
+    }
+
+    /** item_app.xml: 8dp padding above and below, a 7dp gap and the 22dp name label under the tile. */
+    static final float ITEM_EXTRA_DP = 45;
+    /** DockDecoration's offsets above and below the dock row. */
+    static final float DOCK_EXTRA_DP = 6 + 12;
+    /** Room kept under the last row rows_below_dock asks for (MainActivity places the dock with the same). */
+    static final float BOTTOM_ROOM_DP = 30;
+    /** Room kept above the dock for the dock title (48sp hero name plus its 40dp gap) when dock_title is on. */
+    static final float TITLE_ROOM_DP = 104;
+
+    /**
+     * Tile width that fits the columns across and, with rows_below_dock > 0, the dock (with its title above it,
+     * if shown) plus that many rows down the grid's height; the smaller wins. With rows_below_dock = 0, or before
+     * the grid has a height, only the width counts, as before. Without this, 2 or 3 rows below the dock did not
+     * fit: the dock was pushed to the top and its title drew over the clock.
+     */
+    static int tileWidthPx(int innerWidthPx, int gridHeightPx, int columns, int rowsBelowDock, boolean dockTitle,
+                           float density) {
+        int w = tileWidthPx(innerWidthPx, columns, density);
+        if (gridHeightPx <= 0 || rowsBelowDock <= 0) return w;
+        float reserved = (DOCK_EXTRA_DP + BOTTOM_ROOM_DP + (dockTitle ? TITLE_ROOM_DP : 0)) * density;
+        float perItem = (gridHeightPx - reserved) / (rowsBelowDock + 1);
+        float tileH = perItem - ITEM_EXTRA_DP * density;
+        int byHeight = Math.round(tileH * DESIGN_W_DP / DESIGN_H_DP);
+        return Math.max(Math.round(80 * density), Math.min(w, byHeight));
     }
 
     private final Context ctx;
+    private final int rowsBelowDock;
+    private final boolean dockTitle;
     private final TileListener listener;
     private final int dockSize;
     /** Dock order (config.xml dock_apps, or a theme's config.json). */
@@ -138,6 +166,8 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.Holder> {
         this.advancedEffects = cfg.animations && cfg.advancedEffects;
         this.showHomeSettings = cfg.showHomeSettingsShortcut;
         this.reducedMotion = cfg.reducedMotion;
+        this.rowsBelowDock = cfg.rowsBelowDock;
+        this.dockTitle = cfg.dockTitle;
         // Tiles keep their identity across reload(), so a focused tile stays on its app instead of
         // its view being rebound to whatever app now sits in that slot.
         setHasStableIds(true);
@@ -224,7 +254,7 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.Holder> {
         float density = parent.getResources().getDisplayMetrics().density;
         int width = parent.getWidth() > 0 ? parent.getWidth() : parent.getMeasuredWidth();
         int inner = width - parent.getPaddingLeft() - parent.getPaddingRight();
-        int w = tileWidthPx(inner, dockSize, density), h = tileHeightPx(w);
+        int w = tileWidthPx(inner, parent.getHeight(), dockSize, rowsBelowDock, dockTitle, density), h = tileHeightPx(w);
         View card = v.findViewById(R.id.card);
         ViewGroup.LayoutParams cardLp = card.getLayoutParams();
         cardLp.width = w;
