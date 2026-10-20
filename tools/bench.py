@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Measure the launcher's key latency, jank and idle cost on a TV, over ADB.
+"""Measure the launcher's key latency, jank and idle cost on a TV.
 
 The launcher is the app that answers HOME. The script presses a fixed sequence of D-pad keys,
 one at a time, and reads the frame timestamps that `dumpsys gfxinfo <pkg> framestats` reports:
@@ -10,6 +10,10 @@ one at a time, and reads the frame timestamps that `dumpsys gfxinfo <pkg> frames
 
 It also measures the cold start (`am start -W`), the return to Home (HOME key from another app),
 the idle CPU of the whole device and the launcher's own PSS. Nothing on the TV is changed.
+
+The TV is reached through tools/tv.py, the client this project already ships: it speaks ADB over
+TCP with the adb_shell library, so no adb binary is needed. That matters on macOS, where the
+platform tools are not installed by default.
 
 Usage:
     TV_HOST=192.168.1.50 python tools/bench.py --keys 36 --series 3
@@ -26,6 +30,7 @@ most of those keys and leaves a sample too small to say anything.
 import argparse
 import json
 import os
+from pathlib import Path
 import re
 import statistics
 import subprocess
@@ -41,25 +46,55 @@ KEYCODE_NAMES = {19: "KEYCODE_DPAD_UP", 20: "KEYCODE_DPAD_DOWN", 21: "KEYCODE_DP
                  4: "KEYCODE_BACK"}
 
 
-def adb(*args, binary=None, capture=True, check=False):
-    """Run one adb command and return its output as text."""
-    cmd = [binary or os.environ.get("ADB", "adb"), *args]
-    result = subprocess.run(cmd, capture_output=capture, text=True,
-                            errors="replace" if capture else None)
-    if check and result.returncode != 0:
-        raise SystemExit(f"command failed: {' '.join(cmd)}\n{result.stderr}")
-    return result.stdout if capture else ""
-
-
 class TV:
-    """The TV, addressed as serial[:port]."""
+    """The TV, reached through tools/tv.py.
+
+    tools/tv.py is the client this project already ships: it speaks ADB over TCP with the
+    adb_shell library, so no adb binary is needed. That matters on macOS, where the platform
+    tools are not installed by default and the system blocks the ones that are.
+    """
 
     def __init__(self, host, port=5555, binary=None):
         self.serial = f"{host}:{port}"
-        self.binary = binary or os.environ.get("ADB", "adb")
+        self.binary = binary
+        self.client = None
+        self._other_app = None
+
+    def _tv_py(self):
+        """The path of tools/tv.py, next to this file."""
+        return str(Path(__file__).resolve().parent / "tv.py")
+
+    def _python(self):
+        """The interpreter that has the adb_shell library.
+
+        tools/tv.py needs adb_shell, which lives in this project's venv (tools/venv). When the
+        venv is there, it is used; otherwise the interpreter running this script is, and
+        tv.py's own error says what to install.
+        """
+        here = Path(__file__).resolve().parent
+        for candidate in (here / "venv" / "bin" / "python",
+                          here / "venv" / "Scripts" / "python.exe"):
+            if candidate.exists():
+                return str(candidate)
+        return sys.executable
+
+    def _run(self, *args, capture=True):
+        """Run tools/tv.py with the given arguments."""
+        cmd = [self._python(), "-I", self._tv_py(), *args]
+        result = subprocess.run(cmd, capture_output=capture, text=True,
+                                errors="replace" if capture else None)
+        if result and result.returncode != 0 and not result.stdout.strip():
+            raise SystemExit(f"tools/tv.py failed: {result.stderr.strip()}")
+        return result
 
     def shell(self, command):
-        return adb("-s", self.serial, "shell", command, binary=self.binary)
+        """Run one shell command on the TV and return its output.
+
+        tools/tv.py joins the arguments with a space and runs them in the TV's shell, so the
+        command is passed as it is, without a "shell" subcommand of our own.
+        """
+        result = self._run(command)
+        return result.stdout if result else ""
 
     def shell_ok(self, command):
         return self.shell(command).strip() == ""
@@ -113,7 +148,7 @@ def key_event_time(tv, keycode, binary=None):
     The log line is matched by the key's own name: the buffer holds the keys injected before it,
     and the first line of the buffer is not necessarily the key of this measurement.
     """
-    out = adb("-s", tv.serial, "logcat", "-d", "-b", "main", binary=binary or tv.binary)
+    out = tv.shell("logcat -d -b main")
     name = KEYCODE_NAMES.get(keycode, f"keyCode={keycode}")
     for line in reversed(out.splitlines()):
         if "injectKeyEvent" in line and "action=ACTION_DOWN" in line and name in line:
@@ -139,14 +174,12 @@ def measure_key(tv, keycode, binary=None):
     package = tv.package_of(tv.home_component())
     # The reset zeroes the gfxinfo counters. Without it, the previous key's frame would still be
     # in the window and the "first frame after the key" would be the previous key's.
-    reset_out = adb("-s", tv.serial, "shell", "dumpsys", "gfxinfo", package, "reset",
-                    binary=binary or tv.binary)
+    reset_out = tv.shell(f"dumpsys gfxinfo {package} reset")
     t_before = None
     match = re.search(r"^Uptime:\s*(\d+)", reset_out, re.M)
     if match:
         t_before = int(match.group(1))
-    adb("-s", tv.serial, "shell", "input", "keyevent", str(keycode),
-        binary=binary or tv.binary, capture=False)
+    tv.shell(f"input keyevent {keycode}")
     time.sleep(1.0)
     stats = tv.shell(f"dumpsys gfxinfo {package} framestats")
     t_after = None
@@ -194,8 +227,7 @@ def measure_key(tv, keycode, binary=None):
 
 
 def clear_log(tv, binary=None):
-    adb("-s", tv.serial, "logcat", "-c", "-b", "main", binary=binary or tv.binary,
-        capture=False)
+    tv.shell("logcat -c -b main")
 
 
 def frame_rows(framestats):
@@ -218,14 +250,62 @@ def frame_rows(framestats):
     return rows
 
 
+def other_app(tv):
+    """An app to send the TV to, so the launcher really starts cold.
+
+    The Settings app is found by the category it answers, not by a hardcoded activity: the
+    activity name differs between manufacturers (com.android.tv.settings/.MainSettings on
+    Google TV, others elsewhere), and a fixed name simply does not exist on some sets.
+    """
+    if tv._other_app:
+        return tv._other_app
+    out = tv.shell(
+        "cmd package resolve-activity --brief -a android.intent.action.MAIN "
+        "-c android.intent.category.LAUNCHER")
+    lines = [line.strip() for line in out.splitlines() if "/" in line]
+    tv._other_app = lines[-1] if lines else None
+    return tv._other_app
+
+
+def accessibility_services(tv, package):
+    """The accessibility services enabled for a package, as the setting holds them."""
+    out = tv.shell("settings get secure enabled_accessibility_services")
+    return [part.strip() for part in out.split(":") if part.strip().startswith(package + "/")]
+
+
+def restore_accessibility(tv, package, services):
+    """Re-enable the accessibility services a force-stop took down.
+
+    `am force-stop` kills the process the service lives in, and Android unbinds it. The
+    service has to be re-enabled by hand, or the launcher comes back without it. `am kill`
+    would leave the service alone, but it also leaves the process alive, and then there is no
+    cold start to measure.
+    """
+    if not services:
+        return
+    for service in services:
+        tv.shell(f"settings put secure enabled_accessibility_services {service}")
+    tv.shell("settings put secure accessibility_enabled 1")
+
+
 def cold_start(tv, component, repeats):
     """The `am start -W` WaitTime of the launcher, in ms."""
     values = []
+    other = other_app(tv)
+    if not other:
+        print("Could not find another app to switch to; the cold start is not measured.")
+        return values
+    package = tv.package_of(component)
     for _ in range(repeats):
-        tv.shell("am start -W -n com.android.tv.settings/.MainSettings")
+        tv.shell(f"am start -W -n {other}")
         time.sleep(2)
-        tv.shell(f"am force-stop {tv.package_of(component)}")
+        # The services are read before the stop, because a force-stop takes them down with
+        # the process, and put back before the measurement, so the launcher is measured as a
+        # viewer would actually have it.
+        services = accessibility_services(tv, package)
+        tv.shell(f"am force-stop {package}")
         time.sleep(3)
+        restore_accessibility(tv, package, services)
         out = tv.shell(f"am start -W -n {component}")
         match = re.search(r"WaitTime:\s*(\d+)", out)
         if match:
@@ -237,28 +317,35 @@ def cold_start(tv, component, repeats):
 def return_to_home(tv, component, repeats):
     """How long the launcher takes to be back in front after the HOME key, in ms."""
     values = []
+    other = other_app(tv)
+    if not other:
+        print("Could not find another app to switch to; the return to Home is not measured.")
+        return values
     # The event log writes the activity as "am_on_resume_called: [0,pkg.Class,action]", so the
     # class name (the part after the slash) is what identifies the launcher there.
     class_name = component.split("/", 1)[1] if "/" in component else component
     for _ in range(repeats):
-        tv.shell("am start -W -n com.android.tv.settings/.MainSettings")
+        tv.shell(f"am start -W -n {other}")
         time.sleep(3)
         clear_log(tv)
-        adb("-s", tv.serial, "shell", "input", "keyevent", "3",
-            binary=tv.binary, capture=False)
+        tv.shell("input keyevent 3")
         time.sleep(3)
-        out = adb("-s", tv.serial, "logcat", "-d", "-b", "main", "-b", "events", "-v", "epoch",
-                  binary=tv.binary)
+        out = tv.shell("logcat -d -b main -b events -v epoch")
         key_at = resume_at = None
         for line in out.splitlines():
+            # The log indents its lines, so the timestamp is not at the start of the line.
+            # Both timestamps have to come from the same clock: the log's own column is in
+            # epoch seconds, while the eventTime inside the KeyEvent is in uptime
+            # milliseconds. Mixing them gives a negative or absurd difference.
+            stamp = re.search(r"^[\s]*(\d+\.\d+)\s", line)
             if "injectKeyEvent" in line and "KEYCODE_HOME" in line and key_at is None:
-                match = re.match(r"^(\S+)", line)
-                if match:
-                    key_at = float(match.group(1))
-            if "am_on_resume_called" in line and class_name in line and resume_at is None:
-                match = re.match(r"^(\S+)", line)
-                if match:
-                    resume_at = float(match.group(1))
+                if stamp:
+                    key_at = float(stamp.group(1))
+            # The LAST resume of the launcher after the key, not the first: the buffer can
+            # still hold a resume from before the key was pressed.
+            if "am_on_resume_called" in line and class_name in line and stamp:
+                if key_at is None or float(stamp.group(1)) >= key_at:
+                    resume_at = float(stamp.group(1))
         if key_at is not None and resume_at is not None:
             values.append(int((resume_at - key_at) * 1000))
     return values
@@ -338,7 +425,6 @@ def main():
     parser.add_argument("--host", default=os.environ.get("TV_HOST"),
                         help="TV address (or set TV_HOST)")
     parser.add_argument("--port", type=int, default=int(os.environ.get("TV_PORT", "5555")))
-    parser.add_argument("--adb", default=os.environ.get("ADB", "adb"), help="adb binary")
     parser.add_argument("--keys", type=int, default=36, help="keys per series")
     parser.add_argument("--series", type=int, default=3, help="how many series")
     parser.add_argument("--cold", type=int, default=5, help="cold starts")
@@ -349,7 +435,7 @@ def main():
     if not args.host:
         raise SystemExit("pass --host or set TV_HOST")
 
-    tv = TV(args.host, args.port, args.adb)
+    tv = TV(args.host, args.port)
     component = tv.home_component()
     if not component:
         raise SystemExit("no component answers HOME on this TV")
