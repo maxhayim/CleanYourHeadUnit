@@ -22,6 +22,13 @@
 # - Netflix (566, TCL_NETFLIX) and YouTube (569, TCL_YOUTUBE) are broadcasts that only launcherx answers, so
 #   they do nothing once it is off. An accessibility service that matches those scancodes and starts the app
 #   fixes both (verified with the real remote).
+# Remote (Bluetooth, second AR20 unit, France; /dev/input/event3, vendor 0x0417 product 0x0304, Generic.kl):
+# - Its buttons send other codes, and settings_key_scancodes 561 does nothing for them. Gear is KEY_FORWARDMAIL
+#   (233, TCL_SET) and arrives as keycode 4077; Prime Video is HID usage 0x000c005f and arrives as keycode 4099.
+#   `getevent -lt` while pressing a button tells the two remotes apart (event0 mtkinp or event3).
+# - With HOME_KEY_SERVICE=1, this config.xml brought back Gear, Netflix, YouTube and Prime Video (verified with
+#   the real remote): settings_key_keycodes 4077, and app_keys KEYCODE_TCL_NETFLIX:com.netflix.ninja,
+#   KEYCODE_TCL_YOUTUBE:com.google.android.youtube.tv, 4099:com.amazon.amazonvideo.livingroom.
 # tools/b64push.py worked here (md5 match). Screenshots of Live TV and HDMI are 0 bytes; Netflix's are black.
 #
 # DO NOT DISABLE: com.tcl.tv (Live TV, HDMI playback), com.tcl.tvinput (tuner, HDMI and AV inputs),
