@@ -60,13 +60,15 @@ final class Config {
     final File wallpaper;
     /** Whether the overlay file was present and parsed. */
     final boolean overlayApplied;
+    /** Festive skin from a theme (festival, festival_until, greeting, accent_color); {@link Festival#NONE} if none. */
+    final Festival festival;
 
     private Config(List<String> dockApps, List<String> hiddenApps, String liveTvPackage, String liveTvAction,
                    String sourcePanelService, String sourcePanelAction, String inputAction,
                    int columns, int rowsBelowDock, boolean animations, boolean advancedEffects,
                    boolean shamsiDate, boolean moduleCards, boolean reducedMotion, String vpnApp,
                    boolean showHomeSettingsShortcut, int backgroundColor, int skyIntensity,
-                   File wallpaper, boolean overlayApplied) {
+                   File wallpaper, boolean overlayApplied, Festival festival) {
         this.dockApps = Collections.unmodifiableList(dockApps);
         this.hiddenApps = Collections.unmodifiableList(hiddenApps);
         this.liveTvPackage = liveTvPackage;
@@ -87,6 +89,7 @@ final class Config {
         this.skyIntensity = skyIntensity;
         this.wallpaper = wallpaper;
         this.overlayApplied = overlayApplied;
+        this.festival = festival;
     }
 
     /** The folder the theme tools push into; null when external storage is unavailable. */
@@ -152,11 +155,14 @@ final class Config {
         if (wallpaper != null && !(wallpaper.isFile() && wallpaper.length() > 0)) wallpaper = null;
         // A theme can also switch the wallpaper off while the file is still there.
         if (json != null && json.has("wallpaper") && !bool(json, "wallpaper", true)) wallpaper = null;
+        // A festive skin comes only from a theme; config.xml has no festival.
+        Festival festival = json == null ? Festival.NONE : Festival.parse(string(json, "festival", ""),
+                string(json, "festival_until", ""), string(json, "greeting", ""), string(json, "accent_color", ""));
 
         return new Config(dock, hidden, liveTv, liveTvAction, panelService, panelAction, inputAction,
                 Math.max(1, columns), Math.max(0, rowsBelow), animations, advancedEffects,
                 shamsi, moduleCards, reducedMotion, vpn, homeSettings, background,
-                Math.max(0, Math.min(100, skyIntensity)), wallpaper, applied);
+                Math.max(0, Math.min(100, skyIntensity)), wallpaper, applied, festival);
     }
 
     private static void syncThemeChoices(SharedPreferences choices, File dir, File config) {
