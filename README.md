@@ -29,20 +29,23 @@ and a one-line restore if you change your mind.**
 
 <p align="center">
   <sub><b>FEATURED IN</b></sub><br><br>
-  <a href="https://techcrunch.com/2026/10/19/people-are-using-ai-to-make-their-smart-tvs-dumb-again/"><img src="docs/press/techcrunch.png" height="34" alt="TechCrunch"></a>&nbsp;&nbsp;
-  <a href="https://mashable.com/tech/smart-tv-ads-claude-code-ai-cleanup"><img src="docs/press/mashable.png" height="34" alt="Mashable"></a>&nbsp;&nbsp;
-  <a href="https://itsfoss.com/news/debloat-smart-tv/"><img src="docs/press/itsfoss.png" height="34" alt="It's FOSS"></a>&nbsp;&nbsp;
-  <a href="https://techaeris.com/2026/10/18/android-tv-debloat-tvos-style-makeover/"><img src="docs/press/techaeris.png" height="34" alt="Techaeris"></a>&nbsp;&nbsp;
-  <a href="https://www.techtimes.co.uk/ai-smart-tv-bloatware-performance-fix-1809233"><img src="docs/press/techtimes.png" height="34" alt="Tech Times"></a>&nbsp;&nbsp;
-  <a href="https://tech.yahoo.com/ai/meta-ai/articles/developers-using-ai-strip-ads-185856468.html"><img src="docs/press/gadgetreview.png" height="34" alt="Gadget Review"></a>&nbsp;&nbsp;
-  <a href="https://techpp.com/2026/10/18/speed-up-android-tv-claude-code/"><img src="docs/press/techpp.png" height="34" alt="TechPP"></a>&nbsp;&nbsp;
-  <a href="https://www.frandroid.com/android/google-tv/3290159_google-tv-lent-et-envahi-par-les-pubs-le-projet-tv-vibehack-corrige-tout-ca-grace-a-lia-jai-tente-lexperience"><img src="docs/press/frandroid.png" height="34" alt="Frandroid"></a>&nbsp;&nbsp;
-  <a href="https://www.xboxygen.com/News/371393-sa-tv-xiaomi-affichait-des-pubs-partout-il-donne-son-modele-a-claude-code-qui-refait-toute-linterface"><img src="docs/press/xboxygen.png" height="34" alt="Xboxygen"></a>&nbsp;&nbsp;
-  <a href="https://itavisen.no/2026/10/19/vibekodet-bort-reklame-smart-tv/"><img src="docs/press/itavisen.png" height="34" alt="ITavisen"></a>&nbsp;&nbsp;
-  <a href="https://pplware.sapo.pt/inteligencia-artificial/nem-as-smart-tv-escaparam-a-febre-do-vibe-coding-a-televisao-a-medida-de-cada-utilizador/"><img src="docs/press/pplware.png" height="34" alt="Pplware"></a>&nbsp;&nbsp;
-  <a href="https://insmart.cz/android-tv-bez-reklam-ai-claude-code/"><img src="docs/press/insmart.png" height="34" alt="Insmart"></a>&nbsp;&nbsp;
-  <a href="https://inet.detik.com/consumer/d-8713172/kesal-tv-xiaomi-banyak-iklan-pria-ini-sulap-jadi-apple-tv-pakai-ai"><img src="docs/press/detikinet.png" height="34" alt="detikINET"></a>&nbsp;&nbsp;
-  <a href="https://www.iphonemod.net/clean-your-tv-android-tv-debloat-launcher.html"><img src="docs/press/iphonemod.png" height="34" alt="iPhoneMod"></a>
+  <a href="https://techcrunch.com/2026/10/19/people-are-using-ai-to-make-their-smart-tvs-dumb-again/"><img src="docs/press/techcrunch.png" height="30" alt="TechCrunch"></a>&nbsp;&nbsp;
+  <a href="https://mashable.com/tech/smart-tv-ads-claude-code-ai-cleanup"><img src="docs/press/mashable.png" height="30" alt="Mashable"></a>&nbsp;&nbsp;
+  <a href="https://www.androidauthority.com/android-tv-vibe-hacking-remove-ads-bloatware-3725338/"><img src="docs/press/androidauthority.png" height="30" alt="Android Authority"></a>&nbsp;&nbsp;
+  <a href="https://www.xda-developers.com/people-are-now-vibe-coding-their-smart-tvs-to-strip-them-of-ads-and-unwanted-features/"><img src="docs/press/xda.png" height="30" alt="XDA"></a>&nbsp;&nbsp;
+  <a href="https://flatpanelshd.com/news.php?id=1792478262&amp;subaction=showfull"><img src="docs/press/flatpanelshd.png" height="30" alt="FlatpanelsHD"></a>&nbsp;&nbsp;
+  <a href="https://itsfoss.com/news/debloat-smart-tv/"><img src="docs/press/itsfoss.png" height="30" alt="It's FOSS"></a>&nbsp;&nbsp;
+  <a href="https://phandroid.com/2026/10/20/smart-tv-owners-are-using-ai-to-strip-the-ads-off-their-sets/"><img src="docs/press/phandroid.png" height="30" alt="Phandroid"></a>&nbsp;&nbsp;
+  <a href="https://gigazine.net/gsc_news/en/20261020-smart-tv-no-ads-tool/"><img src="docs/press/gigazine.png" height="30" alt="GIGAZINE"></a>&nbsp;&nbsp;
+  <a href="https://www.xataka.com/televisores/ultima-sensacion-viral-ia-eliminar-anuncios-bloatware-smart-tv-he-tontificado-mi-chromecast-maravilloso"><img src="docs/press/xataka.png" height="30" alt="Xataka"></a>&nbsp;&nbsp;
+  <a href="https://winfuture.de/news,162070.html"><img src="docs/press/winfuture.png" height="30" alt="WinFuture"></a>&nbsp;&nbsp;
+  <a href="https://www.frandroid.com/android/google-tv/3290159_google-tv-lent-et-envahi-par-les-pubs-le-projet-tv-vibehack-corrige-tout-ca-grace-a-lia-jai-tente-lexperience"><img src="docs/press/frandroid.png" height="30" alt="Frandroid"></a>&nbsp;&nbsp;
+  <a href="https://www.macitynet.it/rendere-le-tv-meno-smart/"><img src="docs/press/macitynet.png" height="30" alt="Macitynet"></a>&nbsp;&nbsp;
+  <a href="https://techaeris.com/2026/10/18/android-tv-debloat-tvos-style-makeover/"><img src="docs/press/techaeris.png" height="30" alt="Techaeris"></a>&nbsp;&nbsp;
+  <a href="https://techpp.com/2026/10/18/speed-up-android-tv-claude-code/"><img src="docs/press/techpp.png" height="30" alt="TechPP"></a>&nbsp;&nbsp;
+  <a href="https://www.thedailystar.net/news/technology/news/smart-tv-owners-are-using-ai-get-rid-ads-report-4303291"><img src="docs/press/thedailystar.png" height="30" alt="The Daily Star"></a>&nbsp;&nbsp;
+  <a href="https://inet.detik.com/consumer/d-8713172/kesal-tv-xiaomi-banyak-iklan-pria-ini-sulap-jadi-apple-tv-pakai-ai"><img src="docs/press/detikinet.png" height="30" alt="detikINET"></a><br>
+  <sub><a href="docs/PRESS.md">and 54 more &nbsp;·&nbsp; all 70 articles from 21 countries &rarr;</a></sub>
 </p>
 
 
