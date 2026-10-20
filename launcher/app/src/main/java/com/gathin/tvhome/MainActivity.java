@@ -281,7 +281,9 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
                 if (dockRow && getPosition(child) < COLUMNS) return false;
                 int top = child.getTop() + rect.top;
                 int bottom = top + rect.height();
-                int limitBottom = getHeight() - getPaddingBottom();
+                // The grid's bottom edge, not its padding: paddingBottom only lets the last row scroll clear of
+                // the edge, and treating it as off-screen nudged the grid up whenever the last visible row got focus.
+                int limitBottom = getHeight();
                 int dy;
                 if (top < 0) dy = top;
                 else if (bottom > limitBottom) dy = Math.min(top, bottom - limitBottom);
