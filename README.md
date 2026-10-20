@@ -5,10 +5,8 @@
 <p align="center">
   <a href="https://cleanyour.tv">cleanyour.tv</a> ·
   <a href="PROMPT.md">The prompt</a> ·
-  <a href="examples/">67 TV lists</a> ·
-  <a href="SHOWCASE.md">15 built on it</a> ·
-  <a href="examples/">55 TV lists</a> ·
-  <a href="SHOWCASE.md">12 built on it</a> ·
+  <a href="examples/">80 TV lists</a> ·
+  <a href="SHOWCASE.md">16 built on it</a> ·
   <a href="https://x.com/gathint/status/2111379569030939102">The tweet</a>
 </p>
 
@@ -25,7 +23,7 @@ Strip the bloatware from any Android TV or Google TV over Wi-Fi, and replace the
 screen with a clean launcher that looks like an Apple TV. **No root, no cable, nothing uninstalled,
 and a one-line restore if you change your mind.**
 
-<h3 align="center">67 TV models &nbsp;·&nbsp; 25 brands &nbsp;·&nbsp; 14 languages &nbsp;·&nbsp; 300 KB launcher</h3>
+<h3 align="center">80 TV models &nbsp;·&nbsp; 28 brands &nbsp;·&nbsp; 15 languages &nbsp;·&nbsp; 300 KB launcher</h3>
 
 <p align="center">
   <sub><b>FEATURED IN</b></sub><br><br>
@@ -45,8 +43,6 @@ and a one-line restore if you change your mind.**
   <a href="https://www.iphonemod.net/clean-your-tv-android-tv-debloat-launcher.html"><img src="docs/press/iphonemod.png" height="34" alt="iPhoneMod"></a>
 </p>
 
-<h3 align="center">55 TVs with tested lists &nbsp;·&nbsp; 23 brands &nbsp;·&nbsp; 12 languages &nbsp;·&nbsp; 280 KB launcher</h3>
-<h3 align="center">67 TVs tested &nbsp;·&nbsp; 25 brands &nbsp;·&nbsp; 14 languages &nbsp;·&nbsp; 300 KB launcher</h3>
 
 ![Before: stock Google TV home with a sponsored ad. After: the Clean Your TV launcher](docs/stock-vs-new-side.jpg)
 
@@ -115,17 +111,10 @@ install any launcher at all; their lists say so in the header.
 
 Tested lists from contributors, one folder per model in [`examples/`](examples/):
 
-**TCL** 14 · **Xiaomi** 14 · **Sony** 10 · **Philips** 4 · **Hisense** 3 · **CHiQ** 2 · **Skyworth** 2 ·
-AiPro2K · Amazon Fire TV Stick · BenQ · Chromecast with Google TV · Hitachi · Insignia Fire TV ·
-**TCL** 14 · **Xiaomi** 14 · **Sony** 9 · **Philips** 4 · **Hisense** 3 · **CHiQ** 2 · **Skyworth** 2 ·
-AiPro2K · Amazon Fire TV Stick · BenQ · Chromecast with Google TV · Haier · Hitachi · Insignia Fire TV ·
-NVIDIA Shield · OnePlus · Panasonic · PRISM+ · RCA · Redmi · SANYO · Thomson · Toshiba Fire TV · Vu ·
-Stellamore and XGIMI projectors
-**Xiaomi** 12 · **TCL** 11 · **Sony** 8 · **CHiQ** 2 · **Hisense** 2 · **Philips** 2 · **Hitachi** 2 · Amazon Fire TV Stick · BenQ ·
-Chromecast with Google TV · Insignia Fire TV · NVIDIA Shield · OnePlus · Panasonic · RCA · Redmi ·
-SANYO · Skyworth · Thomson · Toshiba Fire TV · Vu · Stellamore and XGIMI projectors
-**Xiaomi** 8 · **TCL** 7 · **Sony** 3 · BenQ · CHiQ · Chromecast with Google TV · Hisense · Insignia Fire TV ·
-NVIDIA Shield · OnePlus · Philips · RCA · SANYO · Toshiba Fire TV · Stellamore and XGIMI projectors
+**TCL** 16 · **Xiaomi** 15 · **Sony** 13 · **Hisense** 4 · **Philips** 4 · **BenQ** 2 · **CHiQ** 2 ·
+**Hitachi** 2 · **Panasonic** 2 · **Skyworth** 2 · AiPro2K · Amazon Fire TV Stick · Chromecast with Google TV ·
+Haier · Insignia Fire TV · Kalley · NVIDIA Shield · OnePlus · onn · PRISM+ · RCA · Redmi · SANYO · Thomson ·
+Toshiba Fire TV · Vu · Stellamore and XGIMI projectors
 
 <details>
 <summary><strong>The full list</strong></summary>
@@ -140,15 +129,17 @@ NVIDIA Shield · OnePlus · Philips · RCA · SANYO · Toshiba Fire TV · Stella
 | CHiQ AI PONT (DVB93CQ) | Android TV 11 |
 | Chromecast with Google TV 4K (sabrina) | Google TV 14 |
 | Haier H32S80EFX (MatrixTV CE, HRT56EU, deto, MediaTek), Thailand | Google TV 14 |
-| Hisense HiSmartTV A4 (xiaoyushan, MStar m7322), India | Android TV 9 |
 | Hisense HiSmartTV A4 (xiaoyushan, MStar m7322), Android 11 firmware RTT2.221108.001 | Android TV 11 |
+| Hisense HiSmartTV A4 (xiaoyushan, MStar m7322), India | Android TV 9 |
 | Hisense SmartTV 4K FFM (huangshan, MediaTek) | Android TV 10 |
 | Hisense U75 (hengshan, MediaTek), Latin America | Google TV 12 |
 | Hitachi 65QLEDSM20 (MTC, bangbae, MediaTek m7322), Australia | Android TV 11 |
 | Hitachi CDH-LE32SMART21 (TCL-built C06, C06_2K_GB, MediaTek MT9221, 1 GB), Argentina | Android TV 11 |
 | Insignia 55" F30 4K Fire TV (NS-55F301NA25, AFTDCT31, duckie) | Fire OS 7 / Android 9 |
+| Kalley R10G (device R10G, product ACER_FFM, MOKA, Realtek RTD2875P), Latin America | Google TV 14 |
 | NVIDIA SHIELD TV Pro 2019 (P2897, mdarcy) | Android TV 11 |
 | OnePlus TV (D00, Dubai) | Google TV 14 |
+| onn 4K Streaming Box (2023, Walmart; YOC, Amlogic), US | Google TV 14 |
 | Panasonic 4KTV-JUP (Jupiter_PA, MediaTek) | Android TV 11 |
 | Panasonic TH-40HS550K (Skyworth-built, GS655 shibuya, MediaTek) | Android TV 11 |
 | Philips 50PUS8517/12 (TP Vision, PH1M_EA_9970A, MediaTek MT5895), Europe | Android TV 11 |
@@ -163,15 +154,15 @@ NVIDIA Shield · OnePlus · Philips · RCA · SANYO · Toshiba Fire TV · Stella
 | Skyworth SWTV-24NA-4K NF (eleonas, MediaTek mt5896), US | Google TV 14 |
 | Sony BRAVIA 4K AE2 (BRAVIA_AE2, MediaTek MT5897), North America | Google TV 14 |
 | Sony BRAVIA 4K GB (BRAVIA_ATV2_EU, BRAVIA_ATV2) | Android TV 9 |
-| Sony BRAVIA 4K GB, US/Canada (BRAVIA_ATV2_UC, MediaTek) | Android TV 9 |
+| Sony BRAVIA 4K GB (BRAVIA_ATV2_UC, MediaTek mt5891) | Android TV 9 |
 | Sony BRAVIA 4K UR2 (BRAVIA_UR2_4K, MediaTek) | Android TV 10 |
 | Sony BRAVIA 4K VH2 (KD-55X80J, BRAVIA_VH2, MediaTek), EU | Google TV 12 |
 | Sony BRAVIA 9 II (K-65XR90M2, BRAVIA_AE3, MediaTek MT5838) | Google TV 14 |
 | Sony BRAVIA BF1 (BRAVIA 2 II class, BRAVIA_BF1_4K_A, MediaTek) | Google TV 12 |
-| Sony BRAVIA VU31 4K (BRAVIA_VU31_4K, Realtek), India | Google TV 14 |
 | Sony BRAVIA KD-55X85J (2021, BRAVIA_VH2, MediaTek MT5895), South America | Google TV 12 |
 | Sony BRAVIA KD-65X80J (2021, BRAVIA_VH2, MediaTek), India | Google TV 10 |
 | Sony BRAVIA KD-65X9300D (2016, SVP-DTV15, MediaTek), Asia-Pacific | Android TV 8.0 |
+| Sony BRAVIA VU31 4K (BRAVIA_VU31_4K, Realtek), India | Google TV 14 |
 | Sony BRAVIA XBR-65X900E (2017, BRAVIA_ATV2) | Android TV 9 |
 | Sony BRAVIA XBR-65X900F (2018, BRAVIA_ATV3_4K, MediaTek MT5891), US/Canada | Android TV 9 |
 | Stellamore T950S projector (Droidlogic be30a3, Amlogic txhd2) | Android 13 |
@@ -180,13 +171,14 @@ NVIDIA Shield · OnePlus · Philips · RCA · SANYO · Toshiba Fire TV · Stella
 | TCL 50EP680 (Europe, BeyondTV, Realtek rtd285o) | Android TV 11 |
 | TCL 55" 4K Google TV, 2023 (G10, G10_4K_US_NF); also TCL 55P6K, Spain (G10_4K_GB_NF_32BIT) | Google TV 12 |
 | TCL 55Q10G Pro (China, tcl_mt5879_cn, MediaTek MT9952) | Android TV 11 |
+| TCL 55S470G (G10, G10_4K_US_NF, Realtek), US | Google TV 12 |
 | TCL 65C725 (Smart TV Pro, BeyondTV4) | Android TV 11 |
 | TCL 65C735 (Smart TV Pro, G05, MediaTek), France | Google TV 11 |
-| TCL C755 QD-Mini LED, 2024, Australia (G08, MediaTek tcl9618) | Google TV 14 |
 | TCL ak30a5 (China, Amlogic) | Android TV 9 |
 | TCL BeyondTV (India) | Android TV 9 |
 | TCL BeyondTV, EU/Nordic (Realtek RTD2851, V8-R851T02-LF1V606) | Android TV 9 |
 | TCL BeyondTV2 (Latin America / Brazil, Realtek RTD2851) | Android TV 9 |
+| TCL C755 QD-Mini LED, 2024, Australia (G08, MediaTek tcl9618) | Google TV 14 |
 | TCL QM6K Pro, 2025 (G08, MediaTek tcl9618) | Google TV 14 |
 | TCL Smart TV Pro (G05, G05_4K_US, MediaTek MT5889) | Google TV 11 |
 | TCL UnionTV, Latin America (TCL-built like Thomson 32HE5800, Realtek RT2841) | Android TV 9 |
@@ -268,8 +260,6 @@ the install script finds `~/Android/Sdk` and the `java` on your PATH.
 - **On-TV launcher settings:** click Settings for the TV's system settings, or hold OK on Settings and choose Launcher settings to set 4, 5, 6 or 7 apps per row, turn animations on or off, and opt into advanced effects. The advanced option adds tile lift, icon zoom and smooth ambient-colour transitions; it may use more memory. Use Follow theme to clear on-TV choices. Pushing or resetting a theme also clears them.
 - **Change the default home:** Launcher settings and the optional Default-home tile (`show_home_settings_shortcut`) open Android's home picker. Choose the original launcher to stop using CleanYourTV as Home, or CleanYourTV to return. The original launcher must be enabled. If the install script disabled it, use the restore script below first. Some TVs provide no home picker.
 - **Themes** set the same keys plus a background colour and a wallpaper from a `config.json` pushed to the TV, no rebuild. Four ship in [`themes/`](themes/), documented there.
-- **Language** follows the TV: English, German, Spanish, Catalan, French, Russian, Serbian (Latin), Polish, Portuguese, Turkish, Arabic, Hebrew, Simplified Chinese, Thai. Android 13+ can set it for the launcher alone: `tools/tv.py 'cmd locale set-app-locales com.gathin.tvhome --locales ca'`.
-- **Themes** set the same keys plus a background colour and a wallpaper from a `config.json` pushed to the TV, no rebuild. Three ship in [`themes/`](themes/), documented there.
 - **Language** follows the TV: English, German, Spanish, Catalan, French, Russian, Serbian (Latin), Polish, Portuguese, Turkish, Arabic, Hebrew, Simplified Chinese, Traditional Chinese (Taiwan), Thai. Android 13+ can set it for the launcher alone: `tools/tv.py 'cmd locale set-app-locales com.gathin.tvhome --locales ca'`.
   Hebrew places the menu buttons on the left and the date and clock on the right, with the greeting above the clock. The Clock screensaver right-aligns its date and time, and Hebrew dates include the month prefix ב (for example, 19 באוקטובר). Hebrew dock and app-grid rows start on the right, with matching left/right remote navigation. The Hebrew input selector places icons and labels on the right, status on the left, and aligns the dropdown with the Inputs button’s right edge. Other languages keep their original layouts.
   Russian includes the module-card approval and management screens and the VPN-off badge.
