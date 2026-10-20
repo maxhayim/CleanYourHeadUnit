@@ -27,8 +27,10 @@ tv() { "$PY" -I tv.py "$@"; }
 # Android removes them asynchronously while it handles the restart, so wait a second before writing the
 # list back. Writing the same list back is not enough: the force-stop also turns accessibility_enabled off,
 # and the service only binds again once the list changes. So restart first, then clear the list, write it
-# back and switch accessibility on again as build-and-install does.
-RESTART="a=\$(settings get secure enabled_accessibility_services); am force-stop $PKG; am start -n $PKG/.MainActivity >/dev/null; case \"\$a\" in *$PKG*) sleep 1; settings put secure enabled_accessibility_services ''; settings put secure enabled_accessibility_services \"\$a\"; settings put secure accessibility_enabled 1 ;; esac"
+# back and switch accessibility on again as build-and-install does. Some TVs (TCL Smart TV Pro G03, Android 11)
+# also keep the service in their "crashed" list after the force-stop and leave it unbound until accessibility
+# itself goes off and on again, so switch it off with the list cleared and wait a second before writing back.
+RESTART="a=\$(settings get secure enabled_accessibility_services); am force-stop $PKG; am start -n $PKG/.MainActivity >/dev/null; case \"\$a\" in *$PKG*) sleep 1; settings put secure enabled_accessibility_services ''; settings put secure accessibility_enabled 0; sleep 1; settings put secure enabled_accessibility_services \"\$a\"; settings put secure accessibility_enabled 1 ;; esac"
 
 if [ "${1:-}" = --reset ]; then
   tv "mkdir -p $DIR; rm -f $DIR/config.json $DIR/wallpaper.jpg; printf '%s' '$REVISION' > $DIR/theme_revision; $RESTART; echo reset" | tail -n 1
