@@ -58,6 +58,10 @@ final class Config {
     final int backgroundColor;
     /** Time-of-day backdrop, 0 to 100 (config.xml, sky_intensity); 0 keeps the plain background. */
     final int skyIntensity;
+    /** Remote keycodes that open Settings through HomeKeyService (config.xml, settings_key_keycodes). */
+    final int[] settingsKeycodes;
+    /** The Settings button opens the quick settings panel instead of the TV's Settings (settings_key_panel). */
+    final boolean settingsKeyPanel;
     /** Full-screen picture behind the launcher, or null for the plain colour. */
     final File wallpaper;
     /** Whether the overlay file was present and parsed. */
@@ -70,7 +74,8 @@ final class Config {
                    int columns, int rowsBelowDock, boolean animations, boolean advancedEffects,
                    boolean shamsiDate, boolean moduleCards, boolean reducedMotion, String vpnApp,
                    boolean showHomeSettingsShortcut, int backgroundColor, int skyIntensity,
-                   File wallpaper, boolean overlayApplied, Festival festival) {
+                   int[] settingsKeycodes, boolean settingsKeyPanel, File wallpaper, boolean overlayApplied,
+                   Festival festival) {
         this.dockApps = Collections.unmodifiableList(dockApps);
         this.fillDock = fillDock;
         this.hiddenApps = Collections.unmodifiableList(hiddenApps);
@@ -90,6 +95,8 @@ final class Config {
         this.showHomeSettingsShortcut = showHomeSettingsShortcut;
         this.backgroundColor = backgroundColor;
         this.skyIntensity = skyIntensity;
+        this.settingsKeycodes = settingsKeycodes;
+        this.settingsKeyPanel = settingsKeyPanel;
         this.wallpaper = wallpaper;
         this.overlayApplied = overlayApplied;
         this.festival = festival;
@@ -121,6 +128,8 @@ final class Config {
         boolean homeSettings = res.getBoolean(R.bool.show_home_settings_shortcut);
         int background = 0xFF000000;
         int skyIntensity = res.getInteger(R.integer.sky_intensity);
+        int[] settingsKeycodes = res.getIntArray(R.array.settings_key_keycodes);
+        boolean settingsKeyPanel = res.getBoolean(R.bool.settings_key_panel);
         boolean applied = false;
 
         File dir = dir(ctx);
@@ -147,6 +156,8 @@ final class Config {
             homeSettings = bool(json, "show_home_settings_shortcut", homeSettings);
             background = color(json, "background_color", background);
             skyIntensity = integer(json, "sky_intensity", skyIntensity, 0, 100);
+            settingsKeycodes = intArray(json, "settings_key_keycodes", settingsKeycodes);
+            settingsKeyPanel = bool(json, "settings_key_panel", settingsKeyPanel);
         }
         // A theme push or reset invalidates choices made on the TV. On first use, remember the
         // current theme without clearing choices from an older launcher version.
@@ -167,7 +178,8 @@ final class Config {
         return new Config(dock, fillDock, hidden, liveTv, liveTvAction, panelService, panelAction, inputAction,
                 Math.max(1, columns), Math.max(0, rowsBelow), animations, advancedEffects,
                 shamsi, moduleCards, reducedMotion, vpn, homeSettings, background,
-                Math.max(0, Math.min(100, skyIntensity)), wallpaper, applied, festival);
+                Math.max(0, Math.min(100, skyIntensity)), settingsKeycodes, settingsKeyPanel, wallpaper, applied,
+                festival);
     }
 
     private static void syncThemeChoices(SharedPreferences choices, File dir, File config) {
@@ -249,6 +261,21 @@ final class Config {
         } catch (IllegalArgumentException e) {
             return fallback;
         }
+    }
+
+    /** Positive keycodes only (vendor remotes use codes in the thousands); a list with anything else in it is ignored as a whole. */
+    private static int[] intArray(JSONObject o, String key, int[] fallback) {
+        Object v = o.opt(key);
+        if (!(v instanceof JSONArray)) return fallback;
+        JSONArray a = (JSONArray) v;
+        int[] out = new int[a.length()];
+        for (int i = 0; i < a.length(); i++) {
+            Object item = a.opt(i);
+            if (!(item instanceof Number)) return fallback;
+            out[i] = ((Number) item).intValue();
+            if (out[i] < 1) return fallback;
+        }
+        return out;
     }
 
     private static List<String> stringList(JSONObject o, String key, List<String> fallback) {
