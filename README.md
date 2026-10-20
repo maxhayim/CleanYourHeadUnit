@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="https://cleanyour.tv"><img src="https://raw.githubusercontent.com/Gathin23/cleanyourtv/main/docs/banner.png" alt="CleanYourTV. Your TV, minus the ads." width="800"></a>
+  <a href="https://cleanyour.tv"><img src="https://raw.githubusercontent.com/Gathin23/cleanyourtv/main/docs/banner.png" alt="CleanYourTV. Your TV, minus the ads. Strip the bloatware from any Android TV or Google TV over Wi-Fi and replace the ad-filled home screen with a clean launcher that looks like an Apple TV. No root, no cable, nothing uninstalled, and a one-line restore." width="800"></a>
 </p>
 
 <p align="center">
@@ -13,20 +13,8 @@
 </p>
 
 <p align="center">
-  <img src="docs/stats.png" alt="123 TV models · 42 brands · 19 languages · 390 KB launcher" width="800">
+  <a href="docs/PRESS.md"><img src="docs/card.jpg" alt="123 TV models · 42 brands · 19 languages · 390 KB launcher. Featured in TechCrunch, Mashable, Android Authority, XDA, FlatpanelsHD, It's FOSS, Phandroid, GIGAZINE, Xataka, WinFuture, Frandroid, Macitynet, Techaeris, TechPP, The Daily Star, detikINET and 54 more: 70 articles from 21 countries. Before: stock Google TV home with a sponsored ad. After: the Clean Your TV launcher." width="800"></a>
 </p>
-
-<p align="center">
-  <a href="docs/PRESS.md"><img src="docs/featured.png" alt="Featured in TechCrunch, Mashable, Android Authority, XDA, FlatpanelsHD, It's FOSS, Phandroid, GIGAZINE, Xataka, WinFuture, Frandroid, Macitynet, Techaeris, TechPP, The Daily Star, detikINET and 54 more: 70 articles from 21 countries" width="800"></a>
-</p>
-
-<p align="center">
-  Strip the bloatware from any Android TV or Google TV over Wi-Fi, and replace the ad-filled home screen<br>
-  with a clean launcher that looks like an Apple TV. <b>No root, no cable, nothing uninstalled,<br>
-  and a one-line restore if you change your mind.</b>
-</p>
-
-![Before: stock Google TV home with a sponsored ad. After: the Clean Your TV launcher](docs/stock-vs-new-side.jpg)
 
 > Vibe coded my parents' TV this afternoon! It was showing a sponsored ad before you could even get
 > to Netflix. Gave Claude Code the model number, it found the TV on wifi, removed 25 Xiaomi packages
@@ -44,6 +32,8 @@ developer options, allow your computer once, and the rest is standard Android to
 2. **Disable** the manufacturer's telemetry, ad services, content rows and preloaded junk with
    `pm disable-user`. Nothing is uninstalled, so a restore script can undo every step.
 3. **Install** a small native launcher and make it the default home screen.
+
+**No root, no cable, nothing uninstalled, and a one-line restore if you change your mind.**
 
 The bloat differs by brand, so the prompt has your coding assistant discover it on your TV and ask
 before touching anything you might use.

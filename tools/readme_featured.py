@@ -1,14 +1,14 @@
-"""Renders the README 'Featured in' panel (docs/featured.png) in the banner's style.
+"""Renders the Featured in panel (docs/featured.png), the middle part of the README card.
 
 Update LOGOS / MORE, then: python3 tools/readme_featured.py Fredoka.ttf docs/featured.png
-Fredoka is the variable TTF from Google Fonts. Logos come from docs/press/."""
+and rebuild the card with tools/readme_card.py. Logos come from docs/press/."""
 import sys
 from PIL import Image, ImageDraw, ImageFont
 FONT, OUT = sys.argv[1], sys.argv[2]
 LOGOS = ["techcrunch", "mashable", "androidauthority", "xda", "flatpanelshd", "itsfoss", "phandroid", "gigazine",
          "xataka", "winfuture", "frandroid", "macitynet", "techaeris", "techpp", "thedailystar", "detikinet"]
 MORE = "+54 more  ·  70 articles from 21 countries"
-W, LH, GAP, ROWGAP, PAD = 1600, 54, 40, 36, 60
+W, LH, GAP, ROWGAP, PAD = 1600, 54, 40, 36, 80
 def f(size, wt):
     x = ImageFont.truetype(FONT, size); x.set_variation_by_axes([wt]); return x
 logos = []
@@ -32,8 +32,8 @@ for r in rows:
     x = (W - (sum(i.width for i in r) + GAP * (len(r) - 1))) / 2
     for im in r: img.alpha_composite(im, (round(x), y)); x += im.width + GAP
     y += LH + ROWGAP
-m = f(34, 500); w = d.textlength(MORE, font=m) + 56; x0 = (W - w) / 2; ty = y + 26
-d.text((x0, ty), MORE, font=m, fill="#cfffcf")
+m = f(32, 500); w = d.textlength(MORE, font=m) + 56; x0 = (W - w) / 2; ty = y + 26
+d.text((x0, ty), MORE, font=m, fill="#e6e9ee")  # soft white; green stays for numbers, AFTER and arrows
 ax, ay = x0 + w - 26, ty + 22  # arrow: Fredoka has no U+2192
 d.line([(ax - 12, ay), (ax + 12, ay)], fill="#cfffcf", width=4)
 d.line([(ax + 2, ay - 10), (ax + 13, ay), (ax + 2, ay + 10)], fill="#cfffcf", width=4, joint="curve")
