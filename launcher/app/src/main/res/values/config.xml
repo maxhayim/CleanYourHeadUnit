@@ -68,8 +68,13 @@
          VPN you use. Empty: the pill opens Wi-Fi settings. The green VPN badge shows for any VPN either way;
          with an app set here, a red "VPN off" badge also shows while no VPN is up. -->
     <string name="vpn_app" translatable="false"></string>
-    <!-- Grid rows left visible under the dock on the home screen. 0 = dock sits at the very bottom. -->
+    <!-- Grid rows left visible under the dock on the home screen. 0 = dock sits at the very bottom. Tiles shrink if
+         the dock, its title and this many rows would not otherwise fit the screen height. -->
     <integer name="rows_below_dock">0</integer>
+
+    <!-- The focused dock app's name in large type above the dock. false keeps only the glow, which leaves room
+         for bigger tiles when rows_below_dock is 2 or 3. -->
+    <bool name="dock_title">true</bool>
 
     <!-- Tiles per row in the grid; the dock always has this many slots. Tiles are 180dp wide at 4 columns and
          shrink to fit from 5 up (about 144dp at 5, 117dp at 6 on a 1080p TV). -->
