@@ -386,7 +386,7 @@ control what goes on your TV. No prebuilt binaries.
 The most useful contribution is your TV's debloat list, so the next person with that model does
 not have to rediscover it. Launcher improvements and sharper prompt wording are welcome too.
 [CONTRIBUTING.md](CONTRIBUTING.md) has the format and the testing we ask for. Built something on
-top, a launcher, a port, a theme? Add it to [SHOWCASE.md](SHOWCASE.md), where eleven projects already
+top, a launcher, a port, a theme? Add it to [SHOWCASE.md](SHOWCASE.md), where eighteen projects already
 live: a webOS port for LG, a Stremio shelf, a Hisense restyle, Fire TV launchers, an AirPlay installer.
 
 The people whose work is in this repo:
