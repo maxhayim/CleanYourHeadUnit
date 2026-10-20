@@ -48,8 +48,12 @@
                 android:layout_marginEnd="16dp"
                 android:orientation="vertical">
 
+                <!-- The header texts use gravity left, not start: the launcher lays out left to right
+                     (no supportsRtl), and with start a right-to-left script such as Arabic would move to the
+                     right edge of these full-width lines instead of staying under the clock. -->
                 <TextView
                     android:id="@+id/greeting"
+                    android:gravity="left"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:singleLine="true"
@@ -117,6 +121,7 @@
                         <!-- Shamsi date ("27 Mehr 1405"), shown when shamsi_date is on. -->
                         <TextView
                             android:id="@+id/shamsiDate"
+                            android:gravity="left"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:singleLine="true"
@@ -131,6 +136,7 @@
 
                         <TextClock
                             android:id="@+id/date"
+                            android:gravity="left"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:singleLine="true"

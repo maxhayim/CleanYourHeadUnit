@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -15,11 +16,13 @@ import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.provider.Settings;
+import android.util.DisplayMetrics;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewOutlineProvider;
+import android.view.animation.DecelerateInterpolator;
 import android.view.animation.OvershootInterpolator;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -51,7 +54,7 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.Holder> {
     }
 
     static final class Entry {
-        static final int APP = 0, CARD = 2;
+        static final int APP = 0, HOME_SETTINGS = 1, CARD = 2;
 
         final int kind;
         final String label;
@@ -80,7 +83,7 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.Holder> {
         }
     }
 
-    static final float FOCUS_SCALE = 1.12f;
+    static final float FOCUS_SCALE = 1.10f;
     /** Design size of a tile (dp); tiles shrink from here when the columns don't fit, see tileWidthPx. */
     static final float DESIGN_W_DP = 180f, DESIGN_H_DP = 101f;
 
@@ -114,6 +117,9 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.Holder> {
     private final Set<String> hidden;
     private final boolean animations;
     private final boolean advancedEffects;
+    private final boolean showHomeSettings;
+    /** Calmer motion for weak GPUs (config.xml, reduced_motion): no overshoot, shorter fades. */
+    private final boolean reducedMotion;
     private final List<Entry> items = new ArrayList<>();
 
     AppAdapter(Context ctx, TileListener listener, int dockSize, Config cfg) {
@@ -124,6 +130,8 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.Holder> {
         this.hidden = new HashSet<>(cfg.hiddenApps);
         this.animations = cfg.animations;
         this.advancedEffects = cfg.animations && cfg.advancedEffects;
+        this.showHomeSettings = cfg.showHomeSettingsShortcut;
+        this.reducedMotion = cfg.reducedMotion;
         // Tiles keep their identity across reload(), so a focused tile stays on its app instead of
         // its view being rebound to whatever app now sits in that slot.
         setHasStableIds(true);
@@ -147,13 +155,14 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.Holder> {
             ComponentName component = new ComponentName(pkg, ri.activityInfo.name);
             Cards.Card card = cardByPkg.get(pkg);
             if (card != null && !card.component.equals(component)) continue;   // the card stands in for this tile
-            Drawable banner = ri.activityInfo.loadBanner(pm);
-            if (banner == null) banner = ri.activityInfo.applicationInfo.loadBanner(pm);
+            Drawable banner = loadBanner(pm, ri);
             Drawable icon = ri.loadIcon(pm);
             if (card != null) {
                 fresh.add(new Entry(Entry.CARD, card.label, component, banner, icon, card.caption, card.accent));
             } else {
-                fresh.add(new Entry(String.valueOf(ri.loadLabel(pm)), component, banner, icon));
+                // Same cleaner as the card prompt: an app label with a bidi override or line separator must not
+                // redraw the tile name as something else (#117).
+                fresh.add(new Entry(Cards.cleanLabel(String.valueOf(ri.loadLabel(pm)), pkg), component, banner, icon));
             }
         }
         Collections.sort(fresh, (a, b) -> {
@@ -168,9 +177,31 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.Holder> {
             if (ca != cb) return ca ? -1 : 1;
             return a.label.compareToIgnoreCase(b.label);
         });
+        // Retain the optional Default-home tile until dependent tile-ordering work is merged.
+        if (showHomeSettings
+                && pm.resolveActivity(new Intent(Settings.ACTION_HOME_SETTINGS), 0) != null) {
+            fresh.add(new Entry(Entry.HOME_SETTINGS, ctx.getString(R.string.home_settings),
+                    new ComponentName(ctx, HomeSettingsActivity.class), null,
+                    ctx.getDrawable(R.drawable.ic_home_settings), null, 0));
+        }
         items.clear();
         items.addAll(fresh);
         notifyDataSetChanged();
+    }
+
+    private Drawable loadBanner(PackageManager pm, ResolveInfo ri) {
+        int id = ri.activityInfo.banner;
+        if (id == 0) id = ri.activityInfo.applicationInfo.banner;
+        if (id != 0) {
+            try {
+                Resources resources = pm.getResourcesForApplication(ri.activityInfo.applicationInfo);
+                // Keep at least xhdpi detail rather than downsampling artwork before the focus zoom.
+                int density = Math.max(DisplayMetrics.DENSITY_XHIGH, ctx.getResources().getDisplayMetrics().densityDpi);
+                return resources.getDrawableForDensity(id, density, null);
+            } catch (PackageManager.NameNotFoundException | Resources.NotFoundException ignored) {
+            }
+        }
+        return ri.activityInfo.loadBanner(pm);
     }
 
     @NonNull
@@ -191,7 +222,7 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.Holder> {
         nameLp.width = w;
         nameLp.topMargin = h + Math.round(7 * density);
         name.setLayoutParams(nameLp);
-        return new Holder(v, listener, animations, advancedEffects);
+        return new Holder(v, listener, animations, advancedEffects, reducedMotion);
     }
 
     @Override
@@ -234,6 +265,11 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.Holder> {
 
     /** Opens the tile's activity by explicit component, with no extras: a card can name nothing else. */
     private void launch(Entry e) {
+        if (e.kind == Entry.HOME_SETTINGS) {
+            ctx.startActivity(new Intent(ctx, HomeSettingsActivity.class)
+                    .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+            return;
+        }
         Intent i = new Intent(Intent.ACTION_MAIN)
                 .addCategory(Intent.CATEGORY_LEANBACK_LAUNCHER)
                 .setComponent(e.component)
@@ -341,14 +377,21 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.Holder> {
         final ImageView icon;
         final TextView label;
         final TextView name;
+        final boolean animations;
+        final boolean advancedEffects;
+        final boolean reducedMotion;
 
-        Holder(View v, TileListener listener, boolean animations, boolean advancedEffects) {
+        Holder(View v, TileListener listener, boolean animations, boolean advancedEffects,
+               boolean reducedMotion) {
             super(v);
             card = v.findViewById(R.id.card);
             banner = v.findViewById(R.id.banner);
             icon = v.findViewById(R.id.icon);
             label = v.findViewById(R.id.label);
             name = v.findViewById(R.id.name);
+            this.animations = animations;
+            this.advancedEffects = advancedEffects;
+            this.reducedMotion = reducedMotion;
 
             final float density = v.getResources().getDisplayMetrics().density;
             card.setOutlineProvider(new ViewOutlineProvider() {
@@ -374,21 +417,7 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.Holder> {
                 name.animate().cancel();
                 float scale = !animations ? 1f : advancedEffects ? 1.12f : 1.10f;
                 float s = focused ? scale : 1f;
-                if (animations) {
-                    view.animate().scaleX(s).scaleY(s)
-                            .translationY(focused && advancedEffects ? -4f * density : 0f)
-                            .translationZ(focused && advancedEffects ? 8f * density : 0f)
-                            .setDuration(advancedEffects ? (focused ? 220 : 170) : (focused ? 260 : 180))
-                            .setInterpolator(new OvershootInterpolator(focused ? (advancedEffects ? 0.7f : 1.6f) : 0f))
-                            .start();
-                    if (advancedEffects) {
-                        banner.animate().scaleX(focused ? 1.035f : 1f).scaleY(focused ? 1.035f : 1f)
-                                .setDuration(280).start();
-                    }
-                    name.animate().alpha(focused ? 1f : 0f)
-                            .translationY(focused ? density * 4f : -density * 6f)
-                            .setDuration(220).start();
-                } else {
+                if (!animations) {
                     view.setScaleX(1f);
                     view.setScaleY(1f);
                     view.setTranslationY(0f);
@@ -397,6 +426,28 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.Holder> {
                     banner.setScaleY(1f);
                     name.setAlpha(focused ? 1f : 0f);
                     name.setTranslationY(0f);
+                } else if (reducedMotion) {
+                    view.animate().scaleX(s).scaleY(s)
+                            .translationY(focused && advancedEffects ? -4f * density : 0f)
+                            .translationZ(focused && advancedEffects ? 8f * density : 0f)
+                            .setDuration(focused ? 120 : 80)
+                            .setInterpolator(new DecelerateInterpolator())
+                            .withLayer().start();
+                    name.animate().alpha(focused ? 1f : 0f).setDuration(100).start();
+                } else {
+                    view.animate().scaleX(s).scaleY(s)
+                            .translationY(focused && advancedEffects ? -4f * density : 0f)
+                            .translationZ(focused && advancedEffects ? 8f * density : 0f)
+                            .setDuration(advancedEffects ? (focused ? 220 : 170) : (focused ? 260 : 180))
+                            .setInterpolator(new OvershootInterpolator(focused ? (advancedEffects ? 0.7f : 1.6f) : 0f))
+                            .withLayer().start();
+                    if (advancedEffects) {
+                        banner.animate().scaleX(focused ? 1.035f : 1f).scaleY(focused ? 1.035f : 1f)
+                                .setDuration(280).start();
+                    }
+                    name.animate().alpha(focused ? 1f : 0f)
+                            .translationY(focused ? density * 4f : -density * 6f)
+                            .setDuration(220).start();
                 }
                 int pos = getBindingAdapterPosition();
                 if (focused && listener != null && pos != RecyclerView.NO_POSITION) {

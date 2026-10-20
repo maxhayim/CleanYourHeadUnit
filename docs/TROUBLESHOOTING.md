@@ -85,3 +85,33 @@ Things that bit us or contributors, so they don't bite you. Commands use `tools/
   package that also claims HOME (PatchWall on Xiaomi) makes Android drop the default. The install
   script now picks the known stock launcher among the candidates by itself; otherwise choose one on
   the TV or pass `STOCK_LAUNCHER=<package>`.
+
+## Accessibility helper enabled but the remote button does nothing
+
+The optional `HomeKeyService` and `InputKeyService` only filter remote keys once Android has bound to
+them. The installer's `enabled` message means the setting was written, not that the service is bound.
+Read the state without changing anything:
+
+```sh
+tools/tv.py 'am get-current-user'
+tools/tv.py 'settings --user current get secure enabled_accessibility_services'
+tools/tv.py 'dumpsys accessibility'
+```
+
+| Helper | Component in the enabled-services list | Key it filters |
+| --- | --- | --- |
+| Home button | `com.gathin.tvhome/.HomeKeyService` | `KEYCODE_ALL_APPS` (not an ordinary `KEYCODE_HOME`) |
+| Input button | `com.gathin.tvhome/.InputKeyService` | `KEYCODE_TV` |
+
+- **Enabled** means the component is in that user's colon-separated list (the class may be written in
+  full, `com.gathin.tvhome/com.gathin.tvhome.HomeKeyService`). Match the whole component.
+- **Bound** means it appears under that user's `Bound services` section of the dump (`services` on older
+  builds). Give it a few seconds after enabling and read again. Labels in the dump can be translated or
+  shared with other services; a line containing "Home" is not proof.
+- **Working** means the physical button does the right thing from inside another app. An injected key
+  over ADB proves navigation, not that the remote sends the code this helper filters.
+
+Enabled but never bound points at a firmware restriction on auto-starting sideloaded services (some TCL
+builds log `OP_AUTO_START` denials). Look at `logcat` for the binding failure before changing settings,
+and do not rewrite the enabled-services list or grant app-ops as a blanket fix. When reporting, give the
+model, build, current user and the relevant redacted lines, not the raw dump.

@@ -1,6 +1,7 @@
 package com.gathin.tvhome;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.util.Log;
@@ -31,6 +32,8 @@ final class Config {
     static final String FILE_NAME = "config.json";
     static final String WALLPAPER_NAME = "wallpaper.jpg";
     static final String SETTINGS_NAME = "launcher_settings";
+    private static final String THEME_REVISION_NAME = "theme_revision";
+    private static final String THEME_SIGNATURE_KEY = "theme_signature";
 
     final List<String> dockApps;
     final List<String> hiddenApps;
@@ -45,7 +48,10 @@ final class Config {
     final int rowsBelowDock;
     final boolean shamsiDate;
     final boolean moduleCards;
+    /** Calmer motion for weak GPUs (config.xml, reduced_motion): stiff spring, short fades, no replay. */
+    final boolean reducedMotion;
     final String vpnApp;
+    final boolean showHomeSettingsShortcut;
     /** Background colour behind everything, #RRGGBB; black unless a theme says otherwise. */
     final int backgroundColor;
     /** Full-screen picture behind the launcher, or null for the plain colour. */
@@ -56,7 +62,8 @@ final class Config {
     private Config(List<String> dockApps, List<String> hiddenApps, String liveTvPackage, String liveTvAction,
                    String sourcePanelService, String sourcePanelAction, String inputAction,
                    int columns, int rowsBelowDock, boolean animations, boolean advancedEffects,
-                   boolean shamsiDate, boolean moduleCards, String vpnApp, int backgroundColor,
+                   boolean shamsiDate, boolean moduleCards, boolean reducedMotion, String vpnApp,
+                   boolean showHomeSettingsShortcut, int backgroundColor,
                    File wallpaper, boolean overlayApplied) {
         this.dockApps = Collections.unmodifiableList(dockApps);
         this.hiddenApps = Collections.unmodifiableList(hiddenApps);
@@ -71,7 +78,9 @@ final class Config {
         this.advancedEffects = advancedEffects;
         this.shamsiDate = shamsiDate;
         this.moduleCards = moduleCards;
+        this.reducedMotion = reducedMotion;
         this.vpnApp = vpnApp;
+        this.showHomeSettingsShortcut = showHomeSettingsShortcut;
         this.backgroundColor = backgroundColor;
         this.wallpaper = wallpaper;
         this.overlayApplied = overlayApplied;
@@ -97,7 +106,9 @@ final class Config {
         boolean advancedEffects = res.getBoolean(R.bool.advanced_effects);
         boolean shamsi = res.getBoolean(R.bool.shamsi_date);
         boolean moduleCards = res.getBoolean(R.bool.module_cards);
+        boolean reducedMotion = res.getBoolean(R.bool.reduced_motion);
         String vpn = res.getString(R.string.vpn_app).trim();
+        boolean homeSettings = res.getBoolean(R.bool.show_home_settings_shortcut);
         int background = 0xFF000000;
         boolean applied = false;
 
@@ -119,11 +130,15 @@ final class Config {
             advancedEffects = bool(json, "advanced_effects", advancedEffects);
             shamsi = bool(json, "shamsi_date", shamsi);
             moduleCards = bool(json, "module_cards", moduleCards);
+            reducedMotion = bool(json, "reduced_motion", reducedMotion);
             vpn = string(json, "vpn_app", vpn);
+            homeSettings = bool(json, "show_home_settings_shortcut", homeSettings);
             background = color(json, "background_color", background);
         }
-        // Choices made with the remote override the shipped configuration and a pushed theme.
-        android.content.SharedPreferences choices = ctx.getSharedPreferences(SETTINGS_NAME, Context.MODE_PRIVATE);
+        // A theme push or reset invalidates choices made on the TV. On first use, remember the
+        // current theme without clearing choices from an older launcher version.
+        SharedPreferences choices = ctx.getSharedPreferences(SETTINGS_NAME, Context.MODE_PRIVATE);
+        syncThemeChoices(choices, dir, file);
         int chosenColumns = choices.getInt("columns", columns);
         if (chosenColumns >= 4 && chosenColumns <= 7) columns = chosenColumns;
         animations = choices.getBoolean("animations", animations);
@@ -135,8 +150,40 @@ final class Config {
 
         return new Config(dock, hidden, liveTv, liveTvAction, panelService, panelAction, inputAction,
                 Math.max(1, columns), Math.max(0, rowsBelow), animations, advancedEffects,
-                shamsi, moduleCards, vpn, background,
-                wallpaper, applied);
+                shamsi, moduleCards, reducedMotion, vpn, homeSettings, background, wallpaper, applied);
+    }
+
+    private static void syncThemeChoices(SharedPreferences choices, File dir, File config) {
+        File revision = dir == null ? null : new File(dir, THEME_REVISION_NAME);
+        String token = revisionToken(revision);
+        String signature = fileStamp(config) + ":" + token;
+        String seen = choices.getString(THEME_SIGNATURE_KEY, null);
+        if (seen == null) {
+            // Existing preferences survive an app upgrade, unless the first launch follows an
+            // explicit theme push or reset by the updated tools.
+            SharedPreferences.Editor editor = choices.edit();
+            if (!"absent".equals(token)) editor.remove("columns").remove("animations")
+                    .remove("advanced_effects");
+            editor.putString(THEME_SIGNATURE_KEY, signature).commit();
+        } else if (!seen.equals(signature)) {
+            choices.edit().remove("columns").remove("animations").remove("advanced_effects")
+                    .putString(THEME_SIGNATURE_KEY, signature).commit();
+        }
+    }
+
+    private static String fileStamp(File file) {
+        return file != null && file.isFile() ? file.length() + "@" + file.lastModified() : "absent";
+    }
+
+    private static String revisionToken(File file) {
+        if (file == null || !file.isFile() || file.length() > 64) return "absent";
+        try (InputStream in = new FileInputStream(file)) {
+            byte[] bytes = new byte[(int) file.length()];
+            int n = in.read(bytes);
+            return n > 0 ? new String(bytes, 0, n, StandardCharsets.US_ASCII) : "absent";
+        } catch (Exception ignored) {
+            return "absent";
+        }
     }
 
     /** Reads and parses the overlay; any problem means "no overlay", never a crash on the home screen. */

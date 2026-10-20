@@ -16,6 +16,7 @@ public final class LauncherSettingsActivity extends Activity {
     private final TextView[] columnChoices = new TextView[4];
     private TextView animationsChoice;
     private TextView advancedChoice;
+    private TextView followThemeChoice;
     private int columns;
     private boolean animations;
     private boolean advancedEffects;
@@ -64,6 +65,17 @@ public final class LauncherSettingsActivity extends Activity {
                         .show();
             }
         });
+        followThemeChoice = findViewById(R.id.followThemeChoice);
+        followThemeChoice.setOnClickListener(v -> {
+            if (!hasOnTvChoices()) return;
+            choices.edit().remove("columns").remove("animations").remove("advanced_effects").commit();
+            Config current = Config.load(this);
+            columns = current.columns;
+            animations = current.animations;
+            advancedEffects = current.animations && current.advancedEffects;
+            setResult(RESULT_OK);
+            refresh();
+        });
         findViewById(R.id.defaultHomeChoice).setOnClickListener(v -> {
             Toast.makeText(this, R.string.home_settings_help, Toast.LENGTH_LONG).show();
             open(new Intent(Settings.ACTION_HOME_SETTINGS));
@@ -91,6 +103,12 @@ public final class LauncherSettingsActivity extends Activity {
                 getString(advancedEffects ? R.string.on : R.string.off)));
         advancedChoice.setEnabled(animations);
         advancedChoice.setAlpha(animations ? 1f : 0.5f);
+        followThemeChoice.setSelected(!hasOnTvChoices());
+    }
+
+    private boolean hasOnTvChoices() {
+        return choices.contains("columns") || choices.contains("animations")
+                || choices.contains("advanced_effects");
     }
 
     private void open(Intent intent) {
