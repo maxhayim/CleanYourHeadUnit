@@ -51,6 +51,28 @@
 # Live TV via the launcher's live_tv_package/live_tv_action = com.xiaomi.mitv.tvplayer +
 # com.xiaomi.mitv.tvplayer.ATV_PLAY works.
 
+# ---- Kids home (儿童桌面) is exported and can be reached from a third-party Home ----
+# The 儿童 channel in PatchWall is an activity inside com.mitv.tvhome, not a separate app:
+#   com.mitv.tvhome.business.kiddesk.KidsHomeActivity        <- android.intent.action.ENTER_KIDS_MODE
+#   com.mitv.tvhome.business.kiddesk.KidsMultipleTabsActivity <- android.intent.action.ENTER_KIDS_MULTIPLE_TABS
+#   com.mitv.tvhome.ChannelActivity                          <- VIEW mitv://video/channel (exported=true)
+# com.mitv.tvhome has targetSdkVersion=23, so a component with an intent-filter and no explicit
+# android:exported defaults to exported=true and a third-party app can start it. MainActivityUserMode
+# declares ENTER_KIDS_MODE too, but that one is guarded by com.mitv.tvhome.permission.HOME_STATE, so an
+# external app must target the explicit KidsHomeActivity component rather than the bare action.
+#
+# This is what makes the kids section usable next to a replacement Home: PatchWall's own home activity
+# drops straight back when it is not the preferred Home, but KidsHomeActivity stays in the foreground
+# (verified over a minute of sampling while com.gathin.tvhome owned Home). A ~12 KB bridge app whose
+# only launcher activity starts that component, placed on the new Home, opens the kids section with one
+# remote click and leaves Home working. The screen is the same one as before: 我的 / DK百科 / 成长VIP /
+# 儿歌 / 动画 / 儿童影院 / 绘本馆 / 互动思维 / 英文分级阅读, with 家长中心 and 退出 in the top bar.
+#
+# The entitlement behind it (儿童成长VIP) is account-side. With no active membership the 我的 tab says
+# 会员已过期 and opening a show raises a renewal dialog with a coupon; the TV's own requests to
+# bss.ptmi.gitv.tv succeed, so this is the account's state, not a missing package. Keep
+# com.xiaomi.mitv.pay / com.xiaomi.mitv.payment enabled or the renewal cannot be completed on the set.
+
 # ---- ADB ----
 # ro.adb.secure=1. Network ADB on 5555 closes on every reboot and has to be re-enabled in
 # Settings -> 账号与安全 -> ADB 调试. It survived all the work above, but not the reboot test.
