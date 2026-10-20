@@ -137,4 +137,10 @@
          sets its opacity. Around 60 reads clearly without hiding a wallpaper. Can also be set with
          "sky_intensity": 60 in a theme's config.json. -->
     <integer name="sky_intensity">0</integer>
+
+    <!-- Cinematic top shelf: the focused dock app's artwork, softened, fills the top of the screen in its
+         colour; the shelf gets a larger name, a "Last opened" line (from the apps Home opened) and dock position
+         dots, the focus glow takes the app's colour and the dock band turns translucent. false keeps the plain
+         shelf. Can also be set with "cinematic_home": true in a theme's config.json. -->
+    <bool name="cinematic_home">false</bool>
 </resources>

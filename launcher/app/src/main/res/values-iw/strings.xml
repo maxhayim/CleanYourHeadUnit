@@ -88,4 +88,5 @@
         <item quantity="other">%1$d אפליקציות</item>
     </plurals>
     <string name="greeting_with_name">%1$s, %2$s</string>
+    <string name="last_opened">נפתח לאחרונה %1$s</string>
 </resources>

@@ -14,6 +14,7 @@ import android.content.pm.ApplicationInfo;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.LinearGradient;
 import android.graphics.Paint;
 import android.graphics.RadialGradient;
 import android.graphics.Rect;
@@ -21,6 +22,7 @@ import android.graphics.Shader;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
 import android.media.tv.TvContract;
 import android.media.tv.TvInputInfo;
 import android.media.tv.TvInputManager;
@@ -43,6 +45,8 @@ import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextPaint;
 import android.text.TextUtils;
+import android.text.style.ForegroundColorSpan;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
@@ -72,9 +76,11 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -103,6 +109,20 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
     private GlassView glass;
     private View ambient;
     private TextView heroName;
+    /** The top shelf: heroName, plus the cinematic shelf's "Last opened" line and dock position dots. */
+    private View hero;
+    private TextView heroMeta;
+    private LinearLayout heroDots;
+    /** Cinematic top shelf (config.xml, cinematic_home): the focused dock app's artwork behind a larger shelf. */
+    private boolean cinematic;
+    private ImageView heroArt;
+    private static final float HERO_ART_ALPHA = 0.5f;
+    /** Softened artwork per app (HeroArt, about 5 KB each), made the first time its dock tile is focused. */
+    private final Map<String, Bitmap> heroArtCache = new HashMap<>();
+    /** The app whose artwork heroArt shows, so focusing it again only fades it back in. */
+    private String heroArtKey;
+    /** The focus glow's colour while the cinematic shelf tints it, 0 for plain white glass. */
+    private int glassAccent;
     private int ambientColor = -1;
     private ValueAnimator ambientAnimator;
     private boolean heroShown;
@@ -275,8 +295,15 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         // a fade renders it into a full-screen offscreen buffer first.
         ambient.forceHasOverlappingRendering(false);
         heroName = findViewById(R.id.heroName);
-        // dock_title false: the name above the dock never shows; the glow still follows the dock.
-        if (!cfg.dockTitle) heroName.setVisibility(View.GONE);
+        hero = findViewById(R.id.hero);
+        heroMeta = findViewById(R.id.heroMeta);
+        heroDots = findViewById(R.id.heroDots);
+        heroArt = findViewById(R.id.heroArt);
+        cinematic = cfg.cinematicHome;
+        if (cinematic) setUpCinematicShelf();
+        // dock_title false: the name above the dock (and the cinematic lines under it) never shows; the glow
+        // still follows the dock.
+        if (!cfg.dockTitle) hero.setVisibility(View.GONE);
         greeting = findViewById(R.id.greeting);
         greetingColor = greeting.getCurrentTextColor();
         btnWifi = findViewById(R.id.btnWifi);
@@ -351,7 +378,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
             public void onChildViewDetachedFromWindow(@NonNull View v) {
             }
         });
-        if (dockRow) grid.addItemDecoration(new DockDecoration(COLUMNS, density));
+        if (dockRow) grid.addItemDecoration(new DockDecoration(COLUMNS, density, cinematic));
         if (animations) {
             int enterAnim = reducedMotion ? R.anim.tile_enter_reduced : R.anim.tile_enter;
             float enterDelay = reducedMotion ? 0f : 0.06f;
@@ -377,7 +404,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
             int gridRows = itemH * rowsBelowDock;
             // Keep the hero below the header when the library is enabled on a short screen,
             // even when the theme requests an extra visible row below the dock.
-            int shelfClearance = cfg.appLibrary ? heroName.getMeasuredHeight() + (int) (40 * density) : 0;
+            int shelfClearance = cfg.appLibrary ? hero.getMeasuredHeight() + (int) (40 * density) : 0;
             int want = Math.max(shelfClearance, h - dockRow - gridRows - (int) (AppAdapter.BOTTOM_ROOM_DP * density));
             // Where the rows cannot fit even at the smallest tile (3 rows with the title on), the title keeps its
             // room above the dock and the last rows run off the bottom instead of the title drawing over the clock.
@@ -582,8 +609,10 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
             glassShown = false;
             glass.setAlpha(0f);
             heroShown = false;
-            heroName.setAlpha(0f);
+            hero.setAlpha(0f);
             ambient.setAlpha(0f);
+            heroArt.animate().cancel();
+            heroArt.setAlpha(0f);
         }
         reloadTiles();
         if (animate && animations && !reducedMotion) grid.scheduleLayoutAnimation();
@@ -615,6 +644,9 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         final String returnKey = lastFocusedKey;
         final int returnSlot = lastFocused;
         final List<Cards.Card> none = Collections.emptyList();
+        // An updated app may bring new artwork; the backdrop is cheap to make again.
+        heroArtCache.clear();
+        heroArtKey = null;
         cards = moduleCards ? CardFeature.run(() -> Cards.discover(this, hiddenApps, Cards.load(Cards.storeFile(this))), none) : none;
         adapter.reload(cards.isEmpty() ? none : CardFeature.run(() -> Cards.shown(cards), none));
         lastFocusedKey = returnKey;
@@ -644,8 +676,9 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         endReorder();   // Home or another app while reordering keeps the order so far
         wallpaperPlayer.stop();
         stopAmbientAnimation();
-        heroName.animate().cancel();
+        hero.animate().cancel();
         ambient.animate().cancel();
+        heroArt.animate().cancel();
         handler.removeCallbacks(minuteTick);
         stopStats();
         if (diya != null) diya.stop();
@@ -1011,6 +1044,12 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         }
         glassTargetX = x;
         glassTargetY = y;
+        // Cinematic shelf: the highlight glows in the dock app's colour, plain white in the grid.
+        int accent = cinematic && !festive && position < COLUMNS ? adapter.ambientColorAt(position) : 0;
+        if (cinematic && !festive && accent != glassAccent) {
+            glassAccent = accent;
+            glass.setAccent(accent);
+        }
         if (!glassShown) {
             springX.cancel();
             springY.cancel();
@@ -1056,18 +1095,19 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
     private void showHero(int position, float dockTopInRoot) {
         String label = adapter.labelAt(position);
         int color = adapter.ambientColorAt(position);
-        float y = dockTopInRoot - 14 * density - 26 * density - heroName.getHeight();
+        float y = dockTopInRoot - 14 * density - 26 * density - hero.getHeight();
         boolean changed = !label.contentEquals(heroName.getText());
+        if (cinematic) showHeroArt(position);
 
         if (!animations || reducedMotion) {
             // Snap the shelf instead of sliding and fading it: each of those frames repaints the
             // full-screen panel, and this switch exists for the GPUs that cannot afford it.
-            heroName.animate().cancel();
+            hero.animate().cancel();
             ambient.animate().cancel();
-            heroName.setText(label);
-            heroName.setY(y);
-            heroName.setTranslationX(0f);
-            heroName.setAlpha(1f);
+            fillHero(position, label);
+            hero.setY(y);
+            hero.setTranslationX(0f);
+            hero.setAlpha(1f);
             setAmbient(color);
             if (!animations) {
                 ambient.setAlpha(1f);
@@ -1082,22 +1122,22 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
 
         if (!heroShown) {
             stopAmbientAnimation();
-            heroName.animate().cancel();
+            hero.animate().cancel();
             ambient.animate().cancel();
-            heroName.setText(label);
-            heroName.setY(y);
-            heroName.setTranslationX(0f);
-            heroName.animate().alpha(1f).setDuration(260).start();
+            fillHero(position, label);
+            hero.setY(y);
+            hero.setTranslationX(0f);
+            hero.animate().alpha(1f).setDuration(260).start();
             setAmbient(color);
             ambient.animate().alpha(1f).setDuration(600).start();
             heroShown = true;
         } else if (changed) {
-            if (advancedEffects) heroName.animate().cancel();
-            heroName.animate().alpha(0f).translationX(-12 * density).setDuration(120).withEndAction(() -> {
-                heroName.setText(label);
-                heroName.setY(y);
-                heroName.setTranslationX(12 * density);
-                heroName.animate().alpha(1f).translationX(0f).setDuration(200).start();
+            if (advancedEffects) hero.animate().cancel();
+            hero.animate().alpha(0f).translationX(-12 * density).setDuration(120).withEndAction(() -> {
+                fillHero(position, label);
+                hero.setY(y);
+                hero.setTranslationX(12 * density);
+                hero.animate().alpha(1f).translationX(0f).setDuration(200).start();
             }).start();
             if (advancedEffects) {
                 transitionAmbient(color);
@@ -1108,7 +1148,130 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
                 }).start();
             }
         } else {
-            heroName.setY(y);
+            hero.setY(y);
+        }
+    }
+
+    /** The shelf's text for this dock app: its name and, on the cinematic shelf, "Last opened" and the dots. */
+    private void fillHero(int position, String label) {
+        heroName.setText(label);
+        if (!cinematic) return;
+        updateHeroMeta(position);
+        updateHeroDots(position);
+    }
+
+    // ---- cinematic shelf -------------------------------------------------------------------------
+
+    /** The parts that never change: a larger name, the meta line and the dots, the artwork and the scrim. */
+    private void setUpCinematicShelf() {
+        heroName.setTextSize(TypedValue.COMPLEX_UNIT_SP, 68f);
+        heroName.setLetterSpacing(-0.025f);
+        heroMeta.setVisibility(View.INVISIBLE);   // keeps its height, so the name does not jump when it fills in
+        heroDots.setVisibility(View.VISIBLE);
+        heroArt.setVisibility(View.VISIBLE);
+        // One stretched bitmap: apply its alpha while drawing instead of through an offscreen buffer.
+        heroArt.forceHasOverlappingRendering(false);
+        View scrim = findViewById(R.id.heroScrim);
+        scrim.setBackground(scrimDrawable());
+        scrim.setVisibility(View.VISIBLE);
+    }
+
+    /**
+     * Darkens the side the shelf's text is on and the lower part of the screen, so the name, the dock and
+     * the grid stay readable over the artwork. One small bitmap stretched over the screen, like the glow.
+     */
+    private Drawable scrimDrawable() {
+        int w = 480, h = 270;
+        Bitmap bmp = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bmp);
+        boolean rtl = getResources().getBoolean(R.bool.rtl_menu_bar);
+        Paint paint = new Paint();
+        paint.setShader(new LinearGradient(rtl ? w : 0, 0, rtl ? 0 : w, 0,
+                new int[]{0xD1060406, 0x59060406, 0x00060406}, new float[]{0f, 0.42f, 0.7f}, Shader.TileMode.CLAMP));
+        canvas.drawRect(0, 0, w, h, paint);
+        paint.setShader(new LinearGradient(0, 0, 0, h,
+                new int[]{0x00060406, 0x00060406, 0xDB060406, 0xFF060406}, new float[]{0f, 0.28f, 0.58f, 0.76f},
+                Shader.TileMode.CLAMP));
+        canvas.drawRect(0, 0, w, h, paint);
+        BitmapDrawable scrim = new BitmapDrawable(getResources(), bmp);
+        scrim.setGravity(Gravity.FILL);
+        return scrim;
+    }
+
+    /** Swaps the backdrop to this app's artwork: fade out, swap, fade in, the way the shelf's name changes. */
+    private void showHeroArt(int position) {
+        String key = adapter.keyAt(position);
+        if (key == null) return;
+        heroArt.animate().cancel();
+        if (key.equals(heroArtKey)) {
+            fadeHeroArt(420);
+            return;
+        }
+        Bitmap art = heroArtCache.get(key);
+        if (art == null) {
+            art = HeroArt.from(adapter.artworkAt(position));
+            if (art != null) heroArtCache.put(key, art);
+        }
+        heroArtKey = key;
+        final Bitmap next = art;
+        if (!animations || reducedMotion || heroArt.getAlpha() == 0f) {
+            heroArt.setImageBitmap(next);
+            fadeHeroArt(600);
+            return;
+        }
+        heroArt.animate().alpha(0f).setDuration(140).withEndAction(() -> {
+            heroArt.setImageBitmap(next);
+            heroArt.animate().alpha(HERO_ART_ALPHA).setDuration(420).start();
+        }).start();
+    }
+
+    private void fadeHeroArt(int ms) {
+        if (!animations) heroArt.setAlpha(HERO_ART_ALPHA);
+        else heroArt.animate().alpha(HERO_ART_ALPHA).setDuration(reducedMotion ? Math.min(ms, 160) : ms).start();
+    }
+
+    /** "Last opened yesterday, 9:40 PM", the time in white; nothing (but the same height) when it was never seen. */
+    private void updateHeroMeta(int position) {
+        long when = LastOpened.get(this, adapter.packageAt(position));
+        if (when <= 0) {
+            heroMeta.setVisibility(View.INVISIBLE);
+            return;
+        }
+        String rel = LastOpened.describe(this, when);
+        String text = getString(R.string.last_opened, rel);
+        SpannableString line = new SpannableString(text);
+        int at = text.indexOf(rel);
+        if (at >= 0) line.setSpan(new ForegroundColorSpan(0xFFFFFFFF), at, at + rel.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        heroMeta.setText(line);
+        heroMeta.setVisibility(View.VISIBLE);
+    }
+
+    /** One dot per dock app, the focused one drawn long and white. Hebrew docks start on the right, so do the dots. */
+    private void updateHeroDots(int position) {
+        int count = Math.min(adapter.dockFilled(), COLUMNS);
+        heroDots.setVisibility(count > 1 ? View.VISIBLE : View.INVISIBLE);
+        if (heroDots.getChildCount() != count) {
+            heroDots.removeAllViews();
+            for (int i = 0; i < count; i++) {
+                View dot = new View(this);
+                GradientDrawable bg = new GradientDrawable();
+                bg.setCornerRadius(3 * density);
+                dot.setBackground(bg);
+                LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams((int) (6 * density), (int) (6 * density));
+                if (i > 0) lp.leftMargin = (int) (6 * density);
+                heroDots.addView(dot, lp);
+            }
+        }
+        for (int i = 0; i < count; i++) {
+            View dot = heroDots.getChildAt(rtlAppGrid ? count - 1 - i : i);
+            boolean on = i == position;
+            ((GradientDrawable) dot.getBackground()).setColor(on ? 0xFFFFFFFF : 0x4DFFFFFF);
+            ViewGroup.LayoutParams lp = dot.getLayoutParams();
+            int w = (int) ((on ? 20 : 6) * density);
+            if (lp.width != w) {
+                lp.width = w;
+                dot.setLayoutParams(lp);
+            }
         }
     }
 
@@ -1129,11 +1292,22 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
             Bitmap bmp = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
             Canvas canvas = new Canvas(bmp);
             Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
-            paint.setShader(new RadialGradient(
-                    w * 0.32f, h * 0.42f, w * 0.62f,
-                    new int[]{0x5CFFFFFF, 0x26FFFFFF, 0x00FFFFFF},
-                    new float[]{0f, 0.45f, 1f},
-                    Shader.TileMode.CLAMP));
+            if (cinematic) {
+                // Higher and stronger, from the corner away from the shelf's text: the app's colour floods
+                // the top of the screen over its artwork, and the scrim keeps the text side dark.
+                boolean rtl = getResources().getBoolean(R.bool.rtl_menu_bar);
+                paint.setShader(new RadialGradient(
+                        w * (rtl ? 0.20f : 0.80f), h * 0.06f, w * 0.78f,
+                        new int[]{0xA6FFFFFF, 0x47FFFFFF, 0x00FFFFFF},
+                        new float[]{0f, 0.5f, 1f},
+                        Shader.TileMode.CLAMP));
+            } else {
+                paint.setShader(new RadialGradient(
+                        w * 0.32f, h * 0.42f, w * 0.62f,
+                        new int[]{0x5CFFFFFF, 0x26FFFFFF, 0x00FFFFFF},
+                        new float[]{0f, 0.45f, 1f},
+                        Shader.TileMode.CLAMP));
+            }
             canvas.drawRect(0, 0, w, h, paint);
             glow = new BitmapDrawable(getResources(), bmp);
             glow.setGravity(Gravity.FILL);
@@ -1172,9 +1346,11 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
     private void showGlowOnly(int position) {
         int color = adapter.ambientColorAt(position);
         stopAmbientAnimation();
-        heroName.animate().cancel();
+        hero.animate().cancel();
         ambient.animate().cancel();
-        heroName.setAlpha(0f);
+        hero.setAlpha(0f);
+        heroArt.animate().cancel();
+        heroArt.setAlpha(0f);
         heroShown = false;
         if (!animations || reducedMotion) {
             setAmbient(color);
@@ -1195,15 +1371,18 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
     private void hideHero() {
         if (!heroShown) return;
         stopAmbientAnimation();
-        heroName.animate().cancel();
+        hero.animate().cancel();
         ambient.animate().cancel();
+        heroArt.animate().cancel();
         heroShown = false;
         if (animations) {
-            heroName.animate().alpha(0f).setDuration(reducedMotion ? 100 : 160).start();
+            hero.animate().alpha(0f).setDuration(reducedMotion ? 100 : 160).start();
             ambient.animate().alpha(0f).setDuration(reducedMotion ? 140 : 300).start();
+            heroArt.animate().alpha(0f).setDuration(reducedMotion ? 140 : 300).start();
         } else {
-            heroName.setAlpha(0f);
+            hero.setAlpha(0f);
             ambient.setAlpha(0f);
+            heroArt.setAlpha(0f);
         }
     }
 
