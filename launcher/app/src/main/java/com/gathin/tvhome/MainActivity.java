@@ -113,6 +113,9 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
     private TextView btnWifi;
     private TextView shamsiDate;
     private TextView stats;
+    private List<RaceWeekend.Race> raceCalendar;
+    private View racePanel;
+    private TextView raceKicker, raceHeadline, raceSessions;
     /** config.xml show_stats, overridable by a theme. Off: the line is gone and nothing is read. */
     private boolean showStats;
     private boolean shamsi;
@@ -234,6 +237,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         @Override
         public void run() {
             updateGreeting();
+            updateRace();
             updateWifiLabel();
             sky.update();
             wallpaperPlayer.update();
@@ -282,6 +286,11 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         btnWifi = findViewById(R.id.btnWifi);
         shamsiDate = findViewById(R.id.shamsiDate);
         stats = findViewById(R.id.stats);
+        raceCalendar = cfg.raceCalendar;
+        racePanel = findViewById(R.id.racePanel);
+        raceKicker = findViewById(R.id.raceKicker);
+        raceHeadline = findViewById(R.id.raceHeadline);
+        raceSessions = findViewById(R.id.raceSessions);
         showStats = cfg.showStats;
         shamsi = cfg.shamsiDate;
         greetingName = cfg.greetingName;
@@ -545,6 +554,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         }
         rebuildOnResume = false;
         updateGreeting();
+        updateRace();
         updateWifiLabel();
         updateInputsButton();
         if (showStats) startStats();
@@ -1551,6 +1561,61 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
             greeting.setTextColor(greetingColor);
         }
         if (shamsi) shamsiDate.setText(Shamsi.today());
+    }
+
+    // ---- race-weekend panel (a theme's race_calendar) -----------------------------------------------
+
+    private static final int RACE_RED = 0xFFFF3B2F;
+
+    /**
+     * Shows or hides the race-weekend panel for this minute. Text only, set once a minute with the clock:
+     * nothing animates, so the panel costs the GPU nothing between ticks.
+     */
+    private void updateRace() {
+        if (raceCalendar.isEmpty()) return;
+        RaceWeekend.State s = RaceWeekend.at(raceCalendar, java.time.Instant.now());
+        if (s == null) {
+            racePanel.setVisibility(View.GONE);
+            return;
+        }
+        RaceWeekend.Race race = s.race;
+        raceKicker.setText(race.place.isEmpty()
+                ? getString(R.string.race_kicker_no_place, race.round, race.shortName())
+                : getString(R.string.race_kicker, race.round, race.shortName(), race.place));
+
+        if (s.live != null) {
+            SpannableString live = new SpannableString("\u25CF  " + getString(R.string.race_live, s.live.title()));
+            live.setSpan(new android.text.style.ForegroundColorSpan(RACE_RED), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            raceHeadline.setText(live);
+        } else if (s.next != null) {
+            String in = RaceWeekend.countdown(s.untilNext);
+            raceHeadline.setText(s.next.isRace() ? getString(R.string.race_lights_out, in)
+                    : getString(R.string.race_next, s.next.title(), in));
+        } else {
+            raceHeadline.setText(R.string.race_finished);
+        }
+
+        // FP1 FRI 11:00 PM   FP2 SAT 2:30 AM ...: done sessions fade, the live one is red, the next one bright.
+        java.time.format.DateTimeFormatter when = java.time.format.DateTimeFormatter.ofPattern(
+                android.text.format.DateFormat.is24HourFormat(this) ? "EEE HH:mm" : "EEE h:mm a", Locale.getDefault())
+                .withZone(java.time.ZoneId.systemDefault());
+        android.text.SpannableStringBuilder row = new android.text.SpannableStringBuilder();
+        for (int i = 0; i < race.sessions.size(); i++) {
+            RaceWeekend.Session session = race.sessions.get(i);
+            if (i > 0) row.append("     ");
+            int start = row.length();
+            row.append(session.shortName()).append("  ").append(when.format(session.start).toUpperCase(Locale.getDefault()));
+            int color;
+            switch (s.statuses.get(i)) {
+                case DONE: color = 0x47FFFFFF; break;
+                case LIVE: color = RACE_RED; break;
+                case NEXT: color = 0xFFFFFFFF; break;
+                default: color = 0x99FFFFFF;
+            }
+            row.setSpan(new android.text.style.ForegroundColorSpan(color), start, row.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        }
+        raceSessions.setText(row);
+        racePanel.setVisibility(View.VISIBLE);
     }
 
     /** Shows the Wi-Fi network name on the button when we can read it, otherwise the connection type. */
