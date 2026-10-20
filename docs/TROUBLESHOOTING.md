@@ -28,6 +28,10 @@ Things that bit us or contributors, so they don't bite you. Commands use `tools/
   switches the USB port to ADB device mode, which cuts the power to a USB speaker or drive. Switch
   USB debugging off when you're done; the launcher doesn't need it.
 - **Close port 5555 when you're done**: plaintext, and a shell for anyone on the LAN when `ro.adb.secure=0`. Steps in the README FAQ.
+- **The TV sits on a separate VLAN or IoT network** and `tools/tv.py` times out although debugging
+  is on: the router keeps the computer from reaching it. Add a temporary firewall rule from your
+  computer to the TV on tcp/5555 only, and remove it again when you close ADB. Opening the whole
+  segment, or moving the TV onto the main network for good, undoes the reason it was separate.
 - **Windows PowerShell 5.1 adds a byte-order mark** to text piped into a program, which turned the
   first batch command into gibberish. `tv.py` now strips it, and the `.ps1` scripts pipe clean UTF-8.
 - **"Allow USB debugging?" comes back** although `adb devices` already works: `tv.py` used its own
