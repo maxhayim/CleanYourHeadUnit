@@ -58,4 +58,23 @@
     <string name="on">تشغيل</string>
     <string name="off">إيقاف</string>
     <string name="enable">تفعيل</string>
+    <string name="app_library">مكتبة التطبيقات</string>
+    <string name="library_empty">لم يتم العثور على تطبيقات قابلة للتشغيل</string>
+    <string name="library_on_home">على الرئيسية</string>
+    <string name="library_add_home">إضافة إلى الرئيسية</string>
+    <string name="library_remove_shortcut">إزالة من الرئيسية</string>
+    <string name="library_open">فتح</string>
+    <string name="library_app_info">معلومات التطبيق</string>
+    <string name="library_save_failed">تعذر حفظ الاختصار</string>
+    <string name="library_recent">جديد · إضافة إلى الرئيسية</string>
+    <string name="library_hint_add">اضغط للإضافة للرئيسية · اضغط مطولاً للخيارات</string>
+    <string name="library_hint_open">اضغط للفتح · اضغط مطولاً للخيارات</string>
+    <plurals name="library_app_count">
+        <item quantity="zero">%1$d تطبيق</item>
+        <item quantity="one">%1$d تطبيق</item>
+        <item quantity="two">%1$d تطبيقان</item>
+        <item quantity="few">%1$d تطبيقات</item>
+        <item quantity="many">%1$d تطبيقًا</item>
+        <item quantity="other">%1$d تطبيق</item>
+    </plurals>
 </resources>

@@ -45,13 +45,17 @@ import java.util.Set;
  * then empty slots up to a full row, see {@link DockSlots}), then the module cards the owner chose to show
  * (by label), the rest is alphabetical.
  */
-public class AppAdapter extends RecyclerView.Adapter<AppAdapter.Holder> {
+public class AppAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     interface TileListener {
         void onTileFocused(int position, View card);
 
         /** Called for a D-pad direction key on a tile. Return true when handled (focus stays put). */
         boolean onTileVerticalKey(int position, int keyCode);
+
+        void onLibraryRequested();
+        void onLibraryFocused();
+        void onLibraryUp();
     }
 
     static final class Entry {
@@ -122,6 +126,7 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.Holder> {
     private final Set<String> hidden;
     private final boolean animations;
     private final boolean advancedEffects;
+    private final boolean showLibrary;
     private final boolean showHomeSettings;
     /** Calmer motion for weak GPUs (config.xml, reduced_motion): no overshoot, shorter fades. */
     private final boolean reducedMotion;
@@ -137,6 +142,7 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.Holder> {
         this.animations = cfg.animations;
         this.advancedEffects = cfg.animations && cfg.advancedEffects;
         this.showHomeSettings = cfg.showHomeSettingsShortcut;
+        this.showLibrary = cfg.appLibrary;
         this.reducedMotion = cfg.reducedMotion;
         // Tiles keep their identity across reload(), so a focused tile stays on its app instead of
         // its view being rebound to whatever app now sits in that slot.
@@ -150,14 +156,27 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.Holder> {
     void reload(List<Cards.Card> cards) {
         PackageManager pm = ctx.getPackageManager();
         Intent probe = new Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_LEANBACK_LAUNCHER);
-        List<ResolveInfo> found = pm.queryIntentActivities(probe, 0);
+        List<ResolveInfo> found = new ArrayList<>(pm.queryIntentActivities(probe, 0));
+        Set<String> tvPackages = new HashSet<>();
+        for (ResolveInfo ri : found) if (ri.activityInfo != null) tvPackages.add(ri.activityInfo.packageName);
+        Set<String> added = LibraryApps.load(ctx);
+        Set<String> removed = LibraryApps.loadRemoved(ctx);
+        if (!added.isEmpty()) {
+            Set<String> seen = new HashSet<>(tvPackages);
+            for (ResolveInfo ri : pm.queryIntentActivities(
+                    new Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_LAUNCHER), 0)) {
+                if (ri.activityInfo != null && added.contains(ri.activityInfo.packageName)
+                        && seen.add(ri.activityInfo.packageName)) found.add(ri);
+            }
+        }
         Map<String, Cards.Card> cardByPkg = new HashMap<>();
         for (Cards.Card c : cards) cardByPkg.put(c.pkg, c);
         List<Entry> fresh = new ArrayList<>();
         for (ResolveInfo ri : found) {
             if (ri.activityInfo == null) continue;
             String pkg = ri.activityInfo.packageName;
-            if (pkg.equals(ctx.getPackageName()) || hidden.contains(pkg)) continue;
+            if (pkg.equals(ctx.getPackageName()) || !ri.activityInfo.exported
+                    || !LibraryApps.visible(tvPackages.contains(pkg), hidden.contains(pkg), added.contains(pkg), removed.contains(pkg))) continue;
             ComponentName component = new ComponentName(pkg, ri.activityInfo.name);
             Cards.Card card = cardByPkg.get(pkg);
             if (card != null && !card.component.equals(component)) continue;   // the card stands in for this tile
@@ -219,7 +238,20 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.Holder> {
 
     @NonNull
     @Override
-    public Holder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        if (viewType == 1) {
+            View row = LayoutInflater.from(ctx).inflate(R.layout.row_app_library, parent, false);
+            View button = row.findViewById(R.id.btnLibrary);
+            button.setOnClickListener(v -> listener.onLibraryRequested());
+            button.setOnFocusChangeListener((v, focused) -> { if (focused) listener.onLibraryFocused(); });
+            button.setOnKeyListener((v, key, event) -> {
+                if (event.getAction() != KeyEvent.ACTION_DOWN) return false;
+                if (key == KeyEvent.KEYCODE_DPAD_UP) listener.onLibraryUp();
+                return key == KeyEvent.KEYCODE_DPAD_UP || key == KeyEvent.KEYCODE_DPAD_DOWN
+                        || key == KeyEvent.KEYCODE_DPAD_LEFT || key == KeyEvent.KEYCODE_DPAD_RIGHT;
+            });
+            return new RecyclerView.ViewHolder(row) { };
+        }
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_app, parent, false);
         float density = parent.getResources().getDisplayMetrics().density;
         int width = parent.getWidth() > 0 ? parent.getWidth() : parent.getMeasuredWidth();
@@ -239,7 +271,9 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.Holder> {
     }
 
     @Override
-    public void onBindViewHolder(@NonNull Holder h, int position) {
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+        if (isLibraryAt(position)) return;
+        Holder h = (Holder) holder;
         Entry e = items.get(position);
         if (e.kind == Entry.EMPTY) {
             // A free dock slot keeps its place in the row and the band, but shows nothing and takes no focus.
@@ -297,7 +331,6 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.Holder> {
             return;
         }
         Intent i = new Intent(Intent.ACTION_MAIN)
-                .addCategory(Intent.CATEGORY_LEANBACK_LAUNCHER)
                 .setComponent(e.component)
                 .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
         try {
@@ -312,12 +345,23 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.Holder> {
 
     @Override
     public int getItemCount() {
-        return items.size();
+        return items.size() + (showLibrary ? 1 : 0);
+    }
+
+    int appCount() { return items.size(); }
+
+    boolean isLibraryAt(int position) { return showLibrary && position == items.size(); }
+
+    @Override public int getItemViewType(int position) { return isLibraryAt(position) ? 1 : 0; }
+
+    boolean containsPackage(String pkg) {
+        for (Entry entry : items) if (entry.pkg.equals(pkg)) return true;
+        return false;
     }
 
     @Override
     public long getItemId(int position) {
-        return items.get(position).component.flattenToShortString().hashCode();
+        return isLibraryAt(position) ? Long.MIN_VALUE : items.get(position).component.flattenToShortString().hashCode();
     }
 
     /** Stable key for the app at a position (its component), or null. */
