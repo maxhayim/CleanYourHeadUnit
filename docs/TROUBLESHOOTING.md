@@ -10,6 +10,14 @@ Things that bit us or contributors, so they don't bite you. Commands use `tools/
   `tools/tv.py` avoids the binary entirely.
 - **No "wireless debugging" toggle** on some TVs, Xiaomi among them. USB debugging alone opens
   network ADB on port 5555.
+- **USB debugging is greyed out and there is no Wireless debugging entry either**, seen on a carrier
+  box ([Airtel Xstream, Android 11](https://github.com/Gathin23/cleanyourtv/issues/227)). Some ISP
+  firmware removes both switches, and then no shell can be reached: `tools/tv.py` fails,
+  `adb connect <ip>:5555` times out, and so does a port check. That timeout is the firmware, not
+  Wi-Fi, the router or the cable, so don't go rebuilding the network for it. Greyed-out rather than
+  missing points at a device-owner policy or a provisioning lock; the toggle comes back after a
+  firmware update from the ISP, or not at all. Without one of the two switches this repo has nothing
+  to talk to.
 - **USB debugging never opens port 5555** on some Google TV sets (a Skyworth-built Philips among
   them). Pair once through Wireless debugging with the stock `adb` (`adb pair <ip>:<port> <code>`,
   then `adb connect`), run `adb tcpip 5555`, and `tools/tv.py` works from then on. `dns-sd -B
