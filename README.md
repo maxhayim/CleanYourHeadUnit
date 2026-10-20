@@ -11,6 +11,8 @@
   <a href="PROMPT.md">The prompt</a> ·
   <a href="examples/">93 TV lists</a> ·
   <a href="SHOWCASE.md">18 built on it</a> ·
+  <a href="examples/">55 TV lists</a> ·
+  <a href="SHOWCASE.md">12 built on it</a> ·
   <a href="https://x.com/gathint/status/2111379569030939102">The tweet</a>
 </p>
 
@@ -56,6 +58,7 @@ and a one-line restore if you change your mind.**
   <a href="https://www.iphonemod.net/clean-your-tv-android-tv-debloat-launcher.html"><img src="docs/press/iphonemod.png" height="34" alt="iPhoneMod"></a>
 </p>
 
+<h3 align="center">55 TVs with tested lists &nbsp;·&nbsp; 24 brands &nbsp;·&nbsp; 12 languages &nbsp;·&nbsp; 280 KB launcher</h3>
 
 ![Before: stock Google TV home with a sponsored ad. After: the Clean Your TV launcher](docs/stock-vs-new-side.jpg)
 
@@ -129,6 +132,9 @@ Tested lists from contributors, one folder per model in [`examples/`](examples/)
 **Haier** 2 · **Hitachi** 2 · **NVIDIA Shield** 2 · **Panasonic** 2 · **Skyworth** 2 · AiPro2K ·
 Amazon Fire TV Stick · Chromecast with Google TV · Insignia Fire TV · Kalley · OnePlus · onn · PRISM+ · RCA ·
 Redmi · SANYO · Thomson · Toshiba Fire TV · Vu · JMGO, Portronics, Stellamore, Wanbo and XGIMI projectors
+**Xiaomi** 12 · **TCL** 11 · **Sony** 8 · **CHiQ** 2 · **Hisense** 2 · **Philips** 2 · Amazon Fire TV Stick · AIWA · BenQ ·
+Chromecast with Google TV · Hitachi · Insignia Fire TV · NVIDIA Shield · OnePlus · Panasonic · RCA · Redmi ·
+SANYO · Skyworth · Thomson · Toshiba Fire TV · Vu · Stellamore and XGIMI projectors
 
 <details>
 <summary><strong>The full list</strong></summary>
@@ -138,6 +144,7 @@ Redmi · SANYO · Thomson · Toshiba Fire TV · Vu · JMGO, Portronics, Stellamo
 | AiPro2K (Expressluck, dongnae; Changhong AI PONT family) | Android TV 14 |
 | Amazon Fire TV Stick 4K, 1st gen 2018 (AFTMM, mantis) | Fire OS 6.7.1.1 / Android 7.1 |
 | Amazon Fire TV Stick Lite, 1st gen 2020 (AFTSS, sheldon) | Fire OS 7.7.1.7 / Android 9 |
+| AIWA AI PONT SA (Changhong, osaka, ISDB86AW) | Google TV 14 |
 | BenQ E55-735 (Changhong AI PONT, DVB96BQ) | Google TV 14 |
 | BenQ E55-750 (Changhong AI PONT, DVB96BQ) | Google TV (Android 11) |
 | CHiQ AI PONT (Changhong GTVU65, dangni, MediaTek mt5867) | Google TV 14 |
