@@ -27,6 +27,9 @@
 # - `pm disable-user` is accepted for the shell user on this build (unlike MiTV-ANTL0, which needs
 #   `pm hide`).
 # - mitv.service is the core MiTV service: do not touch it.
+# - Voice: disabling voicecontrol, wakeupservice, the Mico MQTT service and the two Mi Home
+#   packages also stops an external Xiao Ai speaker from controlling the TV (its "turn the TV
+#   off" command). Verified both ways on this set; see the Voice group below.
 # - com.xiaomi.mitv.settings is the vendor settings UI; the standard com.android.tv.settings app is
 #   also present and answers the plain settings actions.
 # - No Google apps at all. Content comes from CN streaming apps; casting (smartshare / miplay /
@@ -68,12 +71,17 @@ com.xiaomi.mitv.handbook                 # user handbook
 com.xiaomi.tweather                      # weather
 
 # Off by choice: features this owner does not use (comment out what you do use)
-com.xiaomi.mitv.smartpanel               # smart-home panel
-com.xiaomi.smarthome.tv                  # Mi Home
 com.xiaomi.mitv.karaoke.service          # karaoke
 com.xiaomi.mitv.tvvideocall              # MiTime video calls
 com.xiaomi.eetv.litehome                 # a second home screen ("办公模式" office mode)
 com.xiaomi.mitv.light                    # light-effect app ("Symphony of Shadows")
+
+# Voice and Mi Home. KEEP THESE if an external Xiao Ai (小爱) speaker should be able to control the
+# TV: disabling all five cut a household's voice "turn the TV off" in testing, and enabling them again
+# restored it. The TV-side voice remote may only need voicecontrol/wakeupservice; the speaker path goes
+# through the Mico MQTT service and the Mi Home packages. Not narrowed down to one package.
+com.xiaomi.mitv.smartpanel               # smart-home panel
+com.xiaomi.smarthome.tv                  # Mi Home
 com.xiaomi.voicecontrol                  # Xiao Ai voice control
 com.xiaomi.wakeupservice                 # voice wake-up
 com.xiaomi.mico.mqtt.service.application.tv  # Mico voice MQTT service
