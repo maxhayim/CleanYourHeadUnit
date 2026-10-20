@@ -74,11 +74,12 @@ com.xiaomi.mitv.karaoke.service          # karaoke
 com.xiaomi.mitv.tvvideocall              # MiTime video calls
 com.xiaomi.eetv.litehome                 # a second home screen ("办公模式" office mode)
 com.xiaomi.mitv.light                    # light-effect app ("Symphony of Shadows")
-com.xiaomi.mitv.pay                      # Mi payment
-com.xiaomi.mitv.payment                  # payment component
 com.xiaomi.voicecontrol                  # Xiao Ai voice control
 com.xiaomi.wakeupservice                 # voice wake-up
 com.xiaomi.mico.mqtt.service.application.tv  # Mico voice MQTT service
+# Deliberately NOT disabled: com.xiaomi.mitv.pay and com.xiaomi.mitv.payment. Disabling them
+# leaves the TV unable to complete a membership purchase or renewal, and a viewer who pays for
+# the kids membership (儿童成长VIP) loses the only way to renew on the set.
 
 # Stock screensaver, replaced by the launcher's ClockDream. Apply only AFTER the launcher is Home and
 # its screensaver is selected, otherwise the TV has no screensaver:
