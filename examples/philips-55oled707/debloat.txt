@@ -23,10 +23,12 @@
 # 1. org.droidtv.nettvbrowser is needed on a UK set. With it disabled, ITVX (a Freeview Play
 #    app) hung while BBC iPlayer still worked. It is re-enabled here, as the browser-engine
 #    entry in the 50PUS8517 DO NOT DISABLE block says it should be.
-# 2. com.phorus.playfi.tv (Play-Fi) came back enabled after the first full restart, about
-#    45 minutes after it was disabled, so it was not the ~10 s persistence delay (50PUS8517
-#    quirk 1). Every other package in the same batch stayed disabled. Cause not found. It was
-#    disabled again and has not been re-checked across a restart yet.
+# 2. com.phorus.playfi.tv (Play-Fi) could NOT be kept disabled and is commented out below, like
+#    mediashell in 50PUS8517 quirk 4. It came back after both full restarts, with enabled=1
+#    (ENABLED), not 0 (DEFAULT): something re-enables it on purpose, so this is not the ~10 s
+#    persistence delay (50PUS8517 quirk 1). Every other package stayed disabled. The likely
+#    source is org.droidtv.tv.tptvservice, which must stay and which posts a notification on a
+#    PlayFi_ChannelID channel at every boot. That link is not proven.
 # 3. org.droidtv.homeintentresolver ships with its HomeActivity component already disabled
 #    (`pm dump` lists it under disabledComponents), so it does not compete for Home. While
 #    com.google.android.tvlauncher is enabled it wins Home at priority 2 and
@@ -38,6 +40,10 @@
 # 5. Idle-loop check (50PUS8517 quirk 5 method, 30 s, TV in standby): 163 lines, no line
 #    repeating more than 15 times, and nothing tied to a disabled package. The top repeaters
 #    were cast_shell (a phone probing Chromecast) and the tuner's signal-level poll.
+#
+# Verified after a full restart (off at the wall): the replacement launcher stays Home, ITVX
+# plays, channel changes and the TV guide work with Alexa disabled, the SOURCES drawer stays
+# open and lists HDMI 1-4, and the red button opens HbbTV.
 #
 # Memory, read from `dumpsys meminfo` at idle on the home screen. The two readings straddle a
 # restart, so treat the difference as approximate:
@@ -70,9 +76,9 @@ org.droidtv.nettvapp20004410              # Couchplay Games
 org.droidtv.android.fitness               # Fitness Buddy
 
 # Philips features this owner does not use. Check each against your own setup.
-org.droidtv.amazonalexa                   # Alexa bridge; 50PUS8517 warns that live TV binds into it, so test channel zapping and the EPG
+org.droidtv.amazonalexa                   # Alexa bridge; 50PUS8517 warns that live TV binds into it. Channel changes and the TV guide still work with it disabled here
 org.droidtv.demome                        # "Demo me" retail demo mode
-com.phorus.playfi.tv                      # Play-Fi multi-room audio; came back after one restart, see note 2
+# com.phorus.playfi.tv                    # Play-Fi multi-room audio; re-enables itself at every boot, see note 2
 com.phorus.playfi.softap                  # DTSPlayFiSoftAP, Play-Fi's soft access point helper; stayed disabled
 
 # Google telemetry and first-setup leftovers
