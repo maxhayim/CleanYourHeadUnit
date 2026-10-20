@@ -81,6 +81,7 @@ on that firmware, grouped and commented. These are starting points: comment out 
 | `thomson-32he5800/` | Thomson 32HE5800 (TCL-built UnionTV, Realtek RT2841), Spain | Android TV 9 | TCL BI analytics, TCL app store/user center, TV Guard cleaner, Google recommendation rows; 1.4 GB low-RAM; voice, USB media players off by choice |
 | `toshiba-fire-tv-aftha004/` | Toshiba Fire TV (AFTHA004, hazel) | Fire OS 7 / Android 9 | Amazon ACR, metrics, shopping, tutorials, Miracast sink; streaming preloads off by choice; debloat only |
 | `vu-4k-lushan/` | Vu 4K (HVCL, lushan, MediaTek), India | Google TV 12 | Vu/Hisense ACR (evservice), store mode, Alexa, Vu preloads, partner auto-installs; smartsense/aiot kept, setupwraith off for the launcher |
+| `vu-premium-fhd-43-hamamatsucho/` | Vu Premium FHD 43-inch (Smart 2K ATV4, hamamatsucho), India | Android TV 9 (PTO4.200424.001) | CVTE partner apps, Google recommendation rows and retail demo; tested on one set |
 | `wanbo-x5-pro/` | Wanbo X5 Pro projector (built-in Google TV stick: SkyworthDigital YYT, Amlogic), Australia | Google TV 14 | Google feedback, Privacy Sandbox ad services, xCPE remote-management agent, Skyworth device-info and factory test apps; projector observer, remote pairing and hot keys kept; Assistant, YouTube Music, TalkBack off by choice; launcherx + setupwraith (setupwraith owned the Wi-Fi saved at setup); port 5555 opens without pairing |
 | `xgimi-horizon-s-pro/` | XGIMI Horizon S Pro projector (XK03H, xgimigalileo, MediaTek) | Android TV 11 | First projector: keystone/autofocus/HDMI player kept, factory and burn-in tools, bug-report uploader, Google preloads; HDMI needs `input_action`; voice, Chromecast off by choice |
 | `xiaomi-mi-box-s/` | Xiaomi Mi Box S (MIBOX4, oneday), streaming box | Android TV 9 | PatchWall, Mi analytics, Alphonso ad tracking, MiLink; voice, casting, phone remote off by choice |
@@ -99,7 +100,7 @@ on that firmware, grouped and commented. These are starting points: comment out 
 | `xiaomi-tv-a-pro-2026/` | Xiaomi TV A Pro 75" 2026 (MiTV-MZTU0, river, MediaTek) | Google TV 14 | PatchWall/Mi Home tab, Mi analytics, TV Manager, updaters; setup wizard off, launcherx crash-loop notes |
 | `xiaomi-mitv-afmu0/` | Xiaomi TV Box S 3rd gen (MiTV-AFMU0, twilight, Amlogic), streaming box | Google TV 14 | Mi analytics, PatchWall/Mi Home tab, Mi connect/SmartShare; voice and phone remote off by choice; setup wizard off so launcherx can go |
 
-| `vu-premium-fhd-43-hamamatsucho/` | Vu Premium FHD 43-inch (Smart 2K ATV4, hamamatsucho), India | Android TV 9 (PTO4.200424.001) | CVTE partner apps, Google recommendation rows and retail demo; tested on one set |
+
 Notes for a model that has no tested list yet live in [`docs/devices/`](../docs/devices/) (Xiaomi MiTV-MFTR0 "freeguy", China, Android 14: inputs, Xiaomi settings intents, app discovery).
 
 
