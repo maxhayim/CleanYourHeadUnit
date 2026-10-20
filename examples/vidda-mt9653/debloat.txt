@@ -3,6 +3,7 @@
 # the model string is VIDAA_TV and the package namespace is com.jamdeo.* / com.hisense.*, so it shares
 # nothing with the export Hisense lists in this folder (com.hisense.evservice, com.mediatek.*).
 # 3.8 GB RAM, 41 GB storage, UI at 1080p / 320 dpi.
+# Same build as examples/hisense-e5q-pro/, a smaller list that keeps the stock home.
 #
 # Apply:   TV_HOST=<tv ip> tools/disable.sh examples/vidda-mt9653/debloat.txt
 # Undo:    TV_HOST=<tv ip> tools/restore.sh examples/vidda-mt9653/debloat.txt

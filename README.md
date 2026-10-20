@@ -163,6 +163,7 @@ SANYO · Thomson · Toshiba Fire TV · Vidda · Vu · JMGO, Portronics, Stellamo
 | Haier Android TV DVB2K (broadway, HaierATVT56DVB) | Android TV 11 |
 | Haier H32S80EFX (MatrixTV CE, HRT56EU, deto, MediaTek), Thailand | Google TV 14 |
 | Hisense HG9 (HiSmart 4K A4FFM) | Android TV 9 |
+| Hisense E5Q Pro (VIDAA_TV, MediaTek MT9653), China | Android TV 11 |
 | Hisense HiSmartTV A4 (xiaoyushan, MStar m7322), Android 11 firmware RTT2.221108.001 | Android TV 11 |
 | Hisense HiSmartTV A4 (xiaoyushan, MStar m7322), India | Android TV 9 |
 | Hisense SmartTV 4K FFM (huangshan, MediaTek) | Android TV 10 |
