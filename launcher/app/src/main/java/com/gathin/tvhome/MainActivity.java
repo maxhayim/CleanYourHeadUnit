@@ -748,9 +748,11 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
             return true;
         }
         int pos = focusedTilePosition();
-        if (ok && pos >= 0) {
-            if (!down) pickUp(pos);
-            return true;   // never opens the app while reordering
+        if (ok && grid.hasFocus()) {
+            // RecyclerView can briefly report NO_POSITION during a move or rebind. Still consume
+            // OK on the grid: falling through would let the focused card open its app in reorder mode.
+            if (!down && pos >= 0) pickUp(pos);
+            return true;
         }
         return super.dispatchKeyEvent(event);   // arrows navigate; OK on a top-bar pill works as usual
     }
