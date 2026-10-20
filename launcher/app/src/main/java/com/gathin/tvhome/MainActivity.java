@@ -1723,12 +1723,17 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         return getPackageManager().resolveActivity(byAction, 0) != null ? byAction : null;
     }
 
-    /** The TV's own source-selection panel, for TVs that have no TvInputManager (TCL Android TV 9). */
+    /** The TV's own source-selection panel, for TVs that have no TvInputManager (TCL Android TV 9): a
+     *  service, or an activity on sets whose panel is a dialog (BYINTEK U4's QuickSourceActivity). */
     private void openSourcePanel() {
         Intent i = new Intent(sourcePanelAction);
         ComponentName c = ComponentName.unflattenFromString(sourcePanelService);
         if (c != null) i.setComponent(c);
         try {
+            if (getPackageManager().resolveActivity(i, 0) != null) {
+                startActivity(i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+                return;
+            }
             startService(i);
         } catch (Exception e) {
             Toast.makeText(this, R.string.not_available, Toast.LENGTH_SHORT).show();
@@ -1765,6 +1770,12 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
 
     /** Dropdown menu under the Inputs pill: HDMI ports (with connection state), AV and Live TV. */
     private void showInputs() {
+        // A configured source panel and no Live TV row to offer next to it: the panel is the whole menu.
+        // The BYINTEK U4 needs this, as its TvInputManager lists three HDMI ports and an AV input it doesn't have.
+        if (!sourcePanelService.isEmpty() && liveTvIntent() == null) {
+            openSourcePanel();
+            return;
+        }
         View anchor = findViewById(R.id.btnInputs);
         View panel = getLayoutInflater().inflate(R.layout.popup_inputs, root, false);
         LinearLayout rows = panel.findViewById(R.id.rows);
