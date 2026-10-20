@@ -5,8 +5,10 @@
 # Usage: TV_HOST=192.168.1.50 tools/disable.sh examples/xiaomi-mi-tv-4a/debloat.txt
 set -euo pipefail
 LIST="${1:?usage: disable.sh <debloat list>}"
-# Resolve the list against the caller's directory before moving into the repo.
-LIST_DIR="$(cd "$(dirname "$LIST")" && pwd)"
+# Resolve the list against the caller's directory before moving into the repo. Git Bash's pwd says
+# /c/Users/..., which the Windows Python cannot open with MSYS_NO_PATHCONV=1 set; pwd -W gives
+# C:/Users/..., the same path (and so the same record) as the PowerShell scripts.
+LIST_DIR="$(cd "$(dirname "$LIST")" && { pwd -W 2>/dev/null || pwd; })"
 LIST="$LIST_DIR/$(basename "$LIST")"
 cd "$(dirname "$0")/.."
 PY=tools/venv/bin/python
@@ -46,6 +48,11 @@ if printf '%s\n' "$PKGS" | grep -x "$SETUP" >/dev/null && [ -z "${FORCE_SETUPWRA
     PKGS="$(printf '%s\n' "$PKGS" | grep -vx "$SETUP" || true)"
   fi
 fi
+
+# The state undo needs goes to disk before the first command reaches the TV, and a failed save stops
+# here with the TV untouched: a record written afterwards would describe a TV that is already broken,
+# and a retry must not overwrite the one taken before the first change (#239).
+"$PY" -I tools/recovery.py --save "$LIST"
 
 {
   [ -n "$PKGS" ] && printf '%s\n' "$PKGS" | sed 's/^/pm disable-user --user 0 /'

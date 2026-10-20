@@ -38,5 +38,10 @@ if ($pkgs -contains $setup -and -not $env:FORCE_SETUPWRAITH) {
         $pkgs = @($pkgs | Where-Object { $_ -ne $setup })
     }
 }
+# Same as disable.sh: the state undo needs is recorded before the first command reaches the TV, and
+# a failed save leaves the TV untouched (#239).
+& $py -I (Join-Path $repo 'tools\recovery.py') --save $List
+if ($LASTEXITCODE -ne 0) { throw 'no recovery record was written, so nothing was disabled' }
+
 $cmds = @($pkgs | ForEach-Object { "pm disable-user --user 0 $_" }) + 'pm list packages -d'
 $cmds | & $py -I (Join-Path $repo 'tools\tv.py') --batch
