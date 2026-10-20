@@ -54,6 +54,8 @@ final class Config {
     final boolean showHomeSettingsShortcut;
     /** Background colour behind everything, #RRGGBB; black unless a theme says otherwise. */
     final int backgroundColor;
+    /** Time-of-day backdrop, 0 to 100 (config.xml, sky_intensity); 0 keeps the plain background. */
+    final int skyIntensity;
     /** Full-screen picture behind the launcher, or null for the plain colour. */
     final File wallpaper;
     /** Whether the overlay file was present and parsed. */
@@ -63,7 +65,7 @@ final class Config {
                    String sourcePanelService, String sourcePanelAction, String inputAction,
                    int columns, int rowsBelowDock, boolean animations, boolean advancedEffects,
                    boolean shamsiDate, boolean moduleCards, boolean reducedMotion, String vpnApp,
-                   boolean showHomeSettingsShortcut, int backgroundColor,
+                   boolean showHomeSettingsShortcut, int backgroundColor, int skyIntensity,
                    File wallpaper, boolean overlayApplied) {
         this.dockApps = Collections.unmodifiableList(dockApps);
         this.hiddenApps = Collections.unmodifiableList(hiddenApps);
@@ -82,6 +84,7 @@ final class Config {
         this.vpnApp = vpnApp;
         this.showHomeSettingsShortcut = showHomeSettingsShortcut;
         this.backgroundColor = backgroundColor;
+        this.skyIntensity = skyIntensity;
         this.wallpaper = wallpaper;
         this.overlayApplied = overlayApplied;
     }
@@ -110,6 +113,7 @@ final class Config {
         String vpn = res.getString(R.string.vpn_app).trim();
         boolean homeSettings = res.getBoolean(R.bool.show_home_settings_shortcut);
         int background = 0xFF000000;
+        int skyIntensity = res.getInteger(R.integer.sky_intensity);
         boolean applied = false;
 
         File dir = dir(ctx);
@@ -134,6 +138,7 @@ final class Config {
             vpn = string(json, "vpn_app", vpn);
             homeSettings = bool(json, "show_home_settings_shortcut", homeSettings);
             background = color(json, "background_color", background);
+            skyIntensity = integer(json, "sky_intensity", skyIntensity, 0, 100);
         }
         // A theme push or reset invalidates choices made on the TV. On first use, remember the
         // current theme without clearing choices from an older launcher version.
@@ -150,7 +155,8 @@ final class Config {
 
         return new Config(dock, hidden, liveTv, liveTvAction, panelService, panelAction, inputAction,
                 Math.max(1, columns), Math.max(0, rowsBelow), animations, advancedEffects,
-                shamsi, moduleCards, reducedMotion, vpn, homeSettings, background, wallpaper, applied);
+                shamsi, moduleCards, reducedMotion, vpn, homeSettings, background,
+                Math.max(0, Math.min(100, skyIntensity)), wallpaper, applied);
     }
 
     private static void syncThemeChoices(SharedPreferences choices, File dir, File config) {

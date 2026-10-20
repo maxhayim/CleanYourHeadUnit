@@ -40,6 +40,7 @@ is ignored, and a file that doesn't parse is ignored as a whole, so a theme can 
 | `advanced_effects` | bool | Optional lifted tile, icon zoom, smooth ambient colour and app opening effects; false by default |
 | `show_home_settings_shortcut` | bool | Keep the optional Default-home tile visible when the TV has a home picker; false by default |
 | `background_color` | `#RRGGBB` | Colour behind everything; black by default |
+| `sky_intensity` | 0 to 100 | Time-of-day backdrop: a dark gradient that follows the clock, 0 hides it (default) |
 | `wallpaper` | bool | Show `wallpaper.jpg` from the theme folder (`true`), or ignore it (`false`) |
 
 ## Wallpapers
@@ -57,6 +58,19 @@ Android 10 is the known case. The default, `false`, keeps the normal motion.
 
 ```json
 { "reduced_motion": true }
+```
+
+## Time-of-day backdrop
+
+`"sky_intensity": 60` draws a dark gradient over the wallpaper and behind everything else, that follows the
+clock: night blues, a soft blue day, then a warm horizon that peaks just before eight in the evening.
+The glow near the bottom edge travels from left to right with the sun. The colours stay dark so the
+white clock, the hero name and the dock band keep their contrast. It is drawn as one 480×270 bitmap
+and redrawn once a minute, never animated, so even a 1 GB TV has nothing to keep up with. `0` keeps
+the plain background; the default is off (the reference launcher looks exactly as before).
+
+```json
+{ "sky_intensity": 60 }
 ```
 
 ## Adding a theme
