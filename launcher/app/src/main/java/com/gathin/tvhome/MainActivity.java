@@ -1613,7 +1613,11 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
             TextPaint paint = btnWifi.getPaint();
             float room = btnWifi.getMaxWidth() - btnWifi.getTotalPaddingStart() - btnWifi.getTotalPaddingEnd()
                     - span.getSize(paint, badge, 0, badge.length(), null) - paint.measureText(" ") - 2 * density;
-            text = TextUtils.ellipsize(text, paint, Math.max(0, room), TextUtils.TruncateAt.END).toString();
+            String name = TextUtils.ellipsize(text, paint, Math.max(0, room), TextUtils.TruncateAt.END).toString();
+            // A long badge ("VPN отключён") can leave room for a stub like "MT…", which says nothing and, after
+            // rounding, can push the badge itself out of the pill. Show the badge alone then.
+            // The space stays even then: a line holding only the span gets no font metrics and collapses.
+            text = name.length() < text.length() && name.length() < 5 ? "" : name;
             SpannableString label = new SpannableString(text + " " + badge);
             label.setSpan(span, text.length() + 1, label.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             btnWifi.setText(label);
