@@ -154,6 +154,9 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.Holder> {
         Map<String, Cards.Card> cardByPkg = new HashMap<>();
         for (Cards.Card c : cards) cardByPkg.put(c.pkg, c);
         List<Entry> fresh = new ArrayList<>();
+        // Some system apps declare two leanback entry points under one name (Sony's Timers & Clock on the
+        // BRAVIA VU31), which would show as two identical tiles: keep the first per package and label.
+        Set<String> seen = new HashSet<>();
         for (ResolveInfo ri : found) {
             if (ri.activityInfo == null) continue;
             String pkg = ri.activityInfo.packageName;
@@ -161,14 +164,16 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.Holder> {
             ComponentName component = new ComponentName(pkg, ri.activityInfo.name);
             Cards.Card card = cardByPkg.get(pkg);
             if (card != null && !card.component.equals(component)) continue;   // the card stands in for this tile
+            // Same cleaner as the card prompt: an app label with a bidi override or line separator must not
+            // redraw the tile name as something else (#117).
+            String label = card != null ? card.label : Cards.cleanLabel(String.valueOf(ri.loadLabel(pm)), pkg);
+            if (!seen.add(pkg + '\n' + label)) continue;
             Drawable banner = loadBanner(pm, ri);
             Drawable icon = ri.loadIcon(pm);
             if (card != null) {
-                fresh.add(new Entry(Entry.CARD, card.label, component, banner, icon, card.caption, card.accent));
+                fresh.add(new Entry(Entry.CARD, label, component, banner, icon, card.caption, card.accent));
             } else {
-                // Same cleaner as the card prompt: an app label with a bidi override or line separator must not
-                // redraw the tile name as something else (#117).
-                fresh.add(new Entry(Cards.cleanLabel(String.valueOf(ri.loadLabel(pm)), pkg), component, banner, icon));
+                fresh.add(new Entry(label, component, banner, icon));
             }
         }
         Collections.sort(fresh, (a, b) -> {
