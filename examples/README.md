@@ -38,6 +38,8 @@ on that firmware, grouped and commented. These are starting points: comment out 
 | `prismplus-q65-ultra-r10g/` | PRISM+ Q65 Ultra 2026 QLED 4K AI Google TV (R10G, PRISMPLUS_FFM, MOKA, Realtek RTD2875 SoC, RTD6748 platform) | Google TV 14 | Realtek partner customizer, Google partner setup and auto-installs, ambient mode, unused DTMB/ISDB/ATSC tuners, karaoke, preloaded apps; Max off by choice; keep com.realtek.dtv and com.realtek.tv.atv for inputs |
 | `rca-ai-pont/` | RCA AI PONT SA (Changhong, redwood, ISDB92RC; also sold as realme 40-inch) | Android 14 | Homwee store and installers, Anoki ACR, FAST channels; 1 GB |
 | `redmi-mitv-antl0/` | Redmi TV (MiTV-ANTL0, starwars) | Android 5.1.1 (not Android TV) | Mi push/web-content/cloud-control ads, TV Taobao, stock screensaver, OTA; needs `pm hide` instead of `pm disable-user`, boot ad is a `setprop` |
+| `hisense-hg9/` | Hisense HG9 (HiSmart 4K A4FFM) | Android TV 9 | ACR collector, Smartsense, log reporter, store mode, B2B; FLauncher used instead of stock |
+| `rca-ai-pont/` | RCA AI PONT SA (Changhong, redwood, ISDB92RC) | Android 14 | Homwee store and installers, Anoki ACR, FAST channels; 1 GB |
 | `sanyo-atv-r2/` | SANYO ATV R2 (SCBC, Realtek RTD285O) | Android TV 9 | S-Channels, E-SHOW demo, Vewd, TV Booster, SANYO OTA |
 | `skyworth-swtv-21ae/` | Skyworth SWTV-21AE (sunnyvale, MediaTek) | Android TV 14 | Skyworth home-row customizer, shop demo, e-manual; Google feedback; FAST channels, YouTube, ambient mode off by choice; port 5555 opens without pairing; 1 GB |
 | `skyworth-swtv-24na-4k-nf/` | Skyworth SWTV-24NA-4K NF (eleonas, MediaTek mt5896), US | Google TV 14 | Same platform as the India Philips Smart 4K: Skyworth recommendations, after-sale/activation trackers, partner customizer, Ginga/MHEG; casting, karaoke, OTA kept by choice; wireless-debugging pairing only; setupwraith owned the Wi-Fi saved at setup and disabling it deleted the network |
@@ -99,6 +101,7 @@ on that firmware, grouped and commented. These are starting points: comment out 
 | `xiaomi-mitv-afmu0/` | Xiaomi TV Box S 3rd gen (MiTV-AFMU0, twilight, Amlogic), streaming box | Google TV 14 | Mi analytics, PatchWall/Mi Home tab, Mi connect/SmartShare; voice and phone remote off by choice; setup wizard off so launcherx can go |
 
 Notes for a model that has no tested list yet live in [`docs/devices/`](../docs/devices/) (Xiaomi MiTV-MFTR0 "freeguy", China, Android 14: inputs, Xiaomi settings intents, app discovery).
+
 
 To add your TV, see [CONTRIBUTING.md](../CONTRIBUTING.md). The quickest way to get a list is to
 run the prompt in [PROMPT.md](../PROMPT.md) and copy the packages your assistant disabled.
