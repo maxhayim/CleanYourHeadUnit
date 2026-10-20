@@ -57,6 +57,10 @@ Things that bit us or contributors, so they don't bite you. Commands use `tools/
   `Success` while HOME still resolves to the stock launcher (priority 2) until that one is disabled.
   And check which packages actually handle HOME before disabling anything by name: on the Sony
   above, `com.google.android.leanbacklauncher` has a boot receiver but no HOME activity.
+  `tools/disable.sh` now does that check itself: when the list holds the app that owns Home and
+  nothing else on the TV answers HOME, it skips that entry and says so (`FORCE_HOME=1` overrides),
+  so applying a list before the handover no longer leaves the TV without a launcher. Apply the list
+  again after the install script has made the new launcher Home to disable the old one.
 - **The new launcher still doesn't own Home** after the stock one is disabled, seen on Google TV
   (Xiaomi MiTV-MOOR2). Another system app answers HOME: `com.google.android.tungsten.setupwraith`,
   with `.MainActivity` at intent-filter priority 4 and `.RecoveryActivity` at priority 1. You
