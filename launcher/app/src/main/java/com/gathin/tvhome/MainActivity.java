@@ -257,6 +257,33 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
             protected boolean isLayoutRTL() {
                 return rtlAppGrid;
             }
+
+            /**
+             * Every "bring this tile on screen" scroll lands here, both RecyclerView's own on focus and
+             * onTileFocused's. The stock version treats the grid's top padding as the visible top, but that
+             * padding only pushes the dock down the screen: grid rows scroll up into it. With the stock rule,
+             * Up into a row above the padding dragged that row down to the padding line, cut it off at the
+             * bottom of the screen and could scroll the focused tile out entirely, dropping focus into the
+             * top bar. Grid tiles now scroll just enough to show the rect between the grid's top edge and its
+             * bottom; dock tiles are left to onTileFocused, which parks the dock row on the padding line.
+             */
+            @Override
+            public boolean requestChildRectangleOnScreen(@NonNull RecyclerView parent, @NonNull View child,
+                                                         @NonNull Rect rect, boolean immediate,
+                                                         boolean focusedChildVisible) {
+                if (getPosition(child) < COLUMNS) return false;
+                int top = child.getTop() + rect.top;
+                int bottom = top + rect.height();
+                int limitBottom = getHeight() - getPaddingBottom();
+                int dy;
+                if (top < 0) dy = top;
+                else if (bottom > limitBottom) dy = Math.min(top, bottom - limitBottom);
+                else dy = 0;
+                if (dy == 0) return false;
+                if (immediate || reducedMotion || !animations) parent.scrollBy(0, dy);
+                else parent.smoothScrollBy(0, dy);
+                return true;
+            }
         });
         grid.setHasFixedSize(true);
         grid.setItemAnimator(null);
