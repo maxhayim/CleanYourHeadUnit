@@ -122,7 +122,7 @@ tools/tv.py 'dumpsys accessibility'
 | Helper | Component in the enabled-services list | Key it filters |
 | --- | --- | --- |
 | Home button | `com.gathin.tvhome/.HomeKeyService` | `KEYCODE_ALL_APPS` (not an ordinary `KEYCODE_HOME`) |
-| Input button | `com.gathin.tvhome/.InputKeyService` | `KEYCODE_TV` |
+| Input button | `com.gathin.tvhome/.InputKeyService` | `KEYCODE_TV`, plus the keycodes in `config.xml` `input_key_keycodes` and `app_keys` |
 
 - **Enabled** means the component is in that user's colon-separated list (the class may be written in
   full, `com.gathin.tvhome/com.gathin.tvhome.HomeKeyService`). Match the whole component.
@@ -130,7 +130,13 @@ tools/tv.py 'dumpsys accessibility'
   builds). Give it a few seconds after enabling and read again. Labels in the dump can be translated or
   shared with other services; a line containing "Home" is not proof.
 - **Working** means the physical button does the right thing from inside another app. An injected key
-  over ADB proves navigation, not that the remote sends the code this helper filters.
+  over ADB proves navigation, not that the remote sends the code this helper filters. It does not even
+  reach the helper: `input keyevent` skips accessibility key filtering, so an injected `KEYCODE_TV` does
+  nothing even when the real Input button works.
+- **Which keycode** a dead button sends: `dumpsys window policy` lists the "global keys" Android routes
+  to one app (on Google TV several go to launcherx, which is disabled), and Xiaomi firmware logs every
+  press as `handleAction<keycode>` in `logcat`. Put it in `input_key_keycodes` (opens Inputs) or
+  `app_keys` (`keycode:package`), reinstall with `INPUT_KEY_SERVICE=1` and press the real button.
 
 Enabled but never bound points at a firmware restriction on auto-starting sideloaded services (some TCL
 builds log `OP_AUTO_START` denials). Look at `logcat` for the binding failure before changing settings,
