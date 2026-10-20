@@ -275,6 +275,11 @@ you re-enable it. If one lands, the worst case is a package coming back and you 
 **Won't the apps break?** Streaming apps still update through the Play Store, which is left alone.
 The launcher just lists what is installed and launches it with intents that have been stable for a decade.
 
+**Can I do this for someone in another home?** Yes, over a private [Tailscale](https://tailscale.com)
+link instead of the same Wi-Fi: either Tailscale on their TV, shared with you, or a computer or Apple
+TV at their home routing to it. Never by opening the ADB port on their router. Step by step in
+[docs/REMOTE.md](docs/REMOTE.md).
+
 **Isn't ADB access a security hole?** It is one explicit "allow this computer" tap on the TV, the
 same as developing an Android app. Switch USB debugging off afterwards; the launcher keeps working.
 
