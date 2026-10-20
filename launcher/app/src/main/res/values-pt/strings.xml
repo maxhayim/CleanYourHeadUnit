@@ -46,4 +46,7 @@
     <string name="card_state_new">Novo</string>
     <string name="card_state_new_key">Nova chave</string>
     <string name="card_state_new_label">Novo nome</string>
+    <string name="reorder">Reordenar apps</string>
+    <string name="reorder_hint">OK pega numa app, as setas movem-na, Voltar pousa-a. Voltar outra vez para terminar.</string>
+    <string name="reorder_not_saved">Não foi possível guardar a nova ordem</string>
 </resources>

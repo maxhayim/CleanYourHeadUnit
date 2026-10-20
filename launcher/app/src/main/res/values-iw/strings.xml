@@ -62,4 +62,7 @@
     <string name="quick_network">רשת</string>
     <string name="quick_apps">אפליקציות</string>
     <string name="quick_apps_hint">הפעלה מחדש</string>
+    <string name="reorder">סידור אפליקציות</string>
+    <string name="reorder_hint">אישור מרים אפליקציה, החצים מזיזים אותה, חזרה מניחה אותה. חזרה שוב לסיום.</string>
+    <string name="reorder_not_saved">לא ניתן לשמור את הסדר החדש</string>
 </resources>

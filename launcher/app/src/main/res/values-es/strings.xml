@@ -32,4 +32,7 @@
     <string name="on">Sí</string>
     <string name="off">No</string>
     <string name="enable">Activar</string>
+    <string name="reorder">Reordenar apps</string>
+    <string name="reorder_hint">OK coge una app, las flechas la mueven, Atrás la suelta. Atrás de nuevo para terminar.</string>
+    <string name="reorder_not_saved">No se pudo guardar el nuevo orden</string>
 </resources>

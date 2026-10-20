@@ -58,4 +58,7 @@
     <string name="on">Activé</string>
     <string name="off">Désactivé</string>
     <string name="enable">Activer</string>
+    <string name="reorder">Réorganiser les applis</string>
+    <string name="reorder_hint">OK prend une appli, les flèches la déplacent, Retour la pose. Retour à nouveau pour terminer.</string>
+    <string name="reorder_not_saved">Impossible d\'enregistrer le nouvel ordre</string>
 </resources>

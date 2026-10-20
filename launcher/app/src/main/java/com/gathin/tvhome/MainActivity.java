@@ -152,6 +152,17 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
     private boolean rebuildOnResume = true;
     /** The Inputs or Module cards dropdown while one is open, so onPause can close it. */
     private PopupWindow openPopup;
+    /** Reorder mode is on (top-bar button). */
+    private boolean reordering;
+    /** Key of the tile being carried in reorder mode, or null. */
+    private String movingKey;
+    /** Tile order when reorder mode started, to save only when something moved. */
+    private List<String> orderAtStart;
+    private View btnReorder;
+    /** dock_apps as loaded (config.xml or a theme): a saved Order only applies while these are unchanged. */
+    private List<String> dockApps;
+    /** fill_dock false: the dock can have empty slots, which reorder mode leaves out and restores afterwards. */
+    private boolean fillDockLeavesSlots;
 
     private final Handler handler = new Handler(Looper.getMainLooper());
     /** Refreshes the network pill when the connection changes: at boot Wi-Fi often connects after Home is shown. */
@@ -302,6 +313,21 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         });
         grid.setHasFixedSize(true);
         grid.setItemAnimator(null);
+        // Tiles that scroll out while one is carried come back from the view cache without a rebind; set their
+        // dimming again whenever one attaches, so none stays dim after the drop.
+        grid.addOnChildAttachStateChangeListener(new RecyclerView.OnChildAttachStateChangeListener() {
+            @Override
+            public void onChildViewAttachedToWindow(@NonNull View v) {
+                int pos = grid.getChildAdapterPosition(v);
+                boolean carried = movingKey != null && pos != RecyclerView.NO_POSITION
+                        && movingKey.equals(adapter.keyAt(pos));
+                v.setAlpha(movingKey == null || carried ? 1f : 0.45f);
+            }
+
+            @Override
+            public void onChildViewDetachedFromWindow(@NonNull View v) {
+            }
+        });
         if (dockRow) grid.addItemDecoration(new DockDecoration(COLUMNS, density));
         if (animations) {
             int enterAnim = reducedMotion ? R.anim.tile_enter_reduced : R.anim.tile_enter;
@@ -310,6 +336,9 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
                     AnimationUtils.loadAnimation(this, enterAnim), enterDelay));
         }
         adapter = new AppAdapter(this, this, COLUMNS, cfg);
+        dockApps = cfg.dockApps;
+        fillDockLeavesSlots = !cfg.fillDock;
+        adapter.setSavedOrder(Order.ranks(Order.load(Order.file(this)), dockApps));
         grid.setAdapter(adapter);
 
         // tvOS layout: push the dock row towards the bottom of the screen, leaving room for
@@ -379,6 +408,9 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
             return true;
         });
         btnSettings.setOnClickListener(v -> open(systemIntent(Settings.ACTION_SETTINGS)));
+        btnReorder = findViewById(R.id.btnReorder);
+        btnReorder.setOnClickListener(v -> toggleReorder());
+        btnReorder.setVisibility(cfg.reorderButton ? View.VISIBLE : View.GONE);
         btnSettings.setOnLongClickListener(v -> {
             showSettingsMenu();
             return true;
@@ -404,8 +436,9 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         btnInputs.setOnKeyListener(pillKeys);
         btnWifi.setOnKeyListener(pillKeys);
         btnSettings.setOnKeyListener(pillKeys);
+        btnReorder.setOnKeyListener(pillKeys);
         if (advancedEffects) {
-            for (View button : new View[]{btnInputs, btnWifi, btnSettings}) {
+            for (View button : new View[]{btnInputs, btnWifi, btnReorder, btnSettings}) {
                 button.setOnFocusChangeListener((view, focused) -> view.animate()
                         .scaleX(focused ? 1.04f : 1f).scaleY(focused ? 1.04f : 1f)
                         .setDuration(160).start());
@@ -579,6 +612,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
      * ones and cards stay off for this process.
      */
     private void reloadTiles() {
+        if (reordering) endReorder();   // an app installed or removed while reordering: keep the order so far
         // Read these before reload(): rebinding can move focus to the first tile and overwrite them.
         final String returnKey = lastFocusedKey;
         final int returnSlot = lastFocused;
@@ -607,6 +641,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
     @Override
     protected void onPause() {
         super.onPause();
+        endReorder();   // Home or another app while reordering keeps the order so far
         stopAmbientAnimation();
         heroName.animate().cancel();
         ambient.animate().cancel();
@@ -648,8 +683,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
      * or switched off by a force-stop) the stock launcher that used to handle the key is gone, and the button did
      * nothing even on Home.
      */
-    @Override
-    public boolean dispatchKeyEvent(KeyEvent event) {
+    private boolean handleSettingsKey(KeyEvent event) {
         for (int code : settingsKeycodes) {
             if (event.getKeyCode() != code) continue;
             if (event.getAction() == KeyEvent.ACTION_UP && !event.isCanceled()) {
@@ -658,7 +692,184 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
             }
             return true;
         }
-        return super.dispatchKeyEvent(event);
+        return false;
+    }
+
+    // ---- reorder ---------------------------------------------------------------------------------
+
+    /** Blue the glass turns while reorder mode is on. */
+    private static final int REORDER_ACCENT = 0xFF6EC1FF;
+
+    /**
+     * Reorder mode (top-bar button). While it is on, every key comes here first:
+     * - nothing carried: arrows move focus as usual; OK on a tile picks it up instead of opening the app;
+     *   Back ends the mode and saves the order.
+     * - a tile carried: arrows move it; Back (or OK) puts it down and the mode stays on for the next one.
+     * Other keys (volume, Home) pass through; leaving the launcher ends the mode and saves.
+     */
+    @Override
+    public boolean dispatchKeyEvent(KeyEvent event) {
+        if (handleSettingsKey(event)) return true;
+        if (!reordering) return super.dispatchKeyEvent(event);
+        boolean down = event.getAction() == KeyEvent.ACTION_DOWN;
+        int code = event.getKeyCode();
+        boolean ok = code == KeyEvent.KEYCODE_DPAD_CENTER || code == KeyEvent.KEYCODE_ENTER
+                || code == KeyEvent.KEYCODE_NUMPAD_ENTER;
+        boolean back = code == KeyEvent.KEYCODE_BACK || code == KeyEvent.KEYCODE_ESCAPE;
+        if (movingKey != null) {
+            switch (code) {
+                case KeyEvent.KEYCODE_DPAD_LEFT:
+                case KeyEvent.KEYCODE_DPAD_RIGHT:
+                case KeyEvent.KEYCODE_DPAD_UP:
+                case KeyEvent.KEYCODE_DPAD_DOWN:
+                    if (down) moveBy(code);
+                    return true;
+                default:
+                    if (ok || back) {
+                        if (!down) drop();
+                        return true;
+                    }
+                    return super.dispatchKeyEvent(event);
+            }
+        }
+        if (back) {
+            if (!down) endReorder();
+            return true;
+        }
+        int pos = focusedTilePosition();
+        if (ok && pos >= 0) {
+            if (!down) pickUp(pos);
+            return true;   // never opens the app while reordering
+        }
+        return super.dispatchKeyEvent(event);   // arrows navigate; OK on a top-bar pill works as usual
+    }
+
+    /** Adapter position of the focused tile, or -1 when focus is not on a tile. */
+    private int focusedTilePosition() {
+        View f = getCurrentFocus();
+        if (f == null || f.getId() != R.id.card || !(f.getParent() instanceof View)) return -1;
+        return grid.getChildAdapterPosition((View) f.getParent());
+    }
+
+    /** The reorder button: turns the mode on (focus goes back to the last tile), or off again. */
+    private void toggleReorder() {
+        if (reordering) {
+            endReorder();
+            return;
+        }
+        if (adapter.movableCount() < 2) return;
+        adapter.setReordering(true);
+        if (adapter.hasEmptySlots()) reloadTiles();   // every position must hold a tile that can move
+        reordering = true;
+        orderAtStart = adapter.movableKeys();
+        glass.setAccent(REORDER_ACCENT);
+        btnReorder.setActivated(true);
+        focusTile(Math.max(0, Math.min(lastFocused, adapter.movableCount() - 1)));
+        Toast.makeText(this, R.string.reorder_hint, Toast.LENGTH_LONG).show();
+    }
+
+    private void pickUp(int pos) {
+        if (pos >= adapter.movableCount()) return;   // the "Default home" tile stays put
+        movingKey = adapter.keyAt(pos);
+        dimOthers();
+    }
+
+    /** Puts the carried tile down where it is; the mode stays on. */
+    private void drop() {
+        movingKey = null;
+        dimOthers();
+    }
+
+    /** While a tile is carried, every other tile is dimmed so the carried one stands out; otherwise all are full. */
+    private void dimOthers() {
+        for (int i = 0; i < grid.getChildCount(); i++) {
+            View item = grid.getChildAt(i);
+            int pos = grid.getChildAdapterPosition(item);
+            boolean carried = movingKey != null && movingKey.equals(adapter.keyAt(pos));
+            item.setAlpha(movingKey == null || carried ? 1f : 0.45f);
+        }
+    }
+
+    /** Ends the mode and saves the order if it changed since the mode started. */
+    private void endReorder() {
+        if (!reordering) return;
+        drop();
+        reordering = false;
+        adapter.setReordering(false);
+        glass.setAccent(festive ? festival.accentColor() : 0);
+        btnReorder.setActivated(false);
+        List<String> keys = adapter.movableKeys();
+        List<String> before = orderAtStart;
+        orderAtStart = null;
+        if (!keys.equals(before)) {
+            Order order = new Order(Order.dockKey(dockApps), keys);
+            if (Order.save(Order.file(this), order)) {
+                adapter.setSavedOrder(Order.ranks(order, dockApps));
+            } else {
+                Toast.makeText(this, R.string.reorder_not_saved, Toast.LENGTH_SHORT).show();
+            }
+        }
+        if (fillDockLeavesSlots) reloadTiles();   // the empty dock slots left out while reordering come back
+    }
+
+    /**
+     * Moves the carried tile one step. Left and Right wrap across rows, like a list; Up and Down move a whole row,
+     * and Down into a short last row lands on its last tile. Nothing moves past either end or up into the top bar.
+     */
+    private void moveBy(int keyCode) {
+        int from = adapter.positionOf(movingKey);
+        int n = adapter.movableCount();
+        if (from < 0 || from >= n) {
+            drop();
+            return;
+        }
+        int to;
+        // rtl_app_grid (Hebrew) mirrors the grid: position 0 is on the right, so Left moves towards the end.
+        if (keyCode == KeyEvent.KEYCODE_DPAD_LEFT) to = rtlAppGrid ? from + 1 : from - 1;
+        else if (keyCode == KeyEvent.KEYCODE_DPAD_RIGHT) to = rtlAppGrid ? from - 1 : from + 1;
+        else if (keyCode == KeyEvent.KEYCODE_DPAD_UP) to = from - COLUMNS;
+        else if (from + COLUMNS < n) to = from + COLUMNS;
+        else to = from / COLUMNS < (n - 1) / COLUMNS ? n - 1 : from;
+        if (to < 0 || to >= n || to == from) return;
+        keepScroll(() -> adapter.move(from, to));
+        refocusAfterLayout(to);
+    }
+
+    /**
+     * Applies an adapter change without the grid jumping. After a move the layout manager anchors on the focused
+     * tile, keeping it at its old place on screen and shifting every other row; pinning the first visible row at its
+     * current offset as the next layout's anchor keeps the scroll where it was. onTileFocused still scrolls
+     * afterwards if the moved tile itself ends up off screen.
+     */
+    private void keepScroll(Runnable change) {
+        GridLayoutManager lm = (GridLayoutManager) grid.getLayoutManager();
+        int first = lm.findFirstVisibleItemPosition();
+        View firstView = first != RecyclerView.NO_POSITION ? lm.findViewByPosition(first) : null;
+        int offset = firstView != null ? lm.getDecoratedTop(firstView) - grid.getPaddingTop() : 0;
+        change.run();
+        if (firstView != null) lm.scrollToPositionWithOffset(first, offset);
+    }
+
+    /**
+     * Once the grid has applied the change, put the glass (and focus, if the move dropped it) on the tile at pos.
+     * The grid has a fixed size, so it applies adapter changes on the next animation frame rather than in a layout
+     * pass; until then it cannot find the tile by position. Wait frame by frame (at most 10) for that. No focus
+     * change fires for a moved tile, so focusTile's already-focused path calls onTileFocused itself.
+     */
+    private void refocusAfterLayout(int pos) {
+        grid.postOnAnimation(new Runnable() {
+            int frames;
+
+            @Override
+            public void run() {
+                if ((grid.hasPendingAdapterUpdates() || grid.isLayoutRequested()) && ++frames < 10) {
+                    grid.postOnAnimation(this);
+                    return;
+                }
+                focusTile(pos);
+                dimOthers();   // views that came into view or were rebound during the move
+            }
+        });
     }
 
     @Override
@@ -1351,6 +1562,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         addSettingsMenuRow(rows, popup, R.string.launcher_settings, () -> startActivityForResult(
                 new Intent(this, LauncherSettingsActivity.class), LAUNCHER_SETTINGS_REQUEST));
         if (moduleCards) addSettingsMenuRow(rows, popup, R.string.module_cards, this::showModuleCards);
+        addSettingsMenuRow(rows, popup, R.string.reorder, this::toggleReorder);
         panel.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
         popup.setWidth(Math.max((int) (200 * density), panel.getMeasuredWidth()));
         // Hebrew puts Settings at the left of the header: grow the menu inward from it.
@@ -1394,7 +1606,8 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
      * the next one follows as soon as this one is answered. Nothing is shown until the owner says Show.
      */
     private void showCardPrompt() {
-        if (!moduleCards || !tilesReady || promptsPaused || cardPrompt != null || !hasWindowFocus() || isFinishing()) return;
+        if (!moduleCards || !tilesReady || promptsPaused || cardPrompt != null || !hasWindowFocus() || isFinishing()
+                || reordering) return;
         if (cards.isEmpty() || !CardFeature.working()) return;
         CardFeature.run(() -> {
             showCardPromptNow();

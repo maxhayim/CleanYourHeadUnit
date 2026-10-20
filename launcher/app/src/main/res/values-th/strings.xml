@@ -33,4 +33,7 @@
     <string name="on">เปิด</string>
     <string name="off">ปิด</string>
     <string name="enable">เปิดใช้งาน</string>
+    <string name="reorder">จัดเรียงแอป</string>
+    <string name="reorder_hint">กด OK เพื่อเลือกแอป ใช้ลูกศรเพื่อย้าย กดย้อนกลับเพื่อวาง กดย้อนกลับอีกครั้งเพื่อเสร็จสิ้น</string>
+    <string name="reorder_not_saved">บันทึกลำดับใหม่ไม่ได้</string>
 </resources>

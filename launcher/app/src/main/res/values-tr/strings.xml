@@ -58,4 +58,7 @@
     <string name="on">Açık</string>
     <string name="off">Kapalı</string>
     <string name="enable">Etkinleştir</string>
+    <string name="reorder">Uygulamaları sırala</string>
+    <string name="reorder_hint">Tamam bir uygulamayı alır, oklar taşır, Geri bırakır. Bitirmek için tekrar Geri.</string>
+    <string name="reorder_not_saved">Yeni sıra kaydedilemedi</string>
 </resources>

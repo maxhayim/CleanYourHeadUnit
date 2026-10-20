@@ -155,6 +155,10 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.Holder> {
     private final Context ctx;
     private final int rowsBelowDock;
     private final boolean dockTitle;
+    /** The owner's saved order (reorder button, Order): key -> rank. Empty when there is none or it no longer applies. */
+    private Map<String, Integer> savedRanks = Collections.emptyMap();
+    /** Reorder mode: no empty dock slots, so every position holds a tile that can move. */
+    private boolean reordering;
     private final TileListener listener;
     private final int dockSize;
     /** config dock_row: false makes the dock apps the first tiles of one plain grid (names shown, no empty slots). */
@@ -227,6 +231,9 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.Holder> {
             }
         }
         Collections.sort(fresh, (a, b) -> {
+            // The owner's own order first; tiles it does not know (new installs) follow by the rule below.
+            int saved = Order.compare(savedRanks, a.component.flattenToShortString(), b.component.flattenToShortString());
+            if (saved != 0) return saved;
             int fa = favourites.indexOf(a.pkg), fb = favourites.indexOf(b.pkg);
             if (fa >= 0 || fb >= 0) {
                 if (fa < 0) return 1;
@@ -247,7 +254,7 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.Holder> {
         }
         docked = 0;
         while (docked < fresh.size() && favourites.contains(fresh.get(docked).pkg)) docked++;
-        emptySlots = dockRow ? DockSlots.empty(docked, dockSize, fresh.size(), fillDock) : 0;
+        emptySlots = dockRow && !reordering ? DockSlots.empty(docked, dockSize, fresh.size(), fillDock) : 0;
         for (int i = 0; i < emptySlots; i++) {
             fresh.add(docked + i, new Entry(Entry.EMPTY, "", new ComponentName(ctx, "empty-dock-slot-" + i),
                     null, null, null, 0));
@@ -379,6 +386,48 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.Holder> {
     @Override
     public long getItemId(int position) {
         return items.get(position).component.flattenToShortString().hashCode();
+    }
+
+    /** Uses this saved order from the next reload() (Order.ranks). */
+    void setSavedOrder(Map<String, Integer> ranks) {
+        savedRanks = ranks;
+    }
+
+    /** Reorder mode on or off; takes effect at the next reload() (empty dock slots are left out while on). */
+    void setReordering(boolean on) {
+        reordering = on;
+    }
+
+    boolean hasEmptySlots() {
+        return emptySlots > 0;
+    }
+
+    /** Tiles that can be moved: everything but the "Default home" tile, which always stays last. */
+    int movableCount() {
+        int n = items.size();
+        return n > 0 && items.get(n - 1).kind == Entry.HOME_SETTINGS ? n - 1 : n;
+    }
+
+    /** Keys of the movable tiles in their current order, for Order (empty dock slots are not tiles). */
+    List<String> movableKeys() {
+        List<String> keys = new ArrayList<>();
+        for (int i = 0; i < movableCount(); i++) {
+            Entry e = items.get(i);
+            if (e.kind != Entry.EMPTY) keys.add(e.component.flattenToShortString());
+        }
+        return keys;
+    }
+
+    /** Moves one tile; the others shift by one. Stable ids keep the moved tile's view (and its focus). */
+    void move(int from, int to) {
+        if (from == to || from < 0 || to < 0 || from >= movableCount() || to >= movableCount()) return;
+        items.add(to, items.remove(from));
+        notifyItemMoved(from, to);
+        // The dock row hides names by position: rebind the tiles whose side of the dock edge changed.
+        if (from < dockSize || to < dockSize) {
+            int lo = Math.min(from, to), hi = Math.max(from, to);
+            notifyItemRangeChanged(lo, hi - lo + 1);
+        }
     }
 
     /** Stable key for the app at a position (its component), or null. */
