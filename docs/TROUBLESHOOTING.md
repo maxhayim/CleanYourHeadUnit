@@ -84,6 +84,23 @@ Things that bit us or contributors, so they don't bite you. Commands use `tools/
   then belongs to `android.uid.system`), or use Ethernet. `tools/disable.sh` skips setupwraith while it
   owns the network (`FORCE_SETUPWRAITH=1` overrides). Already offline? Rejoin from the TV with its own
   remote or a USB keyboard, then turn Wireless debugging back on if it was in use.
+- **Casting from a phone fails with "Untrusted device" after setupwraith is disabled**, seen on
+  Chromecast with Google TV HD (`boreal`) on Google TV 14 build UTTC.250917.004, the build the
+  `examples/google-chromecast-gtv-4k/` list was made on. YouTube on the phone says "Untrusted device.
+  ... couldn't be verified", and logcat repeats `cast_ClientAuthCredsProvisioning: Loading factory
+  credentials for 1P device`, `Failed to find provider info for ...CastInfoProvider` and
+  `cast_shell: No private key, hence empty signature`. The Cast receiver
+  (`com.google.android.apps.mediashell`) loads its factory device credentials from a content provider
+  inside setupwraith (`...tv.setupwraith.libs.castinfo.CastInfoProvider`), so disabling the wizard
+  takes the credentials with it. Re-enable it and within a minute the log shows
+  `SetupWraith|CastInfoProvider: querying cast infos` and `Created singleton instance of
+  ClientAuthSigner`, and casting works. You cannot keep the provider and give up only Home:
+  `pm disable-user` on `setupwraith/.RecoveryActivity` is refused with `SecurityException: Shell
+  cannot change component state`. So either debloat without setupwraith and launcherx, or re-enable
+  setupwraith after each boot, wait for `ClientAuthSigner`, then disable it again: the receiver keeps
+  the credentials in memory, so casting survives until the next reboot. Reported on Google's own
+  Chromecast hardware so far; the Xiaomi Mi Box S 2nd gen list says casting from a Pixel still works
+  there with setupwraith off.
 - **The TV drops off Wi-Fi every minute right after the install**, seen on Google TV 14 (Xiaomi
   MiTV-MZTU0): the same setupwraith `.RecoveryActivity` took Home and system_server crash-looped
   on it. The install script now starts the new launcher before disabling the stock one, sets the
