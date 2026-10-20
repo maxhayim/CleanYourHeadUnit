@@ -39,4 +39,19 @@
     <string name="reorder">Reordenar apps</string>
     <string name="reorder_hint">OK coge una app, las flechas la mueven, Atrás la suelta. Atrás de nuevo para terminar.</string>
     <string name="reorder_not_saved">No se pudo guardar el nuevo orden</string>
+    <string name="app_library">Biblioteca de aplicaciones</string>
+    <string name="library_empty">No hay aplicaciones que se puedan abrir</string>
+    <string name="library_on_home">En Inicio</string>
+    <string name="library_add_home">Añadir a Inicio</string>
+    <string name="library_remove_shortcut">Quitar de Inicio</string>
+    <string name="library_open">Abrir</string>
+    <string name="library_app_info">Información de la aplicación</string>
+    <string name="library_save_failed">No se pudo guardar el acceso directo</string>
+    <string name="library_recent">Nueva · Añadir a Inicio</string>
+    <string name="library_hint_add">Pulsa para añadir a Inicio · Mantén para opciones</string>
+    <string name="library_hint_open">Pulsa para abrir · Mantén para opciones</string>
+    <plurals name="library_app_count">
+        <item quantity="one">%1$d aplicación</item>
+        <item quantity="other">%1$d aplicaciones</item>
+    </plurals>
 </resources>

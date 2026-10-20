@@ -65,4 +65,19 @@
     <string name="reorder">Réorganiser les applis</string>
     <string name="reorder_hint">OK prend une appli, les flèches la déplacent, Retour la pose. Retour à nouveau pour terminer.</string>
     <string name="reorder_not_saved">Impossible d\'enregistrer le nouvel ordre</string>
+    <string name="app_library">Bibliothèque d’applications</string>
+    <string name="library_empty">Aucune application à ouvrir</string>
+    <string name="library_on_home">Sur l’accueil</string>
+    <string name="library_add_home">Ajouter à l’accueil</string>
+    <string name="library_remove_shortcut">Retirer de l’accueil</string>
+    <string name="library_open">Ouvrir</string>
+    <string name="library_app_info">Infos sur l’application</string>
+    <string name="library_save_failed">Impossible d’enregistrer le raccourci</string>
+    <string name="library_recent">Nouvelle · Ajouter à l’accueil</string>
+    <string name="library_hint_add">Appuyer : ajouter à Accueil · Maintenir : options</string>
+    <string name="library_hint_open">Appuyer : ouvrir · Maintenir : options</string>
+    <plurals name="library_app_count">
+        <item quantity="one">%1$d application</item>
+        <item quantity="other">%1$d applications</item>
+    </plurals>
 </resources>
