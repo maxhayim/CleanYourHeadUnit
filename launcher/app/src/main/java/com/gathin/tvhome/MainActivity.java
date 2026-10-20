@@ -99,6 +99,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
     private AppAdapter adapter;
     private RecyclerView grid;
     private FrameLayout root;
+    private WallpaperPlayer wallpaperPlayer;
     private GlassView glass;
     private View ambient;
     private TextView heroName;
@@ -173,6 +174,10 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
     private List<String> dockApps;
     /** fill_dock false: the dock can have empty slots, which reorder mode leaves out and restores afterwards. */
     private boolean fillDockLeavesSlots;
+    /** Edit-dock mode (Settings menu): a reorder session that swaps one chosen app into one dock place. */
+    private boolean dockEditing;
+    /** Dock place being changed in edit-dock mode, or -1 while the place is still being chosen. */
+    private int dockEditSlot = -1;
     private AppLibraryDialog appLibrary;
     private boolean libraryFocusPending;
     private RecyclerView.OnScrollListener pendingFocusScroll;
@@ -231,6 +236,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
             updateGreeting();
             updateWifiLabel();
             sky.update();
+            wallpaperPlayer.update();
             handler.postDelayed(this, MINUTE_MS);
         }
     };
@@ -259,7 +265,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
 
         root = findViewById(R.id.root);
         root.setBackgroundColor(cfg.backgroundColor);
-        if (cfg.wallpaper != null) showWallpaper(cfg.wallpaper);
+        wallpaperPlayer = new WallpaperPlayer(this, root, cfg);
         sky = findViewById(R.id.sky);
         sky.setIntensity(cfg.skyIntensity);
         glass = findViewById(R.id.glass);
@@ -338,10 +344,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         grid.addOnChildAttachStateChangeListener(new RecyclerView.OnChildAttachStateChangeListener() {
             @Override
             public void onChildViewAttachedToWindow(@NonNull View v) {
-                int pos = grid.getChildAdapterPosition(v);
-                boolean carried = movingKey != null && pos != RecyclerView.NO_POSITION
-                        && movingKey.equals(adapter.keyAt(pos));
-                v.setAlpha(movingKey == null || carried ? 1f : 0.45f);
+                v.setAlpha(tileAlpha(grid.getChildAdapterPosition(v)));
             }
 
             @Override
@@ -502,42 +505,6 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
     }
 
     /**
-     * A theme's full-screen picture behind everything. Decoded once at the size CENTER_CROP shows, so it
-     * costs a screen-sized bitmap (about 4 MB at 1080p), which is the price of a wallpaper on a 1 GB TV.
-     * A picture over 4K is refused rather than decoded (#166); the plain colour stays.
-     */
-    private void showWallpaper(File file) {
-        try {
-            android.util.DisplayMetrics dm = getResources().getDisplayMetrics();
-            android.graphics.BitmapFactory.Options opts = new android.graphics.BitmapFactory.Options();
-            opts.inJustDecodeBounds = true;
-            android.graphics.BitmapFactory.decodeFile(file.getPath(), opts);
-            int w = opts.outWidth, h = opts.outHeight;
-            if (w <= 0 || h <= 0) return;
-            int sample = WallpaperSize.sampleSize(w, h, dm.widthPixels, dm.heightPixels);
-            // The limit applies to what is decoded, so a 12 MP photo still works once it is sampled down.
-            if (!WallpaperSize.accepted(w / sample, h / sample)) return;
-            opts.inJustDecodeBounds = false;
-            opts.inSampleSize = sample;
-            int[] scale = WallpaperSize.coverScale(w / sample, h / sample, dm.widthPixels, dm.heightPixels);
-            if (scale != null) {
-                opts.inScaled = true;
-                opts.inDensity = scale[0];
-                opts.inTargetDensity = scale[1];
-            }
-            opts.inPreferredConfig = android.graphics.Bitmap.Config.RGB_565;   // no alpha needed, half the memory
-            android.graphics.Bitmap bmp = android.graphics.BitmapFactory.decodeFile(file.getPath(), opts);
-            if (bmp == null) return;
-            android.widget.ImageView wall = new android.widget.ImageView(this);
-            wall.setScaleType(android.widget.ImageView.ScaleType.CENTER_CROP);
-            wall.setImageBitmap(bmp);
-            root.addView(wall, 0, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-        } catch (Exception | OutOfMemoryError e) {
-            // A bad or huge picture must never take the home screen down; the plain colour stays.
-        }
-    }
-
-    /**
      * Home pressed while Home is already in front: singleTask delivers it here, then onResume runs.
      * Back to the top with the first dock tile focused, like the stock launcher. Back from an app
      * never comes this way, so returning to the app you left from is unchanged (#118).
@@ -582,6 +549,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         updateInputsButton();
         if (showStats) startStats();
         sky.update();
+        wallpaperPlayer.start();
         handler.postDelayed(minuteTick, MINUTE_MS);
         if (festive && diya != null) {
             diya.start();
@@ -674,6 +642,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
     protected void onPause() {
         super.onPause();
         endReorder();   // Home or another app while reordering keeps the order so far
+        wallpaperPlayer.stop();
         stopAmbientAnimation();
         heroName.animate().cancel();
         ambient.animate().cancel();
@@ -706,6 +675,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        wallpaperPlayer.close();
         ConnectivityManager cm = getSystemService(ConnectivityManager.class);
         TvInputManager tim = (TvInputManager) getSystemService(TV_INPUT_SERVICE);
         if (tim != null) tim.unregisterCallback(inputCallback);
@@ -749,6 +719,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
     public boolean dispatchKeyEvent(KeyEvent event) {
         if (handleSettingsKey(event)) return true;
         if (!reordering) return super.dispatchKeyEvent(event);
+        if (dockEditing) return dispatchDockEdit(event);
         boolean down = event.getAction() == KeyEvent.ACTION_DOWN;
         int code = event.getKeyCode();
         boolean ok = code == KeyEvent.KEYCODE_DPAD_CENTER || code == KeyEvent.KEYCODE_ENTER
@@ -795,15 +766,88 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
             endReorder();
             return;
         }
-        if (adapter.movableCount() < 2) return;
+        if (!beginReorder()) return;
+        focusTile(Math.max(0, Math.min(lastFocused, adapter.movableCount() - 1)));
+        Toast.makeText(this, R.string.reorder_hint, Toast.LENGTH_LONG).show();
+    }
+
+    /** The start shared by reorder and edit-dock mode. False when there is nothing to move. */
+    private boolean beginReorder() {
+        if (adapter.movableCount() < 2) return false;
         adapter.setReordering(true);
         if (adapter.hasEmptySlots()) reloadTiles();   // every position must hold a tile that can move
         reordering = true;
         orderAtStart = adapter.movableKeys();
         glass.setAccent(REORDER_ACCENT);
         btnReorder.setActivated(true);
-        focusTile(Math.max(0, Math.min(lastFocused, adapter.movableCount() - 1)));
-        Toast.makeText(this, R.string.reorder_hint, Toast.LENGTH_LONG).show();
+        return true;
+    }
+
+    /** Edit dock (Settings menu): focus goes to the first dock place, which OK then chooses. */
+    private void startDockEdit() {
+        if (reordering) endReorder();
+        if (!beginReorder()) return;
+        dockEditing = true;
+        dockEditSlot = -1;
+        focusTile(0);
+        Toast.makeText(this, R.string.dock_edit_hint, Toast.LENGTH_LONG).show();
+    }
+
+    /**
+     * Keys in edit-dock mode. First OK on a dock tile chooses that place (the other dock tiles dim) and focus moves
+     * to the grid; then OK on any tile swaps that app into the place, saves the order and ends the mode. Back goes
+     * one step back: from choosing the app to choosing the place, and from there out of the mode.
+     */
+    private boolean dispatchDockEdit(KeyEvent event) {
+        boolean down = event.getAction() == KeyEvent.ACTION_DOWN;
+        int code = event.getKeyCode();
+        boolean ok = code == KeyEvent.KEYCODE_DPAD_CENTER || code == KeyEvent.KEYCODE_ENTER
+                || code == KeyEvent.KEYCODE_NUMPAD_ENTER;
+        boolean back = code == KeyEvent.KEYCODE_BACK || code == KeyEvent.KEYCODE_ESCAPE;
+        if (back) {
+            if (!down) {
+                if (dockEditSlot >= 0) {
+                    int slot = dockEditSlot;
+                    dockEditSlot = -1;
+                    dimOthers();
+                    focusTile(slot);
+                } else {
+                    endReorder();
+                }
+            }
+            return true;
+        }
+        int pos = focusedTilePosition();
+        if (ok && pos >= 0) {
+            if (!down) {
+                int n = adapter.movableCount();
+                if (dockEditSlot < 0) {
+                    if (pos < Math.min(COLUMNS, n)) {
+                        dockEditSlot = pos;
+                        dimOthers();
+                        focusTile(Math.min(COLUMNS, n - 1));
+                        Toast.makeText(this, R.string.dock_edit_pick_app, Toast.LENGTH_LONG).show();
+                    }
+                } else if (pos < n) {
+                    swapIntoDock(dockEditSlot, pos);
+                }
+            }
+            return true;   // never opens the app while editing
+        }
+        return super.dispatchKeyEvent(event);   // arrows navigate as usual
+    }
+
+    /** Puts the app at pos into dock place slot, and the app that was there where the chosen one was; then saves. */
+    private void swapIntoDock(int slot, int pos) {
+        String slotKey = adapter.keyAt(slot);
+        if (pos != slot) {
+            keepScroll(() -> {
+                adapter.move(pos, slot);
+                adapter.move(adapter.positionOf(slotKey), pos);
+            });
+        }
+        endReorder();
+        refocusAfterLayout(slot);
     }
 
     private void pickUp(int pos) {
@@ -822,15 +866,24 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
     private void dimOthers() {
         for (int i = 0; i < grid.getChildCount(); i++) {
             View item = grid.getChildAt(i);
-            int pos = grid.getChildAdapterPosition(item);
-            boolean carried = movingKey != null && movingKey.equals(adapter.keyAt(pos));
-            item.setAlpha(movingKey == null || carried ? 1f : 0.45f);
+            item.setAlpha(tileAlpha(grid.getChildAdapterPosition(item)));
         }
+    }
+
+    /** A tile's alpha: dim unless it is the carried one, or, in edit-dock mode, a dock tile other than the chosen place. */
+    private float tileAlpha(int pos) {
+        if (movingKey != null) {
+            return pos != RecyclerView.NO_POSITION && movingKey.equals(adapter.keyAt(pos)) ? 1f : 0.45f;
+        }
+        if (dockEditSlot >= 0 && pos >= 0 && pos < COLUMNS && pos != dockEditSlot) return 0.45f;
+        return 1f;
     }
 
     /** Ends the mode and saves the order if it changed since the mode started. */
     private void endReorder() {
         if (!reordering) return;
+        dockEditing = false;
+        dockEditSlot = -1;
         drop();
         reordering = false;
         adapter.setReordering(false);
@@ -1724,6 +1777,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         boolean sawNonHdmi = false;
         String tunerId = null;
         boolean tunerIsHw = false;
+        boolean tunerIsAnalog = false;
         if (tim != null) {
             List<TvInputInfo> inputs = new ArrayList<>(tim.getTvInputList());
             // HDMI ports first in port order, then AV and the rest.
@@ -1746,10 +1800,20 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
                         && (info.getServiceInfo().applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0) {
                     // Prefer a hardware tuner: the framework names those ".../HW<n>". System apps such as
                     // AirPlay also register software inputs of type TUNER and may sort first (seen on TCL G05).
+                    // Among tuners of the same kind, skip an analog input when another is present.
+                    // MediaTek names them AnalogInputService and TunerInputService; alphabetical order
+                    // would pick the analog one, and Live TV then opens a dead ATV source.
                     boolean hw = info.getId().matches(".*/HW\\d+$");
-                    if (tunerId == null || (hw && !tunerIsHw) || (hw == tunerIsHw && info.getId().compareTo(tunerId) < 0)) {
+                    boolean analog = info.getId().toLowerCase(Locale.ROOT).contains("analog");
+                    boolean better = tunerId == null
+                            || (hw && !tunerIsHw)
+                            || (hw == tunerIsHw && tunerIsAnalog && !analog)
+                            || (hw == tunerIsHw && analog == tunerIsAnalog
+                                    && info.getId().compareTo(tunerId) < 0);
+                    if (better) {
                         tunerId = info.getId();
                         tunerIsHw = hw;
+                        tunerIsAnalog = analog;
                     }
                 }
                 // Inputs hidden in the TV's Settings > Inputs stay out of the menu too.
@@ -1777,9 +1841,16 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         }
         Intent liveTv = liveTvIntent();
         if (liveTv != null && tunerId != null) {
-            liveTv = new Intent(Intent.ACTION_VIEW)
-                    .setDataAndType(TvContract.buildChannelUriForPassthroughInput(tunerId), "vnd.android.cursor.item/channel")
+            // Tune that input only when the Live TV package itself handles the URI.
+            // The unrestricted input player also resolves it (that is how HDMI opens), but on the
+            // AIWA AI PONT SA that player stays black, and the Live TV package does not handle the
+            // URI at all, which used to toast "Not available on this TV". Keep the leanback activity
+            // then: it is the same path as the Live TV tile. Do not drop the package restriction.
+            Intent tuned = new Intent(Intent.ACTION_VIEW)
+                    .setDataAndType(TvContract.buildChannelUriForPassthroughInput(tunerId),
+                            "vnd.android.cursor.item/channel")
                     .setPackage(liveTvPkg);
+            if (tuned.resolveActivity(getPackageManager()) != null) liveTv = tuned;
         }
         if (liveTv != null) {
             if (rows.getChildCount() > 0) addSeparator(rows);
@@ -1869,6 +1940,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         addSettingsMenuRow(rows, popup, R.string.launcher_settings, () -> startActivityForResult(
                 new Intent(this, LauncherSettingsActivity.class), LAUNCHER_SETTINGS_REQUEST));
         if (moduleCards) addSettingsMenuRow(rows, popup, R.string.module_cards, this::showModuleCards);
+        if (dockRow) addSettingsMenuRow(rows, popup, R.string.dock_edit, this::startDockEdit);
         addSettingsMenuRow(rows, popup, R.string.reorder, this::toggleReorder);
         panel.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
         popup.setWidth(Math.max((int) (200 * density), panel.getMeasuredWidth()));

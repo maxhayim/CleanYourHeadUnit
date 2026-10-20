@@ -295,16 +295,27 @@ public class AppAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private Drawable loadBanner(PackageManager pm, ResolveInfo ri) {
         int id = ri.activityInfo.banner;
         if (id == 0) id = ri.activityInfo.applicationInfo.banner;
+        Drawable banner = null;
         if (id != 0) {
             try {
                 Resources resources = pm.getResourcesForApplication(ri.activityInfo.applicationInfo);
                 // Keep at least xhdpi detail rather than downsampling artwork before the focus zoom.
                 int density = Math.max(DisplayMetrics.DENSITY_XHIGH, ctx.getResources().getDisplayMetrics().densityDpi);
-                return resources.getDrawableForDensity(id, density, null);
+                banner = resources.getDrawableForDensity(id, density, null);
             } catch (PackageManager.NameNotFoundException | Resources.NotFoundException ignored) {
             }
         }
-        return ri.activityInfo.loadBanner(pm);
+        if (banner == null) banner = ri.activityInfo.loadBanner(pm);
+        // A square "banner" counts as none: the tile shows the app's icon and name instead of a blur.
+        return banner != null && isBannerShaped(banner.getIntrinsicWidth(), banner.getIntrinsicHeight()) ? banner : null;
+    }
+
+    /**
+     * Some apps declare a small square image as their banner (Rockchip's Media Center ships a 64 px one). Cropped
+     * over a 16:9 tile it is a blur. A drawable with no intrinsic size (a colour, a shape) still fills the tile.
+     */
+    static boolean isBannerShaped(int width, int height) {
+        return width <= 0 || height <= 0 || width >= height * 1.4f;
     }
 
     @NonNull
@@ -537,25 +548,28 @@ public class AppAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         d.setBounds(0, 0, n, n);
         d.draw(c);
         d.setBounds(saved);
+        int[] px = new int[n * n];
+        bmp.getPixels(px, 0, n, 0, 0, n, n);
+        bmp.recycle();
         float[] hsv = new float[3];
         int best = 0xFF444444;
         float bestScore = -1f;
         long r = 0, g = 0, b = 0;
-        for (int y = 0; y < n; y++) {
-            for (int x = 0; x < n; x++) {
-                int p = bmp.getPixel(x, y);
-                r += Color.red(p);
-                g += Color.green(p);
-                b += Color.blue(p);
-                Color.colorToHSV(p, hsv);
-                float score = hsv[1] * Math.min(1f, hsv[2] * 1.4f);   // saturated and not too dark
-                if (score > bestScore) {
-                    bestScore = score;
-                    best = p;
-                }
+        for (int p : px) {
+            int pr = (p >> 16) & 0xFF, pg = (p >> 8) & 0xFF, pb = p & 0xFF;
+            r += pr;
+            g += pg;
+            b += pb;
+            int max = Math.max(pr, Math.max(pg, pb));
+            int min = Math.min(pr, Math.min(pg, pb));
+            float sat = max == 0 ? 0f : (max - min) / (float) max;
+            float val = max / 255f;
+            float score = sat * Math.min(1f, val * 1.4f);   // saturated and not too dark
+            if (score > bestScore) {
+                bestScore = score;
+                best = p;
             }
         }
-        bmp.recycle();
         if (bestScore < 0.25f) {   // nearly monochrome banner (e.g. white): use its average, lifted
             int avg = Color.rgb((int) (r / (n * n)), (int) (g / (n * n)), (int) (b / (n * n)));
             Color.colorToHSV(avg, hsv);

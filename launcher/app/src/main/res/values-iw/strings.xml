@@ -65,6 +65,9 @@
     <string name="quick_network">רשת</string>
     <string name="quick_apps">אפליקציות</string>
     <string name="quick_apps_hint">הפעלה מחדש</string>
+    <string name="dock_edit">עריכת שורת המועדפים</string>
+    <string name="dock_edit_hint">בחרו מקום בשורת המועדפים ולחצו אישור. חזרה לסיום.</string>
+    <string name="dock_edit_pick_app">עכשיו בחרו את האפליקציה שתופיע שם ולחצו אישור. חזרה לבחירת מקום אחר.</string>
     <string name="reorder">סידור אפליקציות</string>
     <string name="reorder_hint">אישור מרים אפליקציה, החצים מזיזים אותה, חזרה מניחה אותה. חזרה שוב לסיום.</string>
     <string name="reorder_not_saved">לא ניתן לשמור את הסדר החדש</string>
