@@ -505,6 +505,10 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.Holder> {
                             .setInterpolator(new DecelerateInterpolator())
                             .withLayer().start();
                     name.animate().alpha(focused ? 1f : 0f).setDuration(100).start();
+                    // Same place as the full motion's slide ends: the layout's -6dp is only its starting point, and
+                    // left there the name overlaps the zoomed tile.
+                    // Only on focus: snapping it back to -6dp while it fades out would jump it up over the tile.
+                    if (focused) name.setTranslationY(density * 4f);
                 } else {
                     view.animate().scaleX(s).scaleY(s)
                             .translationY(focused && advancedEffects ? -4f * density : 0f)
