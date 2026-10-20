@@ -78,6 +78,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
     private static final int LAUNCHER_SETTINGS_REQUEST = 42;
     /** Tiles per row and dock slots (res/values/config.xml, columns). Set in onCreate. */
     static int COLUMNS = 4;
+    private boolean rtlAppGrid;
     private static final long MINUTE_MS = 60_000L;
     private String liveTvPkg;
     private String liveTvAction;
@@ -233,7 +234,14 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         hiddenApps = new HashSet<>(cfg.hiddenApps);
 
         grid = findViewById(R.id.grid);
-        grid.setLayoutManager(new GridLayoutManager(this, COLUMNS));
+        rtlAppGrid = getResources().getBoolean(R.bool.rtl_app_grid);
+        // Mirror only the app grid; the header and other locales keep their own layouts.
+        grid.setLayoutManager(new GridLayoutManager(this, COLUMNS) {
+            @Override
+            protected boolean isLayoutRTL() {
+                return rtlAppGrid;
+            }
+        });
         grid.setHasFixedSize(true);
         grid.setItemAnimator(null);
         grid.addItemDecoration(new DockDecoration(COLUMNS, density));
@@ -314,6 +322,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
 
         // Keep focus on the top bar at its ends and at the top: Android's focus finder would otherwise
         // jump to a tile far below when there is nothing in that direction.
+        boolean rtlMenuBar = getResources().getBoolean(R.bool.rtl_menu_bar);
         View.OnKeyListener pillKeys = (v, keyCode, event) -> {
             if (event.getAction() != KeyEvent.ACTION_DOWN) return false;
             if (keyCode == KeyEvent.KEYCODE_DPAD_UP) return true;
@@ -322,12 +331,11 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
                 focusTile(lastFocused % COLUMNS);
                 return true;
             }
-            if (keyCode == KeyEvent.KEYCODE_DPAD_LEFT) {
-                // The left end is Inputs, or Wi-Fi on a box without inputs.
-                return v.getId() == R.id.btnInputs
-                        || (v.getId() == R.id.btnWifi && btnInputs.getVisibility() != View.VISIBLE);
-            }
-            return keyCode == KeyEvent.KEYCODE_DPAD_RIGHT && v.getId() == R.id.btnSettings;
+            int firstButton = btnInputs.getVisibility() == View.VISIBLE ? R.id.btnInputs : R.id.btnWifi;
+            int leftButton = rtlMenuBar ? R.id.btnSettings : firstButton;
+            int rightButton = rtlMenuBar ? firstButton : R.id.btnSettings;
+            if (keyCode == KeyEvent.KEYCODE_DPAD_LEFT) return v.getId() == leftButton;
+            return keyCode == KeyEvent.KEYCODE_DPAD_RIGHT && v.getId() == rightButton;
         };
         btnInputs.setOnKeyListener(pillKeys);
         btnWifi.setOnKeyListener(pillKeys);
@@ -748,11 +756,9 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         int target;
         // Horizontal: swallow the key at a row's ends so focus never wraps to the next row or
         // escapes up into the top bar. Mid-row moves fall through to the default focus search.
-        if (keyCode == KeyEvent.KEYCODE_DPAD_LEFT) {
-            return position % COLUMNS == 0;
-        }
-        if (keyCode == KeyEvent.KEYCODE_DPAD_RIGHT) {
-            return position % COLUMNS == COLUMNS - 1 || position == count - 1;
+        if (keyCode == KeyEvent.KEYCODE_DPAD_LEFT || keyCode == KeyEvent.KEYCODE_DPAD_RIGHT) {
+            return GridNavigation.atHorizontalEdge(position, count, COLUMNS,
+                    rtlAppGrid, keyCode == KeyEvent.KEYCODE_DPAD_LEFT);
         }
         if (keyCode == KeyEvent.KEYCODE_DPAD_UP) {
             if (position < COLUMNS) return false;          // dock row: let focus move to the top bar
@@ -1041,7 +1047,8 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         panel.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
         popup.setWidth(Math.max(width, panel.getMeasuredWidth()));
 
-        dropIn(popup, panel, anchor, Gravity.START);
+        int alignment = getResources().getBoolean(R.bool.rtl_menu_bar) ? Gravity.END : Gravity.START;
+        dropIn(popup, panel, anchor, alignment);
         rows.getChildAt(0).requestFocus();
     }
 
