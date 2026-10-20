@@ -18,6 +18,13 @@ Things that bit us or contributors, so they don't bite you. Commands use `tools/
   missing points at a device-owner policy or a provisioning lock; the toggle comes back after a
   firmware update from the ISP, or not at all. Without one of the two switches this repo has nothing
   to talk to.
+- **Developer options is hidden, or Build number asks for a password**, seen on an ISP box (FPT Play
+  650, Android TV 14): tapping Build seven times opens a password prompt instead of unlocking the menu.
+  Often only the way in is locked, not the screen itself: TvSettings still has
+  `com.android.tv.settings/.system.development.DevelopmentActivity`, and any app can open it by its
+  name or with the `android.settings.APPLICATION_DEVELOPMENT_SETTINGS` action. Install an app that
+  opens activities by name (Activity Launcher) from the Play Store, open that screen and switch on
+  USB debugging there. When no app can open it either, see the carrier-box bullet above.
 - **USB debugging never opens port 5555** on some Google TV sets (a Skyworth-built Philips among
   them). Pair once through Wireless debugging with the stock `adb` (`adb pair <ip>:<port> <code>`,
   then `adb connect`), run `adb tcpip 5555`, and `tools/tv.py` works from then on. `dns-sd -B
@@ -46,9 +53,10 @@ Things that bit us or contributors, so they don't bite you. Commands use `tools/
 - **Chained `pm` commands** (`pm disable a; pm disable b`) may silently stop after the first. Run
   one per shell call; `--batch` does exactly that.
 - **Large pushes hang** through the Python client. Use `tools/b64push.py` for APKs.
-- **`adb exec-out screencap -p` gives a broken PNG** on some MediaTek Xiaomi sets: the binary prints
-  `Init wrapper sys mutex successful` on stdout first. Save on the TV and pull the file instead:
-  `screencap -p /data/local/tmp/s.png`.
+- **`adb exec-out screencap -p` gives a broken PNG** on some MediaTek sets (Xiaomi, and Amazon's
+  own Fire TV smart TVs): the binary prints `Init wrapper sys mutex successful` on stdout first.
+  Save on the TV and pull the file instead: `screencap -p /data/local/tmp/s.png`, or cut
+  everything before the `\x89PNG` header.
 - **Play Protect blocked the launcher** ("unsafe app blocked, built for an older version of Android")
   and `pm install` hung, then failed with `INSTALL_FAILED_VERIFICATION_FAILURE`, while it targeted
   SDK 29. It targets 34 now; if you built an old checkout, rebuild.
@@ -65,6 +73,12 @@ Things that bit us or contributors, so they don't bite you. Commands use `tools/
   nothing else on the TV answers HOME, it skips that entry and says so (`FORCE_HOME=1` overrides),
   so applying a list before the handover no longer leaves the TV without a launcher. Apply the list
   again after the install script has made the new launcher Home to disable the old one.
+- **China-market Xiaomi rejects a default Home despite `set-home-activity` reporting success**,
+  verified on MiTV-AETP0 (dofus), Android 9, firmware 22.9.2.851: the framework filters third-party
+  HOME candidates by a package-name allowlist. Disabling the stock launcher then selects
+  `FallbackHome`. An opt-in application-ID build worked with the stock launcher still enabled;
+  see the [device notes and rollback steps](devices/xiaomi-mitv-aetp0-dofus.md). This is different
+  from a missing default-home picker or a remote that emits ALL_APPS.
 - **The new launcher still doesn't own Home** after the stock one is disabled, seen on Google TV
   (Xiaomi MiTV-MOOR2). Another system app answers HOME: `com.google.android.tungsten.setupwraith`,
   with `.MainActivity` at intent-filter priority 4 and `.RecoveryActivity` at priority 1. You
@@ -76,14 +90,32 @@ Things that bit us or contributors, so they don't bite you. Commands use `tools/
   setup wizard, so everyday use is unaffected, but re-enable it before a factory reset - list it in
   your `debloat.txt` and `tools/restore.sh` does that for you.
 - **The TV drops off Wi-Fi for good the moment setupwraith is disabled**, seen on Google TV 14 (Sony
-  BRAVIA 9 II, Philips R8G, Skyworth SWTV-24NA-4K NF, Xiaomi TV Box S 3rd gen MiTV-AFMU0). A Wi-Fi network saved during the first-run
-  wizard belongs to setupwraith, and Android deletes an app's saved networks when the app is disabled.
-  The TV is fine but offline, so ADB and the phone remote stop working, and a restart doesn't bring
-  the network back. Check before disabling it: `tools/tv.py "dumpsys wifi" | grep -o 'cname=[^ ]*'`.
+  BRAVIA 9 II, Philips R8G, Skyworth SWTV-24NA-4K NF, Xiaomi TV Box S 3rd gen MiTV-AFMU0) and on a TCL
+  G07 on Google TV 11 (build AR17; on AR20 the network belonged to `android.uid.system`). A Wi-Fi
+  network saved during the first-run wizard belongs to setupwraith, and Android deletes an app's saved
+  networks when the app is disabled. The TV is fine but offline, so ADB and the phone remote stop
+  working, and a restart doesn't bring the network back. Check before disabling it: `tools/tv.py "dumpsys wifi" | grep -o 'cname=[^ ]*'`.
   If it names setupwraith, forget the network and join it again in Settings > Network & Internet (it
   then belongs to `android.uid.system`), or use Ethernet. `tools/disable.sh` skips setupwraith while it
   owns the network (`FORCE_SETUPWRAITH=1` overrides). Already offline? Rejoin from the TV with its own
   remote or a USB keyboard, then turn Wireless debugging back on if it was in use.
+- **Casting from a phone fails with "Untrusted device" after setupwraith is disabled**, seen on
+  Chromecast with Google TV HD (`boreal`) on Google TV 14 build UTTC.250917.004, the build the
+  `examples/google-chromecast-gtv-4k/` list was made on. YouTube on the phone says "Untrusted device.
+  ... couldn't be verified", and logcat repeats `cast_ClientAuthCredsProvisioning: Loading factory
+  credentials for 1P device`, `Failed to find provider info for ...CastInfoProvider` and
+  `cast_shell: No private key, hence empty signature`. The Cast receiver
+  (`com.google.android.apps.mediashell`) loads its factory device credentials from a content provider
+  inside setupwraith (`...tv.setupwraith.libs.castinfo.CastInfoProvider`), so disabling the wizard
+  takes the credentials with it. Re-enable it and within a minute the log shows
+  `SetupWraith|CastInfoProvider: querying cast infos` and `Created singleton instance of
+  ClientAuthSigner`, and casting works. You cannot keep the provider and give up only Home:
+  `pm disable-user` on `setupwraith/.RecoveryActivity` is refused with `SecurityException: Shell
+  cannot change component state`. So either debloat without setupwraith and launcherx, or re-enable
+  setupwraith after each boot, wait for `ClientAuthSigner`, then disable it again: the receiver keeps
+  the credentials in memory, so casting survives until the next reboot. Reported on Google's own
+  Chromecast hardware so far; the Xiaomi Mi Box S 2nd gen list says casting from a Pixel still works
+  there with setupwraith off.
 - **The TV drops off Wi-Fi every minute right after the install**, seen on Google TV 14 (Xiaomi
   MiTV-MZTU0): the same setupwraith `.RecoveryActivity` took Home and system_server crash-looped
   on it. The install script now starts the new launcher before disabling the stock one, sets the
@@ -93,6 +125,11 @@ Things that bit us or contributors, so they don't bite you. Commands use `tools/
   android.display`, and the main log shows `setupwraith/.RecoveryActivity` being started every
   200 ms or so. If you're already in the loop:
   `tools/tv.py 'pm enable --user 0 com.google.android.apps.tv.launcherx'`.
+- **`theme.sh` fails with "couldn't create file: Permission denied"**, seen on TCL G07 (Android 11): the
+  shell is not in the group that may write `Android/data`. `theme.sh` stages the files in
+  `/data/local/tmp` and, when copying them in is refused, writes them through the launcher's
+  `ThemeProvider` instead. A launcher installed before that provider existed doesn't have it: run
+  `launcher/build-and-install.sh` once, then push the theme again.
 - **No on-screen keyboard** after switching launchers, seen on Xiaomi: the default input method
   pointed at a Baidu keyboard that isn't installed. Fix:
   `tools/tv.py 'ime set com.google.android.inputmethod.latin/com.android.inputmethod.latin.LatinIME'`

@@ -33,9 +33,25 @@
          to that package instead, and the app starts normally. Leave empty to omit. -->
     <string name="live_tv_action" translatable="false"></string>
 
+    <!-- Tiles that open a screen of the app instead of its start screen: "package=action", sent to that package.
+         A tile whose action no longer resolves opens the app normally. MagentaTV's program guide:
+         com.telekom.onetv.tv.pl=com.telekom.onetv.tv.pl.action.PROGRAM_GUIDE. -->
+    <string-array name="launch_actions">
+    </string-array>
+
+    <!-- A tile's name instead of the app's own: "package=Name". It also shows above the dock. -->
+    <string-array name="app_labels">
+    </string-array>
+    <!-- A tile's artwork instead of the app's banner: "package=drawable", a banner_* drawable bundled with the
+         launcher (res/drawable). banner_tv is a magenta field with the Live TV glyph. -->
+    <string-array name="app_banners">
+    </string-array>
+
     <!-- TVs with no TvInputManager have no HDMI list to read, but their own source-selection panel
          still switches inputs (TCL Android TV 9 again). When nothing could be listed, the Inputs menu
-         offers one row that starts this service: component first, then action. Leave empty to omit. -->
+         offers one row that starts this service: component first, then action. The component can also be an
+         activity, for sets whose panel is a dialog (BYINTEK U4). With no Live TV app either, the Inputs pill
+         opens the panel directly instead of a menu. Leave empty to omit. -->
     <string name="source_panel_service" translatable="false"></string>
     <string name="source_panel_action" translatable="false"></string>
 
@@ -137,4 +153,10 @@
          sets its opacity. Around 60 reads clearly without hiding a wallpaper. Can also be set with
          "sky_intensity": 60 in a theme's config.json. -->
     <integer name="sky_intensity">0</integer>
+
+    <!-- Cinematic top shelf: the focused dock app's artwork, softened, fills the top of the screen in its
+         colour; the shelf gets a larger name, a "Last opened" line (from the apps Home opened) and dock position
+         dots, the focus glow takes the app's colour and the dock band turns translucent. false keeps the plain
+         shelf. Can also be set with "cinematic_home": true in a theme's config.json. -->
+    <bool name="cinematic_home">false</bool>
 </resources>
