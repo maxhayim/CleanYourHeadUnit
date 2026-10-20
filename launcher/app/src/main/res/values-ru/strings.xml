@@ -58,6 +58,10 @@
     <string name="follow_theme">Следовать теме (сбросить выбор)</string>
     <string name="follow_theme_hint">Использовать параметры расположения и анимации текущей темы или встроенные. Установка или сброс темы также удаляет выбор на телевизоре.</string>
     <string name="tv_settings">Системные настройки ТВ</string>
+    <string name="quick_picture">Экран</string>
+    <string name="quick_network">Сеть</string>
+    <string name="quick_apps">Приложения</string>
+    <string name="quick_apps_hint">Включить снова</string>
     <string name="on">Вкл.</string>
     <string name="off">Выкл.</string>
     <string name="enable">Включить</string>
