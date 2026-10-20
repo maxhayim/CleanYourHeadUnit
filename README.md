@@ -3,11 +3,12 @@
 </p>
 
 <h3 align="center">107 TV models &nbsp;·&nbsp; 37 brands &nbsp;·&nbsp; 19 languages &nbsp;·&nbsp; 390 KB launcher</h3>
+<h3 align="center">108 TV models &nbsp;·&nbsp; 38 brands &nbsp;·&nbsp; 18 languages &nbsp;·&nbsp; 390 KB launcher</h3>
 
 <p align="center">
   <a href="https://cleanyour.tv">cleanyour.tv</a> ·
   <a href="PROMPT.md">The prompt</a> ·
-  <a href="examples/">107 TV lists</a> ·
+  <a href="examples/">108 TV lists</a> ·
   <a href="SHOWCASE.md">22 built on it</a> ·
   <a href="https://x.com/gathint/status/2111379569030939102">The tweet</a> ·
   <a href="README.zh-CN.md">简体中文</a>
@@ -120,6 +121,7 @@ Tested lists from contributors, one folder per model in [`examples/`](examples/)
 **TCL** 20 · **Sony** 17 · **Xiaomi** 15 · **Philips** 7 · **Hisense** 6 · **Panasonic** 3 ·
 **Amazon Fire TV Stick** 2 · **BenQ** 2 · **CHiQ** 2 · **Haier** 2 · **Hitachi** 2 · **NVIDIA Shield** 2 ·
 **Skyworth** 2 · **Vu** 2 · AiPro2K · AIWA · Chromecast with Google TV · Compac · FFalcon · Freebox · Insignia Fire TV ·
+**Skyworth** 2 · **Vu** 2 · AiPro2K · AIWA · Chromecast with Google TV · EKO · FFalcon · Freebox · Insignia Fire TV ·
 Kalley · MTC · OnePlus · onn · PRISM+ · RCA · Redmi · SANYO · Thomson · Toshiba Fire TV · Vidda ·
 BYINTEK, JMGO, Portronics, Stellamore, Wanbo and XGIMI projectors
 
@@ -139,6 +141,7 @@ BYINTEK, JMGO, Portronics, Stellamore, Wanbo and XGIMI projectors
 | CHiQ AI PONT (DVB93CQ) | Android TV 11 |
 | Chromecast with Google TV 4K (sabrina) | Google TV 14 |
 | Compac ATV R2 (SCBC R2, Realtek RTD285O) | Android TV 9 |
+| EKO 2K Google TV (MTC-built, tennoji, MediaTek mt5867 / T56) | Google TV 14 |
 | FFalcon (雷鸟) 鹤6 PRO 65S585C Pro (China, tcl_mt5879_cn, MediaTek MT9653) | Android TV 11 |
 | Freebox Player POP (Free, fbx8am, Amlogic), IPTV/DVB-T box | Android TV 10 |
 | Haier Android TV DVB2K (broadway, HaierATVT56DVB) | Android TV 11 |
