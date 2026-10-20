@@ -971,7 +971,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         PetalShowerView shower = new PetalShowerView(this);
         root.addView(shower, new FrameLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-        shower.play(28, 1800, () -> root.removeView(shower));
+        shower.play(60, 2200, () -> root.removeView(shower));
     }
 
     private static int liftTowardsWhite(int argb, float amount) {
