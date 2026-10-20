@@ -23,6 +23,10 @@ Connect
   macOS Local Network privacy blocking adb. Don't debug it: use the Python `adb-shell` package in a venv
   as the ADB client instead. If its file push hangs on larger files, transfer files as base64 chunks
   through the shell and verify the md5.
+- If port 5555 stays closed, the TV may only offer Wireless debugging (Google TV sets often do): look for
+  `_adb-tls-connect._tcp` with `dns-sd -B` or `adb mdns services`, ask me for the code and port under
+  Developer options > Wireless debugging > Pair device with pairing code, then `adb pair`, `adb connect`
+  and `adb tcpip 5555`. Android switches Wireless debugging off whenever Wi-Fi drops.
 - Tell me when the "Allow USB debugging?" prompt will appear on the TV so I can accept it.
 - If `adb install` hangs on Android 14 it is waiting for an on-screen confirmation; push the APK and run
   `pm install -r` over the shell instead.
