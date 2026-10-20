@@ -106,8 +106,21 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.Holder> {
 
     /** Height of one grid item: the tile, the name label under it and the item's own padding. */
     static int itemHeightPx(int tileHeightPx, float density) {
-        return tileHeightPx + Math.round(ITEM_EXTRA_DP * density);
+        return itemHeightPx(tileHeightPx, true, density);
     }
+
+    /** The same for either layout: the plain grid (dock_row false) uses the compact spacing. */
+    static int itemHeightPx(int tileHeightPx, boolean dockRow, float density) {
+        return tileHeightPx + Math.round((dockRow ? ITEM_EXTRA_DP : COMPACT_ITEM_EXTRA_DP) * density);
+    }
+
+    /**
+     * dock_row false: 4dp padding above and below, a 4dp gap and a 20dp name label, and 16dp kept under the last
+     * row. The plain grid fits more rows on the screen, and with item_app.xml's roomier spacing the tiles came
+     * out small with wide gaps between them.
+     */
+    static final float COMPACT_ITEM_EXTRA_DP = 4 + 4 + 4 + 20;
+    static final float COMPACT_BOTTOM_ROOM_DP = 16;
 
     /** item_app.xml: 8dp padding above and below, a 7dp gap and the 22dp name label under the tile. */
     static final float ITEM_EXTRA_DP = 45;
@@ -117,20 +130,24 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.Holder> {
     static final float BOTTOM_ROOM_DP = 30;
     /** Room kept above the dock for the dock title (48sp hero name plus its 40dp gap) when dock_title is on. */
     static final float TITLE_ROOM_DP = 104;
+    /** dock_row false: room above the first row for its zoom and glass (MainActivity places the grid with it). */
+    static final float TOP_ROOM_DP = 12;
 
     /**
      * Tile width that fits the columns across and, with rows_below_dock > 0, the dock (with its title above it,
      * if shown) plus that many rows down the grid's height; the smaller wins. With rows_below_dock = 0, or before
      * the grid has a height, only the width counts, as before. Without this, 2 or 3 rows below the dock did not
-     * fit: the dock was pushed to the top and its title drew over the clock.
+     * fit: the dock was pushed to the top and its title drew over the clock. With dock_row false there is no band
+     * or title to make room for: the first row plus rows_below_dock rows fit under a small top margin.
      */
     static int tileWidthPx(int innerWidthPx, int gridHeightPx, int columns, int rowsBelowDock, boolean dockTitle,
-                           float density) {
+                           boolean dockRow, float density) {
         int w = tileWidthPx(innerWidthPx, columns, density);
         if (gridHeightPx <= 0 || rowsBelowDock <= 0) return w;
-        float reserved = (DOCK_EXTRA_DP + BOTTOM_ROOM_DP + (dockTitle ? TITLE_ROOM_DP : 0)) * density;
+        float reserved = (dockRow ? DOCK_EXTRA_DP + BOTTOM_ROOM_DP + (dockTitle ? TITLE_ROOM_DP : 0)
+                : TOP_ROOM_DP + COMPACT_BOTTOM_ROOM_DP) * density;
         float perItem = (gridHeightPx - reserved) / (rowsBelowDock + 1);
-        float tileH = perItem - ITEM_EXTRA_DP * density;
+        float tileH = perItem - (dockRow ? ITEM_EXTRA_DP : COMPACT_ITEM_EXTRA_DP) * density;
         int byHeight = Math.round(tileH * DESIGN_W_DP / DESIGN_H_DP);
         return Math.max(Math.round(80 * density), Math.min(w, byHeight));
     }
@@ -140,6 +157,8 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.Holder> {
     private final boolean dockTitle;
     private final TileListener listener;
     private final int dockSize;
+    /** config dock_row: false makes the dock apps the first tiles of one plain grid (names shown, no empty slots). */
+    private final boolean dockRow;
     /** Dock order (config.xml dock_apps, or a theme's config.json). */
     private final List<String> favourites;
     /** Grid apps fill the dock slots dock_apps leaves free (config.xml, fill_dock). */
@@ -168,6 +187,7 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.Holder> {
         this.reducedMotion = cfg.reducedMotion;
         this.rowsBelowDock = cfg.rowsBelowDock;
         this.dockTitle = cfg.dockTitle;
+        this.dockRow = cfg.dockRow;
         // Tiles keep their identity across reload(), so a focused tile stays on its app instead of
         // its view being rebound to whatever app now sits in that slot.
         setHasStableIds(true);
@@ -222,7 +242,7 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.Holder> {
         }
         docked = 0;
         while (docked < fresh.size() && favourites.contains(fresh.get(docked).pkg)) docked++;
-        emptySlots = DockSlots.empty(docked, dockSize, fresh.size(), fillDock);
+        emptySlots = dockRow ? DockSlots.empty(docked, dockSize, fresh.size(), fillDock) : 0;
         for (int i = 0; i < emptySlots; i++) {
             fresh.add(docked + i, new Entry(Entry.EMPTY, "", new ComponentName(ctx, "empty-dock-slot-" + i),
                     null, null, null, 0));
@@ -254,7 +274,7 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.Holder> {
         float density = parent.getResources().getDisplayMetrics().density;
         int width = parent.getWidth() > 0 ? parent.getWidth() : parent.getMeasuredWidth();
         int inner = width - parent.getPaddingLeft() - parent.getPaddingRight();
-        int w = tileWidthPx(inner, parent.getHeight(), dockSize, rowsBelowDock, dockTitle, density), h = tileHeightPx(w);
+        int w = tileWidthPx(inner, parent.getHeight(), dockSize, rowsBelowDock, dockTitle, dockRow, density), h = tileHeightPx(w);
         View card = v.findViewById(R.id.card);
         ViewGroup.LayoutParams cardLp = card.getLayoutParams();
         cardLp.width = w;
@@ -263,7 +283,13 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.Holder> {
         View name = v.findViewById(R.id.name);
         ViewGroup.MarginLayoutParams nameLp = (ViewGroup.MarginLayoutParams) name.getLayoutParams();
         nameLp.width = w;
-        nameLp.topMargin = h + Math.round(7 * density);
+        nameLp.topMargin = h + Math.round((dockRow ? 7 : 4) * density);
+        if (!dockRow) {
+            // Compact spacing (COMPACT_ITEM_EXTRA_DP): 4dp item padding and a 20dp name instead of 8dp and 22dp.
+            nameLp.height = Math.round(20 * density);
+            int pad = Math.round(4 * density);
+            v.setPadding(v.getPaddingLeft(), pad, v.getPaddingRight(), pad);
+        }
         name.setLayoutParams(nameLp);
         return new Holder(v, listener, animations, advancedEffects, reducedMotion);
     }
@@ -285,7 +311,7 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.Holder> {
         h.card.setVisibility(View.VISIBLE);
         h.card.setFocusable(true);
         h.name.setText(e.name);
-        h.name.setVisibility(position < dockSize ? View.INVISIBLE : View.VISIBLE);   // the dock has no labels
+        h.name.setVisibility(dockRow && position < dockSize ? View.INVISIBLE : View.VISIBLE);   // the dock has no labels
         boolean focused = h.card.isFocused();   // a rebind after reload() can hit the focused tile
         h.name.setAlpha(focused ? 1f : 0f);
         h.card.setScaleX(focused && animations ? focusScale() : 1f);
