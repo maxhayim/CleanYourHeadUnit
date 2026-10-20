@@ -1,5 +1,7 @@
 package com.gathin.tvhome;
 
+import android.animation.ArgbEvaluator;
+import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.ActivityNotFoundException;
@@ -73,6 +75,7 @@ import java.util.Set;
  */
 public class MainActivity extends Activity implements AppAdapter.TileListener {
 
+    private static final int LAUNCHER_SETTINGS_REQUEST = 42;
     /** Tiles per row and dock slots (res/values/config.xml, columns). Set in onCreate. */
     static int COLUMNS = 4;
     private static final long MINUTE_MS = 60_000L;
@@ -89,7 +92,10 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
     private View ambient;
     private TextView heroName;
     private int ambientColor = -1;
+    private ValueAnimator ambientAnimator;
     private boolean heroShown;
+    private boolean animations;
+    private boolean advancedEffects;
     private TextView greeting;
     private View btnInputs;
     private TextView btnWifi;
@@ -187,6 +193,8 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         // config.xml, overlaid by config.json from a pushed theme (see Config and tools/theme.sh).
         Config cfg = Config.load(this);
         COLUMNS = cfg.columns;
+        animations = cfg.animations;
+        advancedEffects = cfg.animations && cfg.advancedEffects;
         reducedMotion = cfg.reducedMotion;
         liveTvPkg = cfg.liveTvPackage;
         liveTvAction = cfg.liveTvAction;
@@ -219,10 +227,12 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         grid.setHasFixedSize(true);
         grid.setItemAnimator(null);
         grid.addItemDecoration(new DockDecoration(COLUMNS, density));
-        int enterAnim = reducedMotion ? R.anim.tile_enter_reduced : R.anim.tile_enter;
-        float enterDelay = reducedMotion ? 0f : 0.06f;
-        grid.setLayoutAnimation(new LayoutAnimationController(
-                AnimationUtils.loadAnimation(this, enterAnim), enterDelay));
+        if (animations) {
+            int enterAnim = reducedMotion ? R.anim.tile_enter_reduced : R.anim.tile_enter;
+            float enterDelay = reducedMotion ? 0f : 0.06f;
+            grid.setLayoutAnimation(new LayoutAnimationController(
+                    AnimationUtils.loadAnimation(this, enterAnim), enterDelay));
+        }
         adapter = new AppAdapter(this, this, COLUMNS, cfg);
         grid.setAdapter(adapter);
 
@@ -273,7 +283,8 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
                 s.setSpring(new SpringForce().setStiffness(1400f).setDampingRatio(0.95f));
                 s.setMinimumVisibleChange(1.5f);
             } else {
-                s.setSpring(new SpringForce().setStiffness(260f).setDampingRatio(0.58f));
+                s.setSpring(new SpringForce().setStiffness(advancedEffects ? 320f : 260f)
+                        .setDampingRatio(advancedEffects ? 0.76f : 0.58f));
             }
         }
 
@@ -287,8 +298,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         });
         btnSettings.setOnClickListener(v -> open(systemIntent(Settings.ACTION_SETTINGS)));
         btnSettings.setOnLongClickListener(v -> {
-            if (!moduleCards) return false;   // off: a long press does nothing, as before the feature
-            showModuleCards();
+            showSettingsMenu();
             return true;
         });
 
@@ -312,6 +322,13 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         btnInputs.setOnKeyListener(pillKeys);
         btnWifi.setOnKeyListener(pillKeys);
         btnSettings.setOnKeyListener(pillKeys);
+        if (advancedEffects) {
+            for (View button : new View[]{btnInputs, btnWifi, btnSettings}) {
+                button.setOnFocusChangeListener((view, focused) -> view.animate()
+                        .scaleX(focused ? 1.04f : 1f).scaleY(focused ? 1.04f : 1f)
+                        .setDuration(160).start());
+            }
+        }
 
         // Hide the glass when focus leaves the tiles.
         getWindow().getDecorView().getViewTreeObserver().addOnGlobalFocusChangeListener((oldF, newF) -> {
@@ -393,6 +410,12 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         handler.postDelayed(minuteTick, MINUTE_MS);
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == LAUNCHER_SETTINGS_REQUEST && resultCode == RESULT_OK) recreate();
+    }
+
     /** Rebuilds the tiles (and the module cards), then puts focus back where it was. */
     private void reloadApps(boolean animate) {
         // Capture the app before rebinding can move focus and overwrite its key.
@@ -407,7 +430,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
             ambient.setAlpha(0f);
         }
         reloadTiles();
-        if (animate && !reducedMotion) grid.scheduleLayoutAnimation();
+        if (animate && animations && !reducedMotion) grid.scheduleLayoutAnimation();
 
         if (restoreFocus) {
             // Follow the same app, or the nearest remaining slot when it was removed.
@@ -458,6 +481,9 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
     @Override
     protected void onPause() {
         super.onPause();
+        stopAmbientAnimation();
+        heroName.animate().cancel();
+        ambient.animate().cancel();
         unregisterReceiver(packageReceiver);
         handler.removeCallbacks(minuteTick);
         // Nothing of ours stays on screen over another app; an undecided prompt simply returns next time.
@@ -498,17 +524,18 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         Rect r = new Rect(0, 0, card.getWidth(), card.getHeight());
         root.offsetDescendantRectToMyCoords(card, r);
         float pad = 6f * density;        // matches GlassView's glow inset
-        float w = card.getWidth() * AppAdapter.FOCUS_SCALE + 2 * pad;
-        float h = card.getHeight() * AppAdapter.FOCUS_SCALE + 2 * pad;
+        float scale = adapter.focusScale();
+        float w = card.getWidth() * scale + 2 * pad;
+        float h = card.getHeight() * scale + 2 * pad;
         float x = r.exactCenterX() - w / 2f;
-        float y = r.exactCenterY() - h / 2f;
+        float y = r.exactCenterY() - h / 2f - (advancedEffects ? 4f * density : 0f);
 
         ViewGroup.LayoutParams lp = glass.getLayoutParams();
         if (lp.width != (int) w || lp.height != (int) h) {
             lp.width = (int) w;
             lp.height = (int) h;
             glass.setLayoutParams(lp);
-            glass.setRadius(AppAdapter.cornerRadius(card.getWidth(), density) * AppAdapter.FOCUS_SCALE + pad);
+            glass.setRadius(AppAdapter.cornerRadius(card.getWidth(), density) * scale + pad);
         }
         glassTargetX = x;
         glassTargetY = y;
@@ -517,8 +544,14 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
             springY.cancel();
             glass.setTranslationX(x);
             glass.setTranslationY(y);
-            glass.animate().alpha(1f).setDuration(reducedMotion ? 100 : 180).start();
+            if (animations) glass.animate().alpha(1f).setDuration(reducedMotion ? 100 : 180).start();
+            else glass.setAlpha(1f);
             glassShown = true;
+        } else if (!animations) {
+            springX.cancel();
+            springY.cancel();
+            glass.setTranslationX(x);
+            glass.setTranslationY(y);
         } else {
             springX.animateToFinalPosition(x);
             springY.animateToFinalPosition(y - glassScrollShift);
@@ -532,7 +565,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
             // actually off; reduced motion does it in one jump so it does not fight the highlight.
             boolean scroll = Math.abs(dy) > (int) (8 * density);
             if (scroll) {
-                if (reducedMotion) grid.scrollBy(0, dy);
+                if (!animations || reducedMotion) grid.scrollBy(0, dy);
                 else grid.smoothScrollBy(0, dy);
             }
             showHero(position, scroll ? r.top - dy : r.top);
@@ -552,16 +585,20 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         float y = dockTopInRoot - 14 * density - 26 * density - heroName.getHeight();
         boolean changed = !label.contentEquals(heroName.getText());
 
-        if (reducedMotion) {
+        if (!animations || reducedMotion) {
             // Snap the shelf instead of sliding and fading it: each of those frames repaints the
             // full-screen panel, and this switch exists for the GPUs that cannot afford it.
             heroName.animate().cancel();
+            ambient.animate().cancel();
             heroName.setText(label);
             heroName.setY(y);
             heroName.setTranslationX(0f);
             heroName.setAlpha(1f);
             setAmbient(color);
-            if (!heroShown) {
+            if (!animations) {
+                ambient.setAlpha(1f);
+                heroShown = true;
+            } else if (!heroShown) {
                 ambient.setAlpha(0f);
                 ambient.animate().alpha(1f).setDuration(160).start();
                 heroShown = true;
@@ -570,6 +607,9 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         }
 
         if (!heroShown) {
+            stopAmbientAnimation();
+            heroName.animate().cancel();
+            ambient.animate().cancel();
             heroName.setText(label);
             heroName.setY(y);
             heroName.setTranslationX(0f);
@@ -578,13 +618,16 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
             ambient.animate().alpha(1f).setDuration(600).start();
             heroShown = true;
         } else if (changed) {
+            if (advancedEffects) heroName.animate().cancel();
             heroName.animate().alpha(0f).translationX(-12 * density).setDuration(120).withEndAction(() -> {
                 heroName.setText(label);
                 heroName.setY(y);
                 heroName.setTranslationX(12 * density);
                 heroName.animate().alpha(1f).translationX(0f).setDuration(200).start();
             }).start();
-            if (color != ambientColor) {
+            if (advancedEffects) {
+                transitionAmbient(color);
+            } else if (color != ambientColor) {
                 ambient.animate().alpha(0.35f).setDuration(200).withEndAction(() -> {
                     setAmbient(color);
                     ambient.animate().alpha(1f).setDuration(500).start();
@@ -621,17 +664,49 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         ambient.setBackground(drawable);
     }
 
+    private void transitionAmbient(int color) {
+        // A rapid focus change continues from the colour actually displayed on screen.
+        stopAmbientAnimation();
+        ambient.animate().cancel();
+        if (color == ambientColor) {
+            ambient.animate().alpha(1f).setDuration(180).start();
+            return;
+        }
+        ambient.animate().alpha(1f).setDuration(180).start();
+        ambientAnimator = ValueAnimator.ofObject(new ArgbEvaluator(), ambientColor, color);
+        ambientAnimator.setDuration(360);
+        ambientAnimator.addUpdateListener(animation -> setAmbient((int) animation.getAnimatedValue()));
+        ambientAnimator.start();
+    }
+
+    private void stopAmbientAnimation() {
+        if (ambientAnimator != null) {
+            ambientAnimator.cancel();
+            ambientAnimator = null;
+        }
+    }
+
     private void hideHero() {
         if (!heroShown) return;
+        stopAmbientAnimation();
+        heroName.animate().cancel();
+        ambient.animate().cancel();
         heroShown = false;
-        heroName.animate().alpha(0f).setDuration(reducedMotion ? 100 : 160).start();
-        ambient.animate().alpha(0f).setDuration(reducedMotion ? 140 : 300).start();
+        if (animations) {
+            heroName.animate().alpha(0f).setDuration(reducedMotion ? 100 : 160).start();
+            ambient.animate().alpha(0f).setDuration(reducedMotion ? 140 : 300).start();
+        } else {
+            heroName.setAlpha(0f);
+            ambient.setAlpha(0f);
+        }
     }
 
     private void hideGlass() {
         if (!glassShown) return;
         glassShown = false;
-        glass.animate().alpha(0f).setDuration(160).start();
+        glass.animate().cancel();
+        if (animations) glass.animate().alpha(0f).setDuration(160).start();
+        else glass.setAlpha(0f);
     }
 
     // ---- navigation ------------------------------------------------------------------------------
@@ -675,6 +750,14 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
             return;
         }
         // Not laid out yet: scroll there, then focus once the scroll settles.
+        if (!animations) {
+            grid.scrollToPosition(pos);
+            grid.post(() -> {
+                RecyclerView.ViewHolder h = grid.findViewHolderForAdapterPosition(pos);
+                if (h != null) h.itemView.findViewById(R.id.card).requestFocus();
+            });
+            return;
+        }
         grid.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(@NonNull RecyclerView rv, int newState) {
@@ -989,7 +1072,51 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         rows.addView(row);
     }
 
-    // ---- module cards ----------------------------------------------------------------------------
+    // ---- launcher settings and module cards -------------------------------------------------------
+
+    /** Keep a normal Settings click for the TV; the launcher's choices live behind hold OK. */
+    private void showSettingsMenu() {
+        View anchor = findViewById(R.id.btnSettings);
+        View panel = getLayoutInflater().inflate(R.layout.popup_inputs, root, false);
+        LinearLayout rows = panel.findViewById(R.id.rows);
+        PopupWindow popup = glassPopup(panel, (int) (200 * density));
+        addSettingsMenuRow(rows, popup, R.string.launcher_settings, () -> startActivityForResult(
+                new Intent(this, LauncherSettingsActivity.class), LAUNCHER_SETTINGS_REQUEST));
+        if (moduleCards) addSettingsMenuRow(rows, popup, R.string.module_cards, this::showModuleCards);
+        panel.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
+        popup.setWidth(Math.max((int) (200 * density), panel.getMeasuredWidth()));
+        dropIn(popup, panel, anchor, Gravity.END);
+        rows.getChildAt(0).requestFocus();
+    }
+
+    private void addSettingsMenuRow(LinearLayout rows, PopupWindow popup, int title, Runnable action) {
+        View row = getLayoutInflater().inflate(R.layout.item_input, rows, false);
+        row.findViewById(R.id.icon).setVisibility(View.GONE);
+        row.findViewById(R.id.dot).setVisibility(View.GONE);
+        row.findViewById(R.id.status).setVisibility(View.GONE);
+        ((TextView) row.findViewById(R.id.title)).setText(title);
+        row.setOnClickListener(v -> {
+            popup.dismiss();
+            action.run();
+        });
+        // The OK-up after opening the menu must not activate its first row.
+        final boolean[] pressed = {false};
+        row.setOnKeyListener((v, code, event) -> {
+            if (code != KeyEvent.KEYCODE_DPAD_CENTER && code != KeyEvent.KEYCODE_ENTER) return false;
+            if (event.getAction() == KeyEvent.ACTION_DOWN) {
+                if (event.getRepeatCount() == 0) pressed[0] = true;
+                return true;
+            }
+            boolean activate = pressed[0];
+            pressed[0] = false;
+            if (activate) {
+                popup.dismiss();
+                action.run();
+            }
+            return true;
+        });
+        rows.addView(row);
+    }
 
     /**
      * Asks about the next card that has no decision for its current signing key. One prompt at a

@@ -20,4 +20,16 @@
     <string name="cant_open">Impossible d\'ouvrir %1$s</string>
     <string name="date_format">EEEE d MMMM</string>
     <string name="dream_name">Horloge</string>
+    <string name="launcher_settings">Paramètres du lanceur</string>
+    <string name="columns_label">Applications par ligne</string>
+    <string name="animations_state">Animations : %1$s</string>
+    <string name="advanced_effects">Effets avancés</string>
+    <string name="advanced_effects_state">Effets avancés : %1$s</string>
+    <string name="advanced_effects_warning">Soulève les tuiles, agrandit les icônes et adoucit les transitions de couleur. Peut augmenter la mémoire utilisée selon le téléviseur.</string>
+    <string name="follow_theme">Suivre le thème (réinitialiser les choix)</string>
+    <string name="follow_theme_hint">Utilise la disposition et les animations du thème actuel ou les valeurs intégrées. Appliquer ou réinitialiser un thème efface aussi ces choix.</string>
+    <string name="tv_settings">Paramètres du téléviseur</string>
+    <string name="on">Activé</string>
+    <string name="off">Désactivé</string>
+    <string name="enable">Activer</string>
 </resources>
