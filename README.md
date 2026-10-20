@@ -130,6 +130,7 @@ SANYO · Skyworth · Thomson · Toshiba Fire TV · Vu · Stellamore and XGIMI pr
 | AiPro2K (Expressluck, dongnae; Changhong AI PONT family) | Android TV 14 |
 | Amazon Fire TV Stick 4K, 1st gen 2018 (AFTMM, mantis) | Fire OS 6.7.1.1 / Android 7.1 |
 | BenQ E55-735 (Changhong AI PONT, DVB96BQ) | Google TV 14 |
+| BenQ E55-750 (Changhong AI PONT, DVB96BQ) | Google TV (Android 11) |
 | CHiQ AI PONT (Changhong GTVU65, dangni, MediaTek mt5867) | Google TV 14 |
 | CHiQ AI PONT (DVB93CQ) | Android TV 11 |
 | Chromecast with Google TV 4K (sabrina) | Google TV 14 |
