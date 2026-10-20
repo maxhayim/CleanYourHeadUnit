@@ -26,14 +26,14 @@ top = 120; H = top + len(rows) * LH + (len(rows) - 1) * ROWGAP + 150
 img = Image.new("RGBA", (W, H), "#15181e"); d = ImageDraw.Draw(img)
 lab = f(30, 500); t = "FEATURED IN"; sp = 8
 w = sum(d.textlength(c, font=lab) for c in t) + sp * (len(t) - 1); x = (W - w) / 2
-for c in t: d.text((x, 48), c, font=lab, fill="#aab3bd"); x += d.textlength(c, font=lab) + sp
+for c in t: d.text((x, 48), c, font=lab, fill="#e6e9ee"); x += d.textlength(c, font=lab) + sp
 y = top
 for r in rows:
     x = (W - (sum(i.width for i in r) + GAP * (len(r) - 1))) / 2
     for im in r: img.alpha_composite(im, (round(x), y)); x += im.width + GAP
     y += LH + ROWGAP
 m = f(32, 500); w = d.textlength(MORE, font=m) + 56; x0 = (W - w) / 2; ty = y + 26
-d.text((x0, ty), MORE, font=m, fill="#e6e9ee")  # soft white; green stays for numbers, AFTER and arrows
+d.text((x0, ty), MORE, font=m, fill="#aab3bd")  # grey; the title is the soft white one, green stays for numbers, AFTER and arrows
 ax, ay = x0 + w - 26, ty + 22  # arrow: Fredoka has no U+2192
 d.line([(ax - 12, ay), (ax + 12, ay)], fill="#cfffcf", width=4)
 d.line([(ax + 2, ay - 10), (ax + 13, ay), (ax + 2, ay + 10)], fill="#cfffcf", width=4, joint="curve")
