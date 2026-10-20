@@ -15,10 +15,12 @@ import android.widget.Toast;
 public final class LauncherSettingsActivity extends Activity {
     private SharedPreferences choices;
     private final TextView[] columnChoices = new TextView[4];
+    private final TextView[] rowChoices = new TextView[4];
     private TextView animationsChoice;
     private TextView advancedChoice;
     private TextView followThemeChoice;
     private int columns;
+    private int rowsBelowDock;
     private boolean animations;
     private boolean advancedEffects;
 
@@ -29,6 +31,7 @@ public final class LauncherSettingsActivity extends Activity {
         choices = getSharedPreferences(Config.SETTINGS_NAME, MODE_PRIVATE);
         Config config = Config.load(this);
         columns = config.columns;
+        rowsBelowDock = config.rowsBelowDock;
         animations = config.animations;
         advancedEffects = config.animations && config.advancedEffects;
 
@@ -44,12 +47,23 @@ public final class LauncherSettingsActivity extends Activity {
                 refresh();
             });
         }
+        int[] rowIds = {R.id.rows0, R.id.rows1, R.id.rows2, R.id.rows3};
+        for (int i = 0; i < rowIds.length; i++) {
+            final int value = i;
+            rowChoices[i] = findViewById(rowIds[i]);
+            rowChoices[i].setOnClickListener(v -> {
+                if (rowsBelowDock == value) return;
+                rowsBelowDock = value;
+                choices.edit().putInt(Config.ROWS_BELOW_DOCK_KEY, value).apply();
+                setResult(RESULT_OK);
+                refresh();
+            });
+        }
         // Keep the numeric choices increasing in the Hebrew reading direction. Reorder the
         // actual views so D-pad focus follows their positions without changing the saved values.
         if (getResources().getBoolean(R.bool.rtl_app_grid)) {
-            LinearLayout row = (LinearLayout) columnChoices[0].getParent();
-            row.removeAllViews();
-            for (int i = columnChoices.length - 1; i >= 0; i--) row.addView(columnChoices[i]);
+            reverseRow(columnChoices);
+            reverseRow(rowChoices);
         }
         animationsChoice = findViewById(R.id.animationsChoice);
         animationsChoice.setOnClickListener(v -> {
@@ -76,9 +90,10 @@ public final class LauncherSettingsActivity extends Activity {
         followThemeChoice = findViewById(R.id.followThemeChoice);
         followThemeChoice.setOnClickListener(v -> {
             if (!hasOnTvChoices()) return;
-            choices.edit().remove("columns").remove("animations").remove("advanced_effects").commit();
+            choices.edit().remove("columns").remove(Config.ROWS_BELOW_DOCK_KEY).remove("animations").remove("advanced_effects").commit();
             Config current = Config.load(this);
             columns = current.columns;
+            rowsBelowDock = current.rowsBelowDock;
             animations = current.animations;
             advancedEffects = current.animations && current.advancedEffects;
             setResult(RESULT_OK);
@@ -94,6 +109,12 @@ public final class LauncherSettingsActivity extends Activity {
         columnChoices[Math.max(0, Math.min(columns - 4, 3))].requestFocus();
     }
 
+    private void reverseRow(TextView[] views) {
+        LinearLayout row = (LinearLayout) views[0].getParent();
+        row.removeAllViews();
+        for (int i = views.length - 1; i >= 0; i--) row.addView(views[i]);
+    }
+
     private void setAdvanced(boolean enabled) {
         advancedEffects = enabled;
         choices.edit().putBoolean("advanced_effects", enabled).apply();
@@ -105,6 +126,9 @@ public final class LauncherSettingsActivity extends Activity {
         for (int i = 0; i < columnChoices.length; i++) {
             columnChoices[i].setSelected(columns == i + 4);
         }
+        for (int i = 0; i < rowChoices.length; i++) {
+            rowChoices[i].setSelected(rowsBelowDock == i);
+        }
         animationsChoice.setText(getString(R.string.animations_state,
                 getString(animations ? R.string.on : R.string.off)));
         advancedChoice.setText(getString(R.string.advanced_effects_state,
@@ -115,8 +139,8 @@ public final class LauncherSettingsActivity extends Activity {
     }
 
     private boolean hasOnTvChoices() {
-        return choices.contains("columns") || choices.contains("animations")
-                || choices.contains("advanced_effects");
+        return choices.contains("columns") || choices.contains(Config.ROWS_BELOW_DOCK_KEY)
+                || choices.contains("animations") || choices.contains("advanced_effects");
     }
 
     private void open(Intent intent) {
