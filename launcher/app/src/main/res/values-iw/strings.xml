@@ -94,4 +94,12 @@
     <string name="wallpaper_none">ללא</string>
     <string name="wallpaper_applied">הטפט שונה</string>
     <string name="wallpaper_theme_default">ברירת המחדל של ערכת הנושא</string>
+
+    <!-- Race-weekend panel (RaceWeekend). -->
+    <string name="race_kicker">סבב %1$d · %2$s · %3$s</string>
+    <string name="race_kicker_no_place">סבב %1$d · %2$s</string>
+    <string name="race_next">%1$s בעוד %2$s</string>
+    <string name="race_lights_out">הזינוק בעוד %1$s</string>
+    <string name="race_live">%1$s · בשידור חי</string>
+    <string name="race_finished">הדגל המשובץ</string>
 </resources>

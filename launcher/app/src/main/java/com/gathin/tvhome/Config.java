@@ -100,6 +100,8 @@ final class Config {
     final boolean overlayApplied;
     /** Festive skin from a theme (festival, festival_until, greeting, accent_color); {@link Festival#NONE} if none. */
     final Festival festival;
+    /** F1 weekends from a theme's race_calendar (see RaceWeekend); empty when the theme has none. */
+    final List<RaceWeekend.Race> raceCalendar;
 
     private Config(List<String> dockApps, boolean fillDock, List<String> hiddenApps, String liveTvPackage,
                    String liveTvAction, Map<String, String> launchActions, Map<String, String> appLabels,
@@ -109,7 +111,8 @@ final class Config {
                    boolean showHomeSettingsShortcut, boolean showStats, boolean appLibrary, int backgroundColor, int skyIntensity,
                    int[] settingsKeycodes, boolean settingsKeyPanel, boolean wallpaperEnabled, File wallpaper, List<File> wallpapers,
                    int wallpaperRotationMinutes, int wallpaperDim, boolean overlayApplied,
-                   Festival festival, int[] inputKeycodes, List<String> appKeys) {
+                   Festival festival, int[] inputKeycodes, List<String> appKeys,
+                   List<RaceWeekend.Race> raceCalendar) {
         this.inputKeycodes = inputKeycodes;
         this.appKeys = Collections.unmodifiableList(appKeys);
         this.dockApps = Collections.unmodifiableList(dockApps);
@@ -149,6 +152,7 @@ final class Config {
         this.wallpaperDim = wallpaperDim;
         this.overlayApplied = overlayApplied;
         this.festival = festival;
+        this.raceCalendar = Collections.unmodifiableList(raceCalendar);
     }
 
     /** The folder the theme tools push into; null when external storage is unavailable. */
@@ -282,7 +286,37 @@ final class Config {
                 shamsi, greetingName, moduleCards, reducedMotion, dockTitle, dockRow, reorderButton, vpn, homeSettings, showStats, library, background,
                 Math.max(0, Math.min(100, skyIntensity)), settingsKeycodes, settingsKeyPanel, wallpaperEnabled, wallpaper,
                 wallpapers, rotationMinutes, wallpaperDim, applied,
-                festival, inputKeycodes, appKeys);
+                festival, inputKeycodes, appKeys, json == null ? Collections.emptyList() : raceCalendar(json));
+    }
+
+    /**
+     * {@code "race_calendar": [{"round": 18, "name": "United States Grand Prix", "place": "Austin",
+     * "sessions": [{"name": "FP1", "start": "2026-10-23T17:30:00Z"}, ...]}, ...]}. A race or session that does
+     * not parse is left out on its own; the rest of the calendar still counts.
+     */
+    private static List<RaceWeekend.Race> raceCalendar(JSONObject json) {
+        List<RaceWeekend.Race> races = new ArrayList<>();
+        JSONArray list = json.optJSONArray("race_calendar");
+        if (list == null) return races;
+        for (int i = 0; i < list.length(); i++) {
+            JSONObject r = list.optJSONObject(i);
+            JSONArray sessions = r == null ? null : r.optJSONArray("sessions");
+            if (sessions == null) continue;
+            List<RaceWeekend.Session> parsed = new ArrayList<>();
+            for (int j = 0; j < sessions.length(); j++) {
+                JSONObject s = sessions.optJSONObject(j);
+                if (s == null) continue;
+                String name = s.optString("name", "").trim();
+                try {
+                    if (!name.isEmpty()) parsed.add(new RaceWeekend.Session(name, java.time.Instant.parse(s.optString("start", ""))));
+                } catch (java.time.format.DateTimeParseException ignored) {
+                    // a session without a readable start time cannot be counted down
+                }
+            }
+            if (!parsed.isEmpty()) races.add(new RaceWeekend.Race(r.optInt("round", 0),
+                    r.optString("name", "Grand Prix").trim(), r.optString("place", "").trim(), parsed));
+        }
+        return races;
     }
 
     private static void syncThemeChoices(SharedPreferences choices, File dir, File config) {
