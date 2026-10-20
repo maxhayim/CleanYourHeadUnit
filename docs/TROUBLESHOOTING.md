@@ -83,10 +83,11 @@ Things that bit us or contributors, so they don't bite you. Commands use `tools/
   setup wizard, so everyday use is unaffected, but re-enable it before a factory reset - list it in
   your `debloat.txt` and `tools/restore.sh` does that for you.
 - **The TV drops off Wi-Fi for good the moment setupwraith is disabled**, seen on Google TV 14 (Sony
-  BRAVIA 9 II, Philips R8G, Skyworth SWTV-24NA-4K NF, Xiaomi TV Box S 3rd gen MiTV-AFMU0). A Wi-Fi network saved during the first-run
-  wizard belongs to setupwraith, and Android deletes an app's saved networks when the app is disabled.
-  The TV is fine but offline, so ADB and the phone remote stop working, and a restart doesn't bring
-  the network back. Check before disabling it: `tools/tv.py "dumpsys wifi" | grep -o 'cname=[^ ]*'`.
+  BRAVIA 9 II, Philips R8G, Skyworth SWTV-24NA-4K NF, Xiaomi TV Box S 3rd gen MiTV-AFMU0) and on a TCL
+  G07 on Google TV 11 (build AR17; on AR20 the network belonged to `android.uid.system`). A Wi-Fi
+  network saved during the first-run wizard belongs to setupwraith, and Android deletes an app's saved
+  networks when the app is disabled. The TV is fine but offline, so ADB and the phone remote stop
+  working, and a restart doesn't bring the network back. Check before disabling it: `tools/tv.py "dumpsys wifi" | grep -o 'cname=[^ ]*'`.
   If it names setupwraith, forget the network and join it again in Settings > Network & Internet (it
   then belongs to `android.uid.system`), or use Ethernet. `tools/disable.sh` skips setupwraith while it
   owns the network (`FORCE_SETUPWRAITH=1` overrides). Already offline? Rejoin from the TV with its own
