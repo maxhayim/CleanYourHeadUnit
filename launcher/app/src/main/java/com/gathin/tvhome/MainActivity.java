@@ -1166,11 +1166,17 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
                         tunerIsHw = hw;
                     }
                 }
-                if (!info.isPassthroughInput()) continue;
+                // Inputs hidden in the TV's Settings > Inputs stay out of the menu too.
+                if (!info.isPassthroughInput() || info.isHidden(this)) continue;
                 CharSequence l = info.loadLabel(this);
                 String label = l == null ? info.getId() : l.toString();
                 boolean hdmi = info.getType() == TvInputInfo.TYPE_HDMI;
                 if (hdmi && !label.toUpperCase(Locale.ROOT).contains("HDMI")) label = "HDMI " + label;
+                // The name given in Settings > Inputs (e.g. "MacBook Pro") goes first, the port after it.
+                CharSequence custom = info.loadCustomLabel(this);
+                if (custom != null && custom.length() > 0 && !custom.toString().equals(label)) {
+                    label = custom + " \u00B7 " + label;
+                }
                 final String id = info.getId();
                 int state = hdmi && hdmiStateBogus ? -1 : tim.getInputState(id);
                 if (!hdmi && rows.getChildCount() > 0 && !sawNonHdmi) addSeparator(rows);
