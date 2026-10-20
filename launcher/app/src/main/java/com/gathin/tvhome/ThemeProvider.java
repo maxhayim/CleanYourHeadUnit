@@ -8,14 +8,11 @@ import android.os.ParcelFileDescriptor;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.List;
-import java.util.regex.Pattern;
 
 /**
  * Lets tools/theme.sh write the theme files into {@link Config#dir} on firmware where the adb shell is
- * locked out of Android/data (TCL G07, Android 11). Only config.json, wallpaper.jpg, theme_revision and
- * images in wallpapers/, and only for callers holding WRITE_SECURE_SETTINGS, which the adb shell has and
- * ordinary apps cannot get.
+ * locked out of Android/data (TCL G07, Android 11). Only the files {@link ThemeFiles} allows, and only for
+ * callers holding WRITE_SECURE_SETTINGS, which the adb shell has and ordinary apps cannot get.
  *
  *   content write --uri content://com.gathin.tvhome.theme/config.json < /data/local/tmp/config.json
  *   content write --uri content://com.gathin.tvhome.theme/wallpapers/dusk.jpg < /data/local/tmp/dusk.jpg
@@ -24,26 +21,14 @@ import java.util.regex.Pattern;
  */
 public class ThemeProvider extends ContentProvider {
 
-    private static final String WALLPAPERS = "wallpapers";
-    /** The names tools/theme.sh accepts for a collection image, and the types WallpaperRotation reads. */
-    private static final Pattern IMAGE = Pattern.compile("[A-Za-z0-9_.-]+\\.(jpg|jpeg|png|webp)",
-            Pattern.CASE_INSENSITIVE);
-
     private File file(Uri uri) throws FileNotFoundException {
-        List<String> path = uri.getPathSegments();
+        String path = ThemeFiles.path(uri.getPathSegments());
         File dir = Config.dir(getContext());
-        if (dir != null && path.size() == 1) {
-            String name = path.get(0);
-            if (Config.FILE_NAME.equals(name) || "wallpaper.jpg".equals(name) || "theme_revision".equals(name)) {
-                return new File(dir, name);
-            }
-        }
-        if (dir != null && path.size() == 2 && WALLPAPERS.equals(path.get(0)) && IMAGE.matcher(path.get(1)).matches()) {
-            File collection = new File(dir, WALLPAPERS);
-            if (!collection.isDirectory() && !collection.mkdirs()) throw new FileNotFoundException(String.valueOf(uri));
-            return new File(collection, path.get(1));
-        }
-        throw new FileNotFoundException(String.valueOf(uri));
+        if (dir == null || path == null) throw new FileNotFoundException(String.valueOf(uri));
+        File f = new File(dir, path);
+        File parent = f.getParentFile();
+        if (parent != null && !parent.isDirectory() && !parent.mkdirs()) throw new FileNotFoundException(String.valueOf(uri));
+        return f;
     }
 
     @Override
@@ -58,10 +43,9 @@ public class ThemeProvider extends ContentProvider {
 
     @Override
     public int delete(Uri uri, String selection, String[] selectionArgs) {
-        List<String> path = uri.getPathSegments();
         File dir = Config.dir(getContext());
-        if (dir != null && path.size() == 1 && WALLPAPERS.equals(path.get(0))) {
-            File[] images = new File(dir, WALLPAPERS).listFiles((d, name) -> IMAGE.matcher(name).matches());
+        if (dir != null && ThemeFiles.isCollection(uri.getPathSegments())) {
+            File[] images = new File(dir, ThemeFiles.WALLPAPERS).listFiles((d, name) -> ThemeFiles.collectionImage(name));
             int n = 0;
             if (images != null) for (File f : images) if (f.delete()) n++;
             return n;
