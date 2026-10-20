@@ -278,6 +278,12 @@ The install scripts ask the TV which launcher owns Home and only disable one the
 (`tvlauncher` or `launcherx`); pass `STOCK_LAUNCHER=<package>` (`-StockLauncher`) to override, or
 `none` to leave it alone.
 
+`tools/disable.sh` (`disable.ps1`) applies the same rule before it disables anything: if the list
+contains the app that owns Home and no other app on the TV answers HOME, it skips that entry, says
+why, and disables the rest of the list. So a list applied before the launcher handover cannot leave
+the TV with nothing to start. Run the same list again once `launcher/build-and-install.sh` has made
+the new launcher Home and the entry is applied; `FORCE_HOME=1` (`$env:FORCE_HOME`) disables it anyway.
+
 ## The launcher
 
 A small native Android TV app (`com.gathin.tvhome`, about 370 KB installed) in plain Java with
