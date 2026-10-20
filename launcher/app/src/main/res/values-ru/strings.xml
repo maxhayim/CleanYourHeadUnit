@@ -20,7 +20,6 @@
     <string name="cant_open">Не удалось открыть %1$s</string>
     <string name="date_format">EEEE, d MMMM</string>
     <string name="stats_cpu">CPU %1$d%%</string>
-    <string name="stats_cpu_unknown">CPU —</string>
     <string name="stats_memory">Память %1$d МБ свободно</string>
     <string name="stats_storage">Накопитель %1$s свободно</string>
     <string name="dream_name">Часы</string>

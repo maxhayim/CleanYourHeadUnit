@@ -153,8 +153,14 @@ public class AppAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         float perItem = (gridHeightPx - reserved) / (rowsBelowDock + 1);
         float tileH = perItem - (dockRow ? ITEM_EXTRA_DP : COMPACT_ITEM_EXTRA_DP) * density;
         int byHeight = Math.round(tileH * DESIGN_W_DP / DESIGN_H_DP);
-        return Math.max(Math.round(80 * density), Math.min(w, byHeight));
+        // Shrink at most to MIN_HEIGHT_FIT of the width-only size. Below that the tiles look lost in their wide
+        // columns (2 rows under a titled dock came out at 80dp); the rows that still don't fit run off the bottom
+        // and scroll, and MainActivity keeps the title's room above the dock.
+        return Math.max(Math.max(Math.round(80 * density), Math.round(w * MIN_HEIGHT_FIT)), Math.min(w, byHeight));
     }
+
+    /** The smallest share of the width-only tile size that fitting rows_below_dock into the height may go to. */
+    static final float MIN_HEIGHT_FIT = 0.85f;
 
     private final Context ctx;
     private final int rowsBelowDock;

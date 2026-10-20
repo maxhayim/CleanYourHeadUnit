@@ -162,24 +162,29 @@
                             android:textAllCaps="true" />
                     </LinearLayout>
 
-                    <!-- Shown only when show_stats is on. Gone, it takes no space, so the clock stays put. -->
-                    <TextView
-                        android:id="@+id/stats"
-                        android:gravity="right"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="2dp"
-                        android:singleLine="true"
-                        android:ellipsize="end"
-                        android:textColor="#D9FFFFFF"
-                        android:textSize="14sp"
-                        android:fontFamily="@font/outfit"
-                        android:fontVariationSettings="'wght' 500"
-                        android:letterSpacing="0.04"
-                        android:focusable="false"
-                        android:visibility="gone" />
                 </LinearLayout>
             </LinearLayout>
+
+            <!-- Shown only when show_stats is on. Outside leftBlock, so the top buttons stay level with the clock
+                 row; gone, it takes no space. -->
+            <TextView
+                android:id="@+id/stats"
+                android:layout_width="0dp"
+                android:layout_below="@id/leftBlock"
+                android:layout_alignStart="@id/leftBlock"
+                android:layout_alignEnd="@id/leftBlock"
+                android:gravity="right"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:singleLine="true"
+                android:ellipsize="end"
+                android:textColor="#D9FFFFFF"
+                android:textSize="14sp"
+                android:fontFamily="@font/outfit"
+                android:fontVariationSettings="'wght' 500"
+                android:letterSpacing="0.04"
+                android:focusable="false"
+                android:visibility="gone" />
 
             <LinearLayout
                 android:id="@+id/topButtons"

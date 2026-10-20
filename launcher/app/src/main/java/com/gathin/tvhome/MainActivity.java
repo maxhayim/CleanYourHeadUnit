@@ -1204,6 +1204,11 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
     }
 
     /** One quiet line, e.g. "CPU 8%  ·  Memory 430 MB free  ·  Storage 3.1 GB free". Runs off the main thread. */
+    private static void appendStat(StringBuilder line, String part) {
+        if (line.length() > 0) line.append("  ·  ");
+        line.append(part);
+    }
+
     private String readStatsLine() {
         int cpu = cpuPercent();
         if (cpu < 0) {
@@ -1215,12 +1220,14 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
             }
             cpu = cpuPercent();
         }
-        StringBuilder line = new StringBuilder(cpu >= 0
-                ? getString(R.string.stats_cpu, cpu) : getString(R.string.stats_cpu_unknown));
+        // Android 8 and later hide /proc/stat from apps on many TVs: then the line leaves CPU out rather than
+        // showing a dash that never fills in.
+        StringBuilder line = new StringBuilder();
+        if (cpu >= 0) line.append(getString(R.string.stats_cpu, cpu));
         long mem = memAvailableMb();
-        if (mem >= 0) line.append("  ·  ").append(getString(R.string.stats_memory, mem));
+        if (mem >= 0) appendStat(line, getString(R.string.stats_memory, mem));
         String free = formatGb(Environment.getDataDirectory().getFreeSpace());
-        if (!free.isEmpty()) line.append("  ·  ").append(getString(R.string.stats_storage, free));
+        if (!free.isEmpty()) appendStat(line, getString(R.string.stats_storage, free));
         return line.toString();
     }
 
