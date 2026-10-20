@@ -57,6 +57,12 @@ Things that bit us or contributors, so they don't bite you. Commands use `tools/
   `Success` while HOME still resolves to the stock launcher (priority 2) until that one is disabled.
   And check which packages actually handle HOME before disabling anything by name: on the Sony
   above, `com.google.android.leanbacklauncher` has a boot receiver but no HOME activity.
+- **China-market Xiaomi rejects a default Home despite `set-home-activity` reporting success**,
+  verified on MiTV-AETP0 (dofus), Android 9, firmware 22.9.2.851: the framework filters third-party
+  HOME candidates by a package-name allowlist. Disabling the stock launcher then selects
+  `FallbackHome`. An opt-in application-ID build worked with the stock launcher still enabled;
+  see the [device notes and rollback steps](devices/xiaomi-mitv-aetp0-dofus.md). This is different
+  from a missing default-home picker or a remote that emits ALL_APPS.
 - **The new launcher still doesn't own Home** after the stock one is disabled, seen on Google TV
   (Xiaomi MiTV-MOOR2). Another system app answers HOME: `com.google.android.tungsten.setupwraith`,
   with `.MainActivity` at intent-filter priority 4 and `.RecoveryActivity` at priority 1. You
