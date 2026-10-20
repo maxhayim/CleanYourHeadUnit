@@ -18,6 +18,13 @@ Things that bit us or contributors, so they don't bite you. Commands use `tools/
   missing points at a device-owner policy or a provisioning lock; the toggle comes back after a
   firmware update from the ISP, or not at all. Without one of the two switches this repo has nothing
   to talk to.
+- **Developer options is hidden, or Build number asks for a password**, seen on an ISP box (FPT Play
+  650, Android TV 14): tapping Build seven times opens a password prompt instead of unlocking the menu.
+  Often only the way in is locked, not the screen itself: TvSettings still has
+  `com.android.tv.settings/.system.development.DevelopmentActivity`, and any app can open it by its
+  name or with the `android.settings.APPLICATION_DEVELOPMENT_SETTINGS` action. Install an app that
+  opens activities by name (Activity Launcher) from the Play Store, open that screen and switch on
+  USB debugging there. When no app can open it either, see the carrier-box bullet above.
 - **USB debugging never opens port 5555** on some Google TV sets (a Skyworth-built Philips among
   them). Pair once through Wireless debugging with the stock `adb` (`adb pair <ip>:<port> <code>`,
   then `adb connect`), run `adb tcpip 5555`, and `tools/tv.py` works from then on. `dns-sd -B
