@@ -102,4 +102,5 @@
     <string name="race_lights_out">הזינוק בעוד %1$s</string>
     <string name="race_live">%1$s · בשידור חי</string>
     <string name="race_finished">הדגל המשובץ</string>
+    <string name="last_opened">נפתח לאחרונה %1$s</string>
 </resources>
