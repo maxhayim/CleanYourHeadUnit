@@ -1,10 +1,11 @@
-# Hisense VIDAA_TV (device MT9653, board mt5879, Hisense), Android TV 11, build RP1A.200720.011
-# (02.02.70.01). China-market set sold with 聚好看 JuUI: the model string is VIDAA_TV, but the package
-# namespace is com.jamdeo.* / com.hisense.* and shares nothing with the export Hisense lists in this
-# folder (com.hisense.evservice, com.mediatek.*). 3.8 GB RAM, 41 GB storage, UI at 1080p / 320 dpi.
+# Vidda VIDAA_TV (Hisense sub-brand; device MT9653, board mt5879), Android TV 11, build
+# RP1A.200720.011 (02.02.70.01). Vidda is Hisense's youth sub-brand, sold in China with 聚好看 JuUI:
+# the model string is VIDAA_TV and the package namespace is com.jamdeo.* / com.hisense.*, so it shares
+# nothing with the export Hisense lists in this folder (com.hisense.evservice, com.mediatek.*).
+# 3.8 GB RAM, 41 GB storage, UI at 1080p / 320 dpi.
 #
-# Apply:   TV_HOST=<tv ip> tools/disable.sh examples/hisense-vidaa-tv-mt9653/debloat.txt
-# Undo:    TV_HOST=<tv ip> tools/restore.sh examples/hisense-vidaa-tv-mt9653/debloat.txt
+# Apply:   TV_HOST=<tv ip> tools/disable.sh examples/vidda-mt9653/debloat.txt
+# Undo:    TV_HOST=<tv ip> tools/restore.sh examples/vidda-mt9653/debloat.txt
 # Everything is DISABLED, not uninstalled. Comment out any line you want to keep.
 #
 # ADB: turning USB debugging on opens network ADB on 5555 directly; no wireless pairing needed.

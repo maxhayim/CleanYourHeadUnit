@@ -32,7 +32,7 @@ Strip the bloatware from any Android TV or Google TV over Wi-Fi, and replace the
 screen with a clean launcher that looks like an Apple TV. **No root, no cable, nothing uninstalled,
 and a one-line restore if you change your mind.**
 
-<h3 align="center">93 TV models &nbsp;·&nbsp; 31 brands &nbsp;·&nbsp; 16 languages &nbsp;·&nbsp; 370 KB launcher</h3>
+<h3 align="center">93 TV models &nbsp;·&nbsp; 32 brands &nbsp;·&nbsp; 16 languages &nbsp;·&nbsp; 370 KB launcher</h3>
 
 <p align="center">
   <sub><b>FEATURED IN</b></sub><br><br>
@@ -121,10 +121,10 @@ install any launcher at all; their lists say so in the header.
 
 Tested lists from contributors, one folder per model in [`examples/`](examples/):
 
-**TCL** 18 · **Sony** 16 · **Xiaomi** 15 · **Philips** 6 · **Hisense** 6 · **BenQ** 2 · **CHiQ** 2 ·
+**TCL** 18 · **Sony** 16 · **Xiaomi** 15 · **Philips** 6 · **Hisense** 5 · **BenQ** 2 · **CHiQ** 2 ·
 **Haier** 2 · **Hitachi** 2 · **Panasonic** 2 · **Skyworth** 2 · AiPro2K · Amazon Fire TV Stick ·
 Chromecast with Google TV · Insignia Fire TV · Kalley · NVIDIA Shield · OnePlus · onn · PRISM+ · RCA · Redmi ·
-SANYO · Thomson · Toshiba Fire TV · Vu · JMGO, Portronics, Stellamore, Wanbo and XGIMI projectors
+SANYO · Thomson · Toshiba Fire TV · Vidda · Vu · JMGO, Portronics, Stellamore, Wanbo and XGIMI projectors
 
 <details>
 <summary><strong>The full list</strong></summary>
@@ -145,7 +145,6 @@ SANYO · Thomson · Toshiba Fire TV · Vu · JMGO, Portronics, Stellamore, Wanbo
 | Hisense HiSmartTV A4 (xiaoyushan, MStar m7322), India | Android TV 9 |
 | Hisense SmartTV 4K FFM (huangshan, MediaTek) | Android TV 10 |
 | Hisense U75 (hengshan, MediaTek), Latin America | Google TV 12 |
-| Hisense VIDAA_TV (MT9653, mt5879), China-market JuUI | Android TV 11 |
 | Hitachi 65QLEDSM20 (MTC, bangbae, MediaTek m7322), Australia | Android TV 11 |
 | Hitachi CDH-LE32SMART21 (TCL-built C06, C06_2K_GB, MediaTek MT9221, 1 GB), Argentina | Android TV 11 |
 | Insignia 55" F30 4K Fire TV (NS-55F301NA25, AFTDCT31, duckie) | Fire OS 7 / Android 9 |
@@ -206,6 +205,7 @@ SANYO · Thomson · Toshiba Fire TV · Vu · JMGO, Portronics, Stellamore, Wanbo
 | TCL UnionTV, Latin America (TCL-built like Thomson 32HE5800, Realtek RT2841) | Android TV 9 |
 | Thomson 32HE5800 (TCL-built UnionTV, Realtek RT2841), Spain | Android TV 9 |
 | Toshiba Fire TV (AFTHA004, hazel) | Fire OS 7 / Android 9 |
+| Vidda VIDAA_TV (Hisense sub-brand, MT9653, mt5879), China JuUI | Android TV 11 |
 | Vu 4K (HVCL, lushan, MediaTek), India | Google TV 12 |
 | Wanbo X5 Pro projector (built-in Google TV stick: SkyworthDigital YYT, Amlogic), Australia | Google TV 14 |
 | XGIMI Horizon S Pro projector (XK03H, xgimigalileo, MediaTek) | Android TV 11 |
