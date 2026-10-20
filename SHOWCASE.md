@@ -25,6 +25,7 @@ project's own issue tracker.
 | [CleanXiaomiTV](https://github.com/majnioui/CleanXiaomiTV) | A fork for one Xiaomi set: a liquid-glass home over the photo of the day, a now playing card, weather and AdGuard DNS | Xiaomi MiTV-MOOR2, Google TV 11 | [majnioui](https://github.com/majnioui) |
 | [Rotating wallpapers and a Wallpaper picker](https://github.com/Alafazam/cleanyourtv/tree/axso2-launcher) | A folder of photos rotating behind Home every 30 minutes, a Wallpaper tile with a thumbnail picker, and an eight-app dock | Xiaomi MiTV-AXSO2, Android TV 9 | [Alafazam](https://github.com/Alafazam) |
 | [tv-bookshelf](https://github.com/griffincockfoster56/tv-bookshelf) | A home screen that is a walnut bookcase: every app is a book, and OK pulls it off the shelf and opens it in 3D. About 60 fps on a 2.3 GB set | Sony BRAVIA 4K UR2, Android TV 10 | [griffincockfoster56](https://github.com/griffincockfoster56) |
+| [Hisense 55U6K: reorder and weather](https://github.com/vlaship/cleanyourtv/tree/hisense-55u6k) | A fork of the launcher: move any app with the remote (hold OK), the dock right under the clock with names under every row, weather next to the clock (TV location or IP, Open-Meteo), a click on every D-pad direction and an AirPlay row in Inputs | Hisense 55U6K, Google TV 11 | [vlaship](https://github.com/vlaship) |
 
 ## Add yours
 
