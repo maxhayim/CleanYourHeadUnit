@@ -5,8 +5,8 @@
 <p align="center">
   <a href="https://cleanyour.tv">cleanyour.tv</a> ·
   <a href="PROMPT.md">The prompt</a> ·
-  <a href="examples/">81 TV lists</a> ·
-  <a href="SHOWCASE.md">16 built on it</a> ·
+  <a href="examples/">92 TV lists</a> ·
+  <a href="SHOWCASE.md">18 built on it</a> ·
   <a href="https://x.com/gathint/status/2111379569030939102">The tweet</a>
 </p>
 
@@ -32,8 +32,7 @@ Strip the bloatware from any Android TV or Google TV over Wi-Fi, and replace the
 screen with a clean launcher that looks like an Apple TV. **No root, no cable, nothing uninstalled,
 and a one-line restore if you change your mind.**
 
-<h3 align="center">81 TV models &nbsp;·&nbsp; 28 brands &nbsp;·&nbsp; 15 languages &nbsp;·&nbsp; 300 KB launcher</h3>
-<h3 align="center">81 TV models &nbsp;·&nbsp; 29 brands &nbsp;·&nbsp; 15 languages &nbsp;·&nbsp; 300 KB launcher</h3>
+<h3 align="center">92 TV models &nbsp;·&nbsp; 31 brands &nbsp;·&nbsp; 16 languages &nbsp;·&nbsp; 300 KB launcher</h3>
 
 <p align="center">
   <sub><b>FEATURED IN</b></sub><br><br>
@@ -98,8 +97,6 @@ screenshots pulled from the TV. With this repo as context it takes about fifteen
 - **The rest of your apps in a grid** that slides up when you press Down.
 - **One floating glass highlight** that springs from tile to tile. The focused tile lifts and shows its name.
 - **Three frosted buttons**: Inputs (HDMI ports under the names you gave them in the TV's settings, AV, Live TV), Wi-Fi or Ethernet with the network name, Settings.
-- **A greeting, a thin clock and the date** in [Outfit](https://fonts.google.com/specimen/Outfit), and a matching Clock screensaver.
-- **Three frosted buttons**: Inputs (HDMI ports, AV, Live TV), Wi-Fi or Ethernet with the network name, Settings.
 - **A greeting, a thin clock and the date** in [Outfit](https://fonts.google.com/specimen/Outfit), and a matching Clock screensaver. Set `show_stats` in config or a theme for one line under the clock: CPU, free memory and free storage. It stays off unless you turn it on, and it refreshes only while Home is on screen.
 - **Themes** that change colours, wallpaper, dock and columns without a rebuild, and **module cards** that let other apps plug a tile in, only with your say-so.
 
@@ -124,11 +121,10 @@ install any launcher at all; their lists say so in the header.
 
 Tested lists from contributors, one folder per model in [`examples/`](examples/):
 
-**TCL** 16 · **Xiaomi** 15 · **Sony** 13 · **Hisense** 4 · **Philips** 4 · **BenQ** 2 · **CHiQ** 2 ·
-**Hitachi** 2 · **Panasonic** 2 · **Skyworth** 2 · AiPro2K · Amazon Fire TV Stick · Chromecast with Google TV ·
-Haier · Insignia Fire TV · Kalley · NVIDIA Shield · OnePlus · onn · PRISM+ · RCA · Redmi · SANYO · Thomson ·
-Toshiba Fire TV · Vu · Stellamore, XGIMI and Portronics projectors
-Toshiba Fire TV · Vu · JMGO, Stellamore and XGIMI projectors
+**TCL** 18 · **Sony** 16 · **Xiaomi** 15 · **Philips** 6 · **Hisense** 5 · **BenQ** 2 · **CHiQ** 2 ·
+**Haier** 2 · **Hitachi** 2 · **Panasonic** 2 · **Skyworth** 2 · AiPro2K · Amazon Fire TV Stick ·
+Chromecast with Google TV · Insignia Fire TV · Kalley · NVIDIA Shield · OnePlus · onn · PRISM+ · RCA · Redmi ·
+SANYO · Thomson · Toshiba Fire TV · Vu · JMGO, Portronics, Stellamore, Wanbo and XGIMI projectors
 
 <details>
 <summary><strong>The full list</strong></summary>
@@ -144,8 +140,8 @@ Toshiba Fire TV · Vu · JMGO, Stellamore and XGIMI projectors
 | Chromecast with Google TV 4K (sabrina) | Google TV 14 |
 | Haier Android TV DVB2K (broadway, HaierATVT56DVB) | Android TV 11 |
 | Haier H32S80EFX (MatrixTV CE, HRT56EU, deto, MediaTek), Thailand | Google TV 14 |
-| Hisense HiSmartTV A4 (xiaoyushan, MStar m7322), Android 11 firmware RTT2.221108.001 | Android TV 11 |
 | Hisense HG9 (HiSmart 4K A4FFM) | Android TV 9 |
+| Hisense HiSmartTV A4 (xiaoyushan, MStar m7322), Android 11 firmware RTT2.221108.001 | Android TV 11 |
 | Hisense HiSmartTV A4 (xiaoyushan, MStar m7322), India | Android TV 9 |
 | Hisense SmartTV 4K FFM (huangshan, MediaTek) | Android TV 10 |
 | Hisense U75 (hengshan, MediaTek), Latin America | Google TV 12 |
@@ -177,6 +173,7 @@ Toshiba Fire TV · Vu · JMGO, Stellamore and XGIMI projectors
 | Sony BRAVIA 4K GB (BRAVIA_ATV2_UC, MediaTek mt5891) | Android TV 9 |
 | Sony BRAVIA 4K UR2 (BRAVIA_UR2_4K, MediaTek) | Android TV 10 |
 | Sony BRAVIA 4K VH2 (KD-55X80J, BRAVIA_VH2, MediaTek), EU | Google TV 12 |
+| Sony BRAVIA 4K VH21 (KD-65X85K, 2022, BRAVIA_VH21, MediaTek MT5895), Australia | Google TV 12 |
 | Sony BRAVIA 9 II (K-65XR90M2, BRAVIA_AE3, MediaTek MT5838) | Google TV 14 |
 | Sony BRAVIA BF1 (BRAVIA 2 II class, BRAVIA_BF1_4K_A, MediaTek) | Google TV 12 |
 | Sony BRAVIA KD-55X8509C (2015, "BRAVIA 4K 2015", SVP-DTV15, MediaTek), EU firmware | Android TV 7.0 |
@@ -184,7 +181,6 @@ Toshiba Fire TV · Vu · JMGO, Stellamore and XGIMI projectors
 | Sony BRAVIA KD-65X80J (2021, BRAVIA_VH2, MediaTek), India | Google TV 10 |
 | Sony BRAVIA KD-65X9300D (2016, SVP-DTV15, MediaTek), Asia-Pacific | Android TV 8.0 |
 | Sony BRAVIA TL2 (OD0M_EA_T32, TPV-built, MediaTek), Europe | Android TV 11 |
-| Sony BRAVIA 4K VH21 (KD-65X85K, 2022, BRAVIA_VH21, MediaTek MT5895), Australia | Google TV 12 |
 | Sony BRAVIA VU31 4K (BRAVIA_VU31_4K, Realtek), India | Google TV 14 |
 | Sony BRAVIA XBR-65X900E (2017, BRAVIA_ATV2) | Android TV 9 |
 | Sony BRAVIA XBR-65X900F (2018, BRAVIA_ATV3_4K, MediaTek MT5891), US/Canada | Android TV 9 |
