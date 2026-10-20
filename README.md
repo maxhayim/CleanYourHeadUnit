@@ -125,6 +125,8 @@ Tested lists from contributors, one folder per model in [`examples/`](examples/)
 **Skyworth** 2 · **Vu** 2 · AiPro2K · AIWA · Chromecast with Google TV · Compac · FFalcon · Freebox · Insignia Fire TV ·
 **Skyworth** 2 · **Vu** 2 · AiPro2K · AIWA · Chromecast with Google TV · EKO · FFalcon · Freebox · Insignia Fire TV ·
 Kalley · MTC · OnePlus · onn · PRISM+ · RCA · Redmi · SANYO · Thomson · Toshiba Fire TV · Vidda ·
+**Skyworth** 2 · **Vu** 2 · AiPro2K · AIWA · Chromecast with Google TV · FFalcon · Freebox · Insignia Fire TV ·
+Kalley · MTC · OnePlus · onn · Polytron · PRISM+ · RCA · Redmi · SANYO · Thomson · Toshiba Fire TV · Vidda ·
 BYINTEK, JMGO, Portronics, Stellamore, Wanbo and XGIMI projectors
 
 <details>
@@ -176,6 +178,7 @@ BYINTEK, JMGO, Portronics, Stellamore, Wanbo and XGIMI projectors
 | Philips Smart 4K TV (Skyworth, eleonas, MediaTek), India | Google TV 14 |
 | Philips TPM191E (TP Vision, PH9M_EA_5599, MediaTek mt5887), Europe | Android TV 12 |
 | Portronics Beem 470 Smart LED Projector (Allwinner H713, 1 GB), India | Android 11 |
+| Polytron 2K (WLTV POLYTRON2K, hayward; Hisense/CVTE board, MediaTek mt5867), Indonesia | Android TV 11 |
 | PRISM+ Q65 Ultra 2026 QLED 4K AI Google TV (R10G, PRISMPLUS_FFM, MOKA, Realtek RTD2875 SoC, RTD6748 platform) | Google TV 14 |
 | RCA AI PONT SA (Changhong, redwood, ISDB92RC; also sold as realme 40-inch) | Android 14 |
 | Redmi TV (MiTV-ANTL0, starwars) | Android 5.1.1 (not Android TV) |
