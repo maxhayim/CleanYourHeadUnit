@@ -9,7 +9,7 @@
 <p align="center">
   <a href="https://cleanyour.tv">cleanyour.tv</a> ·
   <a href="PROMPT.md">The prompt</a> ·
-  <a href="examples/">93 TV lists</a> ·
+  <a href="examples/">94 TV lists</a> ·
   <a href="SHOWCASE.md">18 built on it</a> ·
   <a href="examples/">55 TV lists</a> ·
   <a href="SHOWCASE.md">12 built on it</a> ·
@@ -40,6 +40,7 @@ and a one-line restore if you change your mind.**
 
 <h3 align="center">93 TV models &nbsp;·&nbsp; 31 brands &nbsp;·&nbsp; 17 languages &nbsp;·&nbsp; 370 KB launcher</h3>
 <h3 align="center">93 TV models &nbsp;·&nbsp; 31 brands &nbsp;·&nbsp; 16 languages &nbsp;·&nbsp; 370 KB launcher</h3>
+<h3 align="center">94 TV models &nbsp;·&nbsp; 31 brands &nbsp;·&nbsp; 17 languages &nbsp;·&nbsp; 370 KB launcher</h3>
 
 <p align="center">
   <sub><b>FEATURED IN</b></sub><br><br>
@@ -130,7 +131,7 @@ install any launcher at all; their lists say so in the header.
 Tested lists from contributors, one folder per model in [`examples/`](examples/):
 
 **TCL** 18 · **Sony** 16 · **Xiaomi** 15 · **Philips** 6 · **Hisense** 5 · **BenQ** 2 · **CHiQ** 2 ·
-**Haier** 2 · **Hitachi** 2 · **NVIDIA Shield** 2 · **Panasonic** 2 · **Skyworth** 2 · AiPro2K ·
+**Haier** 2 · **Hitachi** 2 · **NVIDIA Shield** 2 · **Panasonic** 3 · **Skyworth** 2 · AiPro2K ·
 Amazon Fire TV Stick · Chromecast with Google TV · Insignia Fire TV · Kalley · OnePlus · onn · PRISM+ · RCA ·
 Redmi · SANYO · Thomson · Toshiba Fire TV · Vu · JMGO, Portronics, Stellamore, Wanbo and XGIMI projectors
 **Xiaomi** 12 · **TCL** 11 · **Sony** 8 · **CHiQ** 2 · **Hisense** 2 · **Philips** 2 · Amazon Fire TV Stick · AIWA · BenQ ·
@@ -173,6 +174,7 @@ SANYO · Thomson · Toshiba Fire TV · Vu · JMGO, Portronics, Stellamore, Wanbo
 | NVIDIA SHIELD TV Pro 2019 (P2897, mdarcy) | Android TV 11 |
 | OnePlus TV (D00, Dubai) | Google TV 14 |
 | onn 4K Streaming Box (2023, Walmart; YOC, Amlogic), US | Google TV 14 |
+| Panasonic 4KTV-0SU (Skyworth-built SW4H, MediaTek m7332), Gulf region | Android TV 10 |
 | Panasonic 4KTV-JUP (Jupiter_PA, MediaTek) | Android TV 11 |
 | Panasonic TH-40HS550K (Skyworth-built, GS655 shibuya, MediaTek) | Android TV 11 |
 | Philips 50PUS8517/12 (TP Vision, PH1M_EA_9970A, MediaTek MT5895), Europe | Android TV 11 |
