@@ -142,6 +142,7 @@ BYINTEK, JMGO, Portronics, Stellamore, Wanbo and XGIMI projectors
 | Amazon Fire TV Stick Lite, 1st gen 2020 (AFTSS, sheldon) | Fire OS 7.7.1.7 / Android 9 |
 | BenQ E55-735 (Changhong AI PONT, DVB96BQ) | Google TV 14 |
 | BenQ E55-750 (Changhong AI PONT, DVB96BQ) | Google TV (Android 11) |
+| BYINTEK Love U4 projector, 1080P (Skyworth RG_HS352, HiSilicon Hi3751V350, 1 GB), Brazil | Android 9 |
 | BYINTEK T5 Max projector (built-in Google TV stick: SkyworthDigital YYT, Amlogic), Brazil | Google TV 14 |
 | CHiQ AI PONT (Changhong GTVU65, dangni, MediaTek mt5867) | Google TV 14 |
 | CHiQ AI PONT (DVB93CQ) | Android TV 11 |
