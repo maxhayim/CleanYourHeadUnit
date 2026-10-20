@@ -93,6 +93,11 @@ Things that bit us or contributors, so they don't bite you. Commands use `tools/
   android.display`, and the main log shows `setupwraith/.RecoveryActivity` being started every
   200 ms or so. If you're already in the loop:
   `tools/tv.py 'pm enable --user 0 com.google.android.apps.tv.launcherx'`.
+- **`theme.sh` fails with "couldn't create file: Permission denied"**, seen on TCL G07 (Android 11): the
+  shell is not in the group that may write `Android/data`. `theme.sh` stages the files in
+  `/data/local/tmp` and, when copying them in is refused, writes them through the launcher's
+  `ThemeProvider` instead. A launcher installed before that provider existed doesn't have it: run
+  `launcher/build-and-install.sh` once, then push the theme again.
 - **No on-screen keyboard** after switching launchers, seen on Xiaomi: the default input method
   pointed at a Baidu keyboard that isn't installed. Fix:
   `tools/tv.py 'ime set com.google.android.inputmethod.latin/com.android.inputmethod.latin.LatinIME'`

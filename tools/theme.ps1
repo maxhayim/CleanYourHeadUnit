@@ -27,8 +27,17 @@ $revision = [guid]::NewGuid().ToString('N')
 # clear the list, write it back and switch accessibility on again.
 $restart = "a=`$(settings get secure enabled_accessibility_services); am force-stop $pkg; am start -n $pkg/.MainActivity >/dev/null; case `"`$a`" in *$pkg*) sleep 1; settings put secure enabled_accessibility_services ''; settings put secure enabled_accessibility_services `"`$a`"; settings put secure accessibility_enabled 1 ;; esac"
 
+# Some firmware (TCL G07, Android 11) locks the shell out of Android/data. Files are staged in
+# /data/local/tmp and copied in, or written through the launcher's ThemeProvider when that is refused.
+$uri = "content://$pkg.theme"
+$tmp = '/data/local/tmp/cyt-theme'
+# A file's staging path; wallpapers/a.jpg is staged as $tmp-wallpapers-a.jpg.
+function Stage($name) { "$tmp-$($name -replace '/', '-')" }
+function Put($name) { $t = Stage $name; "cp $t $dir/$name 2>/dev/null || content write --uri $uri/$name < $t; rm -f $t" }
+function Del($name) { "rm -f $dir/$name 2>/dev/null; content delete --uri $uri/$name 2>/dev/null" }
+
 if ($Reset) {
-    & $py -I tv.py "mkdir -p $dir; rm -f $dir/config.json $dir/wallpaper.jpg; printf '%s' '$revision' > $dir/theme_revision; $restart; echo reset"
+    & $py -I tv.py "mkdir -p $dir 2>/dev/null; $(Del 'config.json'); $(Del 'wallpaper.jpg'); printf '%s' '$revision' > $tmp-theme_revision; $(Put 'theme_revision'); $restart; echo reset"
     exit 0
 }
 if (-not $Theme) { throw 'usage: theme.ps1 <theme folder> | -Reset' }
@@ -36,18 +45,20 @@ $config = Join-Path $Theme 'config.json'
 if (-not (Test-Path $config)) { throw "no config.json in $Theme" }
 try { Get-Content $config -Raw | ConvertFrom-Json | Out-Null } catch { throw "$config is not valid JSON" }
 
-& $py -I tv.py "mkdir -p $dir" | Out-Null
-& $py -I tv.py --push $config "$dir/config.json"
+& $py -I tv.py "mkdir -p $dir 2>/dev/null" | Out-Null
+& $py -I tv.py --push $config "$tmp-config.json" | Out-Null
+& $py -I tv.py (Put 'config.json')
 $wall = Join-Path $Theme 'wallpaper.jpg'
-if (Test-Path $wall) { & $py -I b64push.py $wall "$dir/wallpaper.jpg" } else { & $py -I tv.py "rm -f $dir/wallpaper.jpg" | Out-Null }
-& $py -I tv.py "mkdir -p $dir/wallpapers; rm -f $dir/wallpapers/*.jpg $dir/wallpapers/*.jpeg $dir/wallpapers/*.png $dir/wallpapers/*.webp $dir/wallpapers/*.JPG $dir/wallpapers/*.JPEG $dir/wallpapers/*.PNG $dir/wallpapers/*.WEBP" | Out-Null
+if (Test-Path $wall) { & $py -I b64push.py $wall "$tmp-wallpaper.jpg"; & $py -I tv.py (Put 'wallpaper.jpg') } else { & $py -I tv.py (Del 'wallpaper.jpg') | Out-Null }
+& $py -I tv.py "mkdir -p $dir/wallpapers 2>/dev/null; rm -f $dir/wallpapers/*.jpg $dir/wallpapers/*.jpeg $dir/wallpapers/*.png $dir/wallpapers/*.webp $dir/wallpapers/*.JPG $dir/wallpapers/*.JPEG $dir/wallpapers/*.PNG $dir/wallpapers/*.WEBP 2>/dev/null; content delete --uri $uri/wallpapers 2>/dev/null" | Out-Null
 $wallpapers = Join-Path $Theme 'wallpapers'
 if (Test-Path $wallpapers -PathType Container) {
     Get-ChildItem $wallpapers -File | Where-Object { $_.Extension -match '^\.(jpg|jpeg|png|webp)$' } | ForEach-Object {
         if ($_.Name -notmatch '^[A-Za-z0-9_.-]+$') { throw "unsupported wallpaper filename: $($_.Name)" }
-        & $py -I b64push.py $_.FullName "$dir/wallpapers/$($_.Name)"
+        & $py -I b64push.py $_.FullName (Stage "wallpapers/$($_.Name)")
+        & $py -I tv.py (Put "wallpapers/$($_.Name)") | Out-Null
     }
 }
-& $py -I tv.py "printf '%s' '$revision' > $dir/theme_revision" | Out-Null
+& $py -I tv.py "printf '%s' '$revision' > $tmp-theme_revision; $(Put 'theme_revision')" | Out-Null
 & $py -I tv.py "$restart; echo applied"
 Write-Host "Theme $(Split-Path $Theme -Leaf) is on the TV. Undo with: tools\theme.ps1 -TvHost $TvHost -Reset"
