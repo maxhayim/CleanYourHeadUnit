@@ -63,4 +63,7 @@
     <string name="card_state_new">Uusi</string>
     <string name="card_state_new_key">Uusi avain</string>
     <string name="card_state_new_label">Uusi nimi</string>
+    <string name="dock_edit">Muokkaa telakkaa</string>
+    <string name="dock_edit_hint">Valitse muutettava telakan paikka ja paina OK. Takaisin lopettaa.</string>
+    <string name="dock_edit_pick_app">Valitse nyt sinne tuleva sovellus ja paina OK. Takaisin valitsee toisen paikan.</string>
 </resources>
