@@ -5,8 +5,8 @@
 <p align="center">
   <a href="https://cleanyour.tv">cleanyour.tv</a> ·
   <a href="PROMPT.md">The prompt</a> ·
-  <a href="examples/">55 TV lists</a> ·
-  <a href="SHOWCASE.md">12 built on it</a> ·
+  <a href="examples/">66 TV lists</a> ·
+  <a href="SHOWCASE.md">15 built on it</a> ·
   <a href="https://x.com/gathint/status/2111379569030939102">The tweet</a>
 </p>
 
@@ -23,9 +23,7 @@ Strip the bloatware from any Android TV or Google TV over Wi-Fi, and replace the
 screen with a clean launcher that looks like an Apple TV. **No root, no cable, nothing uninstalled,
 and a one-line restore if you change your mind.**
 
-<h3 align="center">55 TVs with tested lists &nbsp;·&nbsp; 23 brands &nbsp;·&nbsp; 12 languages &nbsp;·&nbsp; 280 KB launcher</h3>
-<h3 align="center">55 TVs with tested lists &nbsp;·&nbsp; 24 brands &nbsp;·&nbsp; 12 languages &nbsp;·&nbsp; 280 KB launcher</h3>
-<h3 align="center">54 TVs with tested lists &nbsp;·&nbsp; 23 brands &nbsp;·&nbsp; 13 languages &nbsp;·&nbsp; 280 KB launcher</h3>
+<h3 align="center">66 TVs with tested lists &nbsp;·&nbsp; 25 brands &nbsp;·&nbsp; 14 languages &nbsp;·&nbsp; 300 KB launcher</h3>
 
 ![Before: stock Google TV home with a sponsored ad. After: the Clean Your TV launcher](docs/stock-vs-new-side.jpg)
 
@@ -94,11 +92,10 @@ install any launcher at all; their lists say so in the header.
 
 Tested lists from contributors, one folder per model in [`examples/`](examples/):
 
-**Xiaomi** 12 · **TCL** 11 · **Sony** 8 · **Philips** 3 · **CHiQ** 2 · **Hisense** 2 · Amazon Fire TV Stick · BenQ ·
-**Xiaomi** 12 · **TCL** 11 · **Sony** 8 · **CHiQ** 2 · **Hisense** 2 · **Philips** 2 · AiPro2K · Amazon Fire TV Stick · BenQ ·
-**Xiaomi** 12 · **TCL** 11 · **Sony** 8 · **CHiQ** 2 · **Hisense** 3 · **Philips** 2 · Amazon Fire TV Stick · BenQ ·
-Chromecast with Google TV · Hitachi · Insignia Fire TV · NVIDIA Shield · OnePlus · Panasonic · RCA · Redmi ·
-SANYO · Skyworth · Thomson · Toshiba Fire TV · Vu · Stellamore and XGIMI projectors
+**TCL** 14 · **Xiaomi** 14 · **Sony** 9 · **Philips** 4 · **Hisense** 3 · **CHiQ** 2 · **Skyworth** 2 ·
+AiPro2K · Amazon Fire TV Stick · BenQ · Chromecast with Google TV · Hitachi · Insignia Fire TV ·
+NVIDIA Shield · OnePlus · Panasonic · PRISM+ · RCA · Redmi · SANYO · Thomson · Toshiba Fire TV · Vu ·
+Stellamore and XGIMI projectors
 
 <details>
 <summary><strong>The full list</strong></summary>
@@ -140,7 +137,7 @@ SANYO · Skyworth · Thomson · Toshiba Fire TV · Vu · Stellamore and XGIMI pr
 | Sony BRAVIA XBR-65X900E (2017, BRAVIA_ATV2) | Android TV 9 |
 | Stellamore T950S projector (Droidlogic be30a3, Amlogic txhd2) | Android 13 |
 | TCL 40S5400A (C06, C06_2K_GB, MediaTek MT9221, 1 GB) | Android TV 11 |
-| TCL 43C645 (Smart TV Pro, Realtek RTD2851 / R51MT05, V8-R51MT05-LF1V652) | Android TV 11 |
+| TCL 43C645 (Smart TV Pro, Realtek RTD2851 / R51MT05, V8-R51MT05-LF1V652) | Google TV launcher on Android TV 11 |
 | TCL 50EP680 (Europe, BeyondTV, Realtek rtd285o) | Android TV 11 |
 | TCL 55" 4K Google TV, 2023 (G10, G10_4K_US_NF); also TCL 55P6K, Spain (G10_4K_GB_NF_32BIT) | Google TV 12 |
 | TCL 55Q10G Pro (China, tcl_mt5879_cn, MediaTek MT9952) | Android TV 11 |
@@ -199,7 +196,7 @@ tools/theme.sh themes/aurora                                 # push a theme; --r
 | [`tools/b64push.py`](tools/b64push.py) | Uploads large files such as APKs in base64 chunks and verifies the checksum. |
 | [`tools/disable.sh`](tools/disable.sh), [`restore.sh`](tools/restore.sh) | Apply or undo a debloat list. |
 | [`tools/theme.sh`](tools/theme.sh) | Push a folder from [`themes/`](themes/) to the launcher and restart Home. |
-| [`launcher/build-and-install.sh`](launcher/build-and-install.sh) | Builds a shrunk release (about 280 KB), installs it, switches Home, and rolls back if Home does not land on it. |
+| [`launcher/build-and-install.sh`](launcher/build-and-install.sh) | Builds a shrunk release (about 300 KB), installs it, switches Home, and rolls back if Home does not land on it. |
 
 Debloat list paths passed to `disable.sh` and `restore.sh` are relative to the directory you run
 from, so your own lists can live outside the repository. Absolute paths also work.
@@ -219,7 +216,7 @@ The install scripts ask the TV which launcher owns Home and only disable one the
 
 ## The launcher
 
-A small native Android TV app (`com.gathin.tvhome`, about 280 KB installed) in plain Java with
+A small native Android TV app (`com.gathin.tvhome`, about 300 KB installed) in plain Java with
 AndroidX RecyclerView and nothing heavier. Built for sets with 1 GB of RAM: no blur, no video, no
 network, no background services. It needs JDK 17 and Android SDK platform 34 to build; on macOS,
 `brew install openjdk@17 android-commandlinetools` and `sdkmanager "platforms;android-34" "build-tools;34.0.0"`. On Linux
@@ -229,8 +226,7 @@ the install script finds `~/Android/Sdk` and the `java` on your PATH.
 - **On-TV launcher settings:** click Settings for the TV's system settings, or hold OK on Settings and choose Launcher settings to set 4, 5, 6 or 7 apps per row, turn animations on or off, and opt into advanced effects. The advanced option adds tile lift, icon zoom and smooth ambient-colour transitions; it may use more memory. Use Follow theme to clear on-TV choices. Pushing or resetting a theme also clears them.
 - **Change the default home:** Launcher settings and the optional Default-home tile (`show_home_settings_shortcut`) open Android's home picker. Choose the original launcher to stop using CleanYourTV as Home, or CleanYourTV to return. The original launcher must be enabled. If the install script disabled it, use the restore script below first. Some TVs provide no home picker.
 - **Themes** set the same keys plus a background colour and a wallpaper from a `config.json` pushed to the TV, no rebuild. Three ship in [`themes/`](themes/), documented there.
-- **Language** follows the TV: English, German, Spanish, Catalan, French, Russian, Serbian (Latin), Polish, Arabic, Simplified Chinese, Thai, Turkish, Portuguese. Android 13+ can set it for the launcher alone: `tools/tv.py 'cmd locale set-app-locales com.gathin.tvhome --locales ca'`.
-- **Language** follows the TV: English, German, Spanish, Catalan, French, Russian, Serbian (Latin), Polish, Arabic, Hebrew, Simplified Chinese, Thai, Turkish. Android 13+ can set it for the launcher alone: `tools/tv.py 'cmd locale set-app-locales com.gathin.tvhome --locales he'`.
+- **Language** follows the TV: English, German, Spanish, Catalan, French, Russian, Serbian (Latin), Polish, Portuguese, Turkish, Arabic, Hebrew, Simplified Chinese, Thai. Android 13+ can set it for the launcher alone: `tools/tv.py 'cmd locale set-app-locales com.gathin.tvhome --locales ca'`.
   Hebrew places the menu buttons on the left and the date and clock on the right, with the greeting above the clock. The Clock screensaver right-aligns its date and time, and Hebrew dates include the month prefix ב (for example, 19 באוקטובר). Hebrew dock and app-grid rows start on the right, with matching left/right remote navigation. The Hebrew input selector places icons and labels on the right, status on the left, and aligns the dropdown with the Inputs button’s right edge. Other languages keep their original layouts.
   Russian includes the module-card approval and management screens and the VPN-off badge.
 - **Module cards** let any TV app declare its own tile (label, caption, glow). The launcher asks you once per app, Keep hidden by default, and remembers the answer for that app's signing key and card name. Hold OK on Settings and choose Module cards to change your mind. How to make one: [`docs/modules.md`](docs/modules.md); the contract: [`docs/specs/card.md`](docs/specs/card.md).
