@@ -213,7 +213,8 @@ tools/theme.sh themes/aurora                                 # push a theme; --r
 |---|---|
 | [`tools/tv.py`](tools/tv.py) | Pure-Python ADB client: shell, batch, push, pull. Works where the stock `adb` binary is blocked. |
 | [`tools/b64push.py`](tools/b64push.py) | Uploads large files such as APKs in base64 chunks and verifies the checksum. |
-| [`tools/disable.sh`](tools/disable.sh), [`restore.sh`](tools/restore.sh) | Apply or undo a debloat list. |
+| [`tools/disable.sh`](tools/disable.sh), [`restore.sh`](tools/restore.sh) | Apply or undo a debloat list, the undo from the state recorded before the change. |
+| [`tools/recovery.py`](tools/recovery.py) | Writes the record `disable.sh` needs to undo itself, and prints the restore batch. |
 | [`tools/theme.sh`](tools/theme.sh) | Push a folder from [`themes/`](themes/) to the launcher and restart Home. |
 | [`launcher/build-and-install.sh`](launcher/build-and-install.sh) | Builds a shrunk release (about 300 KB), installs it, switches Home, and rolls back if Home does not land on it. |
 
@@ -257,13 +258,23 @@ the install script finds `~/Android/Sdk` and the `java` on your PATH.
 
 ## Restoring your TV
 
-Keep the list you applied. The restore script re-enables exactly those packages, puts the stock
-launcher back as Home and resets the animation scales:
+Before `tools/disable.sh` changes anything it writes down what the TV looked like: for every package
+in the list whether it was enabled, already disabled or not installed, which component owned Home,
+and the three animation scales. That record lives in `~/.cleanyourtv/`, one file per TV and list, and
+a second run of the same list keeps the first record instead of saving the cleaned-up state over it.
+
+Keep the list you applied. The restore script replays the record, so a package you had disabled
+yourself stays disabled and Home goes back to the component that owned it:
 
 ```bash
 TV_HOST=192.168.1.50 tools/restore.sh examples/<your tv>/debloat.txt                                    # Android TV
 TV_HOST=192.168.1.50 tools/restore.sh examples/<your tv>/debloat.txt com.google.android.apps.tv.launcherx  # Google TV
 ```
+
+The `stock launcher` argument is only a fallback: with a record, the launcher that actually owned Home
+is the one that gets it back, and the argument is used only when nothing answered HOME at the time.
+Without a record (an older run, or a record you deleted) the script says so and falls back to
+enabling the whole list and resetting the scales to `1.0`, which is what it used to do.
 
 It leaves the new launcher installed (remove it from the TV's Settings → Apps if you want it gone)
 and does not know about packages you disabled outside the list. To switch back later, run the
