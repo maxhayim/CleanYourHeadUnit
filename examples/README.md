@@ -99,6 +99,7 @@ on that firmware, grouped and commented. These are starting points: comment out 
 | `xiaomi-tv-a-pro-2026/` | Xiaomi TV A Pro 75" 2026 (MiTV-MZTU0, river, MediaTek) | Google TV 14 | PatchWall/Mi Home tab, Mi analytics, TV Manager, updaters; setup wizard off, launcherx crash-loop notes |
 | `xiaomi-mitv-afmu0/` | Xiaomi TV Box S 3rd gen (MiTV-AFMU0, twilight, Amlogic), streaming box | Google TV 14 | Mi analytics, PatchWall/Mi Home tab, Mi connect/SmartShare; voice and phone remote off by choice; setup wizard off so launcherx can go |
 
+| `vu-premium-fhd-43-hamamatsucho/` | Vu Premium FHD 43-inch (Smart 2K ATV4, hamamatsucho), India | Android TV 9 (PTO4.200424.001) | CVTE partner apps, Google recommendation rows and retail demo; tested on one set |
 Notes for a model that has no tested list yet live in [`docs/devices/`](../docs/devices/) (Xiaomi MiTV-MFTR0 "freeguy", China, Android 14: inputs, Xiaomi settings intents, app discovery).
 
 
