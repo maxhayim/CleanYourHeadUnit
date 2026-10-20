@@ -216,6 +216,7 @@ BYINTEK, JMGO, Portronics, Stellamore, Wanbo and XGIMI projectors
 | TCL BeyondTV (India) | Android TV 9 |
 | TCL BeyondTV, EU/Nordic (Realtek RTD2851, V8-R851T02-LF1V606) | Android TV 9 |
 | TCL BeyondTV2 (Latin America / Brazil, Realtek RTD2851) | Android TV 9 |
+| TCL BeyondTV2, Android 11 build (AR05, Realtek rtd285o) | Android TV 11 |
 | TCL C755 QD-Mini LED, 2024, Australia (G08, MediaTek tcl9618) | Google TV 14 |
 | TCL QM6K Pro, 2025 (G08, MediaTek tcl9618) | Google TV 14 |
 | TCL Smart TV (G07, G07_4K_GB_NF, Realtek RTD2851A, 2 GB) | Google TV 11 |
