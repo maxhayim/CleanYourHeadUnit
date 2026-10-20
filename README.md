@@ -9,10 +9,8 @@
 <p align="center">
   <a href="https://cleanyour.tv">cleanyour.tv</a> ·
   <a href="PROMPT.md">The prompt</a> ·
-  <a href="examples/">94 TV lists</a> ·
-  <a href="SHOWCASE.md">18 built on it</a> ·
-  <a href="examples/">55 TV lists</a> ·
-  <a href="SHOWCASE.md">12 built on it</a> ·
+  <a href="examples/">107 TV lists</a> ·
+  <a href="SHOWCASE.md">19 built on it</a> ·
   <a href="https://x.com/gathint/status/2111379569030939102">The tweet</a>
 </p>
 
@@ -38,10 +36,7 @@ Strip the bloatware from any Android TV or Google TV over Wi-Fi, and replace the
 screen with a clean launcher that looks like an Apple TV. **No root, no cable, nothing uninstalled,
 and a one-line restore if you change your mind.**
 
-<h3 align="center">93 TV models &nbsp;·&nbsp; 31 brands &nbsp;·&nbsp; 17 languages &nbsp;·&nbsp; 370 KB launcher</h3>
-<h3 align="center">93 TV models &nbsp;·&nbsp; 31 brands &nbsp;·&nbsp; 16 languages &nbsp;·&nbsp; 370 KB launcher</h3>
-<h3 align="center">94 TV models &nbsp;·&nbsp; 31 brands &nbsp;·&nbsp; 17 languages &nbsp;·&nbsp; 370 KB launcher</h3>
-<h3 align="center">93 TV models &nbsp;·&nbsp; 31 brands &nbsp;·&nbsp; 18 languages &nbsp;·&nbsp; 370 KB launcher</h3>
+<h3 align="center">107 TV models &nbsp;·&nbsp; 37 brands &nbsp;·&nbsp; 18 languages &nbsp;·&nbsp; 390 KB launcher</h3>
 
 <p align="center">
   <sub><b>FEATURED IN</b></sub><br><br>
@@ -61,7 +56,6 @@ and a one-line restore if you change your mind.**
   <a href="https://www.iphonemod.net/clean-your-tv-android-tv-debloat-launcher.html"><img src="docs/press/iphonemod.png" height="34" alt="iPhoneMod"></a>
 </p>
 
-<h3 align="center">55 TVs with tested lists &nbsp;·&nbsp; 24 brands &nbsp;·&nbsp; 12 languages &nbsp;·&nbsp; 280 KB launcher</h3>
 
 ![Before: stock Google TV home with a sponsored ad. After: the Clean Your TV launcher](docs/stock-vs-new-side.jpg)
 
@@ -131,20 +125,11 @@ install any launcher at all; their lists say so in the header.
 
 Tested lists from contributors, one folder per model in [`examples/`](examples/):
 
-**TCL** 18 · **Sony** 16 · **Xiaomi** 15 · **Philips** 6 · **Hisense** 5 · **BenQ** 2 · **CHiQ** 2 ·
-**Haier** 2 · **Hitachi** 2 · **NVIDIA Shield** 2 · **Panasonic** 3 · **Skyworth** 2 · AiPro2K ·
-Amazon Fire TV Stick · Chromecast with Google TV · Insignia Fire TV · Kalley · OnePlus · onn · PRISM+ · RCA ·
-Redmi · SANYO · Thomson · Toshiba Fire TV · Vu · JMGO, Portronics, Stellamore, Wanbo and XGIMI projectors
-**Xiaomi** 12 · **TCL** 11 · **Sony** 8 · **CHiQ** 2 · **Hisense** 2 · **Philips** 2 · Amazon Fire TV Stick · AIWA · BenQ ·
-Chromecast with Google TV · Hitachi · Insignia Fire TV · NVIDIA Shield · OnePlus · Panasonic · RCA · Redmi ·
-SANYO · Skyworth · Thomson · Toshiba Fire TV · Vu · Stellamore and XGIMI projectors
-**TCL** 19 · **Sony** 16 · **Xiaomi** 15 · **Philips** 6 · **Hisense** 5 · **BenQ** 2 · **CHiQ** 2 ·
-**Haier** 2 · **Hitachi** 2 · **Panasonic** 2 · **Skyworth** 2 · AiPro2K · Amazon Fire TV Stick ·
-Chromecast with Google TV · Insignia Fire TV · Kalley · NVIDIA Shield · OnePlus · onn · PRISM+ · RCA · Redmi ·
-SANYO · Thomson · Toshiba Fire TV · Vu · JMGO, Portronics, Stellamore, Wanbo and XGIMI projectors
-**Haier** 2 · **Hitachi** 2 · **Panasonic** 2 · **Skyworth** 2 · AiPro2K · Amazon Fire TV Stick ·
-Chromecast with Google TV · Insignia Fire TV · Kalley · NVIDIA Shield · OnePlus · onn · PRISM+ · RCA · Redmi ·
-SANYO · Thomson · Toshiba Fire TV · Vidda · Vu · JMGO, Portronics, Stellamore, Wanbo and XGIMI projectors
+**TCL** 20 · **Sony** 17 · **Xiaomi** 15 · **Philips** 7 · **Hisense** 6 · **Panasonic** 3 ·
+**Amazon Fire TV Stick** 2 · **BenQ** 2 · **CHiQ** 2 · **Haier** 2 · **Hitachi** 2 · **NVIDIA Shield** 2 ·
+**Skyworth** 2 · **Vu** 2 · AiPro2K · AIWA · Chromecast with Google TV · FFalcon · Freebox · Insignia Fire TV ·
+Kalley · MTC · OnePlus · onn · PRISM+ · RCA · Redmi · SANYO · Thomson · Toshiba Fire TV · Vidda ·
+BYINTEK, JMGO, Portronics, Stellamore, Wanbo and XGIMI projectors
 
 <details>
 <summary><strong>The full list</strong></summary>
@@ -152,9 +137,9 @@ SANYO · Thomson · Toshiba Fire TV · Vidda · Vu · JMGO, Portronics, Stellamo
 | TV | OS |
 |---|---|
 | AiPro2K (Expressluck, dongnae; Changhong AI PONT family) | Android TV 14 |
+| AIWA AI PONT SA (Changhong, osaka, ISDB86AW) | Google TV 14 |
 | Amazon Fire TV Stick 4K, 1st gen 2018 (AFTMM, mantis) | Fire OS 6.7.1.1 / Android 7.1 |
 | Amazon Fire TV Stick Lite, 1st gen 2020 (AFTSS, sheldon) | Fire OS 7.7.1.7 / Android 9 |
-| AIWA AI PONT SA (Changhong, osaka, ISDB86AW) | Google TV 14 |
 | BenQ E55-735 (Changhong AI PONT, DVB96BQ) | Google TV 14 |
 | BenQ E55-750 (Changhong AI PONT, DVB96BQ) | Google TV (Android 11) |
 | BYINTEK T5 Max projector (built-in Google TV stick: SkyworthDigital YYT, Amlogic), Brazil | Google TV 14 |
@@ -165,8 +150,8 @@ SANYO · Thomson · Toshiba Fire TV · Vidda · Vu · JMGO, Portronics, Stellamo
 | Freebox Player POP (Free, fbx8am, Amlogic), IPTV/DVB-T box | Android TV 10 |
 | Haier Android TV DVB2K (broadway, HaierATVT56DVB) | Android TV 11 |
 | Haier H32S80EFX (MatrixTV CE, HRT56EU, deto, MediaTek), Thailand | Google TV 14 |
-| Hisense HG9 (HiSmart 4K A4FFM) | Android TV 9 |
 | Hisense E5Q Pro (VIDAA_TV, MediaTek MT9653), China | Android TV 11 |
+| Hisense HG9 (HiSmart 4K A4FFM) | Android TV 9 |
 | Hisense HiSmartTV A4 (xiaoyushan, MStar m7322), Android 11 firmware RTT2.221108.001 | Android TV 11 |
 | Hisense HiSmartTV A4 (xiaoyushan, MStar m7322), India | Android TV 9 |
 | Hisense SmartTV 4K FFM (huangshan, MediaTek) | Android TV 10 |
@@ -222,9 +207,9 @@ SANYO · Thomson · Toshiba Fire TV · Vidda · Vu · JMGO, Portronics, Stellamo
 | TCL 43EP660 (Europe, BeyondTV, Realtek rtd285o, V8-R851T02-LF1V378) | Android TV 9 |
 | TCL 50EP680 (Europe, BeyondTV, Realtek rtd285o) | Android TV 11 |
 | TCL 55" 4K Google TV, 2023 (G10, G10_4K_US_NF); also TCL 55P6K, Spain (G10_4K_GB_NF_32BIT) | Google TV 12 |
+| TCL 55C815 (2020, Europe/Denmark, BeyondTV2, Realtek rtd285o) | Android TV 11 |
 | TCL 55Q10G Pro (China, tcl_mt5879_cn, MediaTek MT9952) | Android TV 11 |
 | TCL 55S470G (G10, G10_4K_US_NF, Realtek), US | Google TV 12 |
-| TCL 55C815 (2020, Europe/Denmark, BeyondTV2, Realtek rtd285o) | Android TV 11 |
 | TCL 65C725 (Smart TV Pro, BeyondTV4) | Android TV 11 |
 | TCL 65C735 (Smart TV Pro, G05, MediaTek), France | Google TV 11 |
 | TCL ak30a5 (China, Amlogic) | Android TV 9 |
@@ -238,7 +223,7 @@ SANYO · Thomson · Toshiba Fire TV · Vidda · Vu · JMGO, Portronics, Stellamo
 | TCL UnionTV, Latin America (TCL-built like Thomson 32HE5800, Realtek RT2841) | Android TV 9 |
 | Thomson 32HE5800 (TCL-built UnionTV, Realtek RT2841), Spain | Android TV 9 |
 | Toshiba Fire TV (AFTHA004, hazel) | Fire OS 7 / Android 9 |
-| Vidda VIDAA_TV (Hisense sub-brand, MT9653, mt5879), China JuUI | Android TV 11 |
+| Vidda VIDAA_TV (Hisense sub-brand; device MT9653, board mt5879), China JuUI | Android TV 11 |
 | Vu 4K (HVCL, lushan, MediaTek), India | Google TV 12 |
 | Vu Premium FHD 43-inch (Smart 2K ATV4, hamamatsucho), India | Android TV 9 |
 | Wanbo X5 Pro projector (built-in Google TV stick: SkyworthDigital YYT, Amlogic), Australia | Google TV 14 |
@@ -287,7 +272,7 @@ tools/theme.sh themes/aurora                                 # push a theme; --r
 | [`tools/disable.sh`](tools/disable.sh), [`restore.sh`](tools/restore.sh) | Apply or undo a debloat list, the undo from the state recorded before the change. |
 | [`tools/recovery.py`](tools/recovery.py) | Writes the record `disable.sh` needs to undo itself, and prints the restore batch. |
 | [`tools/theme.sh`](tools/theme.sh) | Push a folder from [`themes/`](themes/) to the launcher and restart Home. |
-| [`launcher/build-and-install.sh`](launcher/build-and-install.sh) | Builds a shrunk release (about 370 KB), installs it, switches Home, and rolls back if Home does not land on it. |
+| [`launcher/build-and-install.sh`](launcher/build-and-install.sh) | Builds a shrunk release (about 390 KB), installs it, switches Home, and rolls back if Home does not land on it. |
 
 Debloat list paths passed to `disable.sh` and `restore.sh` are relative to the directory you run
 from, so your own lists can live outside the repository. Absolute paths also work.
@@ -313,7 +298,7 @@ the new launcher Home and the entry is applied; `FORCE_HOME=1` (`$env:FORCE_HOME
 
 ## The launcher
 
-A small native Android TV app (`com.gathin.tvhome`, about 370 KB installed) in plain Java with
+A small native Android TV app (`com.gathin.tvhome`, about 390 KB installed) in plain Java with
 AndroidX RecyclerView and nothing heavier. Built for sets with 1 GB of RAM: no blur, no video, no
 network, no background services. It needs JDK 17 and Android SDK platform 34 to build; on macOS,
 `brew install openjdk@17 android-commandlinetools` and `sdkmanager "platforms;android-34" "build-tools;34.0.0"`. On Linux
@@ -330,7 +315,7 @@ the install script finds `~/Android/Sdk` and the `java` on your PATH.
 - **Module cards** let any TV app declare its own tile (label, caption, glow). The launcher asks you once per app, Keep hidden by default, and remembers the answer for that app's signing key and card name. Hold OK on Settings and choose Module cards to change your mind. How to make one: [`docs/modules.md`](docs/modules.md); the contract: [`docs/specs/card.md`](docs/specs/card.md).
 - **Clock screensaver**: a drifting clock over the glow, so nothing burns in. Pick "Clock" in the TV's screensaver settings, or over ADB:
   `tools/tv.py 'settings put secure screensaver_components com.gathin.tvhome/.ClockDream; settings put secure screensaver_enabled 1'`
-- **Remote keys**: an optional accessibility service keeps the remote's Input button working on Google TV (`INPUT_KEY_SERVICE=1` at install) and can bring back other buttons only the stock launcher answered, such as the YouTube button (`app_keys` and `input_key_keycodes` in `config.xml`), another fixes sticks whose Home key sends ALL_APPS and opens Settings from the remote's gear button, even one Android does not map (`HOME_KEY_SERVICE=1`, scancodes or keycodes in `config.xml`). With `settings_key_panel` the gear opens a [small quick settings panel](docs/quick-settings-panel.jpg) instead, over Home or any app: TV settings, Display, Network, Apps and Launcher settings.
+- **Remote keys**: an optional accessibility service keeps the remote's Input button working on Google TV (`INPUT_KEY_SERVICE=1` at install) and can bring back other buttons only the stock launcher answered, such as the YouTube button (`app_keys` and `input_key_keycodes`, in `config.xml` or a theme; `HOME_KEY_SERVICE=1` reads `app_keys` too), another fixes sticks whose Home key sends ALL_APPS and opens Settings from the remote's gear button, even one Android does not map (`HOME_KEY_SERVICE=1`, scancodes or keycodes in `config.xml`). With `settings_key_panel` the gear opens a [small quick settings panel](docs/quick-settings-panel.jpg) instead, over Home or any app: TV settings, Display, Network, Apps and Launcher settings.
 - **Navigation** is deliberate: Up and Down move one row, the top buttons never fall through to tiles and Down from them returns to the dock tile you came from, the last focused app is remembered, and installing or removing an app refreshes the tiles while Home is open.
 - **Artwork**: app banners load at xhdpi or better, so low-density TV UIs do not downsample them before the focus zoom.
 
