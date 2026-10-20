@@ -11,10 +11,14 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.File;
+import java.util.List;
+
 /** Remote-friendly settings owned by the launcher; system settings stay one row away. */
 public final class LauncherSettingsActivity extends Activity {
     private SharedPreferences choices;
     private final TextView[] columnChoices = new TextView[4];
+    private TextView wallpaperChoice;
     private TextView animationsChoice;
     private TextView advancedChoice;
     private TextView followThemeChoice;
@@ -51,6 +55,8 @@ public final class LauncherSettingsActivity extends Activity {
             row.removeAllViews();
             for (int i = columnChoices.length - 1; i >= 0; i--) row.addView(columnChoices[i]);
         }
+        wallpaperChoice = findViewById(R.id.wallpaperChoice);
+        wallpaperChoice.setOnClickListener(v -> showWallpaperPicker());
         animationsChoice = findViewById(R.id.animationsChoice);
         animationsChoice.setOnClickListener(v -> {
             animations = !animations;
@@ -76,7 +82,8 @@ public final class LauncherSettingsActivity extends Activity {
         followThemeChoice = findViewById(R.id.followThemeChoice);
         followThemeChoice.setOnClickListener(v -> {
             if (!hasOnTvChoices()) return;
-            choices.edit().remove("columns").remove("animations").remove("advanced_effects").commit();
+            choices.edit().remove("columns").remove("animations").remove("advanced_effects")
+                    .remove(Config.WALLPAPER_CHOICE_KEY).commit();
             Config current = Config.load(this);
             columns = current.columns;
             animations = current.animations;
@@ -92,6 +99,47 @@ public final class LauncherSettingsActivity extends Activity {
                 open(new Intent(Settings.ACTION_SETTINGS)));
         refresh();
         columnChoices[Math.max(0, Math.min(columns - 4, 3))].requestFocus();
+    }
+
+    private void showWallpaperPicker() {
+        File dir = Config.dir(this);
+        List<File> images = WallpaperRotation.images(
+                dir == null ? null : new File(dir, "wallpapers"));
+        String[] labels = new String[images.size() + 1];
+        for (int i = 0; i < images.size(); i++) labels[i] = images.get(i).getName();
+        labels[images.size()] = getString(R.string.wallpaper_none);
+        String current = choices.getString(Config.WALLPAPER_CHOICE_KEY, null);
+        int checked = "none".equals(current) ? images.size()
+                : indexOf(images, current);
+        new AlertDialog.Builder(this)
+                .setTitle(R.string.wallpaper_label)
+                .setSingleChoiceItems(labels, checked, (dialog, which) -> {
+                    dialog.dismiss();
+                    if (which == images.size()) {
+                        choices.edit().putString(Config.WALLPAPER_CHOICE_KEY, "none").apply();
+                    } else {
+                        choices.edit().putString(Config.WALLPAPER_CHOICE_KEY,
+                                images.get(which).getName()).apply();
+                    }
+                    setResult(RESULT_OK);
+                    Toast.makeText(this, R.string.wallpaper_applied, Toast.LENGTH_SHORT).show();
+                    refresh();
+                })
+                .setNeutralButton(R.string.wallpaper_theme_default, (dialog, which) -> {
+                    choices.edit().remove(Config.WALLPAPER_CHOICE_KEY).apply();
+                    setResult(RESULT_OK);
+                    refresh();
+                })
+                .setNegativeButton(android.R.string.cancel, null)
+                .show();
+    }
+
+    private static int indexOf(List<File> images, String name) {
+        if (name == null) return -1;
+        for (int i = 0; i < images.size(); i++) {
+            if (images.get(i).getName().equals(name)) return i;
+        }
+        return -1;
     }
 
     private void setAdvanced(boolean enabled) {
@@ -111,12 +159,18 @@ public final class LauncherSettingsActivity extends Activity {
                 getString(advancedEffects ? R.string.on : R.string.off)));
         advancedChoice.setEnabled(animations);
         advancedChoice.setAlpha(animations ? 1f : 0.5f);
+        String wallpaperCurrent = choices.getString(Config.WALLPAPER_CHOICE_KEY, null);
+        wallpaperChoice.setText(getString(R.string.wallpaper_state,
+                "none".equals(wallpaperCurrent) ? getString(R.string.wallpaper_none)
+                        : wallpaperCurrent != null ? wallpaperCurrent
+                        : getString(R.string.wallpaper_theme_default)));
         followThemeChoice.setSelected(!hasOnTvChoices());
     }
 
     private boolean hasOnTvChoices() {
         return choices.contains("columns") || choices.contains("animations")
-                || choices.contains("advanced_effects");
+                || choices.contains("advanced_effects")
+                || choices.contains(Config.WALLPAPER_CHOICE_KEY);
     }
 
     private void open(Intent intent) {
