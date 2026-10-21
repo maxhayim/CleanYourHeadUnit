@@ -52,6 +52,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.SoundEffectConstants;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
@@ -131,6 +132,10 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
     private TextView greeting;
     private View btnInputs;
     private TextView btnWifi;
+    /** The network pill's icon as last set, so a refresh that changes nothing does not lay the top bar out again. */
+    private int wifiIcon;
+    /** The pills have been filled in once; later resumes refresh them after the first frame. */
+    private boolean pillsShown;
     private TextView shamsiDate;
     private TextView stats;
     private List<RaceWeekend.Race> raceCalendar;
@@ -591,8 +596,17 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         rebuildOnResume = false;
         updateGreeting();
         updateRace();
-        updateWifiLabel();
-        updateInputsButton();
+        // The network and Inputs pills keep their state while Home is in the background, and callbacks update them
+        // when the network or the inputs change, so this refresh only catches anything missed. Its binder calls
+        // (about 7 ms on a TCL C755, most of it WifiManager.getConnectionInfo) would hold up the first frame back
+        // on Home, so after the first resume it runs once that frame is drawn.
+        if (pillsShown) {
+            refreshPillsAfterNextDraw();
+        } else {
+            updateWifiLabel();
+            updateInputsButton();
+            pillsShown = true;
+        }
         if (showStats) startStats();
         sky.update();
         wallpaperPlayer.start();
@@ -1834,6 +1848,24 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         racePanel.setVisibility(View.VISIBLE);
     }
 
+    private void refreshPillsAfterNextDraw() {
+        root.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+            @Override
+            public boolean onPreDraw() {
+                root.getViewTreeObserver().removeOnPreDrawListener(this);
+                // Posted from inside the frame's traversal, so it runs after that frame is drawn. A post straight
+                // from onResume would run first: the frame is only scheduled after onResume returns.
+                handler.post(() -> {
+                    if (isDestroyed()) return;
+                    updateWifiLabel();
+                    updateInputsButton();
+                });
+                return true;
+            }
+        });
+        root.invalidate();   // a resume that changes nothing on screen still draws once, so the refresh runs
+    }
+
     /** Shows the Wi-Fi network name on the button when we can read it, otherwise the connection type. */
     private void updateWifiLabel() {
         String text = getString(R.string.wifi);
@@ -1897,8 +1929,8 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
             text = name.length() < text.length() && name.length() < 5 ? "" : name;
             SpannableString label = new SpannableString(text + " " + badge);
             label.setSpan(span, text.length() + 1, label.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-            btnWifi.setText(label);
-        } else {
+            if (!TextUtils.equals(btnWifi.getText(), label)) btnWifi.setText(label);
+        } else if (!TextUtils.equals(btnWifi.getText(), text)) {
             btnWifi.setText(text);
         }
         if (festive && diya != null) {
@@ -1906,7 +1938,10 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
             diya.setSteady(steady);
             diya.setFlame(flame);
         } else {
-            btnWifi.setCompoundDrawablesRelativeWithIntrinsicBounds(icon, 0, 0, 0);
+            if (icon != wifiIcon) {
+                wifiIcon = icon;
+                btnWifi.setCompoundDrawablesRelativeWithIntrinsicBounds(icon, 0, 0, 0);
+            }
         }
     }
 
