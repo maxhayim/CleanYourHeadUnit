@@ -177,6 +177,24 @@ Things that bit us or contributors, so they don't bite you. Commands use `tools/
   nothing else on the TV answers HOME, it skips that entry and says so (`FORCE_HOME=1` overrides),
   so applying a list before the handover no longer leaves the TV without a launcher. Apply the list
   again after the install script has made the new launcher Home to disable the old one.
+- **The TV stays on the boot logo with ADB gone** after a list, seen on a KitKat-era set
+  ([COOP COTV-0001](https://github.com/Gathin23/cleanyourtv/issues/795): Realtek `rtd298x`, Android
+  4.4.2, SDK 19). 17 packages were disabled over Ethernet ADB, each answered `new state:
+  disabled-user` and `pm list packages -d` read back all 17; the factory launcher
+  `com.haiersoft.launcherproject2995hk` was among them with no replacement, because the launcher
+  here needs Android 8.0. After the power cycle the set sits on the green robot and `INICIALIZANDO`,
+  port 5555 goes from filtered to "No route to host", and there is no recovery button, no service
+  port and no public firmware for that board, so `tools/restore.sh` cannot run. What is *not* known:
+  whether the disabled packages did it, whether pulling the plug during the first boot damaged
+  something, or whether that firmware just needs a long first boot after package state changes.
+  Treat it as how these sets get lost rather than as a diagnosis, and on a set that cannot take the
+  launcher: leave the stock launcher alone, keep ADB on Ethernet (KitKat has no network-debugging
+  toggle, and Wi-Fi closed 5555 on this one), and apply the list in batches with a reboot between
+  them. `tools/disable.sh` skips Home's owner when it can name it; since
+  [#795](https://github.com/Gathin23/cleanyourtv/issues/795) it asks `dumpsys activity` when `cmd
+  package` is missing (Android 6 and older, where that command does not exist) and warns when
+  neither answers. That warning means the guard did not run, not that the list is safe. Nothing here
+  brings such a set back - a vendor recovery image does, if one exists.
 - **China-market Xiaomi rejects a default Home despite `set-home-activity` reporting success**,
   verified on MiTV-AETP0 (dofus), Android 9, firmware 22.9.2.851: the framework filters third-party
   HOME candidates by a package-name allowlist. Disabling the stock launcher then selects
