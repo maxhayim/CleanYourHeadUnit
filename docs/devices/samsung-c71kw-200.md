@@ -111,12 +111,22 @@ no matched comparison of cold-boot latency.
 The same app source passed 134 release JVM tests, release lint with zero errors,
 and the release build; the upstream Python suite passed all 206 tests.
 
+## Owner follow-up (October 21)
+
+- The owner confirmed that replacing the remote batteries restored expected
+  volume and power behavior. The earlier unresolved normal-remote issue is
+  resolved; this does not independently validate HDMI-CEC control.
+- In normal use, the owner reported reliable AirPlay dashboard display with
+  simultaneous audio through the TV. This is an owner report from that session,
+  not a measured endurance test or a protected-content playback test.
+
 ## Scope
 
 This was a launcher-update check on this firmware and configuration. Physical
 remote long presses, streaming-provider playback/DRM, voice, CEC, casting,
 package changes during an active reorder, and the optional wallpaper, module
-card and app-library paths were not re-tested in this session. The existing
+card and app-library paths were not re-tested during the automated launcher
+checks. Later owner observations are identified separately above. The existing
 carrier and package choices were preserved; no new package-disable guidance
 follows from these checks.
 
