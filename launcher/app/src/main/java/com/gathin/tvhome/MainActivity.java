@@ -1915,11 +1915,20 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
     private void updateGreeting() {
         int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
         int res;
-        if (hour < 5) res = R.string.good_night;
-        else if (hour < 12) res = R.string.good_morning;
-        else if (hour < 17) res = R.string.good_afternoon;
-        else if (hour < 22) res = R.string.good_evening;
-        else res = R.string.good_night;
+        // Indonesian day parts run on different hours than English:
+        // Pagi 00-10, Siang 10-15, Sore 15-18, Malam 18-24.
+        if ("in".equals(Locale.getDefault().getLanguage())) {
+            if (hour < 10) res = R.string.good_morning;
+            else if (hour < 15) res = R.string.good_afternoon;
+            else if (hour < 18) res = R.string.good_evening;
+            else res = R.string.good_night;
+        } else {
+            if (hour < 5) res = R.string.good_night;
+            else if (hour < 12) res = R.string.good_morning;
+            else if (hour < 17) res = R.string.good_afternoon;
+            else if (hour < 22) res = R.string.good_evening;
+            else res = R.string.good_night;
+        }
         String festiveGreeting = festive ? festival.greetingText() : "";
         if (!festiveGreeting.isEmpty()) {
             greeting.setText(festiveGreeting);
