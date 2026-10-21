@@ -5,9 +5,9 @@ and rebuild the card with tools/readme_card.py. Logos come from docs/press/."""
 import sys
 from PIL import Image, ImageDraw, ImageFont
 FONT, OUT = sys.argv[1], sys.argv[2]
-LOGOS = ["techcrunch", "mashable", "androidauthority", "xda", "flatpanelshd", "itsfoss", "phandroid", "gigazine",
-         "xataka", "winfuture", "frandroid", "macitynet", "techaeris", "techpp", "thedailystar", "detikinet"]
-MORE = "+54 more  ·  70 articles from 21 countries"
+LOGOS = ["techcrunch", "techradar", "tomsguide", "mashable", "androidauthority", "xda", "flatpanelshd", "itsfoss",
+         "phandroid", "gigazine", "xataka", "winfuture", "frandroid", "macitynet", "techaeris", "techpp"]
+MORE = "+57 more  ·  73 articles from 21 countries"
 W, LH, GAP, ROWGAP, PAD = 1600, 54, 40, 36, 80
 def f(size, wt):
     x = ImageFont.truetype(FONT, size); x.set_variation_by_axes([wt]); return x

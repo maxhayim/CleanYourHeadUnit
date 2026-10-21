@@ -1,10 +1,10 @@
 # CleanYourTV in the press
 
-Every article about CleanYourTV (called tv-vibehack until 19 October 2026) that we could open and check: **70 articles**, 46 of them from outlets in 21 countries, 4 from Spanish-language sites in Latin America and 20 from newsletters, blogs and AI news sites. Headlines are in the language they were published in. Syndicated copies and auto-generated listings are left out.
+Every article about CleanYourTV (called tv-vibehack until 19 October 2026) that we could open and check: **73 articles**, 49 of them from outlets in 21 countries, 4 from Spanish-language sites in Latin America and 20 from newsletters, blogs and AI news sites. Headlines are in the language they were published in. Syndicated copies and auto-generated listings are left out.
 
 Wrote about it and not here? Open an issue or a pull request with the link.
 
-[United States](#united-states)&nbsp;7 · [United Kingdom](#united-kingdom)&nbsp;1 · [India](#india)&nbsp;2 · [Denmark](#denmark)&nbsp;1 · [Japan](#japan)&nbsp;2 · [Bangladesh](#bangladesh)&nbsp;1 · [United Arab Emirates](#united-arab-emirates)&nbsp;1 · [France](#france)&nbsp;3 · [Germany](#germany)&nbsp;2 · [Spain](#spain)&nbsp;2 · [Italy](#italy)&nbsp;1 · [Norway](#norway)&nbsp;1 · [Portugal](#portugal)&nbsp;1 · [Czechia](#czechia)&nbsp;1 · [Greece](#greece)&nbsp;1 · [Egypt](#egypt)&nbsp;1 · [Brazil](#brazil)&nbsp;3 · [Latin America (Spanish-language)](#latin-america-spanish-language)&nbsp;4 · [China](#china)&nbsp;7 · [Taiwan](#taiwan)&nbsp;1 · [Indonesia](#indonesia)&nbsp;6 · [Thailand](#thailand)&nbsp;1 · [Online (newsletters, blogs, AI news)](#online-newsletters-blogs-ai-news)&nbsp;20
+[United States](#united-states)&nbsp;9 · [United Kingdom](#united-kingdom)&nbsp;2 · [India](#india)&nbsp;2 · [Denmark](#denmark)&nbsp;1 · [Japan](#japan)&nbsp;2 · [Bangladesh](#bangladesh)&nbsp;1 · [United Arab Emirates](#united-arab-emirates)&nbsp;1 · [France](#france)&nbsp;3 · [Germany](#germany)&nbsp;2 · [Spain](#spain)&nbsp;2 · [Italy](#italy)&nbsp;1 · [Norway](#norway)&nbsp;1 · [Portugal](#portugal)&nbsp;1 · [Czechia](#czechia)&nbsp;1 · [Greece](#greece)&nbsp;1 · [Egypt](#egypt)&nbsp;1 · [Brazil](#brazil)&nbsp;3 · [Latin America (Spanish-language)](#latin-america-spanish-language)&nbsp;4 · [China](#china)&nbsp;7 · [Taiwan](#taiwan)&nbsp;1 · [Indonesia](#indonesia)&nbsp;6 · [Thailand](#thailand)&nbsp;1 · [Online (newsletters, blogs, AI news)](#online-newsletters-blogs-ai-news)&nbsp;20
 
 ## United States
 
@@ -16,12 +16,15 @@ Wrote about it and not here? Open an issue or a pull request with the link.
 | XDA | [People are now vibe-coding their smart TVs to strip them of ads and unwanted features](https://www.xda-developers.com/people-are-now-vibe-coding-their-smart-tvs-to-strip-them-of-ads-and-unwanted-features/) | 19&nbsp;Oct |
 | Phandroid | [Smart TV Owners Are Using AI to Strip the Ads Off Their Sets](https://phandroid.com/2026/10/20/smart-tv-owners-are-using-ai-to-strip-the-ads-off-their-sets/) | 20&nbsp;Oct |
 | Techaeris | [Android TV Debloat Gets a Free tvOS-Style Makeover](https://techaeris.com/2026/10/18/android-tv-debloat-tvos-style-makeover/) | 18&nbsp;Oct |
+| Tom's Guide | [People are using AI to turn their smart TVs into dumb TVs — and you might want to do the same](https://www.tomsguide.com/ai/people-are-using-ai-to-turn-their-smart-tvs-into-dumb-tvs-and-you-might-want-to-do-the-same) | 20&nbsp;Oct |
+| Decrypt | [People Are Vibe Coding the Ads Out of Their Smart TVs: Here's How](https://decrypt.co/381456/vibe-coding-ads-out-smart-tvs-heres-how) | 20&nbsp;Oct |
 | Gadget Review (on Yahoo Tech) | [Developers Are Using AI to Strip Ads and Tracking From Smart TVs](https://tech.yahoo.com/ai/meta-ai/articles/developers-using-ai-strip-ads-185856468.html) | 19&nbsp;Oct |
 
 ## United Kingdom
 
 | Outlet | Article | Date |
 | --- | --- | --- |
+| TechRadar | [‘Your TV should do what you paid for’: People are so sick of ads, trackers and bloat in their smart TVs that they're using AI to vibe code them away](https://www.techradar.com/entertainment/streaming/your-tv-should-do-what-you-paid-for-people-are-vibe-coding-apps-to-banish-ads-from-their-smart-tvs-and-android-tv-and-its-catching-on) | 20&nbsp;Oct |
 | Tech Times | [Man Asks AI with a Simple Prompt 'Can You Hack This?' to Fix His TV: Now Everyone Wants to Copy Him](https://www.techtimes.co.uk/ai-smart-tv-bloatware-performance-fix-1809233) | 19&nbsp;Oct |
 
 ## India
