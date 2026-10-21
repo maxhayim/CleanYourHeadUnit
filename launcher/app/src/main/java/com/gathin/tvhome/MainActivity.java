@@ -1112,9 +1112,9 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
             }
             showHero(position, scroll ? r.top - dy : r.top);
         } else {
-            // A plain grid (dock_row false) has no dock to carry the glow, so it follows every tile there.
-            if (dockRow) hideHero();
-            else showGlowOnly(position);
+            // Below the dock (or in a plain grid) the glow follows the tile without the big name; letting it
+            // fade out left the grid on plain black.
+            showGlowOnly(position);
             // Scroll just enough so the whole glass (not only the tile) is visible.
             revealRect.set(0, -(int) pad * 2, item.getWidth(), item.getHeight() + (int) pad);
             grid.requestChildRectangleOnScreen(item, revealRect, reducedMotion);
@@ -1387,8 +1387,8 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
     }
 
     /**
-     * dock_row false: the glow behind the grid takes the focused tile's colour; the big name above the dock does not
-     * show (every tile has its name underneath).
+     * Grid tiles (every tile with dock_row false): the glow behind the grid takes the focused tile's colour; the big
+     * name above the dock does not show (every grid tile has its name underneath).
      */
     private void showGlowOnly(int position) {
         int color = adapter.ambientColorAt(position);
