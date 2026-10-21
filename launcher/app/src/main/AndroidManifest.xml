@@ -61,6 +61,15 @@
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
             </intent-filter>
+            <!-- The system input switcher. On some sets the stock launcher was the only handler of this action
+                 (Hisense huangshan, Android TV 10: no global_keys.xml and no vendor input picker), so once it is
+                 disabled the remote's Input button, which the Live TV app and InputKeyService turn into this
+                 action, did nothing. Answered here with the Inputs menu; where a vendor picker exists the TV
+                 keeps offering the choice. -->
+            <intent-filter>
+                <action android:name="com.android.tv.action.VIEW_INPUTS" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
         </activity>
 
         <activity
