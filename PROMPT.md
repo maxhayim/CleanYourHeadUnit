@@ -120,9 +120,12 @@ Launcher
 - On Android 11 and newer the launcher must declare `<queries>` for `android.intent.category.LEANBACK_LAUNCHER`,
   or package visibility silently hides every app and the grid comes up empty; target a recent SDK, some
   Google TV 14 sets refuse older targets at install.
+- Ask how many dock slots I want (4, 5, 6 or 7), which apps, and their order; keep four if I have no
+  preference. The reference launcher already supports this: use `columns` and `dock_apps` in
+  `launcher/app/src/main/res/values/config.xml` or a theme's `config.json`, without adding a new layout.
 - Design, Apple TV 4K style: pitch black background; a dock row at the bottom of the screen inside a
-  slightly lighter rounded band holding the four apps I pick (ask me which, and the order); the rest of
-  the apps in a 4-column grid below that scrolls up when I press Down; one translucent "glass" highlight
+  slightly lighter rounded band holding the apps I pick; the rest of the apps in a grid with the same
+  number of columns below that scrolls up when I press Down; one translucent "glass" highlight
   that springs from tile to tile instead of per-tile borders; the focused tile scales up slightly and
   shows its name underneath; above the dock, the focused dock app's name in large light type with an
   ambient glow in a colour sampled from its banner; frosted pill buttons top right for Inputs, Wi-Fi
@@ -154,5 +157,5 @@ Verify
 
 ---
 
-Expect to answer three or four checklist questions (which apps you use, which four go in the dock,
+Expect to answer three or four checklist questions (which apps you use, the dock size and app order,
 whether to keep the voice assistant, Chromecast and firmware updates). Everything is reversible.

@@ -54,7 +54,7 @@ Any of these work: Claude Code (on [0G Private Computer](https://pc.0g.ai) or an
 |---|---|
 | **1. On the TV** | Settings → Device Preferences → About → press OK on **Build** seven times → back → Developer options → **USB debugging** on. If you see a Network or ADB debugging toggle, turn that on too. Keep the TV on. |
 | **2. On your computer** | Paste [`PROMPT.md`](PROMPT.md) into your assistant and fill in your TV model. |
-| **3. Follow along** | Accept "Allow USB debugging?" on the TV, then answer the checklist: which apps you use, which four go in the dock, whether to keep the voice assistant, Chromecast and updates. |
+| **3. Follow along** | Accept "Allow USB debugging?" on the TV, then answer the checklist: which apps you use, the dock size and app order, whether to keep the voice assistant, Chromecast and updates. |
 
 The assistant backs up, debloats, builds and installs the launcher, and checks each step with
 screenshots pulled from the TV. With this repo as context it takes about fifteen minutes.
