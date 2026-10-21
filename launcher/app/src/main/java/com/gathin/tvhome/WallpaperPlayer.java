@@ -4,16 +4,22 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -36,6 +42,9 @@ final class WallpaperPlayer {
     private boolean closed;
     private boolean loading;
     private String displayed = "";
+    /** wallpaper_captions: the shown picture's name from wallpapers/captions.txt; null when off or there are none. */
+    private final TextView caption;
+    private final Map<String, String> names;
 
     WallpaperPlayer(Context context, FrameLayout root, Config config) {
         this.root = root;
@@ -57,6 +66,9 @@ final class WallpaperPlayer {
         image = new ImageView(context);
         image.setScaleType(ImageView.ScaleType.CENTER_CROP);
         image.setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_NO);
+        names = config.wallpaperCaptions && config.wallpaperEnabled && !files.isEmpty()
+                ? WallpaperCaptions.read(files.get(0).getParentFile()) : Collections.emptyMap();
+        caption = names.isEmpty() ? null : makeCaption(context, root);
         if (config.wallpaperEnabled && !files.isEmpty()) {
             root.addView(image, 0, new FrameLayout.LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
@@ -86,6 +98,7 @@ final class WallpaperPlayer {
             if (bitmap != null) {
                 image.setImageBitmap(bitmap);
                 displayed = first.getName();
+                showCaption(false);
                 if (!displayed.equals(previous)) {
                     preferences.edit().putString("image", displayed)
                             .putLong("changed", System.currentTimeMillis()).apply();
@@ -139,12 +152,62 @@ final class WallpaperPlayer {
                 }
                 image.setImageBitmap(bitmap);
                 displayed = next.getName();
+                showCaption(true);
                 if (!displayed.equals(previous) || changed == 0) {
                     preferences.edit().putString("image", displayed)
                             .putLong("changed", System.currentTimeMillis()).apply();
                 }
             });
         });
+    }
+
+    /**
+     * Small light text under the top-right buttons, above everything else and never focusable. It sits where the
+     * top bar ends in every layout, so it does not cover the clock, the stats line or the tiles.
+     */
+    private static TextView makeCaption(Context context, FrameLayout root) {
+        float dp = context.getResources().getDisplayMetrics().density;
+        TextView text = new TextView(context);
+        text.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
+        text.setTextColor(0xD9FFFFFF);
+        text.setShadowLayer(6 * dp, 0, dp, 0xCC000000);
+        text.setSingleLine(true);
+        text.setEllipsize(TextUtils.TruncateAt.END);
+        text.setMaxWidth(Math.round(520 * dp));
+        text.setFocusable(false);
+        text.setAlpha(0f);
+        try {
+            text.setTypeface(context.getResources().getFont(R.font.outfit_regular));
+        } catch (Exception ignored) {
+            // the system font is fine
+        }
+        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT, Gravity.TOP | Gravity.END);
+        params.topMargin = Math.round(110 * dp);
+        params.setMarginEnd(Math.round(62 * dp));
+        root.addView(text, params);
+        return text;
+    }
+
+    /** The displayed picture's name, faded across a change; a picture without a name hides the caption. */
+    private void showCaption(boolean fade) {
+        if (caption == null) return;
+        String name = names.get(displayed);
+        caption.animate().cancel();
+        if (name == null) {
+            caption.setAlpha(0f);
+            return;
+        }
+        caption.setContentDescription(name);
+        if (!fade || caption.getAlpha() == 0f) {
+            caption.setText(name);
+            caption.setAlpha(1f);
+            return;
+        }
+        caption.animate().alpha(0f).setDuration(250).withEndAction(() -> {
+            caption.setText(name);
+            caption.animate().alpha(1f).setDuration(350).start();
+        }).start();
     }
 
     /** Names plus sizes: enough to notice a different collection without hashing every image. */
