@@ -50,5 +50,5 @@ com.coocaa.skycast.tool        # cast component updater; casting itself still wo
 
 # Kept on purpose: com.skyworth.tv (inputs and tuner; the launcher's Inputs menu goes through it),
 # com.tianci.system and com.coocaa.os.ccosservice (Home key, source panel, memory manager),
-# com.tianci.localmedia and the media player (casting plays through it), com.coocaa.dangbeimarket
-# (app store) by choice.
+# com.tianci.localmedia (USB media player; phone casting over DLNA plays through it),
+# com.coocaa.dangbeimarket (app store) by choice.
