@@ -3,6 +3,11 @@
 </p>
 
 <p align="center">
+  <a href="https://trendshift.io/repositories/310225"><img src="https://img.shields.io/badge/%F0%9F%A5%87%20%231%20trending%20repo%20of%20the%20week-ahead%20of%20Google%20%26%20DeepSeek-ffc940?style=for-the-badge&labelColor=15181e" alt="#1 trending repo of the week on Trendshift, ahead of Google and DeepSeek" height="32"></a><br>
+  <sub>Source: <a href="https://trendshift.io/repositories/310225">trendshift.io</a>, weekly trending, all languages, Oct 19–25</sub>
+</p>
+
+<p align="center">
   <a href="https://github.com/Gathin23/cleanyourtv/stargazers"><img src="https://img.shields.io/github/stars/Gathin23/cleanyourtv?style=flat&cacheSeconds=1800&color=cfffcf&labelColor=15181e" alt="Stars"></a>
   <a href="https://github.com/Gathin23/cleanyourtv/pulls?q=is%3Amerged"><img src="https://img.shields.io/github/issues-pr-closed/Gathin23/cleanyourtv?style=flat&cacheSeconds=1800&label=merged%20PRs&color=cfffcf&labelColor=15181e" alt="Merged PRs"></a>
   <a href="https://github.com/Gathin23/cleanyourtv/network/members"><img src="https://img.shields.io/github/forks/Gathin23/cleanyourtv?style=flat&cacheSeconds=1800&color=cfffcf&labelColor=15181e" alt="Forks"></a>
