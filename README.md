@@ -82,7 +82,9 @@ Anything running **Android TV** or **Google TV**. Samsung (Tizen) and LG (webOS)
 systems; see [SHOWCASE.md](SHOWCASE.md) for a webOS port, and
 [docs/devices/samsung-tizen.md](docs/devices/samsung-tizen.md) for what a 2021 Samsung set answers
 over Wi-Fi (no ADB, so no `pm disable-user`) if you are weighing a Tizen port. **Fire TV** takes the
-debloat half only, since Fire OS will not hand Home to a third-party launcher. A few China-market TCL
+debloat half only, since Fire OS will not hand Home to a third-party launcher - and on the 2015 Fire
+TV Box (Fire OS 5) even that half fails: every `pm` route is refused, so nothing can be disabled
+there at all. A few China-market TCL
 sets refuse to install any launcher at all; their lists say so in the header.
 
 Tested lists from contributors, one folder per model in [`examples/`](examples/):

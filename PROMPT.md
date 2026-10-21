@@ -58,6 +58,12 @@ Debloat
 - Before touching streaming apps, voice assistant, Chromecast, Miracast or the update service, ask me
   which ones I use with a checklist question and disable only what I don't tick.
 - Run `pm` commands one per shell call, chained commands may silently stop after the first.
+- If `pm disable-user` is refused for every package, stop and tell me: some firmware (Fire OS 5 on a
+  Fire TV Box, for one) refuses `pm disable-user` with a `SecurityException`, `pm uninstall --user 0`
+  with `DELETE_FAILED_INTERNAL_ERROR`, and `pm hide` reports success while changing nothing. Check
+  with `pm list packages -d` instead of the exit code, and don't burn the session retrying - there is
+  nothing to debloat on such a set, so we fall back to its own privacy toggles and DNS blocking
+  (`docs/TROUBLESHOOTING.md`).
 - Don't launch a package whose name says factory, production, AT or fac menu (`com.cvte.tv.hkcfac`,
   `com.at.factory.*`, `mediatek.factorymenu.ui` and the like) to see what it does, even read-only:
   on Haier/CVTE boards opening one flips a factory-mode flag that kills the Input key and CEC, and
