@@ -24,10 +24,11 @@
 # - Keeping on purpose: Google Play Store, Play Services, TV input and remote services, Bluetooth, Droidlogic.
 #
 # Kept by choice, re-enable if you want them:
-# - com.google.android.youtube.tv: the YouTube app here. Off because the tile uses SmartTube instead.
+# - com.google.android.youtube.tv: NOT disabled by this list. The YouTube app stays enabled.
 # - com.google.android.apps.mediashell (Chromecast), com.google.android.katniss (Google Assistant voice),
 #   com.google.android.apps.tv.dreamx (Google ambient screensaver, replaced by the launcher clock screensaver).
-# - com.xiaomi.mitv.updateservice: off, so firmware updates are not offered. Re-enable to check for updates.
+# - com.xiaomi.mitv.updateservice: DISABLED by this list. The TV will not offer firmware updates.
+#   Re-enable it (pm enable --user 0 com.xiaomi.mitv.updateservice) to check for updates.
 # - Casting (smartshare, wfdsinkhelperservice, mi_connect_service) is off here. Phone casting was not tested.
 
 # Xiaomi and Google telemetry
@@ -52,7 +53,6 @@ com.google.android.play.games
 com.google.android.apps.mediashell      # Chromecast built-in (see note above)
 com.google.android.katniss              # Google Assistant voice search (see note above)
 com.google.android.apps.tv.dreamx       # Google ambient screensaver (see note above)
-com.google.android.youtube.tv           # YouTube app (see note above)
 com.netflix.tokenmanager                # Netflix sign-in token, Netflix itself is already off
 com.android.printspooler                # printing
 com.android.providers.contacts          # contacts, nothing on a TV uses it
@@ -61,7 +61,7 @@ com.xiaomi.mitv.smartshare              # Xiaomi screen share
 com.xiaomi.wfdsinkhelperservice         # Miracast sink helper
 com.xiaomi.mi_connect_service           # Mi Connect
 com.mitv.videoplayer                    # Mi video player
-com.xiaomi.mitv.updateservice           # firmware update checks (see note above)
+com.xiaomi.mitv.updateservice           # DISABLED: firmware updates are not offered (see note above)
 
 # Stock launcher and setup wizard, replaced by launcher/ (see notes above)
 com.google.android.apps.tv.launcherx
