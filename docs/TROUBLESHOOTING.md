@@ -118,6 +118,26 @@ Things that bit us or contributors, so they don't bite you. Commands use `tools/
   tools/tv.py 'pm enable --user 0 com.google.android.apps.mediashell'
   ```
   Keep the package out of your list if you use Stremio on the TV, or cast from a phone.
+- **Picking HDMI 1 in the Inputs menu opened an unrelated app**, seen on an RCA Android TV 9
+  (Toptech/Zeasn firmware `RTK2851P`, Realtek RTD2851P,
+  [#805](https://github.com/Gathin23/cleanyourtv/issues/805)). The launcher switches to a passthrough
+  input with an *implicit* `ACTION_VIEW` on the input's channel URI
+  (`vnd.android.cursor.item/channel`), and only sends the theme's `input_action` when nothing claims
+  that intent at all. "Nothing claims it" is the catch: that firmware has no Live TV app for the URI,
+  and ES File Explorer (`com.estrongs.android.pop/.app.transferstation.FileTransferStationActivity`)
+  declares a `VIEW` filter for the same MIME type, so HDMI 1 opened the file manager and
+  `input_action` was never reached. A set with no handler at least shows "Not available on this TV";
+  a set with one wrong handler opens that app. Ask which app would take a row before blaming the
+  launcher:
+  ```sh
+  tools/tv.py 'cmd package query-activities --brief -a android.intent.action.VIEW -t vnd.android.cursor.item/channel'
+  ```
+  `live_tv_package` does not help: it is applied as `setPackage` on the Live TV row only, and the
+  HDMI and AV rows carry no package. Until the launcher checks that the handler is a TV-input app,
+  hide the rows instead: a theme with `source_panel_service` set and `live_tv_package` empty makes
+  the Inputs pill open the TV's own source panel (what the reporter did), or disable the app that
+  answers. Report another one rather than reading it as a firmware quirk: the wrong-handler case needs
+  a source change, not a setting.
 - **`adb exec-out screencap -p` gives a broken PNG** on some MediaTek sets (Xiaomi, and Amazon's
   own Fire TV smart TVs): the binary prints `Init wrapper sys mutex successful` on stdout first.
   Save on the TV and pull the file instead: `screencap -p /data/local/tmp/s.png`, or cut
