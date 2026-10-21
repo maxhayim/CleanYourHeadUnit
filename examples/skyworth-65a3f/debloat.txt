@@ -33,12 +33,12 @@
 # A third-party launcher cannot own the boot screen:
 # - boot_start_tv_source only picks the input source (DEFAULT/REMEMBER, HOME, CHANNEL); there is
 #   no "launch an app" value, and HOME changes nothing.
-# - The remote's colour key does not help either: ShortcutKeySetActivity offers only one-key
-#   boost, unset, HDMI1, HDMI2, Live TV and Video on this firmware, no installed launchers.
-# - What does work: add the launcher to the stock home's dock through
-#   com.coocaa.aigc.home/.dockedit.DockEditActivity. After a reboot it sits in the left rail and
-#   is one press away. `cmd package set-home-activity` succeeds and the launcher does become the
-#   default HOME, but the boot screen and the HOME key still go to aigc.home.
+# - Two one-press routes work. (1) The remote's colour key:
+#   com.skyworth.setting/.module.device.shortcutkey.ShortcutKeySetActivity lists the installed
+#   launcher and the binding sticks — press the colour key, the launcher opens. (2) The stock
+#   home's dock: com.coocaa.aigc.home/.dockedit.DockEditActivity, after a reboot the launcher sits
+#   in the left rail. `cmd package set-home-activity` also succeeds and the launcher does become
+#   the default HOME, but the boot screen and the HOME key still go to aigc.home.
 #
 # Kept on purpose: com.coocaa.aigc.home, com.skyworth.setting, com.tianci.system, com.coocaa.os.*
 # (including com.coocaa.os.control and com.coocaa.os.softsettings), com.coocaa.safelauncher,
