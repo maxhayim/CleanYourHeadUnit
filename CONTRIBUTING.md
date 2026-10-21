@@ -31,9 +31,9 @@ DynamicAnimation, no Kotlin, no Compose, no network. It targets TVs with 1 GB of
 - Anything that depends on a specific TV goes in `app/src/main/res/values/config.xml`, not in code.
 - Keep D-pad navigation deterministic. Test Up/Down/Left/Right from every edge.
 - Verify on a real TV, not only the emulator. The easiest way is remote key injection plus a
-  screenshot: `tools/tv.py 'input keyevent KEYCODE_DPAD_DOWN'` then
-  `tools/tv.py --screenshot shots/after.png` (the command captures on the TV and pulls the PNG, and
-  creates the folder if it is missing). Include a screenshot in your pull request.
+  screenshot: `tools/tv.py --screenshot shots/after.png DPAD_DOWN` presses the key, waits a second
+  (`--wait` changes that), captures on the TV and pulls the PNG, creating the folder if it is missing.
+  Include a screenshot in your pull request.
 - Long presses (hold OK on Settings or on a tile) can't always be injected: `input keyevent --longpress`
   arrives as a short press on some firmware (Android TV 8.0 on a Philips opens the app instead). Writing
   to the remote's own input device works, because Android then repeats the held key itself. Find the
@@ -72,6 +72,9 @@ build-tools 34.0.0; on macOS `brew install openjdk@17 android-commandlinetools` 
 Ideas that fit the direction: an idle screensaver with clock and ambient colour, per-TV icon packs
 for apps without banners, a settings screen to edit the dock from the TV, localisation.
 Ideas that don't: recommendation rows, content feeds, ads, telemetry.
+
+A new theme goes in `themes/<name>/` with its `config.json` and a required `screenshot.jpg` of Home on a
+real TV with that theme; see [Adding a theme](themes/README.md#adding-a-theme).
 
 ## 3. Improve the prompt and tools
 
