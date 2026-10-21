@@ -45,6 +45,7 @@ final class Config {
     final List<String> hiddenApps;
     final String liveTvPackage;
     final String liveTvAction;
+    final String liveTvInputId;
     /** Package to the action its tile sends instead of opening the start screen (config.xml, launch_actions). */
     final Map<String, String> launchActions;
     /** Package to the name its tile shows instead of the app's label (config.xml, app_labels). */
@@ -106,7 +107,7 @@ final class Config {
     final boolean cinematicHome;
 
     private Config(List<String> dockApps, boolean fillDock, List<String> hiddenApps, String liveTvPackage,
-                   String liveTvAction, Map<String, String> launchActions, Map<String, String> appLabels,
+                   String liveTvAction, String liveTvInputId, Map<String, String> launchActions, Map<String, String> appLabels,
                    Map<String, String> appBanners, String sourcePanelService, String sourcePanelAction, String inputAction,
                    int columns, int rowsBelowDock, boolean animations, boolean advancedEffects,
                    boolean shamsiDate, String greetingName, boolean moduleCards, boolean reducedMotion, boolean dockTitle, boolean dockRow, boolean reorderButton, String vpnApp,
@@ -122,6 +123,7 @@ final class Config {
         this.hiddenApps = Collections.unmodifiableList(hiddenApps);
         this.liveTvPackage = liveTvPackage;
         this.liveTvAction = liveTvAction;
+        this.liveTvInputId = liveTvInputId;
         this.launchActions = Collections.unmodifiableMap(launchActions);
         this.appLabels = Collections.unmodifiableMap(appLabels);
         this.appBanners = Collections.unmodifiableMap(appBanners);
@@ -170,6 +172,7 @@ final class Config {
         List<String> hidden = new ArrayList<>(Arrays.asList(res.getStringArray(R.array.hidden_apps)));
         String liveTv = res.getString(R.string.live_tv_package).trim();
         String liveTvAction = res.getString(R.string.live_tv_action).trim();
+        String liveTvInputId = res.getString(R.string.live_tv_input_id).trim();
         List<String> launchActions = new ArrayList<>(Arrays.asList(res.getStringArray(R.array.launch_actions)));
         List<String> appLabels = new ArrayList<>(Arrays.asList(res.getStringArray(R.array.app_labels)));
         List<String> appBanners = new ArrayList<>(Arrays.asList(res.getStringArray(R.array.app_banners)));
@@ -210,6 +213,7 @@ final class Config {
             hidden = stringList(json, "hidden_apps", hidden);
             liveTv = string(json, "live_tv_package", liveTv);
             liveTvAction = string(json, "live_tv_action", liveTvAction);
+            liveTvInputId = string(json, "live_tv_input_id", liveTvInputId);
             launchActions = stringList(json, "launch_actions", launchActions);
             appLabels = stringList(json, "app_labels", appLabels);
             appBanners = stringList(json, "app_banners", appBanners);
@@ -284,7 +288,7 @@ final class Config {
         Festival festival = json == null ? Festival.NONE : Festival.parse(string(json, "festival", ""),
                 string(json, "festival_until", ""), string(json, "greeting", ""), string(json, "accent_color", ""));
 
-        return new Config(dock, fillDock, hidden, liveTv, liveTvAction, packageMap(launchActions), packageMap(appLabels),
+        return new Config(dock, fillDock, hidden, liveTv, liveTvAction, liveTvInputId, packageMap(launchActions), packageMap(appLabels),
                 packageMap(appBanners), panelService,
                 panelAction, inputAction,
                 Math.max(1, columns), Math.max(0, rowsBelow), animations, advancedEffects,
