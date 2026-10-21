@@ -102,6 +102,9 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
      */
     private static final long TIME_VALID_AFTER_MS = 1_735_689_600_000L;
     private String liveTvPkg;
+    /** Idle time on Home before ClockActivity; 0 is off (config.xml, home_idle_clock_minutes). */
+    private long idleClockMs;
+    private final Runnable showIdleClock = () -> startActivity(new Intent(this, ClockActivity.class));
     private String liveTvAction;
     private String inputAction;
     private String sourcePanelService;
@@ -299,6 +302,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         festival = cfg.festival;
         festive = festival.active(LocalDate.now());
         liveTvPkg = cfg.liveTvPackage;
+        idleClockMs = cfg.homeIdleClockMinutes * MINUTE_MS;
         liveTvAction = cfg.liveTvAction;
         inputAction = cfg.inputAction;
         sourcePanelService = cfg.sourcePanelService;
@@ -606,6 +610,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
             recreate();
             return;
         }
+        restartIdleClock();
         promptsPaused = false;
         if (rebuildOnResume) {
             tilesReady = false;
@@ -712,9 +717,22 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         });
     }
 
+    /** Any key on Home restarts the countdown to the idle clock. */
+    @Override
+    public void onUserInteraction() {
+        super.onUserInteraction();
+        restartIdleClock();
+    }
+
+    private void restartIdleClock() {
+        root.removeCallbacks(showIdleClock);
+        if (idleClockMs > 0) root.postDelayed(showIdleClock, idleClockMs);
+    }
+
     @Override
     protected void onPause() {
         super.onPause();
+        root.removeCallbacks(showIdleClock);
         endReorder();   // Home or another app while reordering keeps the order so far
         wallpaperPlayer.stop();
         stopAmbientAnimation();

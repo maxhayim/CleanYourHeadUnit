@@ -104,6 +104,8 @@ final class Config {
     final List<RaceWeekend.Race> raceCalendar;
     /** Cinematic top shelf (config.xml, cinematic_home): the focused dock app's artwork behind a larger shelf. */
     final boolean cinematicHome;
+    /** Minutes Home may sit untouched before the clock screensaver (config.xml, home_idle_clock_minutes); 0 is off. */
+    final int homeIdleClockMinutes;
 
     private Config(List<String> dockApps, boolean fillDock, List<String> hiddenApps, String liveTvPackage,
                    String liveTvAction, Map<String, String> launchActions, Map<String, String> appLabels,
@@ -114,7 +116,7 @@ final class Config {
                    int[] settingsKeycodes, boolean settingsKeyPanel, boolean wallpaperEnabled, File wallpaper, List<File> wallpapers,
                    int wallpaperRotationMinutes, int wallpaperDim, boolean overlayApplied,
                    Festival festival, int[] inputKeycodes, List<String> appKeys,
-                   List<RaceWeekend.Race> raceCalendar, boolean cinematicHome) {
+                   List<RaceWeekend.Race> raceCalendar, boolean cinematicHome, int homeIdleClockMinutes) {
         this.inputKeycodes = inputKeycodes;
         this.appKeys = Collections.unmodifiableList(appKeys);
         this.dockApps = Collections.unmodifiableList(dockApps);
@@ -156,6 +158,7 @@ final class Config {
         this.festival = festival;
         this.raceCalendar = Collections.unmodifiableList(raceCalendar);
         this.cinematicHome = cinematicHome;
+        this.homeIdleClockMinutes = homeIdleClockMinutes;
     }
 
     /** The folder the theme tools push into; null when external storage is unavailable. */
@@ -198,6 +201,7 @@ final class Config {
         int[] inputKeycodes = res.getIntArray(R.array.input_key_keycodes);
         List<String> appKeys = new ArrayList<>(Arrays.asList(res.getStringArray(R.array.app_keys)));
         boolean cinematic = res.getBoolean(R.bool.cinematic_home);
+        int idleClockMinutes = res.getInteger(R.integer.home_idle_clock_minutes);
         boolean applied = false;
 
         File dir = dir(ctx);
@@ -238,6 +242,7 @@ final class Config {
             inputKeycodes = intArray(json, "input_key_keycodes", inputKeycodes);
             appKeys = stringList(json, "app_keys", appKeys);
             cinematic = bool(json, "cinematic_home", cinematic);
+            idleClockMinutes = integer(json, "home_idle_clock_minutes", idleClockMinutes, 0, 1440);
         }
         // A theme push or reset invalidates choices made on the TV. On first use, remember the
         // current theme without clearing choices from an older launcher version.
@@ -291,7 +296,8 @@ final class Config {
                 shamsi, greetingName, moduleCards, reducedMotion, dockTitle, dockRow, reorderButton, vpn, homeSettings, showStats, library, background,
                 Math.max(0, Math.min(100, skyIntensity)), settingsKeycodes, settingsKeyPanel, wallpaperEnabled, wallpaper,
                 wallpapers, rotationMinutes, wallpaperDim, applied,
-                festival, inputKeycodes, appKeys, json == null ? Collections.emptyList() : raceCalendar(json), cinematic);
+                festival, inputKeycodes, appKeys, json == null ? Collections.emptyList() : raceCalendar(json), cinematic,
+                Math.max(0, idleClockMinutes));
     }
 
     /**
