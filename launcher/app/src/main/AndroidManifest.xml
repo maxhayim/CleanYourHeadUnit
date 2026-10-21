@@ -92,6 +92,7 @@
         <service
             android:name=".HomeKeyService"
             android:label="@string/home_key_name"
+            android:directBootAware="true"
             android:exported="true"
             android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
             <intent-filter>
