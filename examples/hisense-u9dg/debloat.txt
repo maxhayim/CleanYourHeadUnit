@@ -1,0 +1,84 @@
+# Hisense 75" U9DG Dual-Cell ULED (device huangshan, MediaTek), Android TV 10, firmware QTG3.200902.001
+# Security patch 2023-02-05. Sold in the USA (2021). Android model string "SmartTV 4K FFM", the same
+# device and build as hisense-smarttv-4k-ffm (Latin America), with the US preload set. 2 GB RAM,
+# armeabi-v7a (32-bit userspace), 7.7 GB /data.
+#
+# Apply:   TV_HOST=<tv ip> tools/disable.sh examples/hisense-u9dg/debloat.txt
+# Undo:    TV_HOST=<tv ip> tools/restore.sh examples/hisense-u9dg/debloat.txt
+# Everything is DISABLED, not uninstalled. Comment out any line you want to keep.
+#
+# WARNING: never disable com.hisense.tv.smartsense, com.vt.tv.smartsense.ui or com.vt.tv.aiot. On this
+# firmware that family sent a TV to Android Recovery ("Can't load Android system", see
+# hisense-smarttv-4k-ffm). If you ever land on that screen pick "Try again", never "Factory data reset".
+#
+# ADB: turning USB debugging on opens port 5555 directly (no Wireless debugging pairing); ro.adb.secure=1,
+# so the TV asks "Allow USB debugging?" on first connect. Wait ~15 s after pm disable-user before a reboot.
+# Applied on 2026-10-21 in five batches with a reboot after each: normal boot every time, all 7 inputs
+# (HDMI 1-4, composite, two tuners) still registered, HDMI switching from the launcher works. Fresh list,
+# not yet lived with for weeks; update it if something breaks.
+#
+# Keep: com.mediatek.* (wwtv.tvcenter is Live TV and HDMI; autopair, tv.agent, partner.netflix for the
+# Netflix key), com.hisense.tv.hitvinput (HDMI/AV/tuner inputs), com.hisense.tv.smartservice,
+# com.vidaa.persistent.service, com.hisense.tv.customerlauncher, com.hisense.kpad and com.hisense.favkey
+# (remote keys), com.hisense.uifac, com.hisense.tv.rcs, com.hisense.mixbar, com.hisense.tv.protector
+# ("Device Assistant" cleaner, only hidden in the launcher config), com.hisense.audio_update_service,
+# com.vt.eula, com.vt.tv.aipq, com.hisense.tv.videocolor, com.hisense.tv.dlna, com.jamdeo.tv.mediacenter
+# (USB media), com.google.android.apps.mediashell (Chromecast), com.google.android.tungsten.setupwraith
+# (owns the Wi-Fi saved at setup but does not claim HOME on this firmware, so it can stay).
+# Stock launcher: com.google.android.tvlauncher (the default in restore.sh), with a full-width sponsored
+# hero banner that only the launcher swap removes. launcher/build-and-install.sh worked unchanged.
+# Input button: the Bluetooth remote (Vendor_000d_Product_3838.kl) sends scancode 220 = KEYCODE_TV_INPUT,
+# which the Live TV app and the launcher's InputKeyService turn into com.android.tv.action.VIEW_INPUTS.
+# Nothing on this firmware answers that action once tvlauncher is disabled (no global_keys.xml, no vendor
+# input picker), so you need a launcher build that answers VIEW_INPUTS itself and INPUT_KEY_SERVICE=1.
+# Already disabled at the factory: net.vidaatv.android.tv, Pandora, Vudu, Play Games, Google TV movies,
+# YouTube Music, the Hisense browser, the calendar provider.
+
+# Group 1: telemetry, ACR, tracking, silent auto-installs
+com.hisense.evservice                            # ACR "Enhanced Viewing" content recognition
+com.hisense.service.message                      # Hisense push messages
+com.google.android.partnersetup                  # partner referral tracking
+android.autoinstalls.config.hisense.huangshan    # PAI: silent partner-app auto-installs (Sling, FanDuel, Freevee tiles)
+com.google.android.feedback                      # crash/feedback uploader
+com.google.android.tv.bugreportsender
+
+# Group 2: retail demo, hotel mode, first-run walkthrough, Google home-row recommendations
+com.hisense.storemode
+com.hisense.hotelmode
+com.hisense.tv.b2b
+com.demo
+com.hisense.fte                                  # first-time experience
+com.google.android.tvrecommendations             # sponsored/recommendation rows
+com.google.android.syncadapters.calendar         # unused on a TV
+
+# Group 3: preloaded streaming apps, off by choice. Comment out the ones you use. Kept on this set:
+# Netflix, YouTube, Prime Video, Disney+, HBO Max, Apple TV, Hulu, Peacock, Peloton, Tubi, Pluto TV.
+com.google.android.youtube.tvkids
+com.google.android.youtube.tvunplugged           # YouTube TV
+com.cbs.ott                                      # Paramount+
+tv.twitch.android.app
+com.vimeo.android.videoapp
+com.ted.android.tv
+com.clearchannel.iheartradio.tv
+com.espn.score_center
+com.foxsports.videogo
+com.nousguide.android.rbtv                       # Red Bull TV
+com.abclocal.kabc.news                           # ABC7 Los Angeles
+com.imdbtv.livingroom                            # IMDb TV / Freevee
+net.vidaatv.hisense.android.tv                   # Hisense Channels (VIDAA free channels)
+com.yeelink.yeelightflow.hisense.overseas        # Yeelight smart-light app
+
+# Group 4: voice assistants, off by choice. The remote's mic button stops working.
+com.hisense.alexa
+com.google.android.katniss                       # Google Assistant / voice search
+com.google.android.tv.assistant
+
+# Group 5: sharing services, off by choice. Chromecast (com.google.android.apps.mediashell) kept.
+com.mediatek.androidbox                          # Miracast screen sharing (WFDSinkTest)
+com.hisense.tv.hisremotenow                      # RemoteNOW phone app
+com.hisense.tv.hisremotenowserver
+
+# Firmware updates, kept by choice. Add these three to stop OTA updates:
+# com.hisense.tv.ota
+# com.hisense.remoteupgrade
+# com.vt.tv.usbota
