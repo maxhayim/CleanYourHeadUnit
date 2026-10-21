@@ -293,7 +293,9 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         public void run() {
             updateGreeting();
             updateRace();
-            updateWifiLabel();
+            // The pill follows the network callbacks and each return to Home; only the diya's flame follows the
+            // signal level, so only it needs this minute's binder calls (about 7 ms on the UI thread).
+            if (festive) updateWifiLabel();
             sky.update();
             wallpaperPlayer.update();
             handler.postDelayed(this, MINUTE_MS);
