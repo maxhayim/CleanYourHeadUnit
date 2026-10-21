@@ -178,6 +178,24 @@ Things that bit us or contributors, so they don't bite you. Commands use `tools/
   then belongs to `android.uid.system`), or use Ethernet. `tools/disable.sh` skips setupwraith while it
   owns the network (`FORCE_SETUPWRAITH=1` overrides). Already offline? Rejoin from the TV with its own
   remote or a USB keyboard, then turn Wireless debugging back on if it was in use.
+- **The remote's mic button does nothing, or opens the Assistant and it never hears you**, seen on a
+  Xiaomi TV Box S 3rd gen (`MiTV-AFMU0`, `twilight`, Google TV 14, `V816.0.7.0.UZFAABX`). Two
+  packages have to stay enabled, and re-enabling only one of them is what makes this hard to
+  diagnose: `com.google.android.katniss` is the Assistant itself, and
+  `com.google.android.tv.remote.service` is the Google TV bridge for the physical remote, which
+  carries the remote's Bluetooth microphone. With both disabled the button does nothing. With only
+  `katniss` back the Assistant opens, takes `AudioRecord` (`inputSource 6`, VOICE_RECOGNITION) and
+  records silence, because the audio never leaves the remote. `pm enable` on both restores the
+  button without a reboot. To tell the two failures apart: `dumpsys package
+  com.google.android.katniss | grep enabled` and the same for `tv.remote.service` (`enabled=3` is
+  disabled), then `logcat -d | grep AudioRecord` right after pressing the button: a session that
+  opens and closes with no recognition is the missing bridge, not a broken Assistant. The AFMU0
+  list keeps both now; the lists that still disable `com.google.android.tv.remote.service` are
+  `rca-ai-pont`, `sharp-aquos-tve21f`, `sony-bravia-4k-gb-us`, `sony-xbr-65x900f`,
+  `sony-xbr-x900e`, `tcl-32s5k`, `tcl-40s5400a`, `tcl-55s470g`, `tcl-beyondtv2-android-11`,
+  `tcl-g09-google-tv`, `tcl-g10-google-tv`, `xgimi-horizon-s-pro`, `xgimi-mogo-3-pro` and
+  `xiaomi-mi-box-s`, so the same symptom is expected there on any set whose remote has a
+  microphone.
 - **Casting from a phone fails with "Untrusted device" after setupwraith is disabled**, seen on
   Chromecast with Google TV HD (`boreal`) on Google TV 14 build UTTC.250917.004, the build the
   `examples/google-chromecast-gtv-4k/` list was made on. YouTube on the phone says "Untrusted device.
