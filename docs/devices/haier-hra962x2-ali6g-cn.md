@@ -118,8 +118,11 @@ the boot count before launching. Reconnecting the service in the same boot
 did not schedule another takeover while watching video. No new polling or
 background service was added. A reboot was checked separately: the adapted
 launcher became foreground and the owner confirmed the TV displayed a home
-screen normally. The later settings-only update did not receive another boot
-test.
+screen normally. After the owner subsequently powered the TV off and on, the
+settings update (local versionCode 9) was checked too: the new launcher became
+foreground, its Home accessibility service was enabled and bound, and the
+owner again confirmed the physical Home button returned to the new launcher.
+The installed APK matched the locally built APK's SHA-256.
 
 The core of that local `onServiceConnected()` addition was:
 
@@ -205,9 +208,12 @@ Launcher settings wallpaper picker can select a picture or no wallpaper.
 Use a dark, quiet image so the clock and app labels remain readable. There is
 no need for a network wallpaper service or animated background. Restarting the
 launcher to reload a file can affect the accessibility service: after a forced
-stop, recheck that the Home service is still enabled and bound. The final
-wallpaper was visible in a pulled screenshot; the TV later went offline, so
-the last accessibility re-enable was not independently reverified.
+stop, recheck that the Home service is still enabled and bound. The TV went
+offline when the owner powered it off. After the next power-on, the service
+was independently confirmed bound, the wallpaper was still visible in a pulled
+screenshot, and the top-right Settings / Back flow passed again. The wallpaper
+file's SHA-256 still matched the original image. No repair commands were needed
+during this follow-up check.
 
 ## Same-day package observations, not a ready-to-run debloat list
 
