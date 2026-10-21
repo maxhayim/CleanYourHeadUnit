@@ -204,6 +204,20 @@ Things that bit us or contributors, so they don't bite you. Commands use `tools/
   package that also claims HOME (PatchWall on Xiaomi) makes Android drop the default. The install
   script now picks the known stock launcher among the candidates by itself; otherwise choose one on
   the TV or pass `STOCK_LAUNCHER=<package>`.
+- **Stremio fails every stream with `ConnectException: Failed to connect to /127.0.0.1:11470`**,
+  and only Force stop brings it back until the next reboot. This is not the debloat. It is a Stremio
+  regression in 1.11 ([stremio-bugs#2866](https://github.com/Stremio/stremio-bugs/issues/2866)):
+  `startServer()` only runs once the lifecycle is at least STARTED, so a process Android woke in the
+  background never starts the local server, and opening the app reuses that process. On a TV the
+  waker is Stremio's own `BootReceiver` refreshing the home-screen channels, so it happens on every
+  boot. Leaving the app and reopening does not help (same pid); any fresh process does, `am kill`
+  included. Keeping the boot-woken process from sticking around fixes it for good:
+  `tools/tv.py 'cmd appops set com.stremio.one RUN_ANY_IN_BACKGROUND ignore; cmd appops write-settings'`.
+  The second command is not optional: app-ops are written to disk lazily, and on a Vestel shandao set
+  the op was back to `allow` after the next reboot without it, which looks exactly like the
+  workaround not working. An app started in the foreground is unaffected, and the side effect, that
+  the home-screen channels only refresh while Stremio is open, costs nothing once the recommendation
+  rows are disabled anyway.
 
 ## Accessibility helper enabled but the remote button does nothing
 
