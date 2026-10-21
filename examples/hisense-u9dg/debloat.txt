@@ -30,7 +30,8 @@
 # Input button: the Bluetooth remote (Vendor_000d_Product_3838.kl) sends scancode 220 = KEYCODE_TV_INPUT,
 # which the Live TV app and the launcher's InputKeyService turn into com.android.tv.action.VIEW_INPUTS.
 # Nothing on this firmware answers that action once tvlauncher is disabled (no global_keys.xml, no vendor
-# input picker), so you need a launcher build that answers VIEW_INPUTS itself and INPUT_KEY_SERVICE=1.
+# input picker). The launcher answers it itself when handle_view_inputs is on: config.json in this folder
+# sets it (TV_HOST=<tv ip> tools/theme.sh examples/hisense-u9dg), with INPUT_KEY_SERVICE=1 at install.
 # Already disabled at the factory: net.vidaatv.android.tv, Pandora, Vudu, Play Games, Google TV movies,
 # YouTube Music, the Hisense browser, the calendar provider.
 
