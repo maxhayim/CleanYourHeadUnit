@@ -97,7 +97,7 @@ Anything running **Android TV** or **Google TV**.
 
 Tested lists from contributors, one folder per model in [`examples/`](examples/):
 
-**TCL** 40 · **Sony** 22 · **Xiaomi** 23 · **Philips** 10 · **Hisense** 7 · **Amazon Fire TV** 5 ·
+**TCL** 40 · **Sony** 22 · **Xiaomi** 24 · **Philips** 10 · **Hisense** 7 · **Amazon Fire TV** 5 ·
 **Panasonic** 3 · **Skyworth** 3 · **Thomson** 3 · **BenQ** 2 · **CHiQ** 2 · **Google** 2 · **Haier** 2 · **Hitachi** 2 ·
 **Kalley** 2 · **NVIDIA Shield** 2 · **OnePlus** 2 · **onn** 2 · **Redmi** 2 · **Toshiba** 2 · **Vu** 2 ·
 AiPro2K · AIWA · Artel · Cecotec · Challenger · Compac · Dialog · EKO · FFalcon · Freebox · Insignia Fire TV ·
