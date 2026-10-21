@@ -6,6 +6,8 @@
 #
 # Known quirk on this firmware: default_input_method points at com.baidu.input, which is not
 # installed, so no keyboard appears in search fields. Set Gboard as the IME (see README gotchas).
+# Tested on one unit over Ethernet: setupwraith owned saved Wi-Fi networks and claimed HOME;
+# disabling it over Ethernet allowed CleanYourTV to become HOME. Do not disable it over Wi-Fi.
 
 # Batch 1 - telemetry and analytics
 com.tcl.ttvs                           # TCL BI/awareness/identifier services
@@ -45,5 +47,6 @@ com.tcl.airplay2                       # AirPlay
 com.mediatek.AirplayAPK                # AirPlay
 
 # Batch 5 - with the launcher in this repo installed (launcher/build-and-install.sh disables launcherx)
-com.google.android.tungsten.setupwraith # first-run wizard; its RecoveryActivity claims HOME. Re-enable
-                                        # before a factory reset (restore.sh does it).
+com.google.android.tungsten.setupwraith # first-run wizard; owns saved Wi-Fi networks and claims HOME.
+                                        # Disable only while connected over Ethernet; re-enable before
+                                        # a factory reset (restore.sh does it).
