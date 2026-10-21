@@ -9,7 +9,8 @@ instead of writing them from scratch, and only needs to edit `launcher/.../value
 Before you start, on the TV: Settings → Device Preferences → About → press OK on "Build" 7 times,
 then go back → Developer options → turn on USB debugging (and Network/ADB debugging if your TV
 shows it). Keep the TV on. Some boxes cut power to their USB port while USB debugging is on, so a
-USB speaker or drive plugged into it goes dead until you switch debugging off again.
+USB speaker or drive plugged into it goes dead until you switch debugging off again. A USB Ethernet
+adapter on that port can drop the same way, so plan to do the whole session in one sitting.
 
 ---
 
@@ -39,11 +40,20 @@ Connect
 Back up first
 - Save the full package list, disabled-package list, getprop output and all settings to a backup folder
   before changing anything, and write a restore script that re-enables everything you disable.
-- Ask me what is plugged into the TV's USB ports. Some devices cut their power while USB debugging
-  is on, so warn me, and remind me to switch debugging off once you're done.
+- Ask me what is plugged into the TV's USB ports, and ask separately whether the TV's network comes
+  through a USB Ethernet adapter: "nothing plugged in" can be true while the network itself is on that
+  port. Some devices cut their power while USB debugging is on, so warn me, and remind me to switch
+  debugging off once you're done. On a set that reaches the network over USB Ethernet, check before you
+  change anything: `dumpsys usb | grep host_connected` (`host_connected=false` means the adapter is
+  already gone) and `dumpsys connectivity | grep -o 'Transports: [A-Z]*'` (`WIFI` on a TV I call wired
+  means the box fell back, and ADB is running over Wi-Fi). Finish the whole job in one sitting, not
+  two: there the port only returns with USB debugging off, and that closes port 5555 as well. Prefer
+  Wireless debugging if the TV has it.
 - When you finish, close network ADB instead of leaving it open: switch USB debugging and
   Network/ADB debugging off on the TV, revoke the USB debugging authorisations, reboot, and check
-  with `tools/adb-closed.py <tv ip>` that the port refuses the connection. Don't trust `nc` on macOS:
+  with `tools/adb-closed.py <tv ip>` that the port refuses the connection. If the TV's network came
+  over a USB Ethernet adapter, unplug and replug the adapter once debugging is off - the port comes
+  back with it - and have me confirm the TV is on Ethernet again, not Wi-Fi. Don't trust `nc` on macOS:
   Local Network privacy can block it too, and its "No route to host" proves nothing; only "Connection
   refused" does. Port 5555 is plaintext, and on firmware with `ro.adb.secure=0` any device on the LAN
   can get a shell.

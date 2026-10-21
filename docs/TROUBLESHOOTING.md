@@ -31,9 +31,20 @@ Things that bit us or contributors, so they don't bite you. Commands use `tools/
   _adb-tls-pairing._tcp` (or `adb mdns services`) shows the pairing port while the code is on screen.
   Android switches Wireless debugging off whenever Wi-Fi drops; turn it back on and `adb` reconnects
   without a new code. Port 5555 from `adb tcpip` usually lasts only until the next reboot.
-- **USB devices go dead while USB debugging is on**, seen on the Xiaomi Mi Box S: its firmware
-  switches the USB port to ADB device mode, which cuts the power to a USB speaker or drive. Switch
-  USB debugging off when you're done; the launcher doesn't need it.
+- **USB devices go dead while USB debugging is on**, seen on the Xiaomi Mi Box S and the Xiaomi TV
+  Box S 3rd gen ([MiTV-AFMU0, Google TV 14](https://github.com/Gathin23/cleanyourtv/issues/737)):
+  their firmware switches the USB port to ADB device mode, which cuts the power to a USB speaker or
+  drive. A **USB Ethernet adapter sits on that same port**, so the network goes with it and the box
+  falls back to Wi-Fi without saying so. `dumpsys usb | grep host_connected` prints `false`;
+  `dumpsys connectivity | grep -o 'Transports: [A-Z]*'` prints `WIFI` on a set the owner calls wired.
+  A bare `eth0` stuck at `NO-CARRIER` is these boards' own socketless MAC, not the adapter - on the
+  TCL 65C735 the adapter came up as `eth1`. How long the port survives debugging differs by firmware:
+  the two Xiaomi boxes lose it as soon as debugging is on, while the 65C735 kept the adapter until a
+  reboot with debugging still on put the port in gadget mode (`sys.usb.config=adb`, `Mstar-udc`) and
+  it never came back ([that list's header](../examples/tcl-65c735/debloat.txt)). Either way there is
+  no way back from the shell on a set with no Wireless debugging, and switching USB debugging off
+  stops `adbd` too, so plan one sitting rather than two: switch debugging off at the end, replug the
+  adapter, and confirm Ethernet before handing the TV back. The launcher never needs debugging.
 - **Close port 5555 when you're done**: plaintext, and a shell for anyone on the LAN when `ro.adb.secure=0`. Steps in the README FAQ.
 - **The TV sits on a separate VLAN or IoT network** and `tools/tv.py` times out although debugging
   is on: the router keeps the computer from reaching it. Add a temporary firewall rule from your
