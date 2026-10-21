@@ -562,7 +562,7 @@ three that matter most:
 
 ## Questions people ask
 
-<details open>
+<details>
 <summary><b>Is this safe? Can it brick the TV?</b></summary>
 
 Nothing is flashed, rooted or deleted; packages are disabled
@@ -598,7 +598,7 @@ TV at their home routing to it. Never by opening the ADB port on their router. S
 
 </details>
 
-<details open>
+<details>
 <summary><b>Isn't ADB access a security hole?</b></summary>
 
 It is one explicit "allow this computer" tap on the TV, the
