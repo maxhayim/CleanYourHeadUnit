@@ -76,6 +76,10 @@
          Live TV app handles. Where nothing answers that, this action is sent with the same URI instead
          (XGIMI projectors: com.xgimi.action.hdmiPlayer). Leave empty to omit. -->
     <string name="input_action" translatable="false"></string>
+    <!-- Inputs menu: a scheme to send the input's passthrough URI with instead of content:// (and no channel MIME
+         type). YaOS: live-tv. Its source player answers live-tv://android.media.tv/passthrough/<input>, while the
+         content:// URI goes to its channel player, which resumes the last film it played. Leave empty to omit. -->
+    <string name="input_uri_scheme" translatable="false"></string>
 
     <!-- Whether HomeKeyService and InputKeyService actually request key filtering (config.xml or a theme's
          "key_filter"). Some firmware (TCL Google TV on Android 12) drops key auto-repeat once ANY service
