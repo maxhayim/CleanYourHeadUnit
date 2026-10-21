@@ -99,6 +99,7 @@ Anything running **Android TV** or **Google TV**.
 Tested lists from contributors, one folder per model in [`examples/`](examples/):
 
 **TCL** 40 · **Sony** 22 · **Xiaomi** 22 · **Philips** 10 · **Hisense** 7 · **Amazon Fire TV** 6 ·
+**TCL** 40 · **Sony** 22 · **Xiaomi** 24 · **Philips** 10 · **Hisense** 7 · **Amazon Fire TV** 5 ·
 **Panasonic** 3 · **Skyworth** 3 · **Thomson** 3 · **BenQ** 2 · **CHiQ** 2 · **Google** 2 · **Haier** 2 · **Hitachi** 2 ·
 **Kalley** 2 · **NVIDIA Shield** 2 · **OnePlus** 2 · **onn** 2 · **Redmi** 2 · **Toshiba** 2 · **Vu** 2 ·
 AiPro2K · AIWA · Artel · Cecotec · Challenger · Compac · Dialog · EKO · FFalcon · Freebox · Insignia Fire TV ·
@@ -293,6 +294,8 @@ BYINTEK, JMGO, Portronics, Stellamore, Wanbo and XGIMI projectors
 | Xiaomi MiTV-MSSP3 (machuca, MediaTek), Android 9 firmware PI.7524 | Android TV 9 |
 | Xiaomi TV A Pro 75" 2026 (MiTV-MZTU0, river, MediaTek) | Google TV 14 |
 | Xiaomi TV Box S 3rd gen (MiTV-AFMU0, twilight, Amlogic), streaming box | Google TV 14 |
+| Xiaomi TV Stick 4K 2nd gen (MiTV-AFMU1, twilight, adastra, Amlogic), streaming stick | Google TV 14 |
+| Xiaomi TV Stick 4K (MiTV-AYFR0, soul, Amlogic), streaming stick | Android TV 14 |
 | Xiaomi TV S Pro 100 Mini LED 2025 (小米电视 S Pro 100, L100MB-SP, MiTV-MFFU0, finch, MediaTek), China firmware OS3.0.115.0.UFFMATV, 4 GB RAM | Android 14 (HyperOS 3, CN build) |
 
 </details>

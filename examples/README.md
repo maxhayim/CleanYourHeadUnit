@@ -188,6 +188,8 @@ on that firmware, grouped and commented. These are starting points: comment out 
 | `xiaomi-mitv-mssp2/` | Xiaomi MiTV-MSSP2 (volver, MediaTek), firmware PI.4621, low-RAM | Android TV 9 | PatchWall, Mi analytics, TV Manager, partner auto-installs, Google feedback/bug reports, old leanback home still installed; hotkeys, phone remote, Media Player, updater and Chromecast kept; empty Live TV/HDMI screenshots |
 | `xiaomi-tv-a-pro-2026/` | Xiaomi TV A Pro 75" 2026 (MiTV-MZTU0, river, MediaTek) | Google TV 14 | PatchWall/Mi Home tab, Mi analytics, TV Manager, updaters; setup wizard off, launcherx crash-loop notes |
 | `xiaomi-mitv-afmu0/` | Xiaomi TV Box S 3rd gen (MiTV-AFMU0, twilight, Amlogic), streaming box | Google TV 14 | Mi analytics, PatchWall/Mi Home tab, Mi connect/SmartShare; voice and phone remote off by choice; setup wizard off so launcherx can go |
+| `xiaomi-mitv-afmu1/` | Xiaomi TV Stick 4K 2nd gen (MiTV-AFMU1, twilight, adastra, Amlogic), streaming stick | Google TV 14 | Mi analytics, PatchWall/Mi Home tab, Amlogic auto-installs, preloaded apps off; voice, phone remote and Miracast kept; setup wizard off (re-join Wi-Fi first) so launcherx can go |
+| `xiaomi-mitv-ayfr0/` | Xiaomi TV Stick 4K (MiTV-AYFR0, soul, Amlogic), streaming stick | Android TV 14 | Mi analytics, PatchWall, auto-installs (`mibox3` + `soc.amlogic`), update service; `setupwraith` does not claim HOME (kept enabled, Wi-Fi stays intact); remote Home key and CEC One Touch Play verified |
 
 Notes for models that have no tested list yet live in [`docs/devices/`](../docs/devices/):
 
