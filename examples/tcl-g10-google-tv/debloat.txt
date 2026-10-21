@@ -5,6 +5,13 @@
 # Also confirmed on a TCL 55P6K (Spain retail name for the same G10 platform), product
 # G10_4K_GB_NF_32BIT, identical firmware build STT2.230203.001 — this list applies unchanged.
 #
+# Also used on a TCL C69B (EU, product G10_4K_GB, software V8-R75PT01-LF1V548, same build
+# STT2.230203.001; tv.plus and smartlink.core are not installed there). That set kept
+# partnercustomizer, gamebar and tv.remote.service by choice, so those three are untested on it;
+# everything else on the list was disabled and lived with. Its BT_RC833 remote sends
+# YouTube 4065, Netflix 4062, Prime Video 4099 and Web 4159, which only app_keys brings back once
+# launcherx is off, and the gear as keycode 83 on scancode 233 (settings_key_keycodes).
+#
 # Apply:   TV_HOST=<tv ip> tools/disable.sh examples/tcl-g10-google-tv/debloat.txt
 # Undo:    TV_HOST=<tv ip> tools/restore.sh examples/tcl-g10-google-tv/debloat.txt com.google.android.apps.tv.launcherx
 # Everything is DISABLED, not uninstalled. Comment out any line you want to keep.
