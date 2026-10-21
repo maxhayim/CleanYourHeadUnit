@@ -16,7 +16,7 @@
 # com.tcl.gallery, com.tcl.notereminder, com.tcl.smartalexa, tv.wuaki.apptv,
 # com.google.android.apps.nbu.smartconnect.tv, com.google.android.videos, com.google.android.play.games.
 #
-# Tested 2026-10-21 on a real unit: applied in five batches with a screenshot after each (29/29 disabled,
+# Tested 2026-10-21 on a real unit: applied in five batches with a screenshot after each (29/29 disabled at first,
 # plus the stock launcher via launcher/build-and-install.sh), then rebooted once: nothing came back
 # enabled. After the changes the launcher's Inputs menu (HDMI 1-3, AV, Live TV via TvInputManager; Live TV
 # opens com.tcl.tv/.TVActivity), Wi-Fi, and every button on the real remote (Home, Input, Settings, app
@@ -35,6 +35,8 @@
 # com.google.android.apps.mediashell                  # Chromecast (kept by choice)
 # com.tcl.miracast com.tcl.MultiScreenInteraction_TV  # Miracast / MagiConnect (kept by choice)
 # com.tcl.versionUpdateApp                            # TCL OTA updater (kept by choice)
+# com.google.android.tv.remote.service                # Google TV phone-app remote (kept by choice;
+#                                                     # disabled at first, re-enabled the same day)
 
 # 1. Telemetry, analytics and attribution
 com.tcl.bi                                  # TCL BI analytics
@@ -63,7 +65,6 @@ com.google.android.katniss                  # Google Assistant / voice search
 com.google.android.tv.assistant             # Assistant LED service
 com.tcl.assistant                           # TCL voice service
 com.tcl.micmanager                          # TCL microphone manager
-com.google.android.tv.remote.service        # phone-app remote (not used)
 
 # 4. Apps, off by choice. Reinstall or re-enable as wanted.
 com.google.android.youtube.tvmusic          # YouTube Music
