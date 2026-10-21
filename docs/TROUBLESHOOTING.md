@@ -341,15 +341,15 @@ model, build, current user and the relevant redacted lines, not the raw dump.
 
 ## A key helper is bound and a held remote button stopped repeating
 
-Hold volume up or down and the volume moves one step per press instead of ramping. The remote is not
-broken and neither is the debloat: the kernel still repeats the key, and the ramp is back the moment no
-key-filtering accessibility service is bound. On a TCL 55P71B Pro (`G09`, Google TV 12,
-`STT2.230203.001.AS23`) it was all or nothing - `HomeKeyService` alone, `InputKeyService` alone and both
-together all broke it, with `settings put secure enabled_accessibility_services ''` plus
-`accessibility_enabled 0` restoring it. The dumps show `capabilities=8`
-(`CAPABILITY_CAN_FILTER_KEY_EVENTS`), so the platform routes every key through a filter path that drops
-the repeats, before an app sees them; the launcher's own helpers return `false` for keys they do not map,
-so they are not consuming the volume key. Check the state first, do not rewrite the list blind:
+Hold volume up or down and the volume moves one step per press instead of ramping. The remote may be
+fine and so may the debloat: the ramp is back the moment no key-filtering accessibility service is bound,
+and `getevent -lt` shows whether the repeat still arrives from the remote while the button is held. On a
+TCL 55P71B Pro (`G09`, Google TV 12, `STT2.230203.001.AS23`) it was all or nothing - `HomeKeyService`
+alone, `InputKeyService` alone and both together all broke it, with `settings put secure
+enabled_accessibility_services ''` plus `accessibility_enabled 0` restoring it. The dumps show
+`capabilities=8` (`CAPABILITY_CAN_FILTER_KEY_EVENTS`), so the platform routes every key through a filter
+path that drops the repeats, before an app sees them; the launcher's own helpers return `false` for keys
+they do not map, so they are not consuming the volume key. Check the state first, do not rewrite it blind:
 
 ```sh
 tools/tv.py 'settings get secure enabled_accessibility_services'

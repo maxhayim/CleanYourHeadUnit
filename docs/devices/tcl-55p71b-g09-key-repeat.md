@@ -7,9 +7,10 @@ Amlogic.
 ## The symptom
 
 Hold volume up or down and the volume moves one step, on the home screen and inside an app. Pressing
-the button that many times gives that many steps. The remote is fine and the debloat is not involved:
-the kernel still repeats the key (hold it and watch `tools/tv.py 'getevent -lt'`), and the same remote
-ramps normally again as soon as no key-filtering accessibility service is bound.
+the button that many times gives that many steps. The remote is not necessarily the problem and neither
+is the debloat: the same remote ramps normally again as soon as no key-filtering accessibility service is
+bound, and where the repeats go is one `getevent -lt` away - if the kernel still prints them while the
+button is held, they are being dropped above the driver.
 
 ## The bisect
 
