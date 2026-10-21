@@ -111,6 +111,8 @@ final class Config {
     /** Whether the key services request key filtering (config.xml or theme key_filter); false keeps key
      *  auto-repeat working on firmware whose AccessibilityInputFilter drops repeats (TCL Android 12). */
     final boolean keyFilter;
+    /** Stock launcher whose home screen is sent back here if the firmware revives it (config.xml stock_home_redirect). */
+    final String stockHomeRedirect;
     /** The Settings button opens the quick settings panel instead of the TV's Settings (settings_key_panel). */
     final boolean settingsKeyPanel;
     /** Whether themes may show a wallpaper (config.json, wallpaper). */
@@ -148,12 +150,13 @@ final class Config {
                    boolean showHomeSettingsShortcut, boolean showStats, boolean appLibrary, int backgroundColor, int skyIntensity,
                    int[] settingsKeycodes, boolean settingsKeyPanel, boolean wallpaperEnabled, File wallpaper, List<File> wallpapers,
                    int wallpaperRotationMinutes, int wallpaperDim, String wallpaperOrder, boolean overlayApplied,
-                   Festival festival, int[] inputKeycodes, List<String> appKeys,
+                   Festival festival, int[] inputKeycodes, List<String> appKeys, String stockHomeRedirect,
                    List<RaceWeekend.Race> raceCalendar, boolean cinematicHome, boolean ambientGlow, int homeIdleClockMinutes,
                    boolean keyFilter) {
         this.inputKeycodes = inputKeycodes;
         this.appKeys = Collections.unmodifiableList(appKeys);
         this.keyFilter = keyFilter;
+        this.stockHomeRedirect = stockHomeRedirect;
         this.dockApps = Collections.unmodifiableList(dockApps);
         this.fillDock = fillDock;
         this.hiddenApps = Collections.unmodifiableList(hiddenApps);
@@ -257,6 +260,7 @@ final class Config {
         boolean settingsKeyPanel = res.getBoolean(R.bool.settings_key_panel);
         int[] inputKeycodes = res.getIntArray(R.array.input_key_keycodes);
         List<String> appKeys = new ArrayList<>(Arrays.asList(res.getStringArray(R.array.app_keys)));
+        String stockHomeRedirect = res.getString(R.string.stock_home_redirect).trim();
         boolean cinematic = res.getBoolean(R.bool.cinematic_home);
         boolean ambientGlow = res.getBoolean(R.bool.ambient_glow);
         int idleClockMinutes = res.getInteger(R.integer.home_idle_clock_minutes);
@@ -311,6 +315,7 @@ final class Config {
             settingsKeyPanel = bool(json, "settings_key_panel", settingsKeyPanel);
             inputKeycodes = intArray(json, "input_key_keycodes", inputKeycodes);
             appKeys = stringList(json, "app_keys", appKeys);
+            stockHomeRedirect = string(json, "stock_home_redirect", stockHomeRedirect);
             cinematic = bool(json, "cinematic_home", cinematic);
             ambientGlow = bool(json, "ambient_glow", ambientGlow);
             idleClockMinutes = integer(json, "home_idle_clock_minutes", idleClockMinutes, 0, 1440);
@@ -373,7 +378,7 @@ final class Config {
                 shamsi, greetingName, moduleCards, reducedMotion, dockTitle, dockRow, reorderButton, showNetworkPill, iconOnlyButtons, libraryButton, wifiLabelWidth, alwaysShowNames, wallpaperTrueColor, vpn, homeSettings, showStats, library, background,
                 Math.max(0, Math.min(100, skyIntensity)), settingsKeycodes, settingsKeyPanel, wallpaperEnabled, wallpaper,
                 wallpapers, rotationMinutes, wallpaperDim, wallpaperOrder, applied,
-                festival, inputKeycodes, appKeys, json == null ? Collections.emptyList() : raceCalendar(json), cinematic, ambientGlow,
+                festival, inputKeycodes, appKeys, stockHomeRedirect, json == null ? Collections.emptyList() : raceCalendar(json), cinematic, ambientGlow,
                 Math.max(0, idleClockMinutes), keyFilter);
     }
 

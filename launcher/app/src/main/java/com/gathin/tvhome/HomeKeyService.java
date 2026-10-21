@@ -6,17 +6,24 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.UserManager;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.provider.Settings;
 import android.view.KeyEvent;
 import android.view.accessibility.AccessibilityEvent;
 
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Sends the remote's Home button to this launcher on remotes that emit KEYCODE_ALL_APPS for Home
  * (Xiaomi sticks and boxes). Android TV 9 routes that key only to the system-image launcher, so once
  * the stock launcher is disabled the button does nothing. Every other key passes through untouched.
+ *
+ * With stock_home_redirect set, it also sends the stock launcher's home screen back here, for firmware that turns
+ * that launcher on again after it was disabled (XGIMI's xrmservice does, on its own remote keys).
  *
  * Enable over adb:
  *   settings put secure enabled_accessibility_services com.gathin.tvhome/.HomeKeyService
@@ -34,6 +41,8 @@ public class HomeKeyService extends AccessibilityService {
 
     /** Waits for the user to unlock when Android binds this service at boot; null once the config is read. */
     private BroadcastReceiver unlockReceiver;
+    /** The stock launcher's HOME activities (stock_home_redirect), disabled ones included. */
+    private final Set<String> stockHome = new HashSet<>();
 
     @Override
     protected void onServiceConnected() {
@@ -82,6 +91,13 @@ public class HomeKeyService extends AccessibilityService {
         appKeys = RemoteKeys.parseAppKeys(config.appKeys);
         appScancodes = RemoteKeys.parseAppScancodes(config.appKeys);
         RemoteKeys.applyKeyFilter(this, config.keyFilter);
+        stockHome.clear();
+        if (!config.stockHomeRedirect.isEmpty()) {
+            Intent home = new Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_HOME).setPackage(config.stockHomeRedirect);
+            for (ResolveInfo ri : getPackageManager().queryIntentActivities(home, PackageManager.MATCH_DISABLED_COMPONENTS)) {
+                stockHome.add(ri.activityInfo.name);
+            }
+        }
     }
 
     private boolean isSettingsKey(KeyEvent event) {
@@ -126,6 +142,13 @@ public class HomeKeyService extends AccessibilityService {
 
     @Override
     public void onAccessibilityEvent(AccessibilityEvent event) {
+        // stock_home_redirect: the firmware turned the stock launcher back on and its home screen came up.
+        if (stockHome.isEmpty() || event.getEventType() != AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) return;
+        CharSequence cls = event.getClassName();
+        if (cls != null && stockHome.contains(cls.toString())) {
+            startActivity(new Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_HOME).setPackage(getPackageName())
+                    .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED));
+        }
     }
 
     @Override
