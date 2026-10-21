@@ -35,6 +35,7 @@ project's own issue tracker.
 | [TV Remote](https://github.com/HoangTran0410/tv-remote) | A phone, desktop and web remote over ADB with no server or account; its Optimize TV applies this repo's lists with an undo and checks where Home lands after a launcher swap | FPT Play 650 (Android TV 14), Sony BRAVIA (Android 9) | [HoangTran0410](https://github.com/HoangTran0410) |
 | [MYO Launcher](https://github.com/faustinoaq/myo-launcher) | A minimal, ad-free home screen for cheap Android TVs, replacing the ad-filled Zeasn launcher | MYO TV (HiSilicon Hi3751V350, Android 14, 1 GB RAM) | [faustinoaq](https://github.com/faustinoaq) |
 | [CleanTV](https://github.com/0x006E/cleantv) | A launcher started from this one, with Xiaomi USB IR blaster control of cable/DTH set-top boxes, live channel rails and an encrypted LAN companion remote | Xiaomi MiTV-AXSO0 (Mi TV 4A 43"), Android TV 9 | [0x006E](https://github.com/0x006E) |
+| [Afnon · أفنون](https://github.com/egyjs/afnon-android-tv-launcher) ([APK](https://github.com/egyjs/afnon-android-tv-launcher/releases/latest)) | A prayer-times home screen, Arabic first with English: the next prayer and a countdown in a mihrab arch, offline times for 17 cities, Qibla and room direction, reminders and an adhan call screen with 14 voices, Friday and Ramadan modes, and live Quran Radio Cairo that can turn the screen off through TCL's Audio Only. Started from this repo's prompt and launcher. Network is used only for the radio stream | TCL 55P7K, Google TV 12 | [egyjs](https://github.com/egyjs) |
 
 ## Add yours
 
