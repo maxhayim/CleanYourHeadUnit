@@ -14,6 +14,17 @@
         android:layout_height="match_parent"
         android:importantForAccessibility="no" />
 
+    <!-- Cinematic top shelf (cinematic_home): the focused dock app's artwork, a few pixels across and
+         stretched over the screen, which softens it like a blur without the cost of one. Hidden otherwise. -->
+    <ImageView
+        android:id="@+id/heroArt"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="fitXY"
+        android:alpha="0"
+        android:visibility="gone"
+        android:importantForAccessibility="no" />
+
     <!-- Ambient glow in the colour of the focused dock app. -->
     <View
         android:id="@+id/ambient"
@@ -21,21 +32,125 @@
         android:layout_height="match_parent"
         android:alpha="0" />
 
+    <!-- Race-weekend panel (a theme's race_calendar, see RaceWeekend), mirrored: under the clock on the right. -->
+    <LinearLayout
+        android:id="@+id/racePanel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|right"
+        android:layout_marginEnd="60dp"
+        android:layout_marginTop="158dp"
+        android:gravity="right"
+        android:orientation="vertical"
+        android:focusable="false"
+        android:importantForAccessibility="no"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:id="@+id/raceKicker"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:textColor="#B3FFFFFF"
+                android:textSize="12sp"
+                android:fontFamily="@font/outfit_medium"
+                android:letterSpacing="0.22"
+                android:textAllCaps="true" />
+
+            <View
+                android:layout_width="3dp"
+                android:layout_height="13dp"
+                android:layout_marginStart="10dp"
+                android:background="@drawable/race_bar" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/raceHeadline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:singleLine="true"
+            android:textColor="#FFFFFFFF"
+            android:textSize="34sp"
+            android:fontFamily="@font/outfit_light"
+            android:letterSpacing="-0.01"
+            android:includeFontPadding="false" />
+
+        <TextView
+            android:id="@+id/raceSessions"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:singleLine="true"
+            android:textColor="#99FFFFFF"
+            android:textSize="12sp"
+            android:fontFamily="@font/outfit_medium"
+            android:letterSpacing="0.12" />
+    </LinearLayout>
+
+    <!-- Cinematic top shelf: darkens the edge behind the shelf and the lower half, so the text and the
+         dock stay readable over the artwork. -->
+    <View
+        android:id="@+id/heroScrim"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        android:importantForAccessibility="no" />
+
     <!-- Top shelf: the focused dock app's name, positioned above the dock in code. -->
-    <TextView
-        android:id="@+id/heroName"
+    <LinearLayout
+        android:id="@+id/hero"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="68dp"
         android:layout_gravity="right"
         android:gravity="right"
-        android:alpha="0"
-        android:textColor="#FFFFFFFF"
-        android:textSize="48sp"
-        android:fontFamily="@font/outfit_light"
-        android:letterSpacing="-0.02"
-        android:includeFontPadding="false"
-        android:singleLine="true" />
+        android:orientation="vertical"
+        android:alpha="0">
+
+        <TextView
+            android:id="@+id/heroName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:gravity="right"
+            android:textColor="#FFFFFFFF"
+            android:textSize="48sp"
+            android:fontFamily="@font/outfit_light"
+            android:letterSpacing="-0.02"
+            android:includeFontPadding="false"
+            android:singleLine="true" />
+
+        <!-- Cinematic shelf only: when the app was last opened, and the dock position dots. -->
+        <TextView
+            android:id="@+id/heroMeta"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:layout_marginEnd="4dp"
+            android:layout_marginTop="12dp"
+            android:singleLine="true"
+            android:textColor="#B3FFFFFF"
+            android:textSize="15sp"
+            android:fontFamily="@font/outfit_light"
+            android:visibility="gone" />
+
+        <LinearLayout
+            android:id="@+id/heroDots"
+            android:layout_width="wrap_content"
+            android:layout_height="6dp"
+            android:layout_gravity="right"
+            android:layout_marginEnd="4dp"
+            android:layout_marginTop="16dp"
+            android:orientation="horizontal"
+            android:visibility="gone" />
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -168,10 +283,9 @@
                  row; gone, it takes no space. -->
             <TextView
                 android:id="@+id/stats"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_below="@id/leftBlock"
                 android:layout_alignStart="@id/leftBlock"
-                android:layout_alignEnd="@id/leftBlock"
                 android:gravity="right"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="2dp"
@@ -200,6 +314,14 @@
                     style="@style/TopButton"
                     android:text="@string/settings"
                     android:drawableStart="@drawable/ic_settings"
+                    android:nextFocusDown="@+id/grid" />
+
+                <TextView
+                    android:id="@+id/btnLibraryTop"
+                    style="@style/TopButtonIcon"
+                    android:visibility="gone"
+                    android:contentDescription="@string/app_library"
+                    android:drawableStart="@drawable/ic_apps"
                     android:nextFocusDown="@+id/grid" />
 
                 <TextView
