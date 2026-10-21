@@ -13,7 +13,9 @@
 # sonyvendorservice, imeproxy, settingsprovider, systemupdate/update, braviasync* and all com.mediatek.*:
 # they drive HDMI, the tuner, the Input overlay, Bravia Sync, updates and the remote's app buttons.
 # Kept by owner's choice: Netflix, YouTube, Apple TV, Chromecast built-in (mediashell), AirPlay/HomeKit,
-# firmware updates. interactivetvutil kept: it holds a TokenProvider other Sony apps may read.
+# firmware updates, and Sony IP control (com.sony.dtv.webapi.core): Home Assistant's Sony Bravia integration
+# and other IP remotes need it; with it disabled HA reports the TV as off and every command fails.
+# interactivetvutil kept: it holds a TokenProvider other Sony apps may read.
 #
 # Remote: the Netflix, YouTube, Prime Video and Disney+ buttons are routed by Sony's sonyvendorservice, not by
 # the Google TV launcher, so they keep working after launcherx is disabled. YouTube, Prime Video and Disney+
@@ -62,7 +64,6 @@ com.sony.dtv.hbbtvplayer          # HbbTV / red button
 com.sonyericsson.dlna             # DLNA media server/renderer
 com.sony.huey.dlna.module
 com.sony.huey.dlna.renderersettings
-com.sony.dtv.webapi.core          # Sony IP control (phone/home-automation control over the network)
 com.uei.quicksetsdk.sony          # UEI QuickSet: IR control of cable boxes/soundbars; HDMI-CEC unaffected
 com.sony.dtv.gestureapp           # BRAVIA CAM gestures (no camera attached)
 com.google.android.tts            # Google text-to-speech: TalkBack and read-aloud stop working
