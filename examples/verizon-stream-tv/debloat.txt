@@ -20,9 +20,9 @@
 # - Port 5555 opened with USB debugging and Network debugging on; stock adb and tools/tv.py both worked, with an
 #   "Allow USB debugging?" prompt on the first connect. Sideloading works (pm install -r), including a package that
 #   declares HOME; a base-only reinstall of a split APK gives INSTALL_FAILED_VERIFICATION_FAILURE, which is not a block.
-# - The remote is a Bluetooth LE voice remote. To pair a new one, hold OK + Apps together for 6 seconds and release;
+# - The remote is a Bluetooth remote. To pair a new one, hold OK + Apps (bottom right button) together for 6 seconds and release;
 #   the "Pairing your remote" screen is part of the stock launcher. Its buttons: D-pad, OK, Back, Home, Apps (sends
-#   KEYCODE_APP_SWITCH), Mic (KEY_SEARCH), Mute, Play/Pause, Volume. No app buttons.
+#   KEYCODE_APP_SWITCH), Mic (KEY_SEARCH), Mute, Play/Pause, Volume. No app buttons. Non-functional buttons: INPUT, center color button
 # - With the stock launcher off the Apps button does nothing. The custom launcher answers it through HomeKeyService
 #   (HOME_KEY_SERVICE=1) once it also accepts KEYCODE_APP_SWITCH.
 # - The TV installed a firmware update (Android 10 QTT8.201201.004 to this build) while the work was in progress, so keep
