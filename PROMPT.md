@@ -94,7 +94,10 @@ Launcher
   ro.build.version.sdk'` against `grep minSdk launcher/app/build.gradle` (26 = Android 8.0). A set
   below it answers `INSTALL_FAILED_OLDER_SDK`; lowering `minSdk` is a source change you would then
   maintain yourself, and an APK rebuilt elsewhere is nothing this repo can verify. On those sets offer
-  the debloat half and say the launcher cannot be installed.
+  the debloat half and say the launcher cannot be installed. With no launcher to hand over to, the
+  stock one stays: `cmd package` does not exist before Android 7, so `tools/disable.sh` asks `dumpsys
+  activity` for Home there and warns when neither answers - that warning means nothing was checked,
+  and a set with no recovery has no way back (#795).
 - Don't install a third-party launcher that charges for basics like wallpapers. Build a small native
   Android TV launcher instead (Java, AndroidX RecyclerView, minSdk matching the TV, debug build is fine),
   install it over ADB, set it as the default home and disable the stock launcher. If several apps claim
