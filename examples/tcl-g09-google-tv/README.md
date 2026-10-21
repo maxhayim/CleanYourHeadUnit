@@ -75,6 +75,17 @@ Found with `logcat` while pressing each button: TCL logs every press as `handleK
 { ... keyCode=..., scanCode=... }` from `WindowManager`. Keys injected over ADB never reach `InputKeyService`,
 so check with the real remote.
 
+## `INPUT_KEY_SERVICE=1` and volume repeat
+
+On a second unit (55P71B Pro, same `G09_4K_GB` product, firmware `STT2.230203.001.AS23`, India) any bound
+key-filtering accessibility service breaks key auto-repeat: long-pressing volume steps once per press,
+with either helper alone or both. It is all-or-nothing on this build — either the app buttons above work,
+or volume repeat does. `key_filter` in the launcher (`"key_filter": false` in `config.json`) lets the
+service stay bound with filtering off, which is the repeat-keeping half of that choice; see
+[docs/TROUBLESHOOTING.md](../../docs/TROUBLESHOOTING.md) and
+[the unit's note](../../docs/devices/tcl-55p71b-pro-g09.md). The same unit also lost the volume beep for
+good when launcherx was disabled — re-enabling every debloated package did not bring it back.
+
 ## Notes for this set
 
 - The remote's Input button keeps working without Google TV's home: TCL draws that panel itself.
