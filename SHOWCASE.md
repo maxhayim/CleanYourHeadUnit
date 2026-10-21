@@ -10,6 +10,7 @@ project's own issue tracker.
 
 | Project | What it is | Built on | By |
 |---|---|---|---|
+| [Afnon · أفنون](https://github.com/egyjs/afnon-android-tv-launcher) ([APK](https://github.com/egyjs/afnon-android-tv-launcher/releases/latest)) | A prayer-times home screen, Arabic first with English: the next prayer and a countdown in a mihrab arch, offline times for 17 cities, Qibla and room direction, reminders and an adhan call screen with 14 voices, Friday and Ramadan modes, and live Quran Radio Cairo that can turn the screen off through TCL's Audio Only. Started from this repo's prompt and launcher. Network is used only for the radio stream | TCL 55P7K, Google TV 12 | [egyjs](https://github.com/egyjs) |
 | [Stremio shelf, peek dock and calendar](https://github.com/benfirad/tv-vibehack) | A fork of the launcher with a Stremio poster shelf, a dock that peeks over playing content, a frosted settings panel and a calendar overlay | Android TV | [benfirad](https://github.com/benfirad) |
 | [Hisense restyle](https://github.com/YouLop009/tv-vibehack/tree/style-modifications) | A six-column restyle with an app menu, a Wi-Fi picker in the header, daily greetings and four glass finishes | Hisense SmartTV 4K FFM, Android 12 | [YouLop009](https://github.com/YouLop009) |
 | [webOS launcher](https://github.com/OmkarK97/webos-vibehack) | The same Apple TV-style home rebuilt as a webOS web app for LG TVs, installed through LG's Developer Mode, with a Home-button watcher that runs on another device | LG OLED C6, webOS 26 | [OmkarK97](https://github.com/OmkarK97) |
