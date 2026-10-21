@@ -36,6 +36,7 @@ public class HomeKeyService extends AccessibilityService {
         settingsKeycodes = config.settingsKeycodes;
         settingsPanel = config.settingsKeyPanel;
         appKeys = RemoteKeys.parseAppKeys(config.appKeys);
+        RemoteKeys.applyKeyFilter(this, config.keyFilter);
     }
 
     private boolean isSettingsKey(KeyEvent event) {

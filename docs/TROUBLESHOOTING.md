@@ -115,6 +115,18 @@ Things that bit us or contributors, so they don't bite you. Commands use `tools/
   script now picks the known stock launcher among the candidates by itself; otherwise choose one on
   the TV or pass `STOCK_LAUNCHER=<package>`.
 
+## Held-down remote keys do not repeat (volume steps once per long press)
+
+On some firmware — seen on a TCL Google TV 12 build — enabling any accessibility service that requests
+key filtering (the launcher's `HomeKeyService` and `InputKeyService`) breaks key auto-repeat: the held
+button produces a single press. With every such service disabled the repeat returns.
+
+There is no way to keep the remote buttons those helpers power *and* the repeat on those builds; choose
+one. To keep the helpers enabled but stop them filtering (repeat works, the buttons they handled go
+dead), push a theme with `"key_filter": false` in `config.json` — the service drops
+`FLAG_REQUEST_FILTER_KEY_EVENTS` at runtime instead of needing the whole service disabled. `config.xml`
+has the same switch as the `key_filter` bool for a rebuild.
+
 ## Accessibility helper enabled but the remote button does nothing
 
 The optional `HomeKeyService` and `InputKeyService` only filter remote keys once Android has bound to

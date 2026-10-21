@@ -44,6 +44,12 @@
          (XGIMI projectors: com.xgimi.action.hdmiPlayer). Leave empty to omit. -->
     <string name="input_action" translatable="false"></string>
 
+    <!-- Whether HomeKeyService and InputKeyService actually request key filtering (config.xml or a theme's
+         "key_filter"). Some firmware (TCL Google TV on Android 12) drops key auto-repeat once ANY service
+         filters keys, so long-pressing volume only steps once: set false and the service keeps running but
+         stops filtering, which brings repeat back at the price of the remote buttons below doing nothing. -->
+    <bool name="key_filter">true</bool>
+
     <!-- Remote buttons that open Settings, by Linux scancode (HOME_KEY_SERVICE=1 build-and-install.sh). Remotes
          that send KEYCODE_SETTINGS need no entry. Some send a code Android does not map: the Xiaomi/Fengmi
          projector remote's gear button is scancode 384 (KEY_TAPE). Find yours with
