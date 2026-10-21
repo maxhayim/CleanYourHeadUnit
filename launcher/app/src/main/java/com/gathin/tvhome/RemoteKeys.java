@@ -5,18 +5,26 @@ import android.content.Context;
 import android.content.Intent;
 import android.view.KeyEvent;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.function.ToIntFunction;
 
 /**
  * Remote buttons that only the stock launcher answered, for InputKeyService and HomeKeyService: app_keys
  * (config.xml or a theme) maps a keycode to the app it opens, as "190:com.google.android.youtube.tv" or
- * "KEYCODE_BUTTON_3:com.google.android.youtube.tv", or a scancode as "scan:490:com.wbd.hbomax". One map for both services; whichever filters the key first
- * consumes it.
+ * "KEYCODE_BUTTON_3:com.google.android.youtube.tv", or a scancode as "scan:490:com.wbd.hbomax". A "hold:"
+ * prefix makes an entry the long-press action instead: "hold:KEYCODE_BUTTON_8:org.xbmc.kodi" opens Kodi when
+ * that button is held for HOLD_MS, while the unprefixed entry still opens on a tap; "hold:scan:490:..." does
+ * the same for a scancode. One set of maps for both services; whichever filters the key first consumes it.
  */
 final class RemoteKeys {
+
+    /** How long a button is held before its "hold:" entry wins (Android's long-press timeout). */
+    static final long HOLD_MS = 500;
+
     private RemoteKeys() { }
 
     /** keycode -> package, with key names resolved by Android. */
@@ -53,6 +61,19 @@ final class RemoteKeys {
         return keys;
     }
 
+    /** keycode -> package from the "hold:" entries; the rest of each entry reads as it does in parseAppKeys. */
+    static Map<Integer, String> parseHoldAppKeys(String[] entries) {
+        return parseHoldAppKeys(Arrays.asList(entries), KeyEvent::keyCodeFromString);
+    }
+
+    static Map<Integer, String> parseHoldAppKeys(Iterable<String> entries) {
+        return parseHoldAppKeys(entries, KeyEvent::keyCodeFromString);
+    }
+
+    static Map<Integer, String> parseHoldAppKeys(Iterable<String> entries, ToIntFunction<String> names) {
+        return parseAppKeys(holdEntries(entries), names);
+    }
+
     /**
      * scancode -> package, from the "scan:490:com.wbd.hbomax" entries of the same list. For remotes that send
      * several app buttons as one keycode and tell them apart by scancode (Sony BRAVIA: YouTube, Prime Video and
@@ -73,8 +94,42 @@ final class RemoteKeys {
         return keys;
     }
 
+    /** scancode -> package from the "hold:scan:..." entries; the rest reads as it does in parseAppScancodes. */
+    static Map<Integer, String> parseHoldAppScancodes(Iterable<String> entries) {
+        return parseAppScancodes(holdEntries(entries));
+    }
+
+    /** The entries with the "hold:" prefix removed, so the normal parsers can read them. */
+    private static Iterable<String> holdEntries(Iterable<String> entries) {
+        List<String> holds = new ArrayList<>();
+        for (String entry : entries) {
+            if (entry == null) continue;
+            String text = entry.trim();
+            if (text.startsWith("hold:")) holds.add(text.substring(5).trim());
+        }
+        return holds;
+    }
+
+    /**
+     * Consumes a key mapped by either list. On release it opens the hold app after HOLD_MS, otherwise the normal
+     * one; false means neither list has this key, so the caller can pass it on.
+     */
+    static boolean handle(Context ctx, KeyEvent event, String app, String holdApp) {
+        if (app == null && holdApp == null) return false;
+        if (event.getAction() == KeyEvent.ACTION_UP && !event.isCanceled()) {
+            launch(ctx, target(app, holdApp, event.getEventTime() - event.getDownTime()));
+        }
+        return true;
+    }
+
+    /** The app a mapped key opens: its hold entry after HOLD_MS, otherwise its normal one. */
+    static String target(String app, String holdApp, long heldMs) {
+        return heldMs >= HOLD_MS && holdApp != null ? holdApp : app;
+    }
+
     /** Opens an app from a remote button: its TV entry if it has one, else its phone entry. */
     static void launch(Context ctx, String pkg) {
+        if (pkg == null) return;
         Intent open = ctx.getPackageManager().getLeanbackLaunchIntentForPackage(pkg);
         if (open == null) open = ctx.getPackageManager().getLaunchIntentForPackage(pkg);
         if (open == null) return;

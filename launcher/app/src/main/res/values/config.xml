@@ -92,7 +92,10 @@
          and TL;DR 200. Some remotes send several app buttons as one keycode and tell them apart only by scancode
          (Sony BRAVIA: YouTube, Prime Video and Disney+ are all keycode 196, scancodes 485, 490 and 491); list those
          as "scan:scancode:package", e.g. scan:490:com.wbd.hbomax, found with `tools/tv.py 'getevent -lt'` (the
-         EV_KEY code, in hex). A scancode entry wins over a keycode. A listed app that is not installed leaves the
+         EV_KEY code, in hex). A scancode entry wins over a keycode. Prefix an entry with "hold:" for the
+         same button's long press: "hold:KEYCODE_BUTTON_8:org.xbmc.kodi" opens Kodi when held for half a
+         second, while the unprefixed entry still opens on a tap; "hold:scan:490:..." works for scancodes.
+         A key with only a hold entry does nothing on a tap. A listed app that is not installed leaves the
          button doing nothing. Leave empty to omit. -->
     <string-array name="app_keys" translatable="false">
     </string-array>

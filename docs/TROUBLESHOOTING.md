@@ -306,7 +306,8 @@ tools/tv.py 'dumpsys accessibility'
 - **Which keycode** a dead button sends: `dumpsys window policy` lists the "global keys" Android routes
   to one app (on Google TV several go to launcherx, which is disabled), and Xiaomi firmware logs every
   press as `handleAction<keycode>` in `logcat`. Put it in `input_key_keycodes` (opens Inputs) or
-  `app_keys` (`keycode:package`), reinstall with `INPUT_KEY_SERVICE=1` and press the real button.
+  `app_keys` (`keycode:package`, or `hold:keycode:package` for a long press), reinstall with
+  `INPUT_KEY_SERVICE=1` and press the real button.
   A press that `logcat` reports as `KEY_UNKNOWN` or `KEY_PROGRAM` cannot be matched by keycode at all,
   because every unmapped button shares those codes: use the Linux scancode from
   `tools/tv.py 'getevent -lt'` in `settings_key_scancodes` and install with `HOME_KEY_SERVICE=1`
