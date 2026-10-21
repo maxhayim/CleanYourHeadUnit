@@ -214,6 +214,11 @@ tools/tv.py 'dumpsys accessibility'
   to one app (on Google TV several go to launcherx, which is disabled), and Xiaomi firmware logs every
   press as `handleAction<keycode>` in `logcat`. Put it in `input_key_keycodes` (opens Inputs) or
   `app_keys` (`keycode:package`), reinstall with `INPUT_KEY_SERVICE=1` and press the real button.
+  A press that `logcat` reports as `KEY_UNKNOWN` or `KEY_PROGRAM` cannot be matched by keycode at all,
+  because every unmapped button shares those codes: use the Linux scancode from
+  `tools/tv.py 'getevent -lt'` in `settings_key_scancodes` and install with `HOME_KEY_SERVICE=1`
+  (an RC-36 remote sends its gear on scancode 240 and its notifications button on 362 that way; see
+  [the FPD CG50-C3 note](devices/fpd-cg50-c3.md)).
 
 A force-stop switches the helpers off for good: after `am force-stop com.gathin.tvhome` (or Force stop in
 Settings > Apps) Android removes the launcher's services from the enabled list, and they do not come back
