@@ -1,5 +1,17 @@
 <p align="center">
   <a href="https://cleanyour.tv"><img src="https://raw.githubusercontent.com/Gathin23/cleanyourtv/main/docs/banner.png" alt="CleanYourTV. Your TV, minus the ads. Strip the bloatware from any Android TV or Google TV over Wi-Fi and replace the ad-filled home screen with a clean launcher that looks like an Apple TV. No root, no cable, nothing uninstalled, and a one-line restore." width="800"></a>
+  <a href="https://cleanyour.tv"><img src="https://raw.githubusercontent.com/Gathin23/cleanyourtv/main/docs/banner.png" alt="CleanYourTV. Your TV, minus the ads." width="800"></a>
+</p>
+
+<h3 align="center">124 TV models &nbsp;·&nbsp; 38 brands &nbsp;·&nbsp; 18 languages &nbsp;·&nbsp; 390 KB launcher</h3>
+
+<p align="center">
+  <a href="https://cleanyour.tv">cleanyour.tv</a> ·
+  <a href="PROMPT.md">The prompt</a> ·
+  <a href="examples/">124 TV lists</a> ·
+  <a href="SHOWCASE.md">26 built on it</a> ·
+  <a href="https://x.com/gathint/status/2111379569030939102">The tweet</a> ·
+  <a href="README.zh-CN.md">简体中文</a>
 </p>
 
 <p align="center">
@@ -91,6 +103,7 @@ Tested lists from contributors, one folder per model in [`examples/`](examples/)
 **Vu** 2 · AiPro2K · AIWA · Cecotec · Chromecast with Google TV · Compac · EKO · FFalcon · Freebox ·
 Insignia Fire TV · Kalley · MTC · OnePlus · onn · Polytron · PRISM+ · RCA · Redmi · SANYO · Tele System ·
 Thomson · Toshiba Fire TV · Verizon · Vidda ·
+Thomson · Toshiba Fire TV · Vidda · Motorola ·
 BYINTEK, JMGO, Portronics, Stellamore, Wanbo and XGIMI projectors
 
 <details>
@@ -132,6 +145,7 @@ BYINTEK, JMGO, Portronics, Stellamore, Wanbo and XGIMI projectors
 | Kalley 43G200 (device R3_GTV, MOKA, Realtek RTD2841A), Latin America | Google TV 14 |
 | JVC Android TV (Vestel-built, BARTU_Jvc, menlo, MediaTek mt5867), Spain | Android TV 11 |
 | Kalley R10G (device R10G, product ACER_FFM, MOKA, Realtek RTD2875P), Latin America | Google TV 14 |
+| Motorola SWTV-24AE-FHD (Skyworth OEM, beomil, MediaTek), India/Global | Google TV 14 |
 | MTC UK 2K Android TV (tabata, MediaTek m5621; JVC-family firmware, `android.autoinstalls.config.JVC` present), UK | Android TV 11 |
 | NVIDIA SHIELD TV 2019 tube (P3430, sif) | Android TV 11 |
 | NVIDIA SHIELD TV Pro 2019 (P2897, mdarcy) | Android TV 11 |
