@@ -177,7 +177,11 @@ Things that bit us or contributors, so they don't bite you. Commands use `tools/
   If it names setupwraith, forget the network and join it again in Settings > Network & Internet (it
   then belongs to `android.uid.system`), or use Ethernet. `tools/disable.sh` skips setupwraith while it
   owns the network (`FORCE_SETUPWRAITH=1` overrides). Already offline? Rejoin from the TV with its own
-  remote or a USB keyboard, then turn Wireless debugging back on if it was in use.
+  remote or a USB keyboard, then turn Wireless debugging back on if it was in use. Reconnecting is not
+  enough; forget the network first (Xiaomi MiTV-MOSR4, where this also switched USB debugging off).
+- **A reboot on setupwraith's recovery screen factory-reset the TV** (Xiaomi MiTV-MOSR4). Disable
+  setupwraith before launcherx. If `mFocusedApp` shows `.RecoveryActivity`, re-enable launcherx
+  first and do not reboot. [Notes](devices/xiaomi-mitv-mosr4.md).
 - **Casting from a phone fails with "Untrusted device" after setupwraith is disabled**, seen on
   Chromecast with Google TV HD (`boreal`) on Google TV 14 build UTTC.250917.004, the build the
   `examples/google-chromecast-gtv-4k/` list was made on. YouTube on the phone says "Untrusted device.
@@ -312,6 +316,9 @@ tools/tv.py 'dumpsys accessibility'
   `tools/tv.py 'getevent -lt'` in `settings_key_scancodes` and install with `HOME_KEY_SERVICE=1`
   (an RC-36 remote sends its gear on scancode 240 and its notifications button on 362 that way; see
   [the FPD CG50-C3 note](devices/fpd-cg50-c3.md)).
+- **All vendor buttons die at once** and `logcat` says `GLOBAL_BUTTON ... process is bad`: the
+  global-key receiver crashes on the disabled launcherx and Android stops starting it. Map every such
+  keycode in the helpers, also for disabled apps. See [the MOSR4 note](devices/xiaomi-mitv-mosr4.md).
 
 A force-stop switches the helpers off for good: after `am force-stop com.gathin.tvhome` (or Force stop in
 Settings > Apps) Android removes the launcher's services from the enabled list, and they do not come back
