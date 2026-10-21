@@ -1,4 +1,4 @@
-# C71KW-200 (AT&T Osprey): standard launcher verification
+# C71KW-200 (AT&T Osprey): carrier-update caveat and launcher verification
 
 Checked on one physical Android TV set-top box on 2026-10-21. The box already had
 a working replacement Home and owner-chosen package disables. This report covers
@@ -22,6 +22,29 @@ The device and firmware details were previously shared in
 Earlier launcher validation is recorded in
 [PR #412](https://github.com/Gathin23/cleanyourtv/pull/412); the checks below
 describe the newer, unmodified upstream application source.
+
+## Carrier-update takeover during earlier setup
+
+As recorded in [discussion #254](https://github.com/Gathin23/cleanyourtv/discussions/254),
+the carrier update installed DIRECTV interface `34.4.9.255`, took back the Home
+preference and restarted the box after earlier Home/reboot checks had passed.
+The observed updater and installer were `com.att.ngc.swdl.service` and
+`com.directv.tv.vplinstaller`.
+
+The owner approved disabling those two packages while keeping the carrier Home
+`com.directv.tv.dtvlauncher` disabled. Replacement Home persisted through the
+subsequent reboot. Google Play stayed enabled.
+
+**Tradeoff:** that choice pauses automatic vendor firmware updates. It records
+an informed decision on this firmware, not a universal Osprey recommendation
+or a several-day-tested debloat profile. The launcher-update checks below
+preserved the existing package policy.
+
+The earlier setup retained `com.att.ngc.remote.service`,
+`com.att.ngc.remote.settings`, `com.uei.quicksetsdk.directv`, Bluetooth/HDMI
+services, keyboard, Play and required Google services. Another carrier interface,
+`com.att.tv.openvideo`, was observed; its name alone does not establish that it
+is safe to disable.
 
 ## Build and configuration
 
