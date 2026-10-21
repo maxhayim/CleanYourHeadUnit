@@ -144,10 +144,11 @@ Launcher
 
 Verify
 - After each change, inject remote key presses over ADB, take a screenshot from the TV and look at it:
-  `tools/tv.py --screenshot shots/01-after.png` captures on the TV and pulls the PNG.
+  `tools/tv.py --screenshot shots/01-after.png DPAD_RIGHT` presses the key, then captures on the TV and
+  pulls the PNG (leave the keys off to capture what is already on screen).
   Fix what you see before moving on.
-- Live TV and HDMI screenshots come back empty (0 bytes); that is the TV, not a broken debloat, and
-  `--screenshot` exits 1 with that message. Check
+- Live TV, HDMI and some streaming apps (Netflix) give empty screenshots (0 bytes); that is the TV, not a
+  broken debloat, and `--screenshot` exits 1 with that message. Check
   `dumpsys activity activities | grep topResumedActivity` instead (see `docs/TROUBLESHOOTING.md`).
 - If the screen looks enlarged and clipped after an install or a reboot, check the display overrides
   before editing the launcher grid: `wm size` and `wm density` show a physical value next to an
