@@ -22,6 +22,9 @@
 #
 # Disabled from the factory, so not listed (restore.sh would turn them ON): com.netflix.ninja.
 #
+# Off on this unit by the owner's choice but left out of the list, since keyboards stay enabled:
+# org.liskovsoft.androidtv.rukeyboard (a Russian soft keyboard, not the active IME; Gboard is).
+#
 # Kept on purpose: com.smartdevice.livetv + overlay_SANLUX, com.mediatek.tvinput, com.mediatek.tv.service,
 # com.mediatek.android.tv.globalkeyoverlay (Live TV, HDMI, hot keys), com.smartdevice.dailyshortcut (quick
 # menu), com.smartdevice.duplebluetooth + bleconnectservice (BLE remote pairing), com.smartdevice.factory and
@@ -57,7 +60,7 @@ com.smartdevice.setupwraith                  # Skyworth first-run/privacy wizard
 com.android.healthconnect.controller
 com.android.health.connect.backuprestore
 com.google.android.syncadapters.calendar
-org.liskovsoft.androidtv.rukeyboard          # Russian soft keyboard, not the active IME
+# org.liskovsoft.androidtv.rukeyboard        # Russian soft keyboard: keyboards stay on (see header)
 
 # Off by owner's choice
 com.google.android.videos                    # Google TV (Play Movies)
