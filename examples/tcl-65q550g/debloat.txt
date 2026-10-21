@@ -1,4 +1,4 @@
-# TCL 65Q550G (TCL Smart TV, codename UNKNOWN), Google TV 11, firmware V8-R51MT08-LF1V095.021344
+# TCL 65Q550G (TCL BeyondTV4, codename UNKNOWN), Google TV 11, firmware V8-R51MT08-LF1V095.021344
 #
 # Apply:   TV_HOST=<tv ip> tools/disable.sh examples/tcl-65q550g/debloat.txt
 # Undo:    TV_HOST=<tv ip> tools/restore.sh examples/tcl-65q550g/debloat.txt
