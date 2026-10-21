@@ -1528,7 +1528,9 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         statsThread.quit();
         statsThread = null;
         statsBg = null;
-        stats.setVisibility(View.GONE);
+        // Paused (the quick panel or an app on top): keep the last line on screen. Taking it away moved the grid up
+        // under a glass highlight that stayed put.
+        if (!showStats) stats.setVisibility(View.GONE);
     }
 
     /** One quiet line, e.g. "CPU 8%  ·  Memory 430 MB free  ·  Storage 3.1 GB free". Runs off the main thread. */
