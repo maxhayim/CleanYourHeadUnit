@@ -359,3 +359,28 @@ change and the denial is back. Seen on a TCL C89B (Google TV 14, `G08`, `UTT2.25
 reads `[TclAppBoot]:forbid bind service ComponentInfo{com.gathin.tvhome/com.gathin.tvhome.HomeKeyService}`
 and whose `appops get` names the op `AUTO_START`: use the name `appops get` prints. When reporting, give the
 model, build, current user and the relevant redacted lines, not the raw dump.
+
+## A key helper is bound and a held remote button stopped repeating
+
+Hold volume up or down and the volume moves one step per press instead of ramping. The remote may be
+fine and so may the debloat: the ramp is back the moment no key-filtering accessibility service is bound,
+and `getevent -lt` shows whether the repeat still arrives from the remote while the button is held. On a
+TCL 55P71B Pro (`G09`, Google TV 12, `STT2.230203.001.AS23`) it was all or nothing - `HomeKeyService`
+alone, `InputKeyService` alone and both together all broke it, with `settings put secure
+enabled_accessibility_services ''` plus `accessibility_enabled 0` restoring it. The dumps show
+`capabilities=8` (`CAPABILITY_CAN_FILTER_KEY_EVENTS`), so the platform routes every key through a filter
+path that drops the repeats, before an app sees them; the launcher's own helpers return `false` for keys
+they do not map, so they are not consuming the volume key. Check the state first, do not rewrite it blind:
+
+```sh
+tools/tv.py 'settings get secure enabled_accessibility_services'
+tools/tv.py 'settings get secure accessibility_enabled'
+tools/tv.py 'dumpsys accessibility'
+```
+
+This is a trade, not a defect to fix: the buttons the helpers exist for (a gear button sending
+`KEYCODE_NOTIFICATION` 83, app buttons sending vendor keycodes such as 4062) were answered by the stock
+home, so on a set whose list disabled launcherx only a helper can answer them. Either keep the repeat and
+install without `INPUT_KEY_SERVICE=1`/`HOME_KEY_SERVICE=1`, or keep the buttons and accept one step per
+press, or leave launcherx enabled and bind nothing. Write back the exact string the first read printed;
+the empty list also unbinds TalkBack. Bisect, keycodes and limits: [the G09 note](devices/tcl-55p71b-g09-key-repeat.md).

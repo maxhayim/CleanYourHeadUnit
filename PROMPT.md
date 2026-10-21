@@ -114,6 +114,12 @@ Launcher
   Input and Settings/dashboard buttons, so after disabling it ask me to press each one, and remap any that
   do nothing with the launcher's key services: `input_key_keycodes` and `app_keys` with
   INPUT_KEY_SERVICE=1, `settings_key_keycodes` with HOME_KEY_SERVICE=1 (`config.xml` or the theme).
+  Enabling either helper can cost more than the buttons it maps: on a TCL G09 build (Google TV 12) ask me
+  to hold volume up before and after, because a bound key-filtering service there drops the key repeats -
+  a ramping volume becomes one step per press, one helper or both, all or nothing - so say which one I am
+  giving up instead of enabling it quietly (`docs/devices/tcl-55p71b-g09-key-repeat.md` has the bisect and
+  the three ways out). On other sets this was not measured; if holding a button stops repeating once a
+  helper is on, it is the same trade and not a broken remote.
   A button the TV logs as `KEY_UNKNOWN` or `KEY_PROGRAM` cannot be matched by keycode, since every
   unmapped button shares it: read the scancode with `getevent -lt` and use `settings_key_scancodes`,
   which only `config.xml` carries (a theme can set keycodes, not scancodes).
