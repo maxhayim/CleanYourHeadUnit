@@ -1,17 +1,5 @@
 <p align="center">
   <a href="https://cleanyour.tv"><img src="https://raw.githubusercontent.com/Gathin23/cleanyourtv/main/docs/banner.png" alt="CleanYourTV. Your TV, minus the ads. Strip the bloatware from any Android TV or Google TV over Wi-Fi and replace the ad-filled home screen with a clean launcher that looks like an Apple TV. No root, no cable, nothing uninstalled, and a one-line restore." width="800"></a>
-  <a href="https://cleanyour.tv"><img src="https://raw.githubusercontent.com/Gathin23/cleanyourtv/main/docs/banner.png" alt="CleanYourTV. Your TV, minus the ads." width="800"></a>
-</p>
-
-<h3 align="center">124 TV models &nbsp;·&nbsp; 38 brands &nbsp;·&nbsp; 18 languages &nbsp;·&nbsp; 390 KB launcher</h3>
-
-<p align="center">
-  <a href="https://cleanyour.tv">cleanyour.tv</a> ·
-  <a href="PROMPT.md">The prompt</a> ·
-  <a href="examples/">124 TV lists</a> ·
-  <a href="SHOWCASE.md">26 built on it</a> ·
-  <a href="https://x.com/gathint/status/2111379569030939102">The tweet</a> ·
-  <a href="README.zh-CN.md">简体中文</a>
 </p>
 
 <p align="center">
@@ -25,7 +13,7 @@
 </p>
 
 <p align="center">
-  <a href="docs/PRESS.md"><img src="docs/card.jpg" alt="123 TV models · 42 brands · 19 languages · 390 KB launcher. Featured in TechCrunch, Mashable, Android Authority, XDA, FlatpanelsHD, It's FOSS, Phandroid, GIGAZINE, Xataka, WinFuture, Frandroid, Macitynet, Techaeris, TechPP, The Daily Star, detikINET and 54 more: 70 articles from 21 countries. Before: stock Google TV home with a sponsored ad. After: the Clean Your TV launcher." width="800"></a>
+  <a href="docs/PRESS.md"><img src="docs/card.jpg" alt="147 TV models · 49 brands · 19 languages · 390 KB launcher. Featured in TechCrunch, Mashable, Android Authority, XDA, FlatpanelsHD, It's FOSS, Phandroid, GIGAZINE, Xataka, WinFuture, Frandroid, Macitynet, Techaeris, TechPP, The Daily Star, detikINET and 54 more: 70 articles from 21 countries. Before: stock Google TV home with a sponsored ad. After: the Clean Your TV launcher." width="800"></a>
 </p>
 
 > Vibe coded my parents' TV this afternoon! It was showing a sponsored ad before you could even get
@@ -98,12 +86,12 @@ sets refuse to install any launcher at all; their lists say so in the header.
 
 Tested lists from contributors, one folder per model in [`examples/`](examples/):
 
-**TCL** 26 · **Sony** 18 · **Xiaomi** 16 · **Philips** 8 · **Hisense** 6 · **Amazon Fire TV** 4 ·
-**Panasonic** 3 · **BenQ** 2 · **CHiQ** 2 · **Haier** 2 · **Hitachi** 2 · **NVIDIA Shield** 2 · **Skyworth** 2 ·
-**Vu** 2 · AiPro2K · AIWA · Cecotec · Chromecast with Google TV · Compac · EKO · FFalcon · Freebox ·
-Insignia Fire TV · Kalley · MTC · OnePlus · onn · Polytron · PRISM+ · RCA · Redmi · SANYO · Tele System ·
-Thomson · Toshiba Fire TV · Verizon · Vidda ·
-Thomson · Toshiba Fire TV · Vidda · Motorola ·
+**TCL** 32 · **Sony** 18 · **Xiaomi** 17 · **Philips** 8 · **Hisense** 6 · **Amazon Fire TV** 5 ·
+**Panasonic** 3 · **BenQ** 2 · **CHiQ** 2 · **Google** 2 · **Haier** 2 · **Hitachi** 2 · **Kalley** 2 ·
+**NVIDIA Shield** 2 · **OnePlus** 2 · **onn** 2 · **Skyworth** 2 · **Thomson** 2 · **Toshiba** 2 · **Vu** 2 ·
+AiPro2K · AIWA · Cecotec · Challenger · Compac · EKO · FFalcon · Freebox · Insignia Fire TV · JVC ·
+Kogan · Motorola · MTC · Polytron · PRISM+ · RCA · Redmi · SANYO · SHARP · Tele System · Verizon ·
+Vidda · Vision ·
 BYINTEK, JMGO, Portronics, Stellamore, Wanbo and XGIMI projectors
 
 <details>
@@ -114,15 +102,16 @@ BYINTEK, JMGO, Portronics, Stellamore, Wanbo and XGIMI projectors
 | AiPro2K (Expressluck, dongnae; Changhong AI PONT family) | Android TV 14 |
 | AIWA AI PONT SA (Changhong, osaka, ISDB86AW) | Google TV 14 |
 | Amazon Fire TV 50" 4K smart TV (AFTTIFF43, brandenburg) | Fire OS 7.7.1.7 / Android 9 |
+| Amazon Fire TV Stick 4K Max, 1st gen 2021 (AFTKA, kara), Colombia | Fire OS 7.7.1.3 / Android 9 |
 | Amazon Fire TV Stick 4K, 1st gen 2018 (AFTMM, mantis) | Fire OS 6.7.1.1 / Android 7.1 |
 | Amazon Fire TV Stick 4K, 2nd gen 2023 (AFTKM, karat), Brazil | Fire OS 8.1.8.5 / Android 11 |
-| Amazon Fire TV Stick 4K Max, 1st gen 2021 (AFTKA, kara) | Fire OS 7.7.1.3 / Android 9 |
 | Amazon Fire TV Stick Lite, 1st gen 2020 (AFTSS, sheldon) | Fire OS 7.7.1.7 / Android 9 |
 | BenQ E55-735 (Changhong AI PONT, DVB96BQ) | Google TV 14 |
 | BenQ E55-750 (Changhong AI PONT, DVB96BQ) | Google TV (Android 11) |
 | BYINTEK Love U4 projector, 1080P (Skyworth RG_HS352, HiSilicon Hi3751V350, 1 GB), Brazil | Android 9 |
 | BYINTEK T5 Max projector (built-in Google TV stick: SkyworthDigital YYT, Amlogic), Brazil | Google TV 14 |
 | Cecotec VQU10065S 65" QLED (Vestel-built, shandao, MediaTek), Spain | Android TV 14 |
+| Challenger 32T22 BT (cvt_mt5863_col, board TP.MT5510.PB781, MediaTek MT5659, 1 GB RAM), Colombia | Android 7.0 |
 | CHiQ AI PONT (Changhong GTVU65, dangni, MediaTek mt5867) | Google TV 14 |
 | CHiQ AI PONT (DVB93CQ) | Android TV 11 |
 | Chromecast with Google TV 4K (sabrina) | Google TV 14 |
@@ -130,6 +119,7 @@ BYINTEK, JMGO, Portronics, Stellamore, Wanbo and XGIMI projectors
 | EKO 2K Google TV (MTC-built, tennoji, MediaTek mt5867 / T56) | Google TV 14 |
 | FFalcon (雷鸟) 鹤6 PRO 65S585C Pro (China, tcl_mt5879_cn, MediaTek MT9653) | Android TV 11 |
 | Freebox Player POP (Free, fbx8am, Amlogic), IPTV/DVB-T box | Android TV 10 |
+| Google TV Streamer 4K (kirkwood, GZRNL) | Google TV 14 |
 | Haier Android TV DVB2K (broadway, HaierATVT56DVB) | Android TV 11 |
 | Haier H32S80EFX (MatrixTV CE, HRT56EU, deto, MediaTek), Thailand | Google TV 14 |
 | Hisense E5Q Pro (VIDAA_TV, MediaTek MT9653), China | Android TV 11 |
@@ -142,9 +132,10 @@ BYINTEK, JMGO, Portronics, Stellamore, Wanbo and XGIMI projectors
 | Hitachi CDH-LE32SMART21 (TCL-built C06, C06_2K_GB, MediaTek MT9221, 1 GB), Argentina | Android TV 11 |
 | Insignia 55" F30 4K Fire TV (NS-55F301NA25, AFTDCT31, duckie) | Fire OS 7 / Android 9 |
 | JMGO N1S projector (K80A, holan, MediaTek m7332), Australia | Google TV 14 |
-| Kalley 43G200 (device R3_GTV, MOKA, Realtek RTD2841A), Latin America | Google TV 14 |
 | JVC Android TV (Vestel-built, BARTU_Jvc, menlo, MediaTek mt5867), Spain | Android TV 11 |
+| Kalley 43G200 (device R3_GTV, MOKA, Realtek RTD2841A), Latin America | Google TV 14 |
 | Kalley R10G (device R10G, product ACER_FFM, MOKA, Realtek RTD2875P), Latin America | Google TV 14 |
+| Kogan Google TV (Changhong CHiQ AI PONT, GTVU65KG, dangni, MediaTek mt5867), Australia | Google TV 14 |
 | Motorola SWTV-24AE-FHD (Skyworth OEM, beomil, MediaTek), India/Global | Google TV 14 |
 | MTC UK 2K Android TV (tabata, MediaTek m5621; JVC-family firmware, `android.autoinstalls.config.JVC` present), UK | Android TV 11 |
 | NVIDIA SHIELD TV 2019 tube (P3430, sif) | Android TV 11 |
@@ -152,6 +143,7 @@ BYINTEK, JMGO, Portronics, Stellamore, Wanbo and XGIMI projectors
 | OnePlus TV (D00, Dubai) | Google TV 14 |
 | OnePlus Y1 43" (Y Series, shibuya) | Android TV 11 |
 | onn 4K Streaming Box (2023, Walmart; YOC, Amlogic), US | Google TV 14 |
+| onn. 4K Plus Streaming (2025, Walmart; coffey, Amlogic S905X5M), US | Google TV 14 |
 | Panasonic 4KTV-0SU (Skyworth-built SW4H, MediaTek m7332), Gulf region | Android TV 10 |
 | Panasonic 4KTV-JUP (Jupiter_PA, MediaTek) | Android TV 11 |
 | Panasonic TH-40HS550K (Skyworth-built, GS655 shibuya, MediaTek) | Android TV 11 |
@@ -191,21 +183,21 @@ BYINTEK, JMGO, Portronics, Stellamore, Wanbo and XGIMI projectors
 | Sony BRAVIA XBR-65X900E (2017, BRAVIA_ATV2) | Android TV 9 |
 | Sony BRAVIA XBR-65X900F (2018, BRAVIA_ATV3_4K, MediaTek MT5891), US/Canada | Android TV 9 |
 | Stellamore T950S projector (Droidlogic be30a3, Amlogic txhd2) | Android 13 |
+| TCL / FFalcon China (tcl9655_cn, MediaTek MT9655 "merak", UTT2.250416.001 AU01) | Android 14 |
+| TCL 32L5A (C06, model "Smart TV", 1 GB) | Android TV 11 |
 | TCL 32S5400A (C06, C06_2K_GB, MediaTek MT9221, 1 GB), 2023 | Android TV 11 |
 | TCL 32S5K (C06, C06_2K_GB, MediaTek MT9221, 918 MB), EU | Android TV 11 |
-| TCL 32L5A (C06, model "Smart TV", 1 GB) | Android TV 11 |
 | TCL 40S5400A (C06, C06_2K_GB, MediaTek MT9221, 1 GB) | Android TV 11 |
-| TCL L40S66E (C06, C06_2K_GB, MediaTek MT9221, 1 GB), Argentina | Android TV 11 |
 | TCL 43C645 (Smart TV Pro, Realtek RTD2851 / R51MT05, V8-R51MT05-LF1V652) | Google TV launcher on Android TV 11 |
 | TCL 43EP660 (Europe, BeyondTV, Realtek rtd285o, V8-R851T02-LF1V378) | Android TV 9 |
 | TCL 43S5K (G13, G13_2K_GB, MediaTek MT9221, 1 GB), India | Google TV 14 |
 | TCL 50EP680 (Europe, BeyondTV, Realtek rtd285o) | Android TV 11 |
 | TCL 55" 4K Google TV, 2023 (G10, G10_4K_US_NF); also TCL 55P6K, Spain (G10_4K_GB_NF_32BIT) | Google TV 12 |
+| TCL 55C715 QLED (Europe, BeyondTV2, Realtek RTD2851, V8-R851T02-LF1V606) | Android TV 9 |
 | TCL 55C725 (Smart TV Pro, BeyondTV4, G03_4K_GB, Realtek R51MT05, V8-R51MT05-LF1V620), Italy | Google TV launcher on Android TV 11 |
 | TCL 55C815 (2020, Europe/Denmark, BeyondTV2, Realtek rtd285o) | Android TV 11 |
 | TCL 55P7K, Middle East (G10, G10_4K_GB, Realtek RTD2875P) | Google TV 12 |
 | TCL 55Q10G Pro (China, tcl_mt5879_cn, MediaTek MT9952) | Android TV 11 |
-| TCL 55C715 QLED (Europe, BeyondTV2, Realtek RTD2851, V8-R851T02-LF1V606) | Android TV 9 |
 | TCL 55S470G (G10, G10_4K_US_NF, Realtek), US | Google TV 12 |
 | TCL 65C725 (Smart TV Pro, BeyondTV4) | Android TV 11 |
 | TCL 65C735 (Smart TV Pro, G05, MediaTek), France | Google TV 11 |
@@ -216,6 +208,7 @@ BYINTEK, JMGO, Portronics, Stellamore, Wanbo and XGIMI projectors
 | TCL BeyondTV2 (Latin America / Brazil, Realtek RTD2851) | Android TV 9 |
 | TCL BeyondTV2, Android 11 build (AR05, Realtek rtd285o) | Android TV 11 |
 | TCL C755 QD-Mini LED, 2024, Australia (G08, MediaTek tcl9618) | Google TV 14 |
+| TCL L40S66E (C06, C06_2K_GB, MediaTek MT9221, 1 GB), Argentina | Android TV 11 |
 | TCL QM6K Pro, 2025 (G08, MediaTek tcl9618) | Google TV 14 |
 | TCL Smart TV (G07, G07_4K_GB_NF, Realtek RTD2851A, 2 GB) | Google TV 11 |
 | TCL Smart TV Pro (G03, G03_4K_GB, BeyondTV4, Realtek R51MT05, V8-R51MT05-LF1V620), Middle East firmware | Google TV 11 |
@@ -225,6 +218,7 @@ BYINTEK, JMGO, Portronics, Stellamore, Wanbo and XGIMI projectors
 | Tele System TS ON T2/HD (ONT2HD, SDMC, Amlogic), Italy | Android TV 11 |
 | Thomson 32HE5800 (TCL-built UnionTV, Realtek RT2841), Spain | Android TV 9 |
 | Thomson T32RTL6000 (SCBC, Realtek; Android reports model `ATV R1`) | Android TV 9 |
+| Toshiba (Vestel Cosmos170, yeoksam, MediaTek), Spain | Android TV 11 |
 | Toshiba Fire TV (AFTHA004, hazel) | Fire OS 7 / Android 9 |
 | Verizon Stream TV, 1st gen (WNC JS8V, Amlogic), US | Android 12 |
 | Vidda VIDAA_TV (Hisense sub-brand; device MT9653, board mt5879), China JuUI | Android TV 11 |
@@ -233,8 +227,8 @@ BYINTEK, JMGO, Portronics, Stellamore, Wanbo and XGIMI projectors
 | Vu Premium FHD 43-inch (Smart 2K ATV4, hamamatsucho), India | Android TV 9 |
 | Wanbo X5 Pro projector (built-in Google TV stick: SkyworthDigital YYT, Amlogic), Australia | Google TV 14 |
 | XGIMI Horizon S Pro projector (XK03H, xgimigalileo, MediaTek) | Android TV 11 |
-| XGIMI MoGo 3 Pro projector (G0035, altai, MediaTek) | Google TV 14 |
 | XGIMI MoGo 2 projector (MoGo, xgimiapollo, pokemon) | Android TV 11 |
+| XGIMI MoGo 3 Pro projector (G0035, altai, MediaTek) | Google TV 14 |
 | Xiaomi Mi Box S (MIBOX4, oneday), streaming box | Android TV 9 |
 | Xiaomi Mi Box S 2nd gen (MiTV-AFKR0, jaws), streaming box | Google TV 11 |
 | Xiaomi Mi TV (MiTV-MOOQ0, croods) | Android TV 10 |
