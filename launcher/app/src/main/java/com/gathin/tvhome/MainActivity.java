@@ -2232,10 +2232,39 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         }
     }
 
-    /** Switches to a passthrough input (HDMI, AV). The standard way is ACTION_VIEW on its channel URI,
-     *  which the Live TV app handles; where nothing takes that, the configured `input_action` is sent
-     *  with the same URI instead (XGIMI's HDMI player only answers com.xgimi.action.hdmiPlayer). */
+    /** `input_sources` in config.xml: "HW5=23" maps the framework input whose id ends in /HW5 to a vendor
+     *  source number; "HW8=-" leaves that input out of the Inputs menu (a port the board reports but the set
+     *  does not have). Returns the number, -1 for a left-out input, or null when the input is not listed. */
+    private Integer mappedSource(String inputId) {
+        if (inputId == null) return null;
+        String hw = inputId.substring(inputId.lastIndexOf('/') + 1);
+        for (String m : getResources().getStringArray(R.array.input_sources)) {
+            int eq = m.indexOf('=');
+            if (eq <= 0 || !m.substring(0, eq).trim().equals(hw)) continue;
+            String v = m.substring(eq + 1).trim();
+            if (v.equals("-")) return -1;
+            try { return Integer.parseInt(v); } catch (NumberFormatException e) { return null; }
+        }
+        return null;
+    }
+
+    /** Switches to a passthrough input (HDMI, AV). An input mapped in `input_sources` is opened by sending
+     *  `input_action` with its source number as the int extra "input" (Xiaomi China firmware, whose tvplayer
+     *  answers com.xiaomi.mitv.tvplayer.EXTSRC_PLAY and nothing else). Otherwise the standard way is
+     *  ACTION_VIEW on its channel URI, which the Live TV app handles; where nothing takes that, the
+     *  configured `input_action` is sent with the same URI instead (XGIMI's HDMI player only answers
+     *  com.xgimi.action.hdmiPlayer). */
     private void openInput(String inputId) {
+        Integer source = mappedSource(inputId);
+        if (source != null && source >= 0 && !inputAction.isEmpty()) {
+            try {
+                startActivity(new Intent(inputAction).putExtra("input", source.intValue())
+                        .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+                return;
+            } catch (ActivityNotFoundException e) {
+                // fall through to the standard way
+            }
+        }
         Uri uri = TvContract.buildChannelUriForPassthroughInput(inputId);
         Intent view = new Intent(Intent.ACTION_VIEW).setDataAndType(uri, "vnd.android.cursor.item/channel")
                 .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -2328,6 +2357,8 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
                 }
                 // Inputs hidden in the TV's Settings > Inputs stay out of the menu too.
                 if (!info.isPassthroughInput() || info.isHidden(this)) continue;
+                // input_sources can leave out ports the board reports but the set does not have ("HW8=-").
+                if (Integer.valueOf(-1).equals(mappedSource(info.getId()))) continue;
                 // A CEC device's row is added with its port, below.
                 if (info.getParentId() != null && inputIds.contains(info.getParentId())) continue;
                 CharSequence l = info.loadLabel(this);
