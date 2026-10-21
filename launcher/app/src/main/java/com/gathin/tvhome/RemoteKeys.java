@@ -1,5 +1,7 @@
 package com.gathin.tvhome;
 
+import android.accessibilityservice.AccessibilityService;
+import android.accessibilityservice.AccessibilityServiceInfo;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
@@ -51,6 +53,21 @@ final class RemoteKeys {
             if (code > 0) keys.put(code, parts[1].trim());
         }
         return keys;
+    }
+
+    /**
+     * Applies the key_filter choice (config.xml or a theme): when false the service drops
+     * FLAG_REQUEST_FILTER_KEY_EVENTS at runtime, so it stays enabled for nothing but stops filtering.
+     * Some firmware (TCL Google TV on Android 12) drops key auto-repeat once ANY service filters keys:
+     * long-pressing volume then steps once per press. Filtering can only be skipped while the service
+     * runs, since the flag is also declared in the manifest metadata.
+     */
+    static void applyKeyFilter(AccessibilityService service, boolean keyFilter) {
+        if (keyFilter) return;
+        AccessibilityServiceInfo info = service.getServiceInfo();
+        if (info == null) return;
+        info.flags &= ~AccessibilityServiceInfo.FLAG_REQUEST_FILTER_KEY_EVENTS;
+        service.setServiceInfo(info);
     }
 
     /**
