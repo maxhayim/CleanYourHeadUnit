@@ -62,6 +62,11 @@ they send TCL's own keycodes, which TCL's shortcut manager hands to the stock ho
 back through the launcher's `InputKeyService`, which is why the install line above passes
 `INPUT_KEY_SERVICE=1`. Re-pass it on every reinstall; a reinstall drops the service from the accessibility list.
 
+**Ask for that only if you want the buttons more than a ramping volume.** Once a key-filtering service is
+bound, holding volume up/down moves one step instead of repeating, on the whole TV, and one helper or both
+makes no difference - see [the G09 key-repeat note](../../docs/devices/tcl-55p71b-g09-key-repeat.md) for the
+bisect and for the third option (leave launcherx enabled). The Input button below needs no helper.
+
 | Button | Keycode | Scancode | Note |
 |---|---|---|---|
 | Netflix | 4062 | 472 | `app_keys` |
