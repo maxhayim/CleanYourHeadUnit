@@ -89,4 +89,5 @@
     <string name="dock_edit">Muokkaa telakkaa</string>
     <string name="dock_edit_hint">Valitse muutettava telakan paikka ja paina OK. Takaisin lopettaa.</string>
     <string name="dock_edit_pick_app">Valitse nyt sinne tuleva sovellus ja paina OK. Takaisin valitsee toisen paikan.</string>
+    <string name="library_hint_toggle">OK vaihtaa sovelluksen näkymisen aloitusnäytössä. Valitut sovellukset ovat ensin.</string>
 </resources>

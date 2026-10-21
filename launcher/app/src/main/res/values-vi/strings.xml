@@ -112,4 +112,5 @@
     <string name="race_countdown_hours">%1$d giờ %2$d phút</string>
     <string name="race_countdown_days">%1$d ngày %2$d giờ</string>
     <string name="last_opened">Mở lần cuối %1$s</string>
+    <string name="library_hint_toggle">Nhấn OK để bật hoặc tắt hiển thị trên màn hình chính. Ứng dụng được chọn xếp trước.</string>
 </resources>

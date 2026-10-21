@@ -66,4 +66,5 @@
         <item quantity="other">%1$d aplikacija</item>
     </plurals>
     <string name="greeting_with_name">%1$s, %2$s</string>
+    <string name="library_hint_toggle">Pritisnite OK da promenite oznaku za početni ekran. Označene aplikacije su prve.</string>
 </resources>

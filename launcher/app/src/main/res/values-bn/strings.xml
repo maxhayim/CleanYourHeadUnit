@@ -89,4 +89,5 @@
         <item quantity="other">%1$dটি অ্যাপ</item>
     </plurals>
     <string name="greeting_with_name">%1$s, %2$s</string>
+    <string name="library_hint_toggle">হোমে দেখানো চালু বা বন্ধ করতে OK চাপুন। চিহ্নিত অ্যাপ আগে দেখাবে।</string>
 </resources>

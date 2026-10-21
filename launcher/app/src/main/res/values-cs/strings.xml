@@ -90,4 +90,5 @@
         <item quantity="other">%1$d aplikací</item>
     </plurals>
     <string name="greeting_with_name">%1$s, %2$s</string>
+    <string name="library_hint_toggle">Stisknutím OK přepnete zobrazení na hlavní obrazovce. Zaškrtnuté aplikace jsou první.</string>
 </resources>

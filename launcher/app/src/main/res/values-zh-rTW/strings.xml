@@ -83,4 +83,5 @@
         <item quantity="other">%1$d 個應用程式</item>
     </plurals>
     <string name="greeting_with_name">%1$s，%2$s</string>
+    <string name="library_hint_toggle">按確定切換右上角勾選；已顯示的應用程式排在前面</string>
 </resources>

@@ -86,4 +86,5 @@
         <item quantity="other">%1$d aplikacji</item>
     </plurals>
     <string name="greeting_with_name">%1$s, %2$s</string>
+    <string name="library_hint_toggle">Naciśnij OK, aby pokazać lub ukryć na ekranie głównym. Zaznaczone aplikacje są pierwsze.</string>
 </resources>
