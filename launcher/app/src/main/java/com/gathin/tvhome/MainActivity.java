@@ -122,6 +122,9 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
     private LinearLayout heroDots;
     /** Cinematic top shelf (config.xml, cinematic_home): the focused dock app's artwork behind a larger shelf. */
     private boolean cinematic;
+    /** config.xml ambient_glow, overridable by a theme. Off: the glow view is gone and no fade or colour animator
+     *  is started for it, so a focus move costs nothing extra on a launcher that runs all day. */
+    private boolean ambientGlow;
     private ImageView heroArt;
     private static final float HERO_ART_ALPHA = 0.5f;
     /** Softened artwork per app (HeroArt, about 5 KB each), made the first time its dock tile is focused. */
@@ -327,6 +330,8 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         // The glow is one bitmap, so its alpha can be applied while drawing it. Otherwise every frame of
         // a fade renders it into a full-screen offscreen buffer first.
         ambient.forceHasOverlappingRendering(false);
+        ambientGlow = cfg.ambientGlow;
+        if (!ambientGlow) ambient.setVisibility(View.GONE);
         heroName = findViewById(R.id.heroName);
         hero = findViewById(R.id.hero);
         // The hero is now a group (name, and the cinematic lines): without this every fade of the default
@@ -1209,15 +1214,16 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
             hero.setY(y);
             hero.setTranslationX(0f);
             hero.setAlpha(1f);
-            setAmbient(color);
-            if (!animations) {
-                ambient.setAlpha(1f);
-                heroShown = true;
-            } else if (!heroShown) {
-                ambient.setAlpha(0f);
-                ambient.animate().alpha(1f).setDuration(160).start();
-                heroShown = true;
+            if (ambientGlow) {
+                setAmbient(color);
+                if (!animations) {
+                    ambient.setAlpha(1f);
+                } else if (!heroShown) {
+                    ambient.setAlpha(0f);
+                    ambient.animate().alpha(1f).setDuration(160).start();
+                }
             }
+            heroShown = true;
             return;
         }
 
@@ -1229,8 +1235,10 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
             hero.setY(y);
             hero.setTranslationX(0f);
             hero.animate().alpha(1f).setDuration(260).start();
-            setAmbient(color);
-            ambient.animate().alpha(1f).setDuration(600).start();
+            if (ambientGlow) {
+                setAmbient(color);
+                ambient.animate().alpha(1f).setDuration(600).start();
+            }
             heroShown = true;
         } else if (changed) {
             if (advancedEffects) hero.animate().cancel();
@@ -1240,9 +1248,9 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
                 hero.setTranslationX(12 * density);
                 hero.animate().alpha(1f).translationX(0f).setDuration(200).start();
             }).start();
-            if (advancedEffects) {
+            if (ambientGlow && advancedEffects) {
                 transitionAmbient(color);
-            } else if (color != ambientColor) {
+            } else if (ambientGlow && color != ambientColor) {
                 ambient.animate().alpha(0.35f).setDuration(200).withEndAction(() -> {
                     setAmbient(color);
                     ambient.animate().alpha(1f).setDuration(500).start();
@@ -1453,6 +1461,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         heroArt.animate().cancel();
         heroArt.setAlpha(0f);
         heroShown = false;
+        if (!ambientGlow) return;
         if (!animations || reducedMotion) {
             setAmbient(color);
             ambient.setAlpha(1f);
@@ -1478,7 +1487,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         heroShown = false;
         if (animations) {
             hero.animate().alpha(0f).setDuration(reducedMotion ? 100 : 160).start();
-            ambient.animate().alpha(0f).setDuration(reducedMotion ? 140 : 300).start();
+            if (ambientGlow) ambient.animate().alpha(0f).setDuration(reducedMotion ? 140 : 300).start();
             heroArt.animate().alpha(0f).setDuration(reducedMotion ? 140 : 300).start();
         } else {
             hero.setAlpha(0f);
