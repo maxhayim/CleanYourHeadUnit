@@ -68,7 +68,7 @@ Debloat
   nothing to debloat on such a set, so we fall back to its own privacy toggles and DNS blocking
   (`docs/TROUBLESHOOTING.md`).
 - Don't launch a package whose name says factory, production, AT or fac menu (`com.cvte.tv.hkcfac`,
-  `com.at.factory.*`, `mediatek.factorymenu.ui` and the like) to see what it does, even read-only:
+  `com.cvte.tv.fac.menu`, `com.at.factory.*`, `mediatek.factorymenu.ui` and the like) to see what it does, even read-only:
   on Haier/CVTE boards opening one flips a factory-mode flag that kills the Input key and CEC, and
   makes the next boot disable Play services, Netflix and Chromecast - which the shell then cannot
   re-enable. `dumpsys package <name>` tells you what a package is without starting it, and
