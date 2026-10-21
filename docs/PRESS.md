@@ -1,10 +1,10 @@
 # CleanYourTV in the press
 
-Every article about CleanYourTV (called tv-vibehack until 19 October 2026) that we could open and check: **79 articles**, 52 of them from outlets in 22 countries, 4 from Spanish-language sites in Latin America and 23 from newsletters, blogs and AI news sites. Headlines are in the language they were published in. Syndicated copies and auto-generated listings are left out.
+Every article about CleanYourTV (called tv-vibehack until 19 October 2026) that we could open and check: **80 articles**, 52 of them from outlets in 22 countries, 5 from Spanish-language sites in Latin America and 23 from newsletters, blogs and AI news sites. Headlines are in the language they were published in. Syndicated copies and auto-generated listings are left out.
 
 Wrote about it and not here? Open an issue or a pull request with the link.
 
-[United States](#united-states)&nbsp;10 · [United Kingdom](#united-kingdom)&nbsp;2 · [India](#india)&nbsp;2 · [Denmark](#denmark)&nbsp;1 · [Japan](#japan)&nbsp;2 · [Bangladesh](#bangladesh)&nbsp;1 · [United Arab Emirates](#united-arab-emirates)&nbsp;1 · [France](#france)&nbsp;3 · [Germany](#germany)&nbsp;2 · [Spain](#spain)&nbsp;2 · [Italy](#italy)&nbsp;2 · [Norway](#norway)&nbsp;1 · [Portugal](#portugal)&nbsp;1 · [Czechia](#czechia)&nbsp;1 · [Ukraine](#ukraine)&nbsp;1 · [Greece](#greece)&nbsp;1 · [Egypt](#egypt)&nbsp;1 · [Brazil](#brazil)&nbsp;3 · [Latin America (Spanish-language)](#latin-america-spanish-language)&nbsp;4 · [China](#china)&nbsp;7 · [Taiwan](#taiwan)&nbsp;1 · [Indonesia](#indonesia)&nbsp;6 · [Thailand](#thailand)&nbsp;1 · [Online (newsletters, blogs, AI news)](#online-newsletters-blogs-ai-news)&nbsp;23
+[United States](#united-states)&nbsp;10 · [United Kingdom](#united-kingdom)&nbsp;2 · [India](#india)&nbsp;2 · [Denmark](#denmark)&nbsp;1 · [Japan](#japan)&nbsp;2 · [Bangladesh](#bangladesh)&nbsp;1 · [United Arab Emirates](#united-arab-emirates)&nbsp;1 · [France](#france)&nbsp;3 · [Germany](#germany)&nbsp;2 · [Spain](#spain)&nbsp;2 · [Italy](#italy)&nbsp;2 · [Norway](#norway)&nbsp;1 · [Portugal](#portugal)&nbsp;1 · [Czechia](#czechia)&nbsp;1 · [Ukraine](#ukraine)&nbsp;1 · [Greece](#greece)&nbsp;1 · [Egypt](#egypt)&nbsp;1 · [Brazil](#brazil)&nbsp;3 · [Latin America (Spanish-language)](#latin-america-spanish-language)&nbsp;5 · [China](#china)&nbsp;7 · [Taiwan](#taiwan)&nbsp;1 · [Indonesia](#indonesia)&nbsp;6 · [Thailand](#thailand)&nbsp;1 · [Online (newsletters, blogs, AI news)](#online-newsletters-blogs-ai-news)&nbsp;23
 
 ## United States
 
@@ -141,6 +141,7 @@ Wrote about it and not here? Open an issue or a pull request with the link.
 | DiarioBitcoin | [Usuarios usan IA para quitar anuncios y bloatware de sus televisores inteligentes](https://www.diariobitcoin.com/tecnologia/usuarios-usan-ia-para-quitar-anuncios-y-bloatware-de-sus-televisores-inteligentes/) | 19&nbsp;Oct |
 | Ecosistema Startup | [dumbtv: el hack con IA que elimina los anuncios del TV](https://ecosistemastartup.com/dumbtv-el-hack-con-ia-que-elimina-los-anuncios-del-tv/) | 19&nbsp;Oct |
 | TecToc | [Usuarios están usando IA para quitar anuncios y «limpiar» sus Smart TV](https://tectoc.blog/2026/10/19/usuarios-estan-usando-ia-para-quitar-anuncios-y-limpiar-sus-smart-tv/) | 19&nbsp;Oct |
+| Tecnobits | [Cómo hacer debloat a tu Smart TV con IA y CleanYourTV](https://tecnobits.net/como-hacer-debloat-a-tu-smart-tv-con-ia-cleanyourtv/) | 21&nbsp;Oct |
 
 ## China
 

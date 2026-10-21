@@ -18,7 +18,7 @@
 </p>
 
 <p align="center">
-  <a href="docs/PRESS.md"><img src="docs/card.jpg" alt="196 TV models · 57 brands · 24 languages · 436 KB launcher. Featured in TechCrunch, TechRadar, Tom's Guide, Mashable, Android Authority, XDA, FlatpanelsHD, It's FOSS, Phandroid, GIGAZINE, Xataka, WinFuture, Frandroid, Macitynet, Techaeris, TechPP and 63 more: 79 articles from 22 countries. Before: stock Google TV home with a sponsored ad. After: the Clean Your TV launcher." width="800"></a>
+  <a href="docs/PRESS.md"><img src="docs/card.jpg" alt="196 TV models · 57 brands · 24 languages · 443 KB launcher. Featured in TechCrunch, TechRadar, Tom's Guide, Mashable, Android Authority, XDA, FlatpanelsHD, It's FOSS, Phandroid, GIGAZINE, Xataka, WinFuture, Frandroid, Macitynet, Techaeris, TechPP and 64 more: 80 articles from 22 countries. Before: stock Google TV home with a sponsored ad. After: the Clean Your TV launcher." width="800"></a>
 </p>
 
 **The viral tweet:** [x.com/gathint/status/2111379569030939102](https://x.com/gathint/status/2111379569030939102)
@@ -341,7 +341,7 @@ tools/theme.sh themes/aurora                                 # push a theme; --r
 | [`tools/privacy.py`](tools/privacy.py) | Audits the TV for voice, ACR and telemetry candidates and prints the evidence for each; `--write` turns the findings into a list `disable.sh` and `restore.sh` already understand. |
 | [`tools/theme.sh`](tools/theme.sh) | Push a folder from [`themes/`](themes/) to the launcher and restart Home. |
 | [`tools/race_calendar.py`](tools/race_calendar.py) | Writes this season's F1 calendar into a theme for race-weekend mode, from the free Jolpica API. |
-| [`launcher/build-and-install.sh`](launcher/build-and-install.sh) | Builds a shrunk release (about 436 KB), installs it, switches Home, and rolls back if Home does not land on it. |
+| [`launcher/build-and-install.sh`](launcher/build-and-install.sh) | Builds a shrunk release (about 443 KB), installs it, switches Home, and rolls back if Home does not land on it. |
 
 The scripts never leave the TV without a Home app: they only disable a stock launcher they recognise,
 and skip the Home app in a list until another launcher answers HOME. Details below.
@@ -410,7 +410,7 @@ apps), which is why the report names that loss per package instead of calling it
 
 ## The launcher
 
-A small native home screen for Android TV: **about 436 KB**, plain Java, built for TVs with 1 GB of RAM.
+A small native home screen for Android TV: **about 443 KB**, plain Java, built for TVs with 1 GB of RAM.
 No blur, no video, no network permission, no background services.
 
 The **TV** needs Android 8.0 (API 26) or newer: `minSdk` is a compile-time floor in
