@@ -140,10 +140,13 @@ class EntryPointsTest(unittest.TestCase):
 
     def test_prompt_asks_before_enabling_a_helper(self):
         text = flat(PROMPT)
-        self.assertIn("ask me to hold volume up before", text)
+        self.assertIn("on a TCL G09 build (Google TV 12) ask me to hold volume up before", text,
+                      "the check is scoped to the build the evidence came from")
         self.assertIn("all or nothing", text)
         self.assertIn("docs/devices/tcl-55p71b-g09-key-repeat.md", text)
-        self.assertIn("Say which one I am giving up", text)
+        self.assertIn("say which one I am giving up", text)
+        self.assertIn("On other sets this was not measured", text,
+                      "one unit is not a rule for every TV")
 
     def test_examples_index_lists_the_note(self):
         text = EXAMPLES.read_text(encoding="utf-8")
