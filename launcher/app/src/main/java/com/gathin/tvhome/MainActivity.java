@@ -2204,18 +2204,9 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
     }
 
 
-    /**
-     * China-market MIUI TV firmware answers no standard Settings intents at all; open Xiaomi's own
-     * settings app (com.xiaomi.mitv.settings) there, so the Settings and Wi-Fi pills keep working.
-     * On firmware with a standard settings handler the behaviour is unchanged.
-     */
+    /** Every settings entry shares the standard intent and the vendor fallback (SystemSettings). */
     private Intent systemIntent(String standardAction) {
-        Intent i = new Intent(standardAction);
-        if (i.resolveActivity(getPackageManager()) != null) return i;
-        i = new Intent().setComponent(new ComponentName(
-                "com.xiaomi.mitv.settings", "com.xiaomi.mitv.settings.entry.MainActivity"));
-        if (i.resolveActivity(getPackageManager()) != null) return i;
-        return new Intent(standardAction);   // nothing found: let open() show the can't-open toast
+        return SystemSettings.intent(this, standardAction);
     }
 
     /** Hides the Inputs pill when it would have nothing to list: streaming boxes have no HDMI-in, AV or tuner. */

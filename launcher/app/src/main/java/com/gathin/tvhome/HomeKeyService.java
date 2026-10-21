@@ -1,6 +1,7 @@
 package com.gathin.tvhome;
 
 import android.accessibilityservice.AccessibilityService;
+import android.content.ActivityNotFoundException;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -11,6 +12,7 @@ import android.content.pm.ResolveInfo;
 import android.provider.Settings;
 import android.view.KeyEvent;
 import android.view.accessibility.AccessibilityEvent;
+import android.widget.Toast;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -119,8 +121,12 @@ public class HomeKeyService extends AccessibilityService {
         if (isSettingsKey(event)) {
             if (event.getAction() == KeyEvent.ACTION_UP && !event.isCanceled()) {
                 Intent open = settingsPanel ? new Intent(this, QuickSettingsActivity.class)
-                        : new Intent(Settings.ACTION_SETTINGS);
-                startActivity(open.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+                        : SystemSettings.intent(this, Settings.ACTION_SETTINGS);
+                try {
+                    startActivity(open.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+                } catch (ActivityNotFoundException | SecurityException unavailable) {
+                    Toast.makeText(this, R.string.not_available, Toast.LENGTH_SHORT).show();
+                }
             }
             return true;
         }
