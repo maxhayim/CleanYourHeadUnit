@@ -85,6 +85,25 @@ Things that bit us or contributors, so they don't bite you. Commands use `tools/
   and a [Sony KDL-49W800G](https://github.com/Gathin23/cleanyourtv/issues/92). Press Home before
   `screencap`. An empty capture means nothing about the ADB connection or playback; check those
   separately.
+- **The whole UI is huge and clipped, and it is not the launcher**, seen on a Sony K-85XR70
+  (`BRAVIA 4K AE2`, Android 14, China firmware,
+  [#590](https://github.com/Gathin23/cleanyourtv/issues/590)). Its UI runs at 1920×1080 on a 4K panel
+  by design ([#29](https://github.com/Gathin23/cleanyourtv/issues/29)), and two confirmed boots came
+  up with an override density of 640 where 320 worked: everything doubles in size, tiles clip, and it
+  looks like a grid bug. Read the overrides before touching the layout:
+  ```sh
+  tools/tv.py 'wm size'          # Physical size vs Override size
+  tools/tv.py 'wm density'       # Physical density vs Override density
+  tools/tv.py 'settings --user 0 get secure display_density_forced'
+  ```
+  An `Override size` left behind by an old resolution experiment is the first thing to explain, and an
+  empty saved density is a normal Android default rather than damage. `wm density reset` fixes the
+  session; on this firmware it came back as 640 at the next boot, and `wm density 320` alone did not
+  stick because it left the saved setting empty. Put `settings --user 0 put secure
+  display_density_forced 320` after it, reboot, and read all three lines back before believing it.
+  Don't copy the number to another TV: record the three values first, and undo with `wm density reset`
+  plus `settings delete secure display_density_forced`. Device note:
+  [Sony K-85XR70](devices/sony-k85xr70-ae2.md).
 - **Disable the stock launcher only after the new one is installed**, or the Home button lands on
   a factory test app. Launch the replacement by hand first. `set-home-activity` can report
   `Success` while HOME still resolves to the stock launcher (priority 2) until that one is disabled.
