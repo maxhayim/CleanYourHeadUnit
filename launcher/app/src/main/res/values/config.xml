@@ -191,4 +191,9 @@
          only background_color or the wallpaper behind everything. Can also be set with "ambient_glow": false in a
          theme's config.json. -->
     <bool name="ambient_glow">true</bool>
+    <!-- Minutes Home may sit untouched before it shows the clock screensaver (ClockActivity); 0 turns it off.
+         Unlike the system screensaver this never starts over live TV or an app, which matters on TVs whose
+         Live TV window does not keep the screen on (CVTE): there the system screensaver would start in the
+         middle of a programme. Can also be set with "home_idle_clock_minutes": 10 in a theme's config.json. -->
+    <integer name="home_idle_clock_minutes">0</integer>
 </resources>
