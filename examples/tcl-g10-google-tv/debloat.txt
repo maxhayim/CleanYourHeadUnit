@@ -34,6 +34,10 @@
 #   launcher as Home — launcher/build-and-install.sh does this automatically and rolls back if
 #   Home doesn't land on the new launcher. List it in your own debloat file so restore.sh brings
 #   it back. Confirmed on two separate 55P6K units.
+# - TclAppBoot blocks the launcher's key services (and WireGuard's VPN) at every boot until the
+#   package has APP_AUTO_START (docs/TROUBLESHOOTING.md). Run `appops write-settings` after
+#   `appops set com.gathin.tvhome APP_AUTO_START allow`: app-ops are saved lazily, and a plain
+#   `reboot` drops the change. Confirmed on the C69B over three reboots.
 
 # TCL content, ads and promos
 com.tcl.tv.plus                        # TCL TV+ content app
