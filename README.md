@@ -104,7 +104,7 @@ Tested lists from contributors, one folder per model in [`examples/`](examples/)
 AiPro2K · AIWA · Artel · Caxium · Cecotec · Challenger · Compac · Dialog · EKO · Freebox · Insignia Fire TV · JVC ·
 Karbonn · Kogan · Motorola · MTC · Noblex · Nokia · OK. · Polytron · PRISM+ · RCA · Sankey · SANYO · SHARP ·
 Tele System · Verizon · Vidda · Vision ·
-BYINTEK, JMGO, Portronics, Stellamore, Wanbo and XGIMI projectors
+BYINTEK, Gadnic, JMGO, Portronics, Stellamore, Wanbo and XGIMI projectors
 
 <details>
 <summary><strong>The full list</strong></summary>
@@ -136,6 +136,7 @@ BYINTEK, JMGO, Portronics, Stellamore, Wanbo and XGIMI projectors
 | FFalcon (雷鸟) 鹤6 PRO 65S585C Pro (China, tcl_mt5879_cn, MediaTek MT9653) | Android TV 11 |
 | FFalcon (雷鸟) r34a0, China (V8-A920T01-LF1V147, Amlogic T920), 1 GB | Android 5.1.1 |
 | Freebox Player POP (Free, fbx8am, Amlogic), IPTV/DVB-T box | Android TV 10 |
+| Gadnic PROJ100W projector (built-in Google TV stick: SkyworthDigital YYT, Amlogic HP46B), Argentina | Google TV 14 |
 | Google TV Streamer 4K (kirkwood, GZRNL) | Google TV 14 |
 | Haier Android TV DVB2K (broadway, HaierATVT56DVB) | Android TV 11 |
 | Haier H32S80EFX (MatrixTV CE, HRT56EU, deto, MediaTek), Thailand | Google TV 14 |
