@@ -6,8 +6,7 @@
 #
 # 1. Re-enables every package in debloat.txt (tools/restore.sh replays the state recorded before the first
 #    disable, so anything that was already off stays off) and hands Home back to the stock launcher.
-# 2. Puts Private DNS back to the Android default (it was unset before; AdGuard was added).
-# 3. Puts the Ambient screensaver back (it was com.google.android.backdrop/.Backdrop).
+# 2. Puts the Ambient screensaver back (it was com.google.android.backdrop/.Backdrop).
 set -euo pipefail
 : "${TV_HOST:?set TV_HOST to the projector IP, e.g. TV_HOST=192.168.68.51 $0}"
 HERE="$(cd "$(dirname "$0")" && pwd)"
@@ -19,8 +18,6 @@ tv() { "$PY" -I "$ROOT/tools/tv.py" "$@"; }
 "$ROOT/tools/restore.sh" "$HERE/debloat.txt" com.google.android.tvlauncher
 
 # One command per shell call: chained pm/settings commands can stop silently after the first.
-tv "settings delete global private_dns_mode"
-tv "settings delete global private_dns_specifier"
 tv "settings put secure screensaver_components com.google.android.backdrop/.Backdrop"
 
 if [ "${1:-}" = "--remove-launcher" ]; then

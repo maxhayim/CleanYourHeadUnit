@@ -19,7 +19,6 @@ export TV_HOST=192.168.68.51
 | **Back after every boot** | The firmware turns `com.cltv.fast` (Free TV) and `com.google.android.katniss` (Assistant/voice) back on each boot. Nothing shows them without the stock home, so they are left that way |
 | **Kept** | YouTube, Prime Video, YouTube Music, Nebula Play, Chromecast built-in, AirPin (AirPlay), all apps you installed, and everything the projector needs (HDMI, remote, Bluetooth pairing, picture, keyboard, Play Store, Play Services). The setup wizard stays: it owns the saved Wi-Fi |
 | **Screensaver** | Switched from Ambient to the built-in "Colors" screensaver before Ambient was disabled |
-| **Private DNS** | `dns.adguard-dns.com` (blocks many ad and tracking domains; **not** YouTube ads) |
 | **Home** | `com.gathin.tvhome`, configured by [`config.json`](config.json): dock YouTube, Netflix, Disney+, Prime Video; greeting "Sedir"; the Wi-Fi pill opens NordVPN |
 
 A backup of the state before any change (package lists, getprop, all settings, Home, display size) is in
@@ -28,17 +27,9 @@ A backup of the state before any change (package lists, getprop, all settings, H
 ## Undo everything
 
 ```bash
-examples/anker-nebula-d2426/restore.sh                     # re-enable all 17, stock Home back, DNS and screensaver back
+examples/anker-nebula-d2426/restore.sh                     # re-enable all 17, stock Home back, screensaver back
 examples/anker-nebula-d2426/restore.sh --remove-launcher   # same, and uninstall the new launcher
 ```
-
-Undo the DNS alone:
-
-```bash
-tools/venv/bin/python tools/tv.py 'settings put global private_dns_mode opportunistic'
-```
-
-(`opportunistic` is Android's "Automatic". On the projector: Settings > Network & Internet > Private DNS.)
 
 ## Re-enable one app
 
@@ -101,6 +92,7 @@ take over), makes the new launcher Home and pushes `config.json`.
   come back empty, which is the projector, not a fault.
 - The Wi-Fi pill shows a red "VPN desligada" badge while NordVPN is off. The Portuguese badge is long, so the
   network name is left out until the VPN is on (the green "VPN" badge is shorter). Hold the pill for Wi-Fi settings.
+- AdGuard Private DNS (the optional extra in the main README) works on this build; YouTube still plays with it.
 - All remote buttons (Home, Back, Settings, app buttons, mic, focus) were tested on the real remote after the
   stock home was disabled and still work.
 
