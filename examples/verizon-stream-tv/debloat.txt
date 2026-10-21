@@ -12,7 +12,10 @@
 #
 # Stock launcher: com.verizon.tv.launcher (HomeActivity). Home claimants: the Verizon launcher and
 # com.android.tv.settings FallbackHome (-1000). setupwraith does NOT claim Home here. Live TV app: com.google.android.tv
-# (TvActivity; set it as live_tv_package). The box has no HDMI or tuner inputs, so the Inputs pill lists only Live TV.
+# (TvActivity; set it as live_tv_package). The box has no HDMI or tuner inputs. Live Channels is EMPTY unless an app
+# registers a TV input: with Pluto TV (tv.pluto.android, LiveTVInputService) enabled, Inputs > Live TV shows its channels
+# (checked); with Pluto disabled there was nothing, and live_tv_package is better left empty. Tablo and IPTV apps are
+# standalone apps (own guide), they do not feed Live Channels.
 # Already disabled at the factory, so not listed (restore.sh would turn them ON): com.google.android.tvlauncher,
 # com.google.android.tvrecommendations, com.google.android.feedback, com.google.android.play.games.
 #
@@ -33,7 +36,7 @@
 # - Screenshots work on Home and in apps. AdGuard Private DNS (dns.adguard-dns.com) works and YouTube still loads.
 #
 # Kept on purpose: com.omni.ota (firmware updates, by owner's choice), com.omni.simplesetup, com.google.android.tv
-# (Live TV), com.google.android.tv.remote.service (phone remote), com.google.android.inputmethod.latin (keyboard),
+# (Live TV), tv.pluto.android (Pluto TV: the only TV input on this box, see the Live TV note above), com.google.android.tv.remote.service (phone remote), com.google.android.inputmethod.latin (keyboard),
 # Play Store, Play Services, Bluetooth, com.droidlogic.* and com.android.tv.settings, Netflix, Prime Video, YouTube,
 # Disney+, Hulu.
 # Left alone because their purpose is unclear from their components: com.wnc.wnclogger, com.wnc.logger_provider_1
@@ -52,7 +55,6 @@ com.google.android.videos                      # Play Movies & TV
 com.google.android.youtube.tvmusic             # YouTube Music
 com.google.android.youtube.tvunplugged         # YouTube TV
 com.hbo.hbonow                                 # HBO
-tv.pluto.android                               # Pluto TV
 
 # Preloaded apps
 com.android.gallery3d                          # Gallery
