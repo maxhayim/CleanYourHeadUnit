@@ -89,7 +89,7 @@ sets refuse to install any launcher at all; their lists say so in the header.
 
 Tested lists from contributors, one folder per model in [`examples/`](examples/):
 
-**TCL** 34 · **Sony** 19 · **Xiaomi** 19 · **Philips** 8 · **Hisense** 7 · **Amazon Fire TV** 5 ·
+**TCL** 34 · **Sony** 19 · **Xiaomi** 19 · **Philips** 9 · **Hisense** 7 · **Amazon Fire TV** 5 ·
 **Panasonic** 3 · **Skyworth** 3 · **BenQ** 2 · **CHiQ** 2 · **Google** 2 · **Haier** 2 · **Hitachi** 2 ·
 **Kalley** 2 · **NVIDIA Shield** 2 · **OnePlus** 2 · **onn** 2 · **Redmi** 2 · **Thomson** 2 · **Toshiba** 2 · **Vu** 2 ·
 AiPro2K · AIWA · Artel · Cecotec · Challenger · Compac · Dialog · EKO · FFalcon · Freebox · Insignia Fire TV ·
@@ -158,6 +158,7 @@ BYINTEK, JMGO, Portronics, Stellamore, Wanbo and XGIMI projectors
 | Philips 55OLED708/12 (TPV, PH1M_WW_9972, MediaTek), Poland | Google TV 12 |
 | Philips 55PUS7503/12 (TP Vision TPM171E, PH7M_EU_5596, MediaTek MT5891), Europe | Android TV 8.0 |
 | Philips 65PUS8102/12 (TP Vision TPM171E, PH7M_EU_5596, MediaTek MT5891), Europe | Android TV 8.0 |
+| Philips 65PUS9435/12 (TP Vision TPM191E, PH9M_EA_5599, MediaTek MT5887), Germany | Android TV 12 |
 | Philips 75PUS8505/12 (TP Vision TPM191E, PH9M_EA_5599, MediaTek MT5887), Europe | Android TV 12 |
 | Philips R8G Google TV (MOKA, whitefield, Realtek RTD2851F), US | Google TV 14 |
 | Philips Smart 4K TV (Skyworth, eleonas, MediaTek), India | Google TV 14 |
