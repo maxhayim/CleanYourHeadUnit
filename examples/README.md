@@ -167,6 +167,8 @@ on that firmware, grouped and commented. These are starting points: comment out 
 
 Notes for models that have no tested list yet live in [`docs/devices/`](../docs/devices/):
 
+- [TCL BeyondTV AP08](../docs/devices/tcl-beyondtv-ap08.md), `RTD2851`, Android TV 9, patch `2021-01-05`: single-session launcher and package-change report, streaming apps/voice/casting preserved, physical remote and casting checked after restart; no several-day debloat list.
+
 - [Sony XR-75X91K (China firmware)](../docs/devices/sony-xr-75x91k-cn.md), owner-reported retail model, `BRAVIA 4K VH21` / `BRAVIA_VH21`, Android 12: ChinaHome launcher component, preferred-Home handover with stock Home enabled, Sony TV/input routing and explicit validation limits; no tested debloat list.
 - [FPD CG50-C3](../docs/devices/fpd-cg50-c3.md), KTC-built `EcoTV Pro A` / `FPD_4KHA0`, MediaTek, Google TV 11 `RTM9.241015.016`, Canada: a one-day list, kept as a note for that reason; setupwraith owned a saved network that was not the one in use, so `FORCE_SETUPWRAITH=1` was safe; the RC-36 remote's gear and notifications buttons arrive as scancodes 240/362 with `KEY_UNKNOWN`/`KEY_PROGRAM`, so they need `settings_key_scancodes` rather than a keycode.
 - [Durabrand DB Android TV 4K `DURAT32ISDB`](../docs/devices/durabrand-durat32isdb.md) (`dupont`, m7332 Haier/CVTE board, Android TV 11 `RTM6.230109.232`): one-day owner report, ten packages, the two the firmware turns back on at every boot, the Input panel belonging to the MediaTek TV app instead of `tvlauncher`, and the hidden production menu that leaves Play services and Chromecast disabled until it is exited by hand.
