@@ -25,6 +25,9 @@ Connect
   macOS Local Network privacy blocking adb. Don't debug it: use the Python `adb-shell` package in a venv
   as the ADB client instead. If its file push hangs on larger files, transfer files as base64 chunks
   through the shell and verify the md5.
+- If your own commands can't reach the TV at all while it answers from an ordinary terminal (a sandbox that
+  blocks the local network), ask me to run `tools/relay.py <tv ip>` in a terminal and leave it running, then
+  use `TV_HOST=127.0.0.1 TV_PORT=15555` (`tools/relay.md`).
 - If port 5555 stays closed, the TV may only offer Wireless debugging (Google TV sets often do): look for
   `_adb-tls-connect._tcp` with `dns-sd -B` or `adb mdns services`, ask me for the code and port under
   Developer options > Wireless debugging > Pair device with pairing code, then `adb pair`, `adb connect`
