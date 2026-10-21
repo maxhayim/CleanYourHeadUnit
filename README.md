@@ -308,6 +308,10 @@ AndroidX RecyclerView and nothing heavier. Built for sets with 1 GB of RAM: no b
 network, no background services. It needs JDK 17 and Android SDK platform 34 to build; on macOS,
 `brew install openjdk@17 android-commandlinetools` and `sdkmanager "platforms;android-34" "build-tools;34.0.0"`. On Linux
 the install script finds `~/Android/Sdk` and the `java` on your PATH.
+The **TV** needs Android 8.0 (API 26) or newer: `minSdk` is a compile-time floor in
+[`launcher/app/build.gradle`](launcher/app/build.gradle), and the install script asks the TV for
+`ro.build.version.sdk` before it builds, so an older set is told both numbers instead of failing at
+`pm install` (see [Troubleshooting](docs/TROUBLESHOOTING.md) for what is left on such a set).
 
 - **Configure** in [`config.xml`](launcher/app/src/main/res/values/config.xml): dock order, hidden apps, the Live TV package, columns (tiles shrink from 5 up), rows under the dock, an optional VPN app for the network pill, and `reduced_motion` for TVs whose GPU cannot keep up.
 - **App library (optional):** enable `app_library` in config.xml or a theme to browse installed apps and add or remove Home shortcuts with the remote. See [the app library guide](docs/app-library.md).
