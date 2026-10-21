@@ -1,7 +1,11 @@
 package com.gathin.tvhome;
 
 import android.accessibilityservice.AccessibilityService;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.os.UserManager;
 import android.provider.Settings;
 import android.view.KeyEvent;
 import android.view.accessibility.AccessibilityEvent;
@@ -28,10 +32,49 @@ public class HomeKeyService extends AccessibilityService {
     private Map<Integer, String> appKeys = Collections.emptyMap();
     private Map<Integer, String> appScancodes = Collections.emptyMap();
 
+    /** Waits for the user to unlock when Android binds this service at boot; null once the config is read. */
+    private BroadcastReceiver unlockReceiver;
+
     @Override
     protected void onServiceConnected() {
         super.onServiceConnected();
         settingsScancodes = getResources().getIntArray(R.array.settings_key_scancodes);
+        // The service is directBootAware: Android 11 skips a service that is not while the user is still
+        // locked at boot, writes accessibility_enabled=0 and, on TCL G03 firmware, never binds it after the
+        // unlock. Config.load reads credential-protected storage, so wait for the unlock before reading it.
+        UserManager users = getSystemService(UserManager.class);
+        if (users.isUserUnlocked()) {
+            loadConfig();
+            return;
+        }
+        unlockReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                stopWaitingForUnlock();
+                loadConfig();
+            }
+        };
+        registerReceiver(unlockReceiver, new IntentFilter(Intent.ACTION_USER_UNLOCKED));
+        // The unlock may have happened between the check and the registration.
+        if (users.isUserUnlocked()) {
+            stopWaitingForUnlock();
+            loadConfig();
+        }
+    }
+
+    private void stopWaitingForUnlock() {
+        if (unlockReceiver == null) return;
+        unregisterReceiver(unlockReceiver);
+        unlockReceiver = null;
+    }
+
+    @Override
+    public void onDestroy() {
+        stopWaitingForUnlock();
+        super.onDestroy();
+    }
+
+    private void loadConfig() {
         // Keycodes and the panel choice can also come from a theme; theme.sh restarts this service.
         Config config = Config.load(this);
         settingsKeycodes = config.settingsKeycodes;
