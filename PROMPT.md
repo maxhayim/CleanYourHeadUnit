@@ -120,9 +120,11 @@ Launcher
 - Keep it light: the TV has about 1 GB of RAM. No blur, no video, no network polling.
 
 Verify
-- After each change, inject remote key presses over ADB, take a screenshot from the TV and look at it.
+- After each change, inject remote key presses over ADB, take a screenshot from the TV and look at it:
+  `tools/tv.py --screenshot shots/01-after.png` captures on the TV and pulls the PNG.
   Fix what you see before moving on.
-- Live TV and HDMI screenshots come back empty (0 bytes); that is the TV, not a broken debloat. Check
+- Live TV and HDMI screenshots come back empty (0 bytes); that is the TV, not a broken debloat, and
+  `--screenshot` exits 1 with that message. Check
   `dumpsys activity activities | grep topResumedActivity` instead (see `docs/TROUBLESHOOTING.md`).
 - If a remote button relies on an accessibility helper, check that the service is enabled and bound
   for the current user, then ask me to press the real button; an injected key is not proof (see

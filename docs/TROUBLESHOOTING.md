@@ -77,7 +77,8 @@ Things that bit us or contributors, so they don't bite you. Commands use `tools/
 - **`adb exec-out screencap -p` gives a broken PNG** on some MediaTek sets (Xiaomi, and Amazon's
   own Fire TV smart TVs): the binary prints `Init wrapper sys mutex successful` on stdout first.
   Save on the TV and pull the file instead: `screencap -p /data/local/tmp/s.png`, or cut
-  everything before the `\x89PNG` header.
+  everything before the `\x89PNG` header. `tools/tv.py --screenshot shots/home.png` does the save,
+  the pull and the cleanup in one command, and says so when the capture is 0 bytes.
 - **Play Protect blocked the launcher** ("unsafe app blocked, built for an older version of Android")
   and `pm install` hung, then failed with `INSTALL_FAILED_VERIFICATION_FAILURE`, while it targeted
   SDK 29. It targets 34 now; if you built an old checkout, rebuild.
