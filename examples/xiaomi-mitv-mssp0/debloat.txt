@@ -13,9 +13,7 @@
 #
 # Owner choices and checks:
 # - Assistant, Gallery and the Xiaomi media browser are disabled by owner choice.
-#   Keep their packages enabled if you use those features; normal YouTube is not listed.
-# - Chromecast and YouTube Music are commented out below, so this template does not disable them.
-#   This does not re-enable either package on a TV where it is already disabled.
+#   Keep their packages enabled if you use those features.
 # - Before disabling Backdrop, install the launcher and select its Clock screensaver:
 #     TV_HOST=<tv ip> tools/tv.py 'settings put secure screensaver_components com.gathin.tvhome/.ClockDream'
 # - Home, clock and navigation were checked on the TV. The initial setup passed a reboot and
@@ -36,12 +34,10 @@ com.google.android.leanbacklauncher.recommendations
 # Assistant - off by owner choice
 com.google.android.katniss                       # Google Assistant; voice search is lost
 com.google.android.speech.pumpkin                # Assistant speech models
-# com.google.android.apps.mediashell             # Chromecast built-in; not disabled by this list
 
 # Unused preloaded apps - off by owner choice
 com.xiaomi.mitv.mediaexplorer                     # Xiaomi USB/media file browser; keep if used
 com.mitv.gallery                                 # Xiaomi photo gallery
-# com.google.android.youtube.tvmusic             # YouTube Music; not disabled by this list
 
 # Original photo screensaver, replaced by the launcher's Clock (see above)
 com.google.android.backdrop
