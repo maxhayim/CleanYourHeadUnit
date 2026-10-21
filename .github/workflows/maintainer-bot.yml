@@ -41,10 +41,10 @@ jobs:
           path: .maintainer-bot
           key: maintainer-bot-ledger-${{ steps.day.outputs.day }}-${{ github.run_id }}
           restore-keys: maintainer-bot-ledger-${{ steps.day.outputs.day }}-
-      - uses: Gathin23/maintainer-bot@PINNED_SHA # replace with the commit SHA of the release you trust
+      - uses: Gathin23/maintainer-bot@c1a63e955797bdf5e8467f947a3e49d21e0caa06 # maintainer-bot master, pinned
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           og-pc-api-key: ${{ secrets.OG_PC_API_KEY }}
           pr: ${{ github.event.pull_request.number || github.event.issue.number || inputs.pr }}
           force: ${{ github.event_name == 'issue_comment' }}
-          daily-cap-usd: "5"
+          daily-cap-usd: "100"
