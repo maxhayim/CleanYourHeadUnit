@@ -221,6 +221,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
     private List<Cards.Card> cards = Collections.emptyList();
     /** The grid has been laid out and focused since the last resume; the card prompt waits for this. */
     private boolean tilesReady;
+    private boolean settingsRecreationPending;
     private Dialog cardPrompt;
     /** Set when a decision could not be saved: no more prompts until the next resume, instead of asking in a loop. */
     private boolean promptsPaused;
@@ -573,7 +574,16 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
             open(systemIntent(Settings.ACTION_WIFI_SETTINGS));
             return true;
         });
-        btnSettings.setOnClickListener(v -> open(systemIntent(Settings.ACTION_SETTINGS)));
+        launcherSettingsButton = cfg.launcherSettingsButton;
+        if (launcherSettingsButton) {
+            ((TextView) btnSettings).setText(R.string.launcher_settings);
+            ((TextView) btnSettings).setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.ic_home_settings_pill, 0, 0, 0);
+        }
+        btnSettings.setOnClickListener(v -> {
+            if (launcherSettingsButton) startActivityForResult(
+                    new Intent(this, LauncherSettingsActivity.class), LAUNCHER_SETTINGS_REQUEST);
+            else open(systemIntent(Settings.ACTION_SETTINGS));
+        });
         btnReorder = findViewById(R.id.btnReorder);
         btnReorder.setOnClickListener(v -> toggleReorder());
         btnReorder.setVisibility(cfg.reorderButton ? View.VISIBLE : View.GONE);
@@ -594,6 +604,8 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
             showInputsPill = false;
             btnInputs.setVisibility(View.GONE);
             btnWifi.setVisibility(View.GONE);
+            ((TextView) btnSettings).setText(R.string.settings);
+            ((TextView) btnSettings).setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.ic_settings, 0, 0, 0);
             if (!iconOnlyButtons) makeIconOnly((TextView) btnSettings);
             btnSettings.setOnClickListener(v -> showTopMenu());
             // The lone gear sits at the header's middle, not on its bottom line like the row of pills.
@@ -820,7 +832,22 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == LAUNCHER_SETTINGS_REQUEST && resultCode == RESULT_OK) recreate();
+        if (requestCode == LAUNCHER_SETTINGS_REQUEST && resultCode == RESULT_OK) {
+            if (data != null && data.getBooleanExtra(LauncherSettingsActivity.EXTRA_REORDER, false)) {
+                getIntent().putExtra(LauncherSettingsActivity.EXTRA_REORDER, true);
+            }
+            // The old activity must not consume the pending action while recreation is queued.
+            settingsRecreationPending = true;
+            // Reload saved layout choices before entering the existing Home reorder mode.
+            recreate();
+        }
+    }
+
+    private void startPendingSettingsReorder() {
+        if (settingsRecreationPending || !tilesReady || !hasWindowFocus() || isFinishing()
+                || !getIntent().getBooleanExtra(LauncherSettingsActivity.EXTRA_REORDER, false)) return;
+        getIntent().removeExtra(LauncherSettingsActivity.EXTRA_REORDER);
+        toggleReorder();
     }
 
     /** Rebuilds the tiles (and the module cards), then puts focus back where it was. */
@@ -875,6 +902,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
             if (pos < 0) hideHero();
             // A newly installed app may have brought a card with it.
             tilesReady = true;
+            startPendingSettingsReorder();
             showCardPrompt();
         }
     }
@@ -928,6 +956,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
             if (returnToLibrary || libraryFocusPending) focusLibrary();
             else focusTile(pos >= 0 ? pos : returnSlot);
             tilesReady = true;
+            startPendingSettingsReorder();
             showCardPrompt();
         });
     }
@@ -1001,6 +1030,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
         if (hasFocus) {
+            startPendingSettingsReorder();
             if (libraryFocusPending && appLibrary == null) focusLibrary();
             showCardPrompt();
         }
@@ -2300,6 +2330,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
     private boolean iconOnlyButtons;
     /** config.xml top_menu: Inputs, Wi-Fi and Settings folded into one gear. */
     private boolean topMenu;
+    private boolean launcherSettingsButton;
     /** icon_only_buttons without wifi_label_width: the Wi-Fi pill shows no network name. */
     private boolean wifiIconOnly;
     /** The app library button in the top bar (library_button). */
@@ -2761,21 +2792,26 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
             status.setText(network);
             status.setVisibility(View.VISIBLE);
         }
-        addInputRow(rows, popup, R.drawable.ic_settings, getString(R.string.settings), -1,
-                () -> open(systemIntent(Settings.ACTION_SETTINGS)));
+        if (launcherSettingsButton) {
+            addInputRow(rows, popup, R.drawable.ic_home_settings_pill, getString(R.string.launcher_settings), -1,
+                    () -> startActivityForResult(new Intent(this, LauncherSettingsActivity.class), LAUNCHER_SETTINGS_REQUEST));
+        } else {
+            addInputRow(rows, popup, R.drawable.ic_settings, getString(R.string.settings), -1,
+                    () -> open(systemIntent(Settings.ACTION_SETTINGS)));
+        }
         panel.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
         popup.setWidth(Math.max((int) (220 * density), Math.min(panel.getMeasuredWidth(), (int) (360 * density))));
         dropIn(popup, panel, anchor, getResources().getBoolean(R.bool.rtl_menu_bar) ? Gravity.START : Gravity.END);
         rows.getChildAt(0).requestFocus();
     }
 
-    /** Keep a normal Settings click for the TV; the launcher's choices live behind hold OK. */
+    /** The header opens launcher settings directly; hold OK keeps the extra home actions available. */
     private void showSettingsMenu() {
         View anchor = findViewById(R.id.btnSettings);
         View panel = getLayoutInflater().inflate(R.layout.popup_inputs, root, false);
         LinearLayout rows = panel.findViewById(R.id.rows);
         PopupWindow popup = glassPopup(panel, (int) (200 * density));
-        addSettingsMenuRow(rows, popup, R.string.launcher_settings, () -> startActivityForResult(
+        if (!launcherSettingsButton) addSettingsMenuRow(rows, popup, R.string.launcher_settings, () -> startActivityForResult(
                 new Intent(this, LauncherSettingsActivity.class), LAUNCHER_SETTINGS_REQUEST));
         if (moduleCards) addSettingsMenuRow(rows, popup, R.string.module_cards, this::showModuleCards);
         if (dockRow) addSettingsMenuRow(rows, popup, R.string.dock_edit, this::startDockEdit);
