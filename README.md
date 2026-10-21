@@ -216,6 +216,7 @@ BYINTEK, JMGO, Portronics, Stellamore, Wanbo and XGIMI projectors
 | TCL 75T7 (Smart TV Pro, G08, G08_4K_US, MediaTek tcl9618), US firmware | Google TV 14 |
 | TCL ak30a5 (China, Amlogic) | Android TV 9 |
 | TCL BeyondTV (India) | Android TV 9 |
+| TCL BeyondTV, Poland (Realtek RTD2851, AP03, 2 GB) | Android TV 9 |
 | TCL BeyondTV, EU/Nordic (Realtek RTD2851, V8-R851T02-LF1V606) | Android TV 9 |
 | TCL BeyondTV2 (Latin America / Brazil, Realtek RTD2851) | Android TV 9 |
 | TCL BeyondTV2, Android 11 build (AR05, Realtek rtd285o) | Android TV 11 |
