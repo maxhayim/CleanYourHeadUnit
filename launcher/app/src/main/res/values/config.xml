@@ -114,6 +114,14 @@
     <!-- A reorder button (two arrows) in the top bar. Off by default: reordering is also in the Settings
          button's long-press menu, so it needs no extra button on screen. -->
     <bool name="reorder_button">false</bool>
+    <!-- Wi-Fi and Settings as round icon-only buttons (the network name moves to the talkback description);
+         Inputs keeps its label. -->
+    <bool name="icon_only_buttons">false</bool>
+    <!-- The app library as a round button in the top bar, beside Settings (app_library must be on too). -->
+    <bool name="library_button">false</bool>
+    <!-- With icon_only_buttons: keep the network name on the Wi-Fi pill up to this width in dp, cut with an ellipsis.
+         0 leaves the Wi-Fi pill as an icon. -->
+    <integer name="wifi_label_width">0</integer>
 
     <!-- The Wi-Fi/Ethernet pill in the top bar. false hides it (on Android 14 with Location off it can
          only say "Wi-Fi", not the network name). Can also be set with "show_network_pill" in a theme. -->

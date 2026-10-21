@@ -517,6 +517,19 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         btnReorder.setOnClickListener(v -> toggleReorder());
         btnReorder.setVisibility(cfg.reorderButton ? View.VISIBLE : View.GONE);
         if (!cfg.showNetworkPill) btnWifi.setVisibility(View.GONE);
+        btnLibraryTop = findViewById(R.id.btnLibraryTop);
+        btnLibraryTop.setOnClickListener(v -> {
+            onLibraryRequested();
+            libraryFromTopBar = true;   // closing it goes back to this button, not to the pill after the last row
+        });
+        btnLibraryTop.setVisibility(cfg.libraryButton && cfg.appLibrary ? View.VISIBLE : View.GONE);
+        iconOnlyButtons = cfg.iconOnlyButtons;
+        wifiIconOnly = iconOnlyButtons && cfg.wifiLabelWidth <= 0;
+        if (iconOnlyButtons) {
+            if (cfg.wifiLabelWidth > 0) btnWifi.setMaxWidth(Math.round(cfg.wifiLabelWidth * density));
+            else makeIconOnly(btnWifi);
+            makeIconOnly((TextView) btnSettings);
+        }
         btnSettings.setOnLongClickListener(v -> {
             showSettingsMenu();
             return true;
@@ -543,8 +556,9 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         btnWifi.setOnKeyListener(pillKeys);
         btnSettings.setOnKeyListener(pillKeys);
         btnReorder.setOnKeyListener(pillKeys);
+        btnLibraryTop.setOnKeyListener(pillKeys);
         if (advancedEffects) {
-            for (View button : new View[]{btnInputs, btnWifi, btnReorder, btnSettings}) {
+            for (View button : new View[]{btnInputs, btnWifi, btnReorder, btnLibraryTop, btnSettings}) {
                 button.setOnFocusChangeListener((view, focused) -> view.animate()
                         .scaleX(focused ? 1.04f : 1f).scaleY(focused ? 1.04f : 1f)
                         .setDuration(160).start());
@@ -1117,9 +1131,15 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         if (appLibrary != null) appLibrary.close();
         if (openPopup != null) openPopup.dismiss();
         libraryFocusPending = false;
+        libraryFromTopBar = false;
         appLibrary = new AppLibraryDialog(this, animations, reducedMotion, adapter::containsPackage, () -> reloadApps(false), () -> {
             appLibrary = null;
             openPopup = null;
+            if (libraryFromTopBar) {
+                libraryFromTopBar = false;
+                btnLibraryTop.requestFocus();
+                return;
+            }
             libraryFocusPending = true;
             grid.post(() -> {
                 if (libraryFocusPending && appLibrary == null && hasWindowFocus() && !isFinishing()) focusLibrary();
@@ -2034,6 +2054,10 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         } else if (!TextUtils.equals(btnWifi.getText(), text)) {
             btnWifi.setText(text);
         }
+        if (wifiIconOnly) {
+            btnWifi.setContentDescription(btnWifi.getText());
+            btnWifi.setText(null);
+        }
         if (festive && diya != null) {
             if (online && flame == 0) flame = 3;   // online some other way (cellular, USB tethering)
             diya.setSteady(steady);
@@ -2044,6 +2068,26 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
                 btnWifi.setCompoundDrawablesRelativeWithIntrinsicBounds(icon, 0, 0, 0);
             }
         }
+    }
+
+    /** config.xml icon_only_buttons. */
+    private boolean iconOnlyButtons;
+    /** icon_only_buttons without wifi_label_width: the Wi-Fi pill shows no network name. */
+    private boolean wifiIconOnly;
+    /** The app library button in the top bar (library_button). */
+    private View btnLibraryTop;
+    /** The open library came from that button: closing it returns there instead of scrolling to the grid's end. */
+    private boolean libraryFromTopBar;
+
+    /** Turns a labelled top pill into the round TopButtonIcon shape: no text, the icon centred by even padding. */
+    private void makeIconOnly(TextView pill) {
+        pill.setContentDescription(pill.getText());
+        pill.setText(null);
+        pill.setMaxWidth(Integer.MAX_VALUE);
+        int pad = Math.round(10 * density);
+        pill.setPaddingRelative(pad, 0, pad, 0);
+        pill.setCompoundDrawablePadding(0);
+        pill.getLayoutParams().width = Math.round(42 * density);
     }
 
     // ---- festive skin ------------------------------------------------------------------------------
