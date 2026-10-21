@@ -86,6 +86,20 @@ Things that bit us or contributors, so they don't bite you. Commands use `tools/
   Press the real Input button afterwards and check the packages are back:
   `tools/tv.py 'pm list packages -e | grep -E "gms|netflix|mediashell|katniss"'`. More on the unit in
   the [device notes](devices/durabrand-durat32isdb.md).
+- **Stremio looks like its server died after the debloat**, seen on a Xiaomi MiTV-MZTU0 (`river`,
+  Google TV 14, [list](../examples/xiaomi-tv-a-pro-2026/debloat.txt)). The app opens, the add-ons
+  load, and nothing ever plays, which reads like a local server fault. It is not: with
+  `com.google.android.apps.mediashell` disabled, Stremio's own `stremio_server_process` is still
+  running, still listening on 11470/12470, still holds ESTABLISHED connections to `api.strem.io`,
+  and `logcat -b crash` is clean. Stremio's Android TV build plays through mediashell, so the server
+  is healthy and the playback path is gone. `pm enable --user 0 com.google.android.apps.mediashell`
+  fixed it on that set with no reboot and no reinstall. Check this before blaming your add-ons or
+  the network:
+  ```sh
+  tools/tv.py 'pm list packages -d | grep mediashell'     # output here = this is the cause
+  tools/tv.py 'pm enable --user 0 com.google.android.apps.mediashell'
+  ```
+  Keep the package out of your list if you use Stremio on the TV, or cast from a phone.
 - **`adb exec-out screencap -p` gives a broken PNG** on some MediaTek sets (Xiaomi, and Amazon's
   own Fire TV smart TVs): the binary prints `Init wrapper sys mutex successful` on stdout first.
   Save on the TV and pull the file instead: `screencap -p /data/local/tmp/s.png`, or cut
