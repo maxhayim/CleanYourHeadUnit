@@ -47,4 +47,13 @@ public class RemoteKeysTest {
         // and the keycode parser leaves scancode entries alone
         assertEquals(1, parse(entries.toArray(new String[0])).size());
     }
+    @Test public void inputTargets() {
+        String hdmi = "com.tcl.tvinput/.passthroughinput.TvPassThroughService/HW1413743104";
+        Map<Integer, String> keys = parse("4062:input:" + hdmi);
+        assertEquals(hdmi, RemoteKeys.inputId(keys.get(4062)));
+        assertEquals(hdmi, RemoteKeys.inputId(RemoteKeys.parseAppScancodes(
+                java.util.Arrays.asList("scan:586:input:" + hdmi)).get(586)));
+        assertEquals(null, RemoteKeys.inputId("com.netflix.ninja"));
+        assertEquals(null, RemoteKeys.inputId("input: "));
+    }
 }
