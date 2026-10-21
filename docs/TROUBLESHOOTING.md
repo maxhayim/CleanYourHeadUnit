@@ -53,6 +53,18 @@ Things that bit us or contributors, so they don't bite you. Commands use `tools/
 - **Chained `pm` commands** (`pm disable a; pm disable b`) may silently stop after the first. Run
   one per shell call; `--batch` does exactly that.
 - **Large pushes hang** through the Python client. Use `tools/b64push.py` for APKs.
+- **Every way of disabling a package is refused**, not just one. On a Fire TV Box 2015 (`sloane`,
+  Fire OS 5 / Android 5.1) `pm disable-user --user 0` returns `SecurityException`,
+  `pm uninstall --user 0` returns `DELETE_FAILED_INTERNAL_ERROR`, and `pm hide` reports success
+  while `pm list packages -d` stays empty ([#577](https://github.com/Gathin23/cleanyourtv/issues/577)).
+  Read `pm list packages -d` after each attempt instead of the exit code - `pm hide` is the one that
+  lies. When all three refuse, this firmware does not take a debloat list at all: there is no shell
+  route around it, sponsored rows stay on the home screen, and the only useful work left is the
+  TV's own privacy toggles plus DNS blocking (Pi-hole with a smart-TV ad list; the report used
+  Perflyst's `AmazonFireTV` list). Fire OS 6 is the opposite case: `pm disable-user` works and about
+  ten Amazon packages are protected, which
+  [`examples/amazon-fire-tv-stick-4k-2018/debloat.txt`](../examples/amazon-fire-tv-stick-4k-2018/debloat.txt)
+  lists, with the same DNS fallback for their endpoints.
 - **The Input key and CEC die after the hidden factory menu is opened**, seen on a Haier/CVTE set
   (Durabrand `DURAT32ISDB`, `dupont`, Android TV 11 build `RTM6.230109.232`,
   [#470](https://github.com/Gathin23/cleanyourtv/issues/470)). `com.cvte.tv.hkcfac` is the
