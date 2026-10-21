@@ -61,15 +61,6 @@
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
             </intent-filter>
-            <!-- The system input switcher. On some sets the stock launcher was the only handler of this action
-                 (Hisense huangshan, Android TV 10: no global_keys.xml and no vendor input picker), so once it is
-                 disabled the remote's Input button, which the Live TV app and InputKeyService turn into this
-                 action, did nothing. Answered here with the Inputs menu; where a vendor picker exists the TV
-                 keeps offering the choice. -->
-            <intent-filter>
-                <action android:name="com.android.tv.action.VIEW_INPUTS" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
         </activity>
 
         <activity
@@ -77,6 +68,23 @@
             android:exported="false"
             android:excludeFromRecents="true"
             android:screenOrientation="landscape" />
+        <!-- The system input switcher (com.android.tv.action.VIEW_INPUTS), which is what the remote's Input
+             button becomes through the TV's Live TV app or InputKeyService. Disabled here and switched on by
+             MainActivity only while handle_view_inputs is true (config.xml or a theme), for sets whose stock
+             launcher was the only handler of the action (Hisense huangshan, Android TV 10): kept off, a TV with
+             its own input picker never sees a second candidate and a chooser. -->
+        <activity
+            android:name=".InputsRequestActivity"
+            android:exported="true"
+            android:enabled="false"
+            android:excludeFromRecents="true"
+            android:noHistory="true"
+            android:theme="@android:style/Theme.NoDisplay">
+            <intent-filter>
+                <action android:name="com.android.tv.action.VIEW_INPUTS" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
         <!-- Remote Settings button panel (settings_key_panel); own task so the app behind stays put. -->
         <activity
             android:name=".QuickSettingsActivity"
