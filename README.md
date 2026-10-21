@@ -263,6 +263,7 @@ BYINTEK, JMGO, Portronics, Stellamore, Wanbo and XGIMI projectors
 | Xiaomi TV S Mini LED 75 2025 (MiTV-MOEU0, ladybird, MediaTek) | Google TV 14 |
 | Xiaomi MiTV-MOOR2 (venom, MediaTek) | Google TV 11 |
 | Xiaomi MiTV-MOSR4 (irobot, MediaTek) | Google TV 11 |
+| Xiaomi MiTV-MSSP0 / Xiaomi Mi TV 4A 32 (amelie), firmware PI.5926 | Android TV 9 |
 | Xiaomi MiTV-MSSP3 (machuca, MediaTek) | Android TV 11 |
 | Xiaomi MiTV-MSSP3 (machuca, MediaTek), Android 9 firmware PI.7524 | Android TV 9 |
 | Xiaomi TV A Pro 75" 2026 (MiTV-MZTU0, river, MediaTek) | Google TV 14 |
