@@ -3,8 +3,7 @@
 </p>
 
 <p align="center">
-  <a href="https://trendshift.io/repositories/310225"><img src="https://img.shields.io/badge/%F0%9F%A5%87%20%231%20trending%20repo%20of%20the%20week-ahead%20of%20Google%20%26%20DeepSeek-ffc940?style=for-the-badge&labelColor=15181e" alt="#1 trending repo of the week on Trendshift, ahead of Google and DeepSeek" height="32"></a><br>
-  <sub>Source: <a href="https://trendshift.io/repositories/310225">trendshift.io</a>, weekly trending, all languages, Oct 19–25</sub>
+  <a href="https://trendshift.io/repositories/310225"><img src="docs/trending-badge.png" alt="#1 trending repo of the week, via trendshift.io" width="360"></a>
 </p>
 
 <p align="center">
