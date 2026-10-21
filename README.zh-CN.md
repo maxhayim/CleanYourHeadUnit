@@ -33,7 +33,7 @@
 
 ## 快速开始
 
-准备一台与电视连接同一局域网的电脑，以及可以运行终端命令的编程助手，例如 Claude Code、Codex 或 Gemini CLI。
+准备一台与电视连接同一局域网的电脑，以及可以运行终端命令的编程助手，例如 [Claude Code](https://claude.com/product/claude-code)、[Codex](https://github.com/openai/codex) 或 [Gemini CLI](https://github.com/google-gemini/gemini-cli)。
 
 | 步骤 | 操作 |
 |---|---|

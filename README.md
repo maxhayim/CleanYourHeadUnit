@@ -42,7 +42,8 @@ before touching anything you might use.
 
 You need a computer on the same Wi-Fi as the TV and a coding assistant with shell access.
 Suggested: Claude Code on [0G Private Computer](https://pc.0g.ai), one API key for 100+ models.
-Claude Code with an Anthropic plan, Codex or Gemini CLI work too.
+[Claude Code](https://claude.com/product/claude-code) with an [Anthropic plan](https://claude.com/pricing),
+[Codex](https://github.com/openai/codex) or [Gemini CLI](https://github.com/google-gemini/gemini-cli) work too.
 
 | | |
 |---|---|
