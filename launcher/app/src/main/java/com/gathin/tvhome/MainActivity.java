@@ -193,6 +193,8 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
     private boolean promptsPaused;
     /** Rebuild the tiles on resume: Home was fully hidden by an app, or Home was pressed. Not after a side panel such as Wi-Fi settings. */
     private boolean rebuildOnResume = true;
+    /** Between onStart and onStop: Home is (at least partly) on screen. */
+    private boolean started;
     /** The Inputs or Module cards dropdown while one is open, so onPause can close it. */
     private PopupWindow openPopup;
     /** Reorder mode is on (top-bar button). */
@@ -588,6 +590,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
     @Override
     protected void onStart() {
         super.onStart();
+        started = true;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             registerReceiver(packageReceiver, packageFilter, Context.RECEIVER_NOT_EXPORTED);
             registerReceiver(timeReceiver, timeFilter, Context.RECEIVER_NOT_EXPORTED);
@@ -607,6 +610,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
             return;
         }
         promptsPaused = false;
+        if (grid.getAdapter() == null) grid.setAdapter(adapter);   // dropped by onTrimMemory
         if (rebuildOnResume) {
             tilesReady = false;
             reloadApps(true);
@@ -734,9 +738,33 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
     @Override
     protected void onStop() {
         super.onStop();
+        started = false;
         unregisterReceiver(packageReceiver);
         unregisterReceiver(timeReceiver);
         handler.removeCallbacks(clockCheck);
+        rebuildOnResume = true;
+    }
+
+    /**
+     * Another app needs the memory while Home is in the background: let go of every tile's artwork, and
+     * rebuild it when Home comes back. Not at UI_HIDDEN, the ordinary trip to an app, where keeping the
+     * tiles is what makes the return instant.
+     */
+    @Override
+    public void onTrimMemory(int level) {
+        super.onTrimMemory(level);
+        // RUNNING_LOW and CRITICAL also arrive while Home is visible when an accessibility service keeps the
+        // process in the foreground; never blank the screen the owner is looking at.
+        boolean due = level >= TRIM_MEMORY_BACKGROUND
+                || level == TRIM_MEMORY_RUNNING_LOW || level == TRIM_MEMORY_RUNNING_CRITICAL;
+        if (!due || started) return;
+        adapter.clear();
+        // Detach the adapter too: with Home stopped no layout pass runs, so the tile views (and the bitmaps
+        // they hold) would stay attached until Home comes back. setAdapter(null) recycles them now.
+        grid.setAdapter(null);
+        grid.getRecycledViewPool().clear();
+        heroArtCache.clear();
+        heroArtKey = null;
         rebuildOnResume = true;
     }
 
