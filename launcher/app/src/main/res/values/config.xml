@@ -54,6 +54,16 @@
          opens the panel directly instead of a menu. Leave empty to omit. -->
     <string name="source_panel_service" translatable="false"></string>
     <string name="source_panel_action" translatable="false"></string>
+    <!-- One int extra sent with the source panel intent, "name=value". Coocaa OS (Skyworth, China) needs
+         control_center_command=100 for its control center to open on the source row, as the remote's
+         Source button does. Leave empty to omit. -->
+    <string name="source_panel_extra" translatable="false"></string>
+
+    <!-- Coocaa OS (Skyworth, China) registers no inputs with TvInputManager; com.skyworth.tv lists its
+         sources (HDMI 1, HDMI 2, AV, the tuner) through its own provider instead. true: show those in the
+         Inputs menu and switch with com.skyworth.tv, ahead of the source panel above, which stays as the
+         fallback. See CoocaaSources and examples/skyworth-7s60-a5. -->
+    <bool name="coocaa_sources">false</bool>
 
     <!-- Inputs menu: HDMI and AV rows normally open with ACTION_VIEW on the input's channel URI, which the
          Live TV app handles. Where nothing answers that, this action is sent with the same URI instead

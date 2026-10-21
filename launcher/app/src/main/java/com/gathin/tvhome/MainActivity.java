@@ -111,6 +111,8 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
     private String inputAction;
     private String sourcePanelService;
     private String sourcePanelAction;
+    private String sourcePanelExtra;
+    private boolean coocaaSources;
 
     private AppAdapter adapter;
     private RecyclerView grid;
@@ -320,6 +322,8 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         inputAction = cfg.inputAction;
         sourcePanelService = cfg.sourcePanelService;
         sourcePanelAction = cfg.sourcePanelAction;
+        sourcePanelExtra = cfg.sourcePanelExtra;
+        coocaaSources = cfg.coocaaSources;
 
         root = findViewById(R.id.root);
         root.setBackgroundColor(cfg.backgroundColor);
@@ -2183,7 +2187,8 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
 
     /** Hides the Inputs pill when it would have nothing to list: streaming boxes have no HDMI-in, AV or tuner. */
     private void updateInputsButton() {
-        boolean any = liveTvIntent() != null || !sourcePanelService.isEmpty();
+        boolean any = liveTvIntent() != null || !sourcePanelService.isEmpty()
+                || (coocaaSources && !CoocaaSources.list(this).isEmpty());
         TvInputManager tim = (TvInputManager) getSystemService(TV_INPUT_SERVICE);
         if (!any && tim != null) {
             for (TvInputInfo info : tim.getTvInputList()) {
@@ -2212,6 +2217,14 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         Intent i = new Intent(sourcePanelAction);
         ComponentName c = ComponentName.unflattenFromString(sourcePanelService);
         if (c != null) i.setComponent(c);
+        int eq = sourcePanelExtra.indexOf('=');
+        if (eq > 0) {
+            try {
+                i.putExtra(sourcePanelExtra.substring(0, eq).trim(),
+                        Integer.parseInt(sourcePanelExtra.substring(eq + 1).trim()));
+            } catch (NumberFormatException ignored) {
+            }
+        }
         try {
             if (getPackageManager().resolveActivity(i, 0) != null) {
                 startActivity(i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
@@ -2255,7 +2268,8 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
     private void showInputs() {
         // A configured source panel and no Live TV row to offer next to it: the panel is the whole menu.
         // The BYINTEK U4 needs this, as its TvInputManager lists three HDMI ports and an AV input it doesn't have.
-        if (!sourcePanelService.isEmpty() && liveTvIntent() == null) {
+        List<CoocaaSources.Source> coocaa = coocaaSources ? CoocaaSources.list(this) : Collections.emptyList();
+        if (coocaa.isEmpty() && !sourcePanelService.isEmpty() && liveTvIntent() == null) {
             openSourcePanel();
             return;
         }
@@ -2361,6 +2375,18 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
                 int state = !hdmi || hdmiStateBogus ? -1 : tim.getInputState(id);
                 addInputRow(rows, popup, hdmi ? R.drawable.ic_input : R.drawable.ic_av, label, state,
                         () -> openInput(id));
+            }
+        }
+        // Coocaa OS registers nothing with TvInputManager; com.skyworth.tv lists its sources instead.
+        if (rows.getChildCount() == 0) {
+            for (CoocaaSources.Source s : coocaa) {
+                int icon = "HDMI".equals(s.name) ? R.drawable.ic_input
+                        : "VOD".equals(s.name) ? R.drawable.ic_livetv : R.drawable.ic_av;
+                addInputRow(rows, popup, icon, s.label, -1, () -> {
+                    if (!CoocaaSources.open(this, s)) {
+                        Toast.makeText(this, R.string.not_available, Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
         }
         // Nothing to list where there is no TvInputManager: the TV's own source panel switches inputs.
