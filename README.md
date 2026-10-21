@@ -669,7 +669,7 @@ not have to rediscover it. [CONTRIBUTING.md](CONTRIBUTING.md) has the format and
 
 The people whose work is in this repo:
 
-<a href="https://github.com/Gathin23/cleanyourtv/graphs/contributors"><img src="https://contrib.rocks/image?repo=Gathin23/cleanyourtv&columns=16" alt="Contributors"></a>
+<a href="https://github.com/Gathin23/cleanyourtv/graphs/contributors"><img src="https://contrib.rocks/image?repo=Gathin23/cleanyourtv&columns=16&max=400" alt="Contributors"></a>
 
 <details>
 <summary><strong>Star history</strong></summary>
