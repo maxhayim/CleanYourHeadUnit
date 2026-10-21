@@ -108,6 +108,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
     private long idleClockMs;
     private final Runnable showIdleClock = () -> startActivity(new Intent(this, ClockActivity.class));
     private String liveTvAction;
+    private String liveTvInputId;
     private String inputAction;
     private String sourcePanelService;
     private String sourcePanelAction;
@@ -328,6 +329,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         liveTvPkg = cfg.liveTvPackage;
         idleClockMs = cfg.homeIdleClockMinutes * MINUTE_MS;
         liveTvAction = cfg.liveTvAction;
+        liveTvInputId = cfg.liveTvInputId;
         inputAction = cfg.inputAction;
         sourcePanelService = cfg.sourcePanelService;
         sourcePanelAction = cfg.sourcePanelAction;
@@ -2339,7 +2341,8 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
             boolean hdmiStateBogus = hdmiPorts > 1 && hdmiConnected == hdmiPorts;
             for (TvInputInfo info : inputs) {
                 if (info.getType() == TvInputInfo.TYPE_TUNER
-                        && (info.getServiceInfo().applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0) {
+                        && (info.getServiceInfo().applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0
+                        && (liveTvInputId.isEmpty() || liveTvInputId.equals(info.getId()))) {
                     // Prefer a hardware tuner: the framework names those ".../HW<n>". System apps such as
                     // AirPlay also register software inputs of type TUNER and may sort first (seen on TCL G05).
                     // Among tuners of the same kind, skip an analog input when another is present.
@@ -2418,9 +2421,14 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
             // AIWA AI PONT SA that player stays black, and the Live TV package does not handle the
             // URI at all, which used to toast "Not available on this TV". Keep the leanback activity
             // then: it is the same path as the Live TV tile. Do not drop the package restriction.
+            // An explicit tuner uses its channel collection (e.g. DVB-S rather than DVB-T/C).
+            // Keep the legacy passthrough route for automatic selection: some OEM players need it.
+            // If the configured input is absent, tunerId stays null and the app opens normally.
+            boolean configured = !liveTvInputId.isEmpty();
             Intent tuned = new Intent(Intent.ACTION_VIEW)
-                    .setDataAndType(TvContract.buildChannelUriForPassthroughInput(tunerId),
-                            "vnd.android.cursor.item/channel")
+                    .setDataAndType(configured ? TvContract.buildChannelsUriForInput(tunerId)
+                                    : TvContract.buildChannelUriForPassthroughInput(tunerId),
+                            configured ? TvContract.Channels.CONTENT_TYPE : TvContract.Channels.CONTENT_ITEM_TYPE)
                     .setPackage(liveTvPkg);
             if (tuned.resolveActivity(getPackageManager()) != null) liveTv = tuned;
         }
