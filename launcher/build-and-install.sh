@@ -4,7 +4,22 @@ set -euo pipefail
 cd "$(dirname "$0")"
 : "${TV_HOST:?set TV_HOST to the TV IP address, e.g. TV_HOST=192.168.1.50 $0}"
 # macOS: java_home or Homebrew; Linux: the java on PATH.
-export JAVA_HOME="${JAVA_HOME:-$(/usr/libexec/java_home -v 17 2>/dev/null || { [ -d /opt/homebrew/opt/openjdk@17 ] && echo /opt/homebrew/opt/openjdk@17; } || java -XshowSettings:properties -version 2>&1 | awk '/java.home/ {print $3}')}"
+# `/usr/libexec/java_home -v 17` means "17 or newer", so on a Mac whose only JDK is newer it prints
+# that one and exits 0, and the Homebrew fallback below never runs. Gradle 8.9 then stops with
+# "Unsupported class file major version" (68 for JDK 24) before it reads a line of this project.
+# Homebrew's openjdk@17 is keg-only and is never registered where java_home would find it, so check
+# the version it answers with and fall through when it is not a 17. `java -version` goes to a
+# variable rather than through `grep -q`, whose early exit can SIGPIPE the JVM under `set -o pipefail`.
+if [ -z "${JAVA_HOME:-}" ]; then
+  JH="$(/usr/libexec/java_home -v 17 2>/dev/null || true)"
+  if [ -n "$JH" ]; then
+    case "$("$JH/bin/java" -version 2>&1 || true)" in *'version "17.'*) ;; *) JH="" ;; esac
+  fi
+  if [ -z "$JH" ] && [ -d /opt/homebrew/opt/openjdk@17 ]; then JH=/opt/homebrew/opt/openjdk@17; fi
+  if [ -z "$JH" ]; then JH="$(java -XshowSettings:properties -version 2>&1 | awk '/java.home/ {print $3}')"; fi
+  JAVA_HOME="$JH"
+fi
+export JAVA_HOME
 # Android Studio's default SDK location on macOS, then on Linux, then Homebrew's command-line tools.
 export ANDROID_HOME="${ANDROID_HOME:-$(for d in ~/Library/Android/sdk ~/Android/Sdk; do [ -d "$d" ] && echo "$d" && break; done)}"
 export ANDROID_HOME="${ANDROID_HOME:-/opt/homebrew/share/android-commandlinetools}"
