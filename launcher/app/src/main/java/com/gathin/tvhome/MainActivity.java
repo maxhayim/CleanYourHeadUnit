@@ -292,6 +292,10 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
 
         root = findViewById(R.id.root);
         root.setBackgroundColor(cfg.backgroundColor);
+        // root fills the window with an opaque colour (Config keeps background_color opaque), so the window's own
+        // black under it is a second full-screen fill on every frame for nothing. The starting window still uses
+        // the theme's background, so launch looks the same.
+        getWindow().setBackgroundDrawable(null);
         wallpaperPlayer = new WallpaperPlayer(this, root, cfg);
         sky = findViewById(R.id.sky);
         sky.setIntensity(cfg.skyIntensity);
