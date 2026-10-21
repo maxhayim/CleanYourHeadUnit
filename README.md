@@ -30,9 +30,9 @@ developer options, allow your computer once, and the rest is standard Android to
 
 | Step | What happens |
 |---|---|
-| 💾 **Back&nbsp;up** | The list of installed packages and settings. |
-| 🚫 **Disable** | The manufacturer's telemetry, ad services, content rows and preloaded junk, with `pm disable-user`. Nothing is uninstalled, so a restore script can undo every step. |
-| 🏠 **Install** | A small native launcher, made the default home screen. |
+| **Back&nbsp;up** | The list of installed packages and settings. |
+| **Disable** | The manufacturer's telemetry, ad services, content rows and preloaded junk, with `pm disable-user`. Nothing is uninstalled, so a restore script can undo every step. |
+| **Install** | A small native launcher, made the default home screen. |
 
 **No root, no cable, nothing uninstalled, and a one-line restore if you change your mind.**
 
@@ -49,9 +49,9 @@ You need a computer on the same Wi-Fi as the TV and a coding assistant with shel
 
 | Where | What to do |
 |---|---|
-| 📺 **1. On the TV** | Settings → Device Preferences → About → press OK on **Build** seven times → back → Developer options → **USB debugging** on. If you see a Network or ADB debugging toggle, turn that on too. Keep the TV on. |
-| 💻 **2. On your computer** | Paste [`PROMPT.md`](PROMPT.md) into your assistant and fill in your TV model. |
-| ✅ **3. Follow along** | Accept "Allow USB debugging?" on the TV, then answer the checklist: which apps you use, which four go in the dock, whether to keep the voice assistant, Chromecast and updates. |
+| **1. On the TV** | Settings → Device Preferences → About → press OK on **Build** seven times → back → Developer options → **USB debugging** on. If you see a Network or ADB debugging toggle, turn that on too. Keep the TV on. |
+| **2. On your computer** | Paste [`PROMPT.md`](PROMPT.md) into your assistant and fill in your TV model. |
+| **3. Follow along** | Accept "Allow USB debugging?" on the TV, then answer the checklist: which apps you use, which four go in the dock, whether to keep the voice assistant, Chromecast and updates. |
 
 The assistant backs up, debloats, builds and installs the launcher, and checks each step with
 screenshots pulled from the TV. With this repo as context it takes about fifteen minutes.
@@ -62,13 +62,13 @@ A home screen that looks like an Apple TV and gets out of the way:
 
 | Part | What it looks like |
 |---|---|
-| 🖤 **A pitch-black home** | A dock of your four favourite apps in a rounded band, where Apple TV puts it. |
-| ✨ **A top shelf** | Names the focused app in large type, with an ambient glow in a colour taken from its artwork. |
-| 🔲 **The rest of your apps in a grid** | Slides up when you press Down. |
-| 🔦 **One floating glass highlight** | Springs from tile to tile. The focused tile lifts and shows its name. |
-| 🔘 **Three frosted buttons** | Inputs (HDMI ports under the names you gave them in the TV's settings, AV, Live TV), Wi-Fi or Ethernet with the network name, Settings. |
-| 🕰️ **A greeting, a thin clock and the date** | In [Outfit](https://fonts.google.com/specimen/Outfit), and a matching Clock screensaver. Set `show_stats` in config or a theme for one line under the clock: CPU, free memory and free storage. It stays off unless you turn it on, and it refreshes only while Home is on screen. |
-| 🎨 **Themes and module cards** | Themes change colours, wallpaper, dock and columns without a rebuild, and module cards let other apps plug a tile in, only with your say-so. |
+| **A pitch-black home** | A dock of your four favourite apps in a rounded band, where Apple TV puts it. |
+| **A top shelf** | Names the focused app in large type, with an ambient glow in a colour taken from its artwork. |
+| **The rest of your apps in a grid** | Slides up when you press Down. |
+| **One floating glass highlight** | Springs from tile to tile. The focused tile lifts and shows its name. |
+| **Three frosted buttons** | Inputs (HDMI ports under the names you gave them in the TV's settings, AV, Live TV), Wi-Fi or Ethernet with the network name, Settings. |
+| **A greeting, a thin clock and the date** | In [Outfit](https://fonts.google.com/specimen/Outfit), and a matching Clock screensaver. Set `show_stats` in config or a theme for one line under the clock: CPU, free memory and free storage. It stays off unless you turn it on, and it refreshes only while Home is on screen. |
+| **Themes and module cards** | Themes change colours, wallpaper, dock and columns without a rebuild, and module cards let other apps plug a tile in, only with your say-so. |
 
 And a TV that stops working against you: no sponsored rows, no "Discover" nags, no analytics
 phoning home, no apps you never asked for.
@@ -88,10 +88,10 @@ Anything running **Android TV** or **Google TV**.
 
 | Platform | What works |
 |---|---|
-| ✅ **Android TV, Google TV** | The debloat and the launcher. |
-| 🔥 **Fire TV** | The debloat half only, since Fire OS will not hand Home to a third-party launcher. And on the 2015 Fire TV Box (Fire OS 5) even that half fails: every `pm` route is refused. |
-| ⚠️ **A few China-market TCL sets** | They refuse to install any launcher at all; their lists say so in the header. |
-| ❌ **Samsung (Tizen), LG (webOS)** | Different systems. See [SHOWCASE.md](SHOWCASE.md) for a webOS port, and [docs/devices/samsung-tizen.md](docs/devices/samsung-tizen.md) for what a 2021 Samsung set answers over Wi-Fi (no ADB, so no `pm disable-user`) if you are weighing a Tizen port. |
+| **Android TV, Google TV** | The debloat and the launcher. |
+| **Fire TV** | The debloat half only, since Fire OS will not hand Home to a third-party launcher. And on the 2015 Fire TV Box (Fire OS 5) even that half fails: every `pm` route is refused. |
+| **A few China-market TCL sets** | They refuse to install any launcher at all; their lists say so in the header. |
+| **Samsung (Tizen), LG (webOS)** | Different systems. See [SHOWCASE.md](SHOWCASE.md) for a webOS port, and [docs/devices/samsung-tizen.md](docs/devices/samsung-tizen.md) for what a 2021 Samsung set answers over Wi-Fi (no ADB, so no `pm disable-user`) if you are weighing a Tizen port. |
 
 Tested lists from contributors, one folder per model in [`examples/`](examples/):
 
@@ -369,14 +369,14 @@ The **TV** needs Android 8.0 (API 26) or newer: `minSdk` is a compile-time floor
 
 | What | How it works |
 |---|---|
-| 🎛️ **Configure** | Dock order, hidden apps, Live TV app, 4 to 7 tiles per row, reduced motion. All in [`config.xml`](launcher/app/src/main/res/values/config.xml) |
-| ⚙️ **Settings on the TV** | Hold OK on the Settings pill for Launcher settings: tiles per row, animations, advanced effects |
-| 🎨 **Themes** | Background, wallpaper and layout from a `config.json` pushed over Wi-Fi, no rebuild. Five ship in [`themes/`](themes/) |
-| 🌍 **24 languages** | Follows the TV's language, with a fully mirrored right-to-left layout for Hebrew |
-| 📚 **App library** | Optional: browse every installed app and add or remove Home shortcuts. See [the app library guide](docs/app-library.md) |
-| 🧩 **Module cards** | Any TV app can offer its own tile; you approve each one once. See [`docs/modules.md`](docs/modules.md) |
-| 🕰️ **Clock screensaver** | A drifting clock over the glow, so nothing burns in |
-| 🎮 **Remote keys** | Keeps the Input, YouTube and gear buttons working after the stock launcher is gone |
+| **Configure** | Dock order, hidden apps, Live TV app, 4 to 7 tiles per row, reduced motion. All in [`config.xml`](launcher/app/src/main/res/values/config.xml) |
+| **Settings on the TV** | Hold OK on the Settings pill for Launcher settings: tiles per row, animations, advanced effects |
+| **Themes** | Background, wallpaper and layout from a `config.json` pushed over Wi-Fi, no rebuild. Five ship in [`themes/`](themes/) |
+| **24 languages** | Follows the TV's language, with a fully mirrored right-to-left layout for Hebrew |
+| **App library** | Optional: browse every installed app and add or remove Home shortcuts. See [the app library guide](docs/app-library.md) |
+| **Module cards** | Any TV app can offer its own tile; you approve each one once. See [`docs/modules.md`](docs/modules.md) |
+| **Clock screensaver** | A drifting clock over the glow, so nothing burns in |
+| **Remote keys** | Keeps the Input, YouTube and gear buttons working after the stock launcher is gone |
 
 <details>
 <summary><b>Build it yourself</b></summary>
@@ -483,10 +483,10 @@ TV_HOST=192.168.1.50 tools/restore.sh examples/<your tv>/debloat.txt com.google.
 
 | What | How |
 |---|---|
-| 📝 **A record comes first** | Before `tools/disable.sh` changes anything it writes down what the TV looked like, in `~/.cleanyourtv/`. |
-| ↩️ **Restore replays it** | A package you had disabled yourself stays disabled, and Home goes back to the component that owned it. |
-| 📦 **The launcher stays installed** | Remove it from the TV's Settings → Apps if you want it gone. |
-| 🛟 **No computer?** | If the TV is unreachable, its own Settings → Apps page can re-enable packages too. |
+| **A record comes first** | Before `tools/disable.sh` changes anything it writes down what the TV looked like, in `~/.cleanyourtv/`. |
+| **Restore replays it** | A package you had disabled yourself stays disabled, and Home goes back to the component that owned it. |
+| **The launcher stays installed** | Remove it from the TV's Settings → Apps if you want it gone. |
+| **No computer?** | If the TV is unreachable, its own Settings → Apps page can re-enable packages too. |
 
 <details>
 <summary><b>What the record holds, and what happens without one</b></summary>
@@ -659,9 +659,9 @@ not have to rediscover it. [CONTRIBUTING.md](CONTRIBUTING.md) has the format and
 
 | How to help | What it means |
 |---|---|
-| 📋 **Your TV's debloat list** | The most useful one: the next person with that model skips the discovery. |
-| 🛠️ **Launcher and prompt** | Launcher improvements and sharper prompt wording are welcome too. |
-| 🧩 **Built something on top?** | A launcher, a port, a theme: add it to [SHOWCASE.md](SHOWCASE.md), where twenty-two projects already live: a webOS port for LG, a Stremio shelf, a Hisense restyle, Fire TV launchers, an AirPlay installer. |
+| **Your TV's debloat list** | The most useful one: the next person with that model skips the discovery. |
+| **Launcher and prompt** | Launcher improvements and sharper prompt wording are welcome too. |
+| **Built something on top?** | A launcher, a port, a theme: add it to [SHOWCASE.md](SHOWCASE.md), where twenty-two projects already live: a webOS port for LG, a Stremio shelf, a Hisense restyle, Fire TV launchers, an AirPlay installer. |
 
 The people whose work is in this repo:
 
@@ -678,9 +678,9 @@ The people whose work is in this repo:
 
 | For | Where |
 |---|---|
-| 📺 **Questions about your TV** | [GitHub Discussions](https://github.com/Gathin23/cleanyourtv/discussions) |
-| 📰 **Press and partnerships** | [hello@itsgathin.com](mailto:hello@itsgathin.com) |
-| 🔒 **Security issues** | Report them privately through the [Security tab](https://github.com/Gathin23/cleanyourtv/security), see [`SECURITY.md`](SECURITY.md) |
+| **Questions about your TV** | [GitHub Discussions](https://github.com/Gathin23/cleanyourtv/discussions) |
+| **Press and partnerships** | [hello@itsgathin.com](mailto:hello@itsgathin.com) |
+| **Security issues** | Report them privately through the [Security tab](https://github.com/Gathin23/cleanyourtv/security), see [`SECURITY.md`](SECURITY.md) |
 
 ## Licence
 
