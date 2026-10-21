@@ -20,6 +20,13 @@
   <a href="docs/PRESS.md"><img src="docs/card.jpg" alt="174 TV models · 53 brands · 24 languages · 429 KB launcher. Featured in TechCrunch, TechRadar, Tom's Guide, Mashable, Android Authority, XDA, FlatpanelsHD, It's FOSS, Phandroid, GIGAZINE, Xataka, WinFuture, Frandroid, Macitynet, Techaeris, TechPP and 63 more: 79 articles from 22 countries. Before: stock Google TV home with a sponsored ad. After: the Clean Your TV launcher." width="800"></a>
 </p>
 
+> Vibe coded my parents' TV this afternoon! It was showing a sponsored ad before you could even get
+> to Netflix. Gave Claude Code the model number, it found the TV on wifi, removed 25 Xiaomi packages
+> and wrote a new launcher. Looks like an Apple TV now lol.
+>
+> [@gathint, 17 October 2026](https://x.com/gathint/status/2111379569030939102). The replies are where
+> most of the TV lists here came from. The repo was called tv-vibehack until the 19th; old links work.
+
 ## How it works
 
 Android TVs have the same debug bridge as Android phones. Switch on USB debugging in the TV's
@@ -41,7 +48,8 @@ before touching anything you might use.
 You need a computer on the same Wi-Fi as the TV and a coding assistant with shell access.
 
 - **Suggested:** Claude Code on [0G Private Computer](https://pc.0g.ai), one API key for 100+ models.
-- **Also works:** [Claude Code](https://claude.com/product/claude-code) with an [Anthropic plan](https://claude.com/pricing), [Codex](https://github.com/openai/codex) or [Gemini CLI](https://github.com/google-gemini/gemini-cli).
+- **Also works:** [Claude Code](https://claude.com/product/claude-code) with an [Anthropic plan](https://claude.com/pricing),
+  [Codex](https://github.com/openai/codex) or [Gemini CLI](https://github.com/google-gemini/gemini-cli).
 
 | Where | What to do |
 |---|---|
@@ -51,15 +59,6 @@ You need a computer on the same Wi-Fi as the TV and a coding assistant with shel
 
 The assistant backs up, debloats, builds and installs the launcher, and checks each step with
 screenshots pulled from the TV. With this repo as context it takes about fifteen minutes.
-
-**The viral tweet:**
-
-> Vibe coded my parents' TV this afternoon! It was showing a sponsored ad before you could even get
-> to Netflix. Gave Claude Code the model number, it found the TV on wifi, removed 25 Xiaomi packages
-> and wrote a new launcher. Looks like an Apple TV now lol.
->
-> [@gathint, 17 October 2026](https://x.com/gathint/status/2111379569030939102). The replies are where
-> most of the TV lists here came from. The repo was called tv-vibehack until the 19th; old links work.
 
 ## What you get
 
