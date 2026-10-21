@@ -379,6 +379,13 @@ record already holds the state from before the first run: `tools/restore.sh` sti
 stock afterwards. Home is fixed first; if no launcher is left to take it, `--fix` changes nothing
 and says so.
 
+It runs the same safety checks as `tools/disable.sh` before it disables anything, since an update is
+the moment they matter again: it leaves setupwraith on while the saved Wi-Fi network belongs to it
+(`FORCE_SETUPWRAITH=1` on Ethernet), leaves the packages under the HDMI/AV inputs on
+(`TVINPUT_ALLOW=1` if you really want them off), and never takes Home to a vendor `FallbackHome`.
+Each package it leaves on comes with the reason and exits 1, because the TV is not back to the list
+until you deal with that one by hand.
+
 Lists that also disable the updater get no updates at all. To install one, re-enable the updater on
 the TV, let it update, run `check.py --fix`, and disable the updater again.
 
