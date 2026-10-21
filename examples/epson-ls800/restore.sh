@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Put an Epson LS800 back the way it came: re-enable every package in debloat.txt, give Home back to the
-# stock launcher, and undo the extras from examples/epson-ls800/README.md (Private DNS, input names, theme).
+# stock launcher, and undo the extras from examples/epson-ls800/README.md (input names, theme).
 # The Projector Operation Log toggle (Projector Settings > Information) is not touched; switch it back on
 # there if you want it.
 #
@@ -14,8 +14,6 @@ tv() { "$PY" -I tools/tv.py "$@"; }
 
 tools/restore.sh examples/epson-ls800/debloat.txt com.google.android.tvlauncher
 tools/theme.sh --reset || true
-tv 'settings put global private_dns_mode opportunistic'
-tv 'settings delete global private_dns_specifier'
 tv 'settings delete secure tv_input_custom_labels'
 if [ "${1:-}" = --uninstall-launcher ]; then
   tv 'pm uninstall com.gathin.tvhome'

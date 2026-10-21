@@ -39,10 +39,6 @@ needed.
 ### Extras set on this unit
 
 ```bash
-# Ad-blocking DNS (does not block YouTube ads). Undo: private_dns_mode opportunistic
-TV_HOST=<projector-ip> tools/tv.py 'settings put global private_dns_specifier dns.adguard-dns.com'
-TV_HOST=<projector-ip> tools/tv.py 'settings put global private_dns_mode hostname'
-
 # Names in the Inputs menu (this firmware has no Inputs screen in Settings to rename them).
 # Undo: settings delete secure tv_input_custom_labels
 TV_HOST=<projector-ip> tools/tv.py "settings put secure tv_input_custom_labels 'com.droidlogic.tvinput%2F.services.Hdmi2InputService%2FHW6,ARC:com.droidlogic.tvinput%2F.services.Hdmi3InputService%2FHW7,Nintendo%20Switch'"
