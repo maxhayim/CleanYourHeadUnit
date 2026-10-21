@@ -87,7 +87,7 @@ sets refuse to install any launcher at all; their lists say so in the header.
 
 Tested lists from contributors, one folder per model in [`examples/`](examples/):
 
-**TCL** 32 · **Sony** 18 · **Xiaomi** 17 · **Philips** 8 · **Hisense** 6 · **Amazon Fire TV** 5 ·
+**TCL** 32 · **Sony** 18 · **Xiaomi** 17 · **Philips** 8 · **Hisense** 7 · **Amazon Fire TV** 5 ·
 **Panasonic** 3 · **BenQ** 2 · **CHiQ** 2 · **Google** 2 · **Haier** 2 · **Hitachi** 2 · **Kalley** 2 ·
 **NVIDIA Shield** 2 · **OnePlus** 2 · **onn** 2 · **Skyworth** 2 · **Thomson** 2 · **Toshiba** 2 · **Vu** 2 ·
 AiPro2K · AIWA · Cecotec · Challenger · Compac · EKO · FFalcon · Freebox · Insignia Fire TV · JVC ·
@@ -124,6 +124,7 @@ BYINTEK, JMGO, Portronics, Stellamore, Wanbo and XGIMI projectors
 | Haier Android TV DVB2K (broadway, HaierATVT56DVB) | Android TV 11 |
 | Haier H32S80EFX (MatrixTV CE, HRT56EU, deto, MediaTek), Thailand | Google TV 14 |
 | Hisense E5Q Pro (VIDAA_TV, MediaTek MT9653), China | Android TV 11 |
+| Hisense Fire TV (AFTCIBFBD1, coyote, MediaTek), US | Fire OS 8.0 / Android 11 |
 | Hisense HG9 (HiSmart 4K A4FFM) | Android TV 9 |
 | Hisense HiSmartTV A4 (xiaoyushan, MStar m7322), Android 11 firmware RTT2.221108.001 | Android TV 11 |
 | Hisense HiSmartTV A4 (xiaoyushan, MStar m7322), India | Android TV 9 |
