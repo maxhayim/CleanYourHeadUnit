@@ -41,6 +41,10 @@ DynamicAnimation, no Kotlin, no Compose, no network. It targets TVs with 1 GB of
   then hold it for a second:
   `tools/tv.py 'e=/dev/input/event1; sendevent $e 1 352 1; sendevent $e 0 0 0; sleep 1.2; sendevent $e 1 352 0; sendevent $e 0 0 0'`.
   This needs the shell user in the `input` group (`tools/tv.py id`).
+  SELinux can refuse it even then: on a TCL 55C728 (Google TV 11, enforcing) the shell is in `input`,
+  yet `sendevent` fails with `Permission denied` and `logcat` shows
+  `avc: denied { write } ... scontext=u:r:shell:s0 tcontext=u:object_r:input_device:s0`, while
+  `--longpress` arrives as a short press too. On a set like that, test long presses with the remote.
 
 ### Automated navigation and lifecycle checks
 
