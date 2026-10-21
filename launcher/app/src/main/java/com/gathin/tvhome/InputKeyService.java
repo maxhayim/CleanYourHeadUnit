@@ -27,6 +27,7 @@ public class InputKeyService extends AccessibilityService {
     @Override
     protected void onServiceConnected() {
         super.onServiceConnected();
+        ServiceRepair.connected(this, getClass());
         // From config.xml or a theme's config.json; theme.sh rebinds this service after a push.
         Config config = Config.load(this);
         inputKeycodes = config.inputKeycodes;
@@ -61,6 +62,13 @@ public class InputKeyService extends AccessibilityService {
             }
         }
         return true;
+    }
+
+    /** Unbound by Android: the user turned the helper off, so Home doesn't put it back (ServiceRepair). */
+    @Override
+    public boolean onUnbind(Intent intent) {
+        ServiceRepair.disconnected(this, getClass());
+        return super.onUnbind(intent);
     }
 
     @Override
