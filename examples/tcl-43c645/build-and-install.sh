@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
-# Build launcher/ and install it on the TCL 60C635 as Home, with this TV's config.json (dock, Live TV,
-# remote keys) and the remote-key services on.
+# Build launcher/ and install it on a TCL 43C645 / 60C635 as Home, with this folder's config.json
+# (dock, Live TV, remote keys) and the remote-key services on.
 # To change the dock order, edit dock_apps in config.json and run this again.
 # Uses the stock adb binary. Safe to re-run: Android turns accessibility services off on every
 # reinstall, so they are switched on again each time.
 #
-# Usage: TV_HOST=192.168.1.50 examples/tcl-60c635/build-and-install.sh
+# Usage: TV_HOST=192.168.1.50 examples/tcl-43c645/build-and-install.sh
 set -euo pipefail
 cd "$(dirname "$0")/../../launcher"
 TV="${TV_HOST:?set TV_HOST to the TV IP}:${TV_PORT:-5555}"
@@ -30,11 +30,11 @@ $A shell rm -f /data/local/tmp/tvhome.apk
 echo "$OUT"
 [ "$OUT" = Success ] || { echo "install failed, Home left as it was" >&2; exit 1; }
 
-# This TV's dock, Live TV app and remote keys (examples/tcl-60c635/config.json), overlaid on
+# This TV's dock, Live TV app and remote keys (examples/tcl-43c645/config.json), overlaid on
 # config.xml by the launcher at start. A new theme_revision makes it drop on-TV layout choices.
 DIR=/sdcard/Android/data/com.gathin.tvhome/files
 $A shell mkdir -p "$DIR"
-$A push ../examples/tcl-60c635/config.json "$DIR/config.json" >/dev/null
+$A push ../examples/tcl-43c645/config.json "$DIR/config.json" >/dev/null
 $A shell "printf '%s' $(date +%s) > $DIR/theme_revision"
 
 START=$($A shell am start -W -n com.gathin.tvhome/.MainActivity | tr -d '\r')
@@ -42,8 +42,8 @@ echo "$START" | grep -q 'Status: ok' || { echo "launcher did not start, Home lef
 
 $A shell pm grant com.gathin.tvhome android.permission.ACCESS_FINE_LOCATION
 $A shell cmd package compile -m speed -f com.gathin.tvhome >/dev/null
-# Stock Home and the Google TV setup wizard (which claims Home once launcherx is off). Already
-# disabled on this TV; the commands are a no-op then.
+# Stock Home and the Google TV setup wizard (which claims Home once launcherx is off). A no-op when
+# debloat.txt already disabled setupwraith.
 $A shell pm disable-user --user 0 com.google.android.tungsten.setupwraith
 $A shell pm disable-user --user 0 com.google.android.apps.tv.launcherx
 $A shell cmd package set-home-activity --user 0 com.gathin.tvhome/.MainActivity

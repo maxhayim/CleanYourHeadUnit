@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
-# Undo examples/tcl-60c635: re-enable every package in debloat.txt, give Home back to the Google TV
+# Undo examples/tcl-43c645: re-enable every package in debloat.txt, give Home back to the Google TV
 # launcher and switch the launcher's accessibility services off. Nothing was uninstalled, so this
 # brings the TV back to how it shipped. Pass --uninstall to remove the custom launcher as well.
 #
-# Usage: TV_HOST=192.168.1.50 examples/tcl-60c635/restore.sh [--uninstall]
+# Usage: TV_HOST=192.168.1.50 examples/tcl-43c645/restore.sh [--uninstall]
 # Re-enable one app only:  adb shell pm enable <package>
 set -euo pipefail
 cd "$(dirname "$0")"
@@ -22,6 +22,8 @@ for p in $PKGS; do
 done
 
 $A shell settings put secure enabled_accessibility_services "''"
+# launcherx is not in debloat.txt: build-and-install.sh disables it.
+$A shell pm enable com.google.android.apps.tv.launcherx | tr -d '\r'
 $A shell cmd package set-home-activity --user 0 com.google.android.apps.tv.launcherx/.home.HomeActivity
 if [ "${1:-}" = --uninstall ]; then
   $A shell pm uninstall com.gathin.tvhome

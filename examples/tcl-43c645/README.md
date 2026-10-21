@@ -1,31 +1,35 @@
-# TCL 60C635 (Google TV 11)
+# TCL G03 / BeyondTV4 (Google TV 11): 43C645, 60C635
 
-Tested on a real unit on 2026-10-20, over Wi-Fi, in Spain.
+One list for TCL's G03 / BeyondTV4 firmware `V8-R51MT05-LF1V652` (`AR11`), the same build as
+`docs/devices/tcl-75c63b.md`. Both TVs report `ro.product.model` `Smart TV Pro`.
 
-| Field | Value |
-|---|---|
-| `ro.product.model` / `name` / `device` | `Smart TV Pro` / `G03_4K_GB` / `BeyondTV4` |
-| Android / SDK | 11 / 30, security patch 2024-12-05 |
-| Firmware | `V8-R51MT05-LF1V652`, `AR11` (same as `tcl-43c645` and `docs/devices/tcl-75c63b.md`) |
-| SoC / RAM | Realtek `rtd288o`, 2 GB |
-| Remote | `TCL_RC902V_U1` (Bluetooth, `Generic.kl`) |
-| `ro.adb.secure` | 1 (the "Allow USB debugging?" prompt appears) |
+## Tested models
 
-Port 5555 was open with only **USB debugging** on; this firmware has no separate network-debugging switch.
+| Model | Tested | SoC / RAM | Network | Groups applied |
+|---|---|---|---|---|
+| TCL 43C645 | 2026-10-19 | Realtek RTD2851 / R51MT05 | Ethernet | 1, 1b, 2, 3 |
+| TCL 60C635 (`G03_4K_GB`, Spain) | 2026-10-20 | Realtek `rtd288o`, 2 GB | Wi-Fi | 1, 1b, 2 except `com.tcl.android.webview` and `com.tcl.keyhelp`, 4, 5, plus launcherx via `build-and-install.sh` |
+
+Groups 4 and 5 have not been run on a 43C645 yet, nor group 3, webview or keyhelp on a 60C635.
+If you try them, say how it went in an issue.
+
+60C635 details: Android 11 / SDK 30, security patch 2024-12-05, remote `TCL_RC902V_U1` (Bluetooth,
+`Generic.kl`), `ro.adb.secure` 1 (the "Allow USB debugging?" prompt appears). Port 5555 was open with only
+**USB debugging** on; this firmware has no separate network-debugging switch.
 
 ## What is here
 
 | File | What it does |
 |---|---|
-| `debloat.txt` | 36 packages in 6 batches: telemetry, TCL content/ads, background services, voice assistant, unused preloads, and the stock launcher handover |
-| `config.json` | Launcher overlay for this TV: dock, Live TV app, remote buttons |
+| `debloat.txt` | Groups 1-3 (both TVs' telemetry, promos and extras, setupwraith), 4 (more TCL telemetry, content and unused preloads) and 5 (voice assistant, by choice) |
+| `config.json` | Launcher overlay for these TVs: dock, Live TV app, remote buttons |
 | `build-and-install.sh` | Builds `launcher/`, installs it, pushes `config.json`, makes it Home, disables launcherx and setupwraith, switches the key services on |
 | `restore.sh` | Re-enables everything in `debloat.txt`, gives Home back to launcherx, switches the key services off (`--uninstall` also removes the launcher) |
 
 ```sh
-TV_HOST=<tv ip> tools/disable.sh examples/tcl-60c635/debloat.txt   # or one batch at a time, see below
-TV_HOST=<tv ip> examples/tcl-60c635/build-and-install.sh
-TV_HOST=<tv ip> examples/tcl-60c635/restore.sh                     # undo
+TV_HOST=<tv ip> tools/disable.sh examples/tcl-43c645/debloat.txt   # or one group at a time
+TV_HOST=<tv ip> examples/tcl-43c645/build-and-install.sh
+TV_HOST=<tv ip> examples/tcl-43c645/restore.sh                     # undo
 ```
 
 The scripts use the stock `adb` from platform-tools (`$ANDROID_HOME/platform-tools/adb`). On WSL2 the adb
@@ -49,8 +53,9 @@ For a wallpaper, copy this folder's `config.json` into a theme folder, add `"wal
 
 ## Remote buttons
 
-With launcherx disabled, `TclPhoneWindowManager` still turns the app buttons into broadcasts that only
-launcherx answered, so they did nothing. Android keycodes on this firmware (read with
+Mapped on the 60C635; the 43C645 runs the same firmware, but its remote has not been checked against
+this table. With launcherx disabled, `TclPhoneWindowManager` still turns the app buttons into broadcasts
+that only launcherx answered, so they did nothing. Android keycodes on this firmware (read with
 `KeyEvent.keyCodeFromString` through `app_process`, not guessed):
 
 | Button | Keycode name | Number | Now does |
@@ -69,7 +74,7 @@ maps them to the names above. Do not guess from the button's label: the TCL butt
 not `TCL_DASHBOARD` (4137). All of the above were checked with the real
 remote. Injected keys never reach the accessibility services, so `input keyevent` is not a test.
 
-## Quirks on this firmware
+## Quirks on this firmware (60C635)
 
 - **Accessibility services after a reinstall**: Android unbinds them on reinstall and binds them again only
   when `enabled_accessibility_services` changes. Writing the same value back leaves them enabled but unbound
@@ -87,7 +92,12 @@ remote. Injected keys never reach the accessibility services, so `input keyevent
 
 ## Verified
 
-After every batch: Home, the Input key (Quick panel, `com.tcl.suspension`), Live TV (`com.tcl.tv`) and
+43C645 (groups 1-3, Ethernet): after each group, Ethernet stayed up; Home and the D-pad, the launcher's
+Sources menu (HDMI via TvInputManager), Netflix, and Home from Netflix all worked, also after a reboot.
+Private DNS (AdGuard) kept working. `tools/b64push.py` failed its md5 check there; plain `adb push` +
+`pm install -r` worked.
+
+60C635: after every batch: Home, the Input key (Quick panel, `com.tcl.suspension`), Live TV (`com.tcl.tv`) and
 YouTube playback. After the handover: D-pad (one row per press, Up from the dock to the top bar, top bar
 ends stay put), Inputs dropdown (HDMI 1, HDMI 2, AV, Live TV), Home on the real remote, a cold reboot.
 Not tested: casting, Miracast, firmware update, several-day stability.
