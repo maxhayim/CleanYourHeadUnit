@@ -157,6 +157,7 @@ BYINTEK, JMGO, Portronics, Stellamore, Wanbo and XGIMI projectors
 | MTC UK 2K Android TV (tabata, MediaTek m5621; JVC-family firmware, `android.autoinstalls.config.JVC` present), UK | Android TV 11 |
 | NVIDIA SHIELD TV 2019 tube (P3430, sif) | Android TV 11 |
 | NVIDIA SHIELD TV Pro 2019 (P2897, mdarcy) | Android TV 11 |
+| OK. AI PONT (Changhong, ikebukuro, MediaTek), Italy | Android TV 11 |
 | OnePlus TV (D00, Dubai) | Google TV 14 |
 | OnePlus Y1 43" (Y Series, shibuya) | Android TV 11 |
 | onn 4K Streaming Box (2023, Walmart; YOC, Amlogic), US | Google TV 14 |
