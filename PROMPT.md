@@ -124,6 +124,12 @@ Verify
   Fix what you see before moving on.
 - Live TV and HDMI screenshots come back empty (0 bytes); that is the TV, not a broken debloat. Check
   `dumpsys activity activities | grep topResumedActivity` instead (see `docs/TROUBLESHOOTING.md`).
+- If the screen looks enlarged and clipped after an install or a reboot, check the display overrides
+  before editing the launcher grid: `wm size` and `wm density` show a physical value next to an
+  override, and an override left over from an old resolution experiment, or a density that comes back
+  wrong on some MediaTek Sony firmware, is not a launcher bug. An empty
+  `settings get secure display_density_forced` is a normal default, not damage - read all three
+  values first and put them back if you undo (`docs/TROUBLESHOOTING.md`).
 - If a remote button relies on an accessibility helper, check that the service is enabled and bound
   for the current user, then ask me to press the real button; an injected key is not proof (see
   `docs/TROUBLESHOOTING.md`).
