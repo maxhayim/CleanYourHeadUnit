@@ -3,6 +3,7 @@ package com.gathin.tvhome;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
+import android.media.tv.TvContract;
 import android.view.KeyEvent;
 
 import java.util.Arrays;
@@ -14,7 +15,7 @@ import java.util.function.ToIntFunction;
  * Remote buttons that only the stock launcher answered, for InputKeyService and HomeKeyService: app_keys
  * (config.xml or a theme) maps a keycode to the app it opens, as "190:com.google.android.youtube.tv" or
  * "KEYCODE_BUTTON_3:com.google.android.youtube.tv", or a scancode as "scan:490:com.wbd.hbomax". One map for both services; whichever filters the key first
- * consumes it.
+ * consumes it. A target of "input:<input id>" switches to that TV input (an HDMI port) instead of opening an app.
  */
 final class RemoteKeys {
     private RemoteKeys() { }
@@ -73,8 +74,29 @@ final class RemoteKeys {
         return keys;
     }
 
-    /** Opens an app from a remote button: its TV entry if it has one, else its phone entry. */
+    /** The TV input id of an "input:<id>" target, e.g. "input:com.tcl.tvinput/.passthroughinput.TvPassThroughService/HW1413743104"; null for a package. */
+    static String inputId(String target) {
+        if (target == null || !target.startsWith("input:")) return null;
+        String id = target.substring("input:".length()).trim();
+        return id.isEmpty() ? null : id;
+    }
+
+    /** Opens an app from a remote button: its TV entry if it has one, else its phone entry. An "input:<id>" target
+     *  switches to that TV input (an HDMI port) instead. */
     static void launch(Context ctx, String pkg) {
+        String inputId = inputId(pkg);
+        if (inputId != null) {
+            // The same passthrough URI the Inputs menu opens, which the Live TV app handles.
+            Intent view = new Intent(Intent.ACTION_VIEW)
+                    .setDataAndType(TvContract.buildChannelUriForPassthroughInput(inputId),
+                            "vnd.android.cursor.item/channel")
+                    .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            try {
+                ctx.startActivity(view);
+            } catch (ActivityNotFoundException ignored) {
+            }
+            return;
+        }
         Intent open = ctx.getPackageManager().getLeanbackLaunchIntentForPackage(pkg);
         if (open == null) open = ctx.getPackageManager().getLaunchIntentForPackage(pkg);
         if (open == null) return;
