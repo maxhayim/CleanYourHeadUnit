@@ -59,8 +59,9 @@ is ignored, and a file that doesn't parse is ignored as a whole, so a theme can 
 | `background_color` | `#RRGGBB` | Colour behind everything; black by default |
 | `sky_intensity` | 0 to 100 | Time-of-day backdrop: a dark gradient that follows the clock, 0 hides it (default) |
 | `wallpaper` | bool | Show `wallpaper.jpg` from the theme folder (`true`), or ignore it (`false`) |
-| `wallpaper_rotation_minutes` | 0 to 1440 | Randomly rotate images in the theme's `wallpapers/` folder at this interval; 0 keeps the single-image behaviour |
-| `wallpaper_dim` | 0 to 90 | Black overlay over wallpaper images, in percent; 0 by default |
+| `wallpaper_rotation_minutes` | 0 to 1440 | Rotate images in the theme's `wallpapers/` folder at this interval; 0 keeps the single-image behaviour. A negative or non-numeric value is ignored, and 0 means "no rotation", not "every minute" |
+| `wallpaper_order` | `shuffle` or `sequential` | How a collection advances. `shuffle` (the default, and what launchers did before this key existed) avoids repeating the current picture; `sequential` walks the folder in filename order and wraps at the end. An unknown value falls back to `shuffle` |
+| `wallpaper_dim` | 0 to 90 | Black overlay over wallpaper images, in percent; 0 by default and no shade view at all |
 | `festival` | string | Turns on a festive skin: the network pill becomes a diya whose flame follows the connection, Inputs a temple bell, Settings a marigold, and the first Home of the day gets a petal shower. `dussehra` and `diwali` have built-in greetings |
 | `festival_until` | `YYYY-MM-DD` | Last day the festive skin shows; it switches itself off after that. A malformed date turns it off |
 | `greeting` | string | Replaces the time-of-day greeting while the festive skin is on |
@@ -84,8 +85,15 @@ it; a picture that is still over 4K (about 8.4 million pixels) after it is sampl
 For a wallpaper collection, place JPEG, PNG or WebP files in the theme’s `wallpapers/` folder beside `config.json`, then set:
 
 ```json
-{ "wallpaper": true, "wallpaper_rotation_minutes": 30, "wallpaper_dim": 40 }
+{ "wallpaper": true, "wallpaper_rotation_minutes": 30, "wallpaper_dim": 40, "wallpaper_order": "sequential" }
 ```
+
+The last displayed picture is remembered on the TV, so a restart or reboot resumes from it rather than
+starting over at the first image in `sequential` mode. Missing an interval while the TV is asleep or
+unplugged does not replay the missed pictures: Home moves on at most once when it wakes. Replacing the
+collection starts playback from the new collection's first picture. A collection with one picture is
+shown once and never blanked on a timer. Images are centre-cropped to fill the 16:9 screen; dimming is
+drawn as a black overlay above the picture and below the launcher's text.
 
 When you apply a theme, its collection replaces the one already on the TV. Use filenames containing
 only letters, digits, underscores, dots and hyphens. Images can come from any source; check that you
