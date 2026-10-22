@@ -267,6 +267,19 @@ Things that bit us or contributors, so they don't bite you. Commands use `tools/
 - **A reboot on setupwraith's recovery screen factory-reset the TV** (Xiaomi MiTV-MOSR4). Disable
   setupwraith before launcherx. If `mFocusedApp` shows `.RecoveryActivity`, re-enable launcherx
   first and do not reboot. [Notes](devices/xiaomi-mitv-mosr4.md).
+- **Black screen at every boot after the launcher change, LED on, remote dead** (Vision
+  2024VISION43STV, CVTE, Android 13: [its list](../examples/vision-2024vision43stv/debloat.txt) has the
+  details). With file-based encryption (`getprop ro.crypto.type` says `file`) Android starts Home before
+  the first unlock, and only a direct-boot-aware activity can start then. Most firmwares have a
+  `FallbackHome` that stands in until the unlock; some, like this CVTE board, do not, and then boot
+  never completes. This repo's launcher is direct-boot-aware; most other launchers are not. Check both
+  before disabling the stock launcher:
+  ```sh
+  tools/tv.py 'cmd package query-activities --brief -a android.intent.action.MAIN -c android.intent.category.HOME'
+  tools/tv.py 'dumpsys package <new.launcher.package> | grep -o "[A-Z_]*DIRECT_BOOT_AWARE"'
+  ```
+  No `FallbackHome` in the first and nothing from the second: keep the stock launcher enabled and set
+  Home with `cmd package set-home-activity` only.
 - **Stuck on the boot animation after the launcher change, ADB gone** (JVC LT-43N7115, CVTE
   `TP.SK706S.PC822`, Android 11, [#741](https://github.com/Gathin23/cleanyourtv/discussions/741)): the stock
   launcher `com.cvte.tv.launcher.space` was disabled and a remote-key helper enabled before one reboot.
