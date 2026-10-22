@@ -37,9 +37,11 @@ public class HomeKeyService extends AccessibilityService {
     private int[] settingsScancodes = new int[0];
     private int[] settingsKeycodes = new int[0];
     private boolean settingsPanel;
-    /** app_keys, the same map InputKeyService reads, for setups that run only this service. */
+    /** app_keys, the same maps InputKeyService reads, for setups that run only this service. */
     private Map<Integer, String> appKeys = Collections.emptyMap();
     private Map<Integer, String> appScancodes = Collections.emptyMap();
+    private Map<Integer, String> holdAppKeys = Collections.emptyMap();
+    private Map<Integer, String> holdAppScancodes = Collections.emptyMap();
 
     /** Waits for the user to unlock when Android binds this service at boot; null once the config is read. */
     private BroadcastReceiver unlockReceiver;
@@ -100,6 +102,8 @@ public class HomeKeyService extends AccessibilityService {
                 stockHome.add(ri.activityInfo.name);
             }
         }
+        holdAppKeys = RemoteKeys.parseHoldAppKeys(config.appKeys);
+        holdAppScancodes = RemoteKeys.parseHoldAppScancodes(config.appKeys);
     }
 
     private boolean isSettingsKey(KeyEvent event) {
@@ -112,11 +116,8 @@ public class HomeKeyService extends AccessibilityService {
     @Override
     protected boolean onKeyEvent(KeyEvent event) {
         // A scancode entry is more specific than any keycode, so it goes first.
-        String scanApp = appScancodes.get(event.getScanCode());
-        if (scanApp != null) {
-            if (event.getAction() == KeyEvent.ACTION_UP && !event.isCanceled()) RemoteKeys.launch(this, scanApp);
-            return true;
-        }
+        if (RemoteKeys.handle(this, event, appScancodes.get(event.getScanCode()),
+                holdAppScancodes.get(event.getScanCode()))) return true;
         // The stock launcher handled the remote's Settings button; with it disabled the button does nothing.
         if (isSettingsKey(event)) {
             if (event.getAction() == KeyEvent.ACTION_UP && !event.isCanceled()) {
@@ -130,11 +131,8 @@ public class HomeKeyService extends AccessibilityService {
             }
             return true;
         }
-        String app = appKeys.get(event.getKeyCode());
-        if (app != null) {
-            if (event.getAction() == KeyEvent.ACTION_UP && !event.isCanceled()) RemoteKeys.launch(this, app);
-            return true;
-        }
+        if (RemoteKeys.handle(this, event, appKeys.get(event.getKeyCode()),
+                holdAppKeys.get(event.getKeyCode()))) return true;
         if (event.getKeyCode() != KeyEvent.KEYCODE_ALL_APPS) return false;
         if (event.getAction() == KeyEvent.ACTION_UP && !event.isCanceled()) {
             Intent home = new Intent(Intent.ACTION_MAIN)
