@@ -265,3 +265,4 @@ Notes for models that have no tested list yet live in [`docs/devices/`](../docs/
 
 To add your TV, see [CONTRIBUTING.md](../CONTRIBUTING.md). The quickest way to get a list is to
 run the prompt in [PROMPT.md](../PROMPT.md) and copy the packages your assistant disabled.
+- [Hi VHIX-43F169MSY](../docs/devices/hi-vhix-43f169msy.md), Yandex TV, CVTE `TP.SK506S.PB802` / `m5621`, Android 9: two-day observation, stock/replacement Home and working CVTE/Yandex settings component, Yandex IO service dependency, disabled-package history and low-memory follow-up; no several-day debloat list or signal/CEC verification.
