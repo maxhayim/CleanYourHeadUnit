@@ -11,6 +11,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.ResolveInfo;
 import android.content.res.Resources;
@@ -95,6 +96,8 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
     private static final int LAUNCHER_SETTINGS_REQUEST = 42;
     /** Sent by QuickSettingsActivity: open Launcher settings from here so Home rebuilds when they close. */
     static final String ACTION_LAUNCHER_SETTINGS = "com.gathin.tvhome.action.LAUNCHER_SETTINGS";
+    /** The system input switcher, forwarded here by InputsRequestActivity while handle_view_inputs is on. */
+    static final String ACTION_VIEW_INPUTS = "com.android.tv.action.VIEW_INPUTS";
     /** Tiles per row and dock slots (res/values/config.xml, columns). Set in onCreate. */
     static int COLUMNS = 4;
     private boolean rtlAppGrid;
@@ -330,6 +333,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         density = getResources().getDisplayMetrics().density;
         // config.xml, overlaid by config.json from a pushed theme (see Config and tools/theme.sh).
         Config cfg = Config.load(this);
+        applyViewInputsHandler(cfg.handleViewInputs);
         settingsKeycodes = cfg.settingsKeycodes;
         settingsKeyPanel = cfg.settingsKeyPanel;
         COLUMNS = cfg.columns;
@@ -627,7 +631,50 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
                     .build(), vpnCallback);
         }
         // Not after recreate(): the launch intent survives it and would open the settings again.
-        if (savedInstanceState == null) openLauncherSettingsIfAsked(getIntent());
+        if (savedInstanceState == null && !openLauncherSettingsIfAsked(getIntent())) openInputsIfAsked(getIntent());
+    }
+
+    /**
+     * handle_view_inputs: switch InputsRequestActivity, the VIEW_INPUTS handler, on or off. It is disabled in the
+     * manifest, so a TV with its own input picker never sees it; only the sets that need it turn it on. Written
+     * only when the state differs, so an ordinary start does not touch the package manager.
+     */
+    private void applyViewInputsHandler(boolean on) {
+        ComponentName handler = new ComponentName(this, InputsRequestActivity.class);
+        PackageManager pm = getPackageManager();
+        int want = on ? PackageManager.COMPONENT_ENABLED_STATE_ENABLED : PackageManager.COMPONENT_ENABLED_STATE_DEFAULT;
+        if (pm.getComponentEnabledSetting(handler) != want) {
+            pm.setComponentEnabledSetting(handler, want, PackageManager.DONT_KILL_APP);
+        }
+    }
+
+    /**
+     * VIEW_INPUTS, forwarded by InputsRequestActivity while handle_view_inputs is on: open the Inputs menu once
+     * the pill is on screen. The intent is replaced so a later recreate() does not
+     * open it again. Nothing to do when the TV has no inputs to list (the pill is hidden then).
+     */
+    private boolean openInputsIfAsked(Intent intent) {
+        if (intent == null || !ACTION_VIEW_INPUTS.equals(intent.getAction())) return false;
+        setIntent(new Intent(Intent.ACTION_MAIN));
+        if (btnInputs.getVisibility() != View.VISIBLE) return true;
+        if (btnInputs.isLaidOut()) {
+            btnInputs.requestFocus();
+            showInputs();
+            return true;
+        }
+        // Cold start: the popup anchors to the pill, so wait for the first layout.
+        btnInputs.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                btnInputs.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                btnInputs.post(() -> {
+                    if (isFinishing() || btnInputs.getVisibility() != View.VISIBLE) return;
+                    btnInputs.requestFocus();
+                    showInputs();
+                });
+            }
+        });
+        return true;
     }
 
     private boolean openLauncherSettingsIfAsked(Intent intent) {
@@ -646,6 +693,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         if (openLauncherSettingsIfAsked(intent)) return;
+        if (openInputsIfAsked(intent)) return;
         if (intent == null || !intent.hasCategory(Intent.CATEGORY_HOME)) return;
         grid.scrollToPosition(0);
         lastFocused = 0;
