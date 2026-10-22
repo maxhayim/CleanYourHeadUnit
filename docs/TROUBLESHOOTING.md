@@ -519,6 +519,38 @@ reads `[TclAppBoot]:forbid bind service ComponentInfo{com.gathin.tvhome/com.gath
 and whose `appops get` names the op `AUTO_START`: use the name `appops get` prints. When reporting, give the
 model, build, current user and the relevant redacted lines, not the raw dump.
 
+## SHIELD TV phone app connects, but no key does anything
+
+On an NVIDIA SHIELD, the SHIELD TV phone app finds the box and connects, but the D-pad, OK, Back and
+power buttons in the app do nothing. Restarting the remote server brings them back until the next
+reboot. The key helpers are not the cause: it happens with them off too.
+
+The app's keys go through `com.nvidia.shield.remote.server`, which injects them through its own
+`virtualinput.InputService`, a `TvRemoteProvider` that Android's TV remote service binds at boot.
+Read the state without changing anything:
+
+```sh
+tools/tv.py "logcat -d | grep -E 'Key injection failed|Beyonder_VIS'"
+tools/tv.py "dumpsys activity services com.nvidia.shield.remote.server | awk '/\* ServiceRecord/{inb=/virtualinput.InputService/} inb' | grep -c IntentBindRecord"
+```
+
+`Key injection failed` with `Beyonder_VIS ... mProvider ... isInitialized=false`, and a count of `0`, is
+this fault: the service runs but Android never bound it. `1` is a bound, working service.
+
+Cause: `com.google.android.tvrecommendations` disabled. With it disabled, the provider is not bound after
+boot. Bisected with a reboot per step on a 2017 SHIELD (`darcy`) and confirmed on a 2015/2017 one
+(`foster_e`), both on SHIELD Experience with Android 11: every reboot with it off left the count at `0`,
+every reboot with it on gave `1`. Fix:
+
+```sh
+tools/tv.py "pm enable com.google.android.tvrecommendations"
+```
+
+Wait about 20 seconds before rebooting: Android writes package state to disk with a delay, and a reboot
+straight after `pm enable` can lose the change. `am force-stop com.nvidia.shield.remote.server` makes
+Android bind the provider at once, but only until the next boot. The SHIELD lists in `examples/` keep
+`tvrecommendations` enabled for this reason.
+
 ## Fire TV (Fire OS): debloat works, the launcher cannot take Home
 
 Why Google TV differs: on Google TV a third-party app can take the HOME role, so the launcher, the
