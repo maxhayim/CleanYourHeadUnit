@@ -30,6 +30,11 @@ this file repeats their rules in the form an agent needs, and links to them for 
   network, disabling it takes the TV off Wi-Fi and ADB. `tools/disable.sh` and
   `launcher/build-and-install.sh` already enforce this. Use `FORCE_HOME=1` or `FORCE_SETUPWRAITH=1` only in
   the situation the script's own message describes, and only with the person's agreement.
+  - On a CVTE board (any `com.cvte.*` package), leave its stock launcher (`com.cvte.tv.launcher.*`) enabled
+    unless the `examples/` folder for that exact board disables it. Make the new launcher Home with
+    `cmd package set-home-activity`, reboot once, and confirm Home and ADB come back before anything else.
+    Don't enable a remote-key helper in the same pass: a JVC set hung on its boot animation with ADB gone
+    after both were done before one reboot (#741).
 - **Ask before anything the family uses.** Streaming apps, the voice assistant, Chromecast, Miracast and
   the firmware updater go into one checklist question; disable only what the person does not tick.
 - **Disable in small batches** and screenshot between them (`tools/tv.py --screenshot shots/01.png`).
