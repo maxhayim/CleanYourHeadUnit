@@ -59,3 +59,5 @@ With `--vs`, a third table shows the change in each median. A run over twice the
 - **Expect no latency gain from off-main-thread work.** It removes work, but doesn't shorten the time to
   the first frame.
 - **Never commit the `.pftrace` files.** They hold the TV's process list.
+
+The whole before/after method for a pull request is in [`docs/workflows/perf-ab.md`](../docs/workflows/perf-ab.md).

@@ -62,7 +62,7 @@ share their TV's list afterwards, follow [Add a TV list](#add-a-tv-list) below.
 | `SHOWCASE.md` | Projects built on this repo that live in their own repositories. |
 | `CODE_OF_CONDUCT.md` | Includes the rule against publishing device identifiers, Wi-Fi names and IPs. |
 | `examples/` | One folder per tested TV model: `debloat.txt`, sometimes a `README.md` and a `config.json`. Indexed in `examples/README.md`. |
-| `docs/` | `docs/TROUBLESHOOTING.md`, `docs/REMOTE.md` (another home, over Tailscale), `docs/modules.md` and `docs/specs/card.md` (module cards), `docs/PRESS.md`, and `docs/devices/` for models with notes but no tested list. |
+| `docs/` | `docs/TROUBLESHOOTING.md`, `docs/REMOTE.md` (another home, over Tailscale), `docs/modules.md` and `docs/specs/card.md` (module cards), `docs/PRESS.md`, `docs/devices/` for models with notes but no tested list, and `docs/workflows/` for multi-step methods (`perf-ab.md`: measuring a performance change). |
 | `launcher/` | The reference launcher, package `com.gathin.tvhome`: plain Java, AndroidX RecyclerView and DynamicAnimation, `minSdk` 26, no `INTERNET` permission. |
 | `themes/` | One folder per theme: `config.json`, a required `screenshot.jpg`, optional wallpapers. Keys are documented in `themes/README.md`. |
 | `addons/` | Optional module-card apps, each its own Gradle project, never built into the launcher. |
