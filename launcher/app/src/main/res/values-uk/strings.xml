@@ -92,6 +92,7 @@
     <string name="dock_edit_hint">Виберіть місце в доку, яке треба змінити, і натисніть OK. «Назад» — завершити.</string>
     <string name="dock_edit_pick_app">Тепер виберіть застосунок для цього місця та натисніть OK. «Назад» — вибрати інше місце.</string>
     <string name="reorder">Упорядкувати застосунки</string>
+    <string name="tile_move">Перемістити</string>
     <string name="reorder_hint">OK бере застосунок, стрілки переміщують, «Назад» ставить на місце. Ще раз «Назад» — завершити.</string>
     <string name="reorder_not_saved">Не вдалося зберегти новий порядок</string>
     <string name="app_library">Бібліотека застосунків</string>

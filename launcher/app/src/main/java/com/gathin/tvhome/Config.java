@@ -165,6 +165,8 @@ final class Config {
     final boolean wallpaperCaptions;
     /** Answer VIEW_INPUTS with the Inputs menu (handle_view_inputs); see InputsRequestActivity. */
     final boolean handleViewInputs;
+    /** Hold OK on a tile opens a menu (Move, Remove from Home, App info) instead of App info (config.xml / theme tile_menu). */
+    final boolean tileMenu;
 
     private Config(List<String> dockApps, boolean fillDock, List<String> hiddenApps, String liveTvPackage,
                    String liveTvAction, String liveTvInputId, Map<String, String> launchActions, Map<String, String> appLabels,
@@ -178,8 +180,9 @@ final class Config {
                    Festival festival, int[] inputKeycodes, List<String> appKeys, String stockHomeRedirect,
                    List<RaceWeekend.Race> raceCalendar, boolean cinematicHome, boolean ambientGlow, boolean appGlow, int homeIdleClockMinutes,
                    boolean keyFilter, boolean dockGlass, String glowStyle, boolean wallpaperCaptions,
-                   boolean handleViewInputs) {
+                   boolean handleViewInputs, boolean tileMenu) {
         this.handleViewInputs = handleViewInputs;
+        this.tileMenu = tileMenu;
         this.inputKeycodes = inputKeycodes;
         this.appKeys = Collections.unmodifiableList(appKeys);
         this.keyFilter = keyFilter;
@@ -297,6 +300,7 @@ final class Config {
         boolean wallpaperTrueColor = res.getBoolean(R.bool.wallpaper_true_color);
         boolean focusOvershoot = res.getBoolean(R.bool.focus_overshoot);
         boolean wallpaperCaptions = res.getBoolean(R.bool.wallpaper_captions);
+        boolean tileMenu = res.getBoolean(R.bool.tile_menu);
         String vpn = res.getString(R.string.vpn_app).trim();
         boolean homeSettings = res.getBoolean(R.bool.show_home_settings_shortcut);
         boolean showStats = res.getBoolean(R.bool.show_stats);
@@ -362,6 +366,7 @@ final class Config {
             wallpaperTrueColor = bool(json, "wallpaper_true_color", wallpaperTrueColor);
             focusOvershoot = bool(json, "focus_overshoot", focusOvershoot);
             wallpaperCaptions = bool(json, "wallpaper_captions", wallpaperCaptions);
+            tileMenu = bool(json, "tile_menu", tileMenu);
             vpn = string(json, "vpn_app", vpn);
             homeSettings = bool(json, "show_home_settings_shortcut", homeSettings);
             showStats = bool(json, "show_stats", showStats);
@@ -443,7 +448,7 @@ final class Config {
                 Math.max(0, Math.min(100, skyIntensity)), settingsKeycodes, settingsKeyPanel, restoreKeyServices, wallpaperEnabled, wallpaper,
                 wallpapers, rotationMinutes, wallpaperDim, dockOpacity, wallpaperOrder, applied,
                 festival, inputKeycodes, appKeys, stockHomeRedirect, json == null ? Collections.emptyList() : raceCalendar(json), cinematic, ambientGlow, appGlow,
-                Math.max(0, idleClockMinutes), keyFilter, dockGlass, glowStyle, wallpaperCaptions, handleViewInputs);
+                Math.max(0, idleClockMinutes), keyFilter, dockGlass, glowStyle, wallpaperCaptions, handleViewInputs, tileMenu);
     }
 
     /**
