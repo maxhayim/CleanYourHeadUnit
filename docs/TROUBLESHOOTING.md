@@ -196,7 +196,10 @@ Things that bit us or contributors, so they don't bite you. Commands use `tools/
   `tools/disable.sh` now does that check itself: when the list holds the app that owns Home and
   nothing else on the TV answers HOME, it skips that entry and says so (`FORCE_HOME=1` overrides),
   so applying a list before the handover no longer leaves the TV without a launcher. Apply the list
-  again after the install script has made the new launcher Home to disable the old one.
+  again after the install script has made the new launcher Home to disable the old one. A factory
+  test app does not count as something else: on a Xiaomi Mi TV 4A
+  `com.duokan.factorytest/.FactoryLauncher` answers HOME, so the guard leaves it out, along with any
+  package named `*factorytest*`, `*factory_test*` or `*factorymode*`.
 - **The TV stays on the boot logo with ADB gone** after a list, seen on a KitKat-era set
   ([COOP COTV-0001](https://github.com/Gathin23/cleanyourtv/issues/795): Realtek `rtd298x`, Android
   4.4.2, SDK 19). 17 packages were disabled over Ethernet ADB, each answered `new state:

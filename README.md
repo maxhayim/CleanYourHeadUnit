@@ -385,7 +385,8 @@ The install scripts ask the TV which launcher owns Home and only disable one the
 
 `tools/disable.sh` (`disable.ps1`) applies the same rule before it disables anything: if the list
 contains the app that owns Home and no other app on the TV answers HOME, it skips that entry, says
-why, and disables the rest of the list. So a list applied before the launcher handover cannot leave
+why, and disables the rest of the list. The setup wizard, the settings apps, a vendor `FallbackHome`
+and factory-test apps (Xiaomi's `com.duokan.factorytest`) answer HOME too and don't count. So a list applied before the launcher handover cannot leave
 the TV with nothing to start. Run the same list again once `launcher/build-and-install.sh` has made
 the new launcher Home and the entry is applied; `FORCE_HOME=1` (`$env:FORCE_HOME`) disables it anyway.
 
@@ -612,7 +613,8 @@ and says so.
 It runs the same safety checks as `tools/disable.sh` before it disables anything, since an update is
 the moment they matter again: it leaves setupwraith on while the saved Wi-Fi network belongs to it
 (`FORCE_SETUPWRAITH=1` on Ethernet), leaves the packages under the HDMI/AV inputs on
-(`TVINPUT_ALLOW=1` if you really want them off), and never takes Home to a vendor `FallbackHome`.
+(`TVINPUT_ALLOW=1` if you really want them off), and never takes Home to a vendor `FallbackHome` or
+a factory-test app.
 Each package it leaves on comes with the reason and exits 1, because the TV is not back to the list
 until you deal with that one by hand.
 
