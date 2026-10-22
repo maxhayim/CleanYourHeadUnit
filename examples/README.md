@@ -257,6 +257,7 @@ Notes for models that have no tested list yet live in [`docs/devices/`](../docs/
 - [TCL `75QM751G`](../docs/devices/tcl-75qm751g-qm7.md) (QM7, 2024, `G08`, Android 14 `UTT2.250416.001 AU14`): the QM6K list applies with seven extra packages, setupwraith owns the saved Wi-Fi even on an Ethernet set, and the Cast receiver can be up while it has stopped advertising.
 - [TVision Hub](../docs/devices/tvision-hub.md) (SEI Robotics, Amlogic S905X2, T-Mobile's Google TV dongle): one-session report with seven disabled packages and the launcher confirmed as Home; ADB only connected after a restart; no several-day list.
 - [Master-G 2K Smart TV](../docs/devices/master-g-2k-smart-tv.md) (KTC `jagalchi`, Chile, Google TV 14 `UKN4.250714.046`): a same-day session, not a several-day list; `set-home-activity` prints `Success` but `launcherx` keeps Home, `setupwraith`'s RecoveryActivity takes it next and owns the saved Wi-Fi until the network is re-joined; Android 14 ad/ML services and owner-chosen apps disabled, reboot-checked.
+- [JMGO G9S](../docs/devices/jmgo-g9s.md) (China, `m7642_JmGO_H7A0`, MediaTek m7642, Android TV 9 `1.1.52`): one-session seven-package set, the stock launcher `com.jmgo.launcher` deliberately left out because `com.jmgo.tv` (the HDMI input app) also answers HOME, and the `ro.adb.secure=0` / 5555 shutdown notes; no several-day list yet.
 
 To add your TV, see [CONTRIBUTING.md](../CONTRIBUTING.md). The quickest way to get a list is to
 run the prompt in [PROMPT.md](../PROMPT.md) and copy the packages your assistant disabled.
