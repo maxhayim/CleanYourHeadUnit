@@ -8,6 +8,7 @@ import android.os.Environment;
 import android.util.Log;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
@@ -20,8 +21,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * The launcher's settings: the values in res/values/config.xml, with an optional overlay read from
@@ -175,6 +178,8 @@ final class Config {
     final boolean dockGlass;
     /** The dock band's padding equals the gap between its tiles (config.xml, dock_even_padding); false keeps the fixed padding. */
     final boolean dockEvenPadding;
+    /** A rotating collection's groups by time of day, as file names (config.xml, wallpaper_moods); empty rotates through all of it. */
+    final Map<String, Set<String>> wallpaperMoods;
     /** Shape of the glow behind the focused app (config.xml, glow_style): {@link #GLOW_RADIAL} or {@link #GLOW_HORIZON}. */
     final String glowStyle;
 
@@ -198,7 +203,7 @@ final class Config {
                    Festival festival, int[] inputKeycodes, List<String> appKeys, String stockHomeRedirect,
                    List<RaceWeekend.Race> raceCalendar, boolean cinematicHome, boolean ambientGlow, boolean appGlow, int homeIdleClockMinutes,
                    boolean keyFilter, boolean dockGlass, String glowStyle, boolean wallpaperCaptions,
-                   boolean handleViewInputs, boolean tileMenu, boolean dockEvenPadding) {
+                   boolean handleViewInputs, boolean tileMenu, boolean dockEvenPadding, Map<String, Set<String>> wallpaperMoods) {
         this.handleViewInputs = handleViewInputs;
         this.tileMenu = tileMenu;
         this.inputKeycodes = inputKeycodes;
@@ -269,6 +274,7 @@ final class Config {
         this.homeIdleClockMinutes = homeIdleClockMinutes;
         this.dockGlass = dockGlass;
         this.dockEvenPadding = dockEvenPadding;
+        this.wallpaperMoods = wallpaperMoods;
         this.glowStyle = glowStyle(glowStyle);
         this.wallpaperCaptions = wallpaperCaptions;
     }
@@ -346,6 +352,7 @@ final class Config {
         boolean keyFilter = res.getBoolean(R.bool.key_filter);
         boolean dockGlass = res.getBoolean(R.bool.dock_glass);
         boolean dockEvenPadding = res.getBoolean(R.bool.dock_even_padding);
+        Map<String, Set<String>> wallpaperMoods = moods(res.getString(R.string.wallpaper_moods));
         String glowStyle = res.getString(R.string.glow_style);
         boolean applied = false;
 
@@ -416,6 +423,8 @@ final class Config {
             keyFilter = bool(json, "key_filter", keyFilter);
             dockGlass = bool(json, "dock_glass", dockGlass);
             dockEvenPadding = bool(json, "dock_even_padding", dockEvenPadding);
+            JSONObject moods = json.optJSONObject("wallpaper_moods");
+            if (moods != null) wallpaperMoods = moods(moods);
             glowStyle = string(json, "glow_style", glowStyle);
         }
         // A theme push or reset invalidates choices made on the TV. On first use, remember the
@@ -470,7 +479,7 @@ final class Config {
                 Math.max(0, Math.min(100, skyIntensity)), settingsKeycodes, settingsKeyPanel, restoreKeyServices, wallpaperEnabled, wallpaper,
                 wallpapers, rotationMinutes, wallpaperDim, dockOpacity, wallpaperOrder, applied,
                 festival, inputKeycodes, appKeys, stockHomeRedirect, json == null ? Collections.emptyList() : raceCalendar(json), cinematic, ambientGlow, appGlow,
-                Math.max(0, idleClockMinutes), keyFilter, dockGlass, glowStyle, wallpaperCaptions, handleViewInputs, tileMenu, dockEvenPadding);
+                Math.max(0, idleClockMinutes), keyFilter, dockGlass, glowStyle, wallpaperCaptions, handleViewInputs, tileMenu, dockEvenPadding, wallpaperMoods);
     }
 
     /**
@@ -582,6 +591,32 @@ final class Config {
             Log.w(TAG, "ignoring " + file + ": " + e.getMessage());
             return null;
         }
+    }
+
+    /** wallpaper_moods as JSON text (config.xml); empty or unreadable is no groups. */
+    private static Map<String, Set<String>> moods(String text) {
+        if (text.trim().isEmpty()) return Collections.emptyMap();
+        try {
+            return moods(new JSONObject(text));
+        } catch (JSONException e) {
+            return Collections.emptyMap();
+        }
+    }
+
+    /** {"night": ["03-moon-lake.jpg", ...], ...}: each mood's picture names; other keys and names are left out. */
+    private static Map<String, Set<String>> moods(JSONObject o) {
+        Map<String, Set<String>> groups = new HashMap<>();
+        for (String mood : WallpaperMood.ALL) {
+            JSONArray names = o.optJSONArray(mood);
+            if (names == null) continue;
+            Set<String> group = new HashSet<>();
+            for (int i = 0; i < names.length(); i++) {
+                String name = names.optString(i, "").trim();
+                if (ThemeFiles.collectionImage(name)) group.add(name);
+            }
+            if (!group.isEmpty()) groups.put(mood, Collections.unmodifiableSet(group));
+        }
+        return Collections.unmodifiableMap(groups);
     }
 
     private static String string(JSONObject o, String key, String fallback) {
