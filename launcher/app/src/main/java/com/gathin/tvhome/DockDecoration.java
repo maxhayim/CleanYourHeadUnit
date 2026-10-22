@@ -30,14 +30,15 @@ public class DockDecoration extends RecyclerView.ItemDecoration {
     /**
      * @param translucent the cinematic shelf's band: the artwork and the glow show through it.
      * @param names       the dock tiles show their names, so the band reaches down over them.
+     * @param opacity     the plain band's opacity in percent (dock_opacity), so a wallpaper can show through it.
      * @param lightGlass  a light frosted band like the pills, for a sky or wallpaper behind it.
      */
-    DockDecoration(int dockSize, float density, boolean translucent, boolean names, boolean lightGlass) {
+    DockDecoration(int dockSize, float density, boolean translucent, boolean names, int opacity, boolean lightGlass) {
         this.dockSize = dockSize;
         this.density = density;
         this.namesRoom = names ? 22 * density : 0;
         this.lightGlass = lightGlass;
-        band.setColor(translucent ? 0x8C121014 : 0xFF141416);
+        band.setColor(translucent ? 0x8C121014 : (Math.round(opacity * 2.55f) << 24) | 0x141416);
         edge.setStyle(Paint.Style.STROKE);
         edge.setStrokeWidth(density);
         edge.setColor(lightGlass ? 0x38FFFFFF : translucent ? 0x26FFFFFF : 0x1FFFFFFF);
