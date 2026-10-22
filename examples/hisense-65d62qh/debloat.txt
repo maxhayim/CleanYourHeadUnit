@@ -180,3 +180,6 @@ com.android.wallpaperbackup
 # local boot_start_home launcher experiment is not included in the upstream launcher; until a
 # tested upstream fix is available, leave com.jamdeo.tv.vod enabled unless you accept a blank
 # screen at boot. Full notes: docs/devices/hisense-65d62qh.md
+# The stock launcher stays enabled while applying this list; it is disabled by
+# build-and-install only after the new launcher is installed and set as Home.
+# com.jamdeo.tv.vod
