@@ -62,7 +62,7 @@ share their TV's list afterwards, follow [Add a TV list](#add-a-tv-list) below.
 | `SHOWCASE.md` | Projects built on this repo that live in their own repositories. |
 | `CODE_OF_CONDUCT.md` | Includes the rule against publishing device identifiers, Wi-Fi names and IPs. |
 | `examples/` | One folder per tested TV model: `debloat.txt`, sometimes a `README.md` and a `config.json`. Indexed in `examples/README.md`. |
-| `docs/` | `docs/TROUBLESHOOTING.md`, `docs/REMOTE.md` (another home, over Tailscale), `docs/modules.md` and `docs/specs/card.md` (module cards), `docs/PRESS.md`, `docs/devices/` for models with notes but no tested list, and `docs/workflows/` for multi-step methods (`perf-ab.md`: measuring a performance change). |
+| `docs/` | `docs/TROUBLESHOOTING.md`, `docs/REMOTE.md` (another home, over Tailscale), `docs/modules.md` and `docs/specs/card.md` (module cards), `docs/PRESS.md`, `docs/devices/` for models with notes but no tested list, and `docs/workflows/` for multi-step methods (see [Workflows](#workflows)). |
 | `launcher/` | The reference launcher, package `com.gathin.tvhome`: plain Java, AndroidX RecyclerView and DynamicAnimation, `minSdk` 26, no `INTERNET` permission. |
 | `themes/` | One folder per theme: `config.json`, a required `screenshot.jpg`, optional wallpapers. Keys are documented in `themes/README.md`. |
 | `addons/` | Optional module-card apps, each its own Gradle project, never built into the launcher. |
@@ -227,6 +227,14 @@ no switch. No new dependencies in `launcher/app/build.gradle` without an issue f
 - Several tests pin facts in `docs/devices/` notes, `PROMPT.md` and `docs/TROUBLESHOOTING.md` (the
   `tests/test_*_note.py` files). If you reword one of those passages, run the suite and keep the fact.
 - Docs and the README stay in step: a new list, theme, add-on or tool gets its row where the others are.
+
+## Workflows
+
+Multi-step methods in `docs/workflows/`. Read the one that fits before you start; each opens with when to
+use it and links the tool guides it needs.
+
+- [`perf-ab.md`](docs/workflows/perf-ab.md): measure performance improvements or regressions from a launcher
+  change, with traces, a report and flame charts.
 
 ## Before opening a PR
 
