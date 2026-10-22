@@ -1,8 +1,9 @@
 # Xiaomi Redmi Smart TV A Pro 55" 2025 Energy-saving (MiTV-ASTR0, blueplanet, Amlogic
 # AMLT963D4/T5M), China firmware OS3.0.106.0.USTAATV (HyperOS TV 3), Android 14 (SDK 34),
-# 3 GB RAM. Stock launcher com.mitv.tvhome (PatchWall) - it is DISABLED at the bottom of
-# this list and replaced by a third-party launcher through the allowlist trampoline;
-# read the PatchWall block there before running the whole list.
+# 3 GB RAM. Stock launcher com.mitv.tvhome (PatchWall) - its line at the bottom is
+# commented out by default: on this build the stock launcher was replaced through the
+# com.ts.launcher allowlist trampoline (see the PatchWall block and the device doc)
+# before disabling it; uncomment that line only together with that setup.
 # Disabled and lived with on 2026-10-22; the screensaver-ad package was verified live
 # (resumed activity while the ad showed). See docs/devices/xiaomi-mitv-astr0-blueplanet.md
 # for the ad screensaver, the Home allowlist behavior and what must stay enabled.
@@ -55,8 +56,8 @@ com.mitv.toolhouse
 # Screensaver ads (verified: resumed activity while the ad carousel showed, own cache)
 com.xiaomi.mitv.hyper.screensaver        # HyperOS screensaver Activity; see device doc
 
-# Stock launcher - ONLY together with the allowlist trampoline (see device doc §Home).
-# disable.sh's Home guard skips this line unless another launcher can answer HOME;
-# with the com.ts.launcher trampoline installed it goes through. Undo path:
+# Stock launcher - LEFT COMMENTED OUT by default: uncomment ONLY together with the
+# allowlist trampoline from the device doc (§Home), or Home lands on FallbackHome's
+# black screen. disable.sh's Home guard normally skips it anyway. Undo path:
 # pm enable com.mitv.tvhome + reboot.
-com.mitv.tvhome
+#com.mitv.tvhome
