@@ -29,7 +29,9 @@ picture come from Photo Prints by [@shivamsingh262](https://github.com/shivamsin
 
 ## Install
 
-JDK 17 and Android SDK 34, as for the launcher, and the `tools/venv` from the main README.
+JDK 17 and Android SDK 34, as for the launcher, and the `tools/venv` from the main README. The small
+`gradlew` scripts reuse the launcher's pinned Gradle wrapper with this folder as the project, so no wrapper
+JAR is copied into the add-on; keep this folder inside the repository when building.
 
 ```sh
 TV_HOST=192.168.1.50 addons/photo-screensaver/build-and-install.sh
@@ -73,15 +75,14 @@ is decoded at screen size. On a TCL 43P69K (1.5 GB) a 1080p clip played with the
 
 ## Permissions
 
-No storage permission and no background service: the pictures stay on the TV in the app's own folder
-(`Android/data/com.gathin.photodream/files/pictures`), removed with the app.
-
-- **`INTERNET`** and **`ACCESS_COARSE_LOCATION`**: only for the weather option, off by default. With it on,
-  the TV's rough location, rounded to two decimals (about 1 km), goes to `api.open-meteo.com` every 30
-  minutes while the screensaver runs. Nothing else goes out; with it off, nothing goes over the network.
+- **Network: `INTERNET` and `ACCESS_COARSE_LOCATION`**, used only by the weather option, which is off by
+  default. With it on, the TV's rough location, rounded to two decimals (about 1 km), goes to
+  `api.open-meteo.com` every 30 minutes while the screensaver runs, and the temperature and weather code
+  come back, with whether it is day. Nothing else goes out; with the weather off, the app makes no network connection at all.
+- No storage permission and no background service: the pictures stay on the TV in the app's own folder
+  (`Android/data/com.gathin.photodream/files/pictures`), removed with the app.
 - **`SlideshowActivity`** (exported) is the module card; **`SettingsActivity`** (exported) is opened by the
   TV's screensaver settings. Both only show the slideshow or change its options.
-
 - **`FilesProvider`** (exported) is how `sync.sh` writes the pictures, so the app owns them: on TCL G10 a
   file the adb shell copies into `Android/data` is unreadable for the app. Only callers holding
   `WRITE_SECURE_SETTINGS` may use it, which the adb shell has and ordinary apps cannot get, and only
