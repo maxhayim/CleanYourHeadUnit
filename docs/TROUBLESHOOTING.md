@@ -447,6 +447,21 @@ tools/tv.py 'dumpsys accessibility'
   `tools/tv.py 'getevent -lt'` in `settings_key_scancodes` and install with `HOME_KEY_SERVICE=1`
   (an RC-36 remote sends its gear on scancode 240 and its notifications button on 362 that way; see
   [the FPD CG50-C3 note](devices/fpd-cg50-c3.md)).
+  Not every set answers those two routes, though ([#853](https://github.com/Gathin23/cleanyourtv/issues/853),
+  a PEAQ "AI PONT DE", `DVB99PQ` / Changhong `changi`, Google TV 14, `UKNV.260504.001`): a HID
+  consumer-control usage prints an evdev `MSC_SCAN` that is not necessarily the `KeyEvent.getScanCode()`
+  the framework reports, so a value read with `getevent -lt` can match nothing in
+  `settings_key_scancodes` (that set's gear printed `MSC_SCAN 000c009f`, and neither 159 nor 786591, the
+  two spellings of it, did anything), and `logcat -v time -s InputReader:D`, the filter `config.xml`
+  suggests, printed no key line at all there, for any button, only `Reconfiguring input devices`. What
+  Android really delivers comes from a temporary `Log.d` at the top of the helper's `onKeyEvent` printing
+  `getKeyCode()`, `getScanCode()` and `getDeviceId()`, rebuilt with `HOME_KEY_SERVICE=1` and read with
+  `tools/tv.py "logcat -s TvHomeKeys:D"` while pressing the real button: that set reported
+  `action=0 keyCode=83 scanCode=240 deviceId=9`, and `settings_key_keycodes = [83]` opened the TV's
+  Settings at once. So a `getevent` code that matches nothing is not proof the press never arrived, and
+  consuming the key in the helper also keeps it from the vendor receiver
+  `com.homwee.factory/.FactoryKeyReciver`, which `dumpsys window policy` routes `KEYCODE_NOTIFICATION`
+  to once the stock launcher is gone.
 - **All vendor buttons die at once** and `logcat` says `GLOBAL_BUTTON ... process is bad`: the
   global-key receiver crashes on the disabled launcherx and Android stops starting it. Map every such
   keycode in the helpers, also for disabled apps. See [the MOSR4 note](devices/xiaomi-mitv-mosr4.md).
