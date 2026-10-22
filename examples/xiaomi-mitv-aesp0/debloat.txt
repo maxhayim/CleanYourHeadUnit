@@ -57,7 +57,7 @@ com.mitv.milinkservice                      # Mi Cast receiver; re-enable to cas
 
 # Google TV plumbing this stick does not need (second set)
 com.google.android.tv                       # Live Channels; the stick has no tuner or HDMI input
-com.android.providers.tv                    # TV content provider (EPG/channel data)
+# (the TV content provider is intentionally not listed: never-disable per repo policy)
 com.google.android.videos                   # Google Play Movies & TV
 com.google.android.youtube.tvmusic         # YouTube Music TV
 com.google.android.tungsten.setupwraith     # setup helper left over from first boot
@@ -91,4 +91,4 @@ com.google.android.katniss                  # voice search; the voice stack bare
 com.google.android.speech.pumpkin
 com.google.android.tts                      # comment out if anything reads text aloud
 com.google.android.marvin.talkback          # accessibility; only disable if nobody uses TalkBack
-com.google.android.tv.remote.service        # phone-as-remote; the Bluetooth remote is unaffected
+# com.google.android.tv.remote.service      # phone-as-remote: comment kept disabled only if you never use it; left OFF this set on review advice
