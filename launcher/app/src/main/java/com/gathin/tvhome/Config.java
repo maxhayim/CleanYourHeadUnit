@@ -96,6 +96,8 @@ final class Config {
     final int wifiLabelWidth;
     /** Decode wallpapers in 32-bit colour instead of RGB_565 (config.xml wallpaper_true_color). */
     final boolean wallpaperTrueColor;
+    /** The focused tile and the glass highlight swing past their target before settling (config.xml, focus_overshoot). */
+    final boolean focusOvershoot;
     final String vpnApp;
     final boolean showHomeSettingsShortcut;
     /** One line under the clock: CPU, free memory, free storage. Off unless config or a theme turns it on. */
@@ -156,7 +158,7 @@ final class Config {
                    Map<String, String> appBanners, String sourcePanelService, String sourcePanelAction,
                    String sourcePanelExtra, boolean coocaaSources, String inputAction,
                    String inputUriScheme, int columns, int rowsBelowDock, boolean animations, boolean advancedEffects,
-                   boolean shamsiDate, String greetingName, boolean moduleCards, boolean reducedMotion, boolean bootToLiveTv, boolean dockTitle, boolean dockRow, boolean reorderButton, boolean showNetworkPill, boolean showInputsPill, boolean iconOnlyButtons, boolean libraryButton, int wifiLabelWidth, boolean alwaysShowNames, boolean wallpaperTrueColor, String vpnApp,
+                   boolean shamsiDate, String greetingName, boolean moduleCards, boolean reducedMotion, boolean bootToLiveTv, boolean dockTitle, boolean dockRow, boolean reorderButton, boolean showNetworkPill, boolean showInputsPill, boolean iconOnlyButtons, boolean libraryButton, int wifiLabelWidth, boolean alwaysShowNames, boolean wallpaperTrueColor, boolean focusOvershoot, String vpnApp,
                    boolean showHomeSettingsShortcut, boolean showStats, boolean appLibrary, int backgroundColor, int skyIntensity,
                    int[] settingsKeycodes, boolean settingsKeyPanel, boolean wallpaperEnabled, File wallpaper, List<File> wallpapers,
                    int wallpaperRotationMinutes, int wallpaperDim, int dockOpacity, String wallpaperOrder, boolean overlayApplied,
@@ -201,6 +203,7 @@ final class Config {
         this.wifiLabelWidth = wifiLabelWidth;
         this.alwaysShowNames = alwaysShowNames;
         this.wallpaperTrueColor = wallpaperTrueColor;
+        this.focusOvershoot = focusOvershoot;
         this.vpnApp = vpnApp;
         this.showHomeSettingsShortcut = showHomeSettingsShortcut;
         this.showStats = showStats;
@@ -267,6 +270,7 @@ final class Config {
         int wifiLabelWidth = res.getInteger(R.integer.wifi_label_width);
         boolean alwaysShowNames = res.getBoolean(R.bool.always_show_names);
         boolean wallpaperTrueColor = res.getBoolean(R.bool.wallpaper_true_color);
+        boolean focusOvershoot = res.getBoolean(R.bool.focus_overshoot);
         String vpn = res.getString(R.string.vpn_app).trim();
         boolean homeSettings = res.getBoolean(R.bool.show_home_settings_shortcut);
         boolean showStats = res.getBoolean(R.bool.show_stats);
@@ -326,6 +330,7 @@ final class Config {
             wifiLabelWidth = integer(json, "wifi_label_width", wifiLabelWidth, 0, 300);
             alwaysShowNames = bool(json, "always_show_names", alwaysShowNames);
             wallpaperTrueColor = bool(json, "wallpaper_true_color", wallpaperTrueColor);
+            focusOvershoot = bool(json, "focus_overshoot", focusOvershoot);
             vpn = string(json, "vpn_app", vpn);
             homeSettings = bool(json, "show_home_settings_shortcut", homeSettings);
             showStats = bool(json, "show_stats", showStats);
@@ -399,7 +404,7 @@ final class Config {
                 packageMap(appBanners), panelService,
                 panelAction, panelExtra, coocaaSources, inputAction, inputUriScheme,
                 Math.max(1, columns), Math.max(0, rowsBelow), animations, advancedEffects,
-                shamsi, greetingName, moduleCards, reducedMotion, bootToLiveTv, dockTitle, dockRow, reorderButton, showNetworkPill, showInputsPill, iconOnlyButtons, libraryButton, wifiLabelWidth, alwaysShowNames, wallpaperTrueColor, vpn, homeSettings, showStats, library, background,
+                shamsi, greetingName, moduleCards, reducedMotion, bootToLiveTv, dockTitle, dockRow, reorderButton, showNetworkPill, showInputsPill, iconOnlyButtons, libraryButton, wifiLabelWidth, alwaysShowNames, wallpaperTrueColor, focusOvershoot, vpn, homeSettings, showStats, library, background,
                 Math.max(0, Math.min(100, skyIntensity)), settingsKeycodes, settingsKeyPanel, wallpaperEnabled, wallpaper,
                 wallpapers, rotationMinutes, wallpaperDim, dockOpacity, wallpaperOrder, applied,
                 festival, inputKeycodes, appKeys, stockHomeRedirect, json == null ? Collections.emptyList() : raceCalendar(json), cinematic, ambientGlow, appGlow,

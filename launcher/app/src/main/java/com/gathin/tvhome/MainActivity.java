@@ -196,6 +196,8 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
     private boolean reducedMotion;
     /** config.xml dock_row: the first row is a separate dock (band, parked low, top shelf) rather than plain grid. */
     private boolean dockRow;
+    /** The highlight springs past its target (config.xml, focus_overshoot); false goes straight there. */
+    private boolean focusOvershoot;
     /** Festive skin from the theme (see Festival); applied while it is active today. */
     private Festival festival = Festival.NONE;
     private boolean festive;
@@ -333,6 +335,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         advancedEffects = cfg.animations && cfg.advancedEffects;
         reducedMotion = cfg.reducedMotion;
         dockRow = cfg.dockRow;
+        focusOvershoot = cfg.focusOvershoot;
         festival = cfg.festival;
         festive = festival.active(LocalDate.now());
         liveTvPkg = cfg.liveTvPackage;
@@ -526,6 +529,9 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         for (SpringAnimation s : new SpringAnimation[]{springX, springY}) {
             if (reducedMotion) {
                 Motion.reduce(s);
+            } else if (!focusOvershoot) {
+                // Critically damped: glides straight onto the tile without swinging past it.
+                s.setSpring(new SpringForce().setStiffness(advancedEffects ? 520f : 440f).setDampingRatio(1f));
             } else {
                 s.setSpring(new SpringForce().setStiffness(advancedEffects ? 320f : 260f)
                         .setDampingRatio(advancedEffects ? 0.76f : 0.58f));
