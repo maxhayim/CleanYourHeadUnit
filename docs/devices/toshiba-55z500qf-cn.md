@@ -44,13 +44,19 @@ The settings menu has no Developer options entry. `com.android.settings` is
 disabled both in the owner's pre-change baseline and in the October
 transcript; when and why it was disabled is not known.
 
-The owner reports installing a small, locally built helper APK (not
-published) from a USB stick and turning on debugging from the screen it
-opened. The helper tries, in order,
-`Settings.ACTION_APPLICATION_DEVELOPMENT_SETTINGS`,
-`com.android.tv.settings/.system.development.DevelopmentActivity` and
-`com.android.settings/.Settings$DevelopmentSettingsActivity`. Which of the
-three opened the screen on this set was not recorded.
+The route is to start the Developer options screen directly. These are the
+targets, in the order the owner's helper tried them:
+
+1. the intent action `android.settings.APPLICATION_DEVELOPMENT_SETTINGS`
+2. the activity `com.android.tv.settings/.system.development.DevelopmentActivity`
+3. the activity `com.android.settings/.Settings$DevelopmentSettingsActivity`
+
+Any app that can start an activity or an intent action, such as a public
+activity launcher installed from a USB stick, should reach the same screens.
+On this set only the owner's own helper was used: a small, locally built APK
+(not published) installed from a USB stick, after which debugging was
+turned on from the screen it opened. Which of the three targets answered was
+not recorded.
 
 Network ADB answers on TCP 5555. The transcribed output reports
 `ro.adb.secure=1`, and on 2026-10-22 a computer with a new adb key stayed
