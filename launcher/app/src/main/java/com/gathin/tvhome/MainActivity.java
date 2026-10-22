@@ -64,6 +64,7 @@ import android.view.animation.LayoutAnimationController;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -572,6 +573,22 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         btnLibraryTop.setVisibility(cfg.libraryButton && cfg.appLibrary ? View.VISIBLE : View.GONE);
         iconOnlyButtons = cfg.iconOnlyButtons;
         wifiIconOnly = iconOnlyButtons && cfg.wifiLabelWidth <= 0;
+        if (cfg.topMenu) {
+            // One gear: Inputs and Wi-Fi move into its dropdown. The Wi-Fi pill stays hidden but keeps its
+            // label up to date, which the menu's Wi-Fi row shows.
+            showInputsPill = false;
+            btnInputs.setVisibility(View.GONE);
+            btnWifi.setVisibility(View.GONE);
+            if (!iconOnlyButtons) makeIconOnly((TextView) btnSettings);
+            btnSettings.setOnClickListener(v -> showTopMenu());
+            // The lone gear sits at the header's middle, not on its bottom line like the row of pills.
+            LinearLayout topButtons = findViewById(R.id.topButtons);
+            RelativeLayout.LayoutParams tlp = (RelativeLayout.LayoutParams) topButtons.getLayoutParams();
+            tlp.addRule(RelativeLayout.ALIGN_TOP, R.id.leftBlock);
+            tlp.bottomMargin = 0;
+            topButtons.setLayoutParams(tlp);
+            topButtons.setGravity(Gravity.CENTER_VERTICAL);
+        }
         if (iconOnlyButtons) {
             if (cfg.wifiLabelWidth > 0) btnWifi.setMaxWidth(Math.round(cfg.wifiLabelWidth * density));
             else makeIconOnly(btnWifi);
@@ -2488,7 +2505,9 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
             openSourcePanel();
             return;
         }
-        View anchor = findViewById(R.id.btnInputs);
+        // top_menu: the pill is gone, so the list hangs under the gear, growing inward from the right.
+        boolean underGear = btnInputs.getVisibility() != View.VISIBLE;
+        View anchor = findViewById(underGear ? R.id.btnSettings : R.id.btnInputs);
         View panel = getLayoutInflater().inflate(R.layout.popup_inputs, root, false);
         LinearLayout rows = panel.findViewById(R.id.rows);
 
@@ -2643,7 +2662,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         panel.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
         popup.setWidth(Math.max(width, Math.min(panel.getMeasuredWidth(), (int) (360 * density))));
 
-        int alignment = getResources().getBoolean(R.bool.rtl_menu_bar) ? Gravity.END : Gravity.START;
+        int alignment = getResources().getBoolean(R.bool.rtl_menu_bar) != underGear ? Gravity.END : Gravity.START;
         dropIn(popup, panel, anchor, alignment);
         rows.getChildAt(0).requestFocus();
     }
@@ -2707,6 +2726,29 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
     }
 
     // ---- launcher settings and module cards -------------------------------------------------------
+
+    /** top_menu: the gear's dropdown, standing in for the Inputs, Wi-Fi and Settings pills. */
+    private void showTopMenu() {
+        View anchor = findViewById(R.id.btnSettings);
+        View panel = getLayoutInflater().inflate(R.layout.popup_inputs, root, false);
+        LinearLayout rows = panel.findViewById(R.id.rows);
+        PopupWindow popup = glassPopup(panel, (int) (220 * density));
+        // Inputs opens its own list once this one has closed.
+        addInputRow(rows, popup, R.drawable.ic_input, getString(R.string.inputs), -1, () -> root.post(this::showInputs));
+        addInputRow(rows, popup, R.drawable.ic_wifi, getString(R.string.quick_network), -1, this::openNetworkPill);
+        CharSequence network = wifiIconOnly ? btnWifi.getContentDescription() : btnWifi.getText();
+        if (!TextUtils.isEmpty(network)) {
+            TextView status = rows.getChildAt(rows.getChildCount() - 1).findViewById(R.id.status);
+            status.setText(network);
+            status.setVisibility(View.VISIBLE);
+        }
+        addInputRow(rows, popup, R.drawable.ic_settings, getString(R.string.settings), -1,
+                () -> open(systemIntent(Settings.ACTION_SETTINGS)));
+        panel.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
+        popup.setWidth(Math.max((int) (220 * density), Math.min(panel.getMeasuredWidth(), (int) (360 * density))));
+        dropIn(popup, panel, anchor, getResources().getBoolean(R.bool.rtl_menu_bar) ? Gravity.START : Gravity.END);
+        rows.getChildAt(0).requestFocus();
+    }
 
     /** Keep a normal Settings click for the TV; the launcher's choices live behind hold OK. */
     private void showSettingsMenu() {
