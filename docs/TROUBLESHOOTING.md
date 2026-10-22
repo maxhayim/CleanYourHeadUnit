@@ -525,6 +525,22 @@ running back on the list the next time it starts; a helper turned off in Setting
 - **All vendor buttons die at once** and `logcat` says `GLOBAL_BUTTON ... process is bad`: the
   global-key receiver crashes on the disabled launcherx and Android stops starting it. Map every such
   keycode in the helpers, also for disabled apps. See [the MOSR4 note](devices/xiaomi-mitv-mosr4.md).
+- **The list still names the helper but `accessibility_enabled` is `0`**, so nothing is bound and the
+  button does nothing (not the force stop below): on a TCL C6K Pro (`G08`, Android 14,
+  [#1047](https://github.com/Gathin23/cleanyourtv/issues/1047)) a reboot left
+  `enabled_accessibility_services` naming `com.gathin.tvhome/com.gathin.tvhome.HomeKeyService` while
+  `accessibility_enabled` read `0`, `dumpsys accessibility` showed `Bound services:{}` and the Home
+  button opened Google TV. `restore_key_services` does not repair this state: `ServiceRepair` writes
+  `accessibility_enabled 1` only on the path that also puts a missing helper back on the list, and here
+  the list was complete. Write the flag back, then read the dump again; toggling the service off and on
+  in Accessibility, which is what the owner did, brought the redirect back for that session. Whether the
+  flag survives the next reboot was not retested on that set, and what cleared it is not established:
+
+  ```sh
+  tools/tv.py 'settings get secure accessibility_enabled'
+  tools/tv.py 'settings put secure accessibility_enabled 1'
+  tools/tv.py 'dumpsys accessibility'
+  ```
 
 A force-stop switches the helpers off for good: after `am force-stop com.gathin.tvhome` (or Force stop in
 Settings > Apps) Android removes the launcher's services from the enabled list, and they do not come back
