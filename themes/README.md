@@ -152,7 +152,7 @@ Android 10 is the known case. The default, `false`, keeps the normal motion.
 ## Time-of-day backdrop
 
 `"sky_intensity": 60` draws a dark gradient over the wallpaper and behind everything else, that follows the
-clock: night blues, a soft blue day, then a warm horizon that peaks just before eight in the evening.
+clock: night blues, a soft blue day, then a warm horizon that peaks at seven in the evening.
 The glow near the bottom edge travels from left to right with the sun. The colours stay dark so the
 white clock, the hero name and the dock band keep their contrast. It is drawn as one 480×270 bitmap
 and redrawn once a minute, never animated, so even a 1 GB TV has nothing to keep up with. `0` keeps
@@ -161,6 +161,11 @@ the plain background; the default is off (the reference launcher looks exactly a
 ```json
 { "sky_intensity": 60 }
 ```
+
+That evening peak is a fixed reference day, sunrise 07:30 and sunset 19:00 on the TV's clock. The
+launcher follows the real sun only when `latitude` and `longitude` are set in
+`launcher/app/src/main/res/values/config.xml`, which is a build setting a theme cannot carry: see
+[docs/sky.md](../docs/sky.md) for the two lines and what still falls back.
 
 ## Adding a theme
 
