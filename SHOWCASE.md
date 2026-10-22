@@ -10,7 +10,7 @@ project's own issue tracker.
 
 **Jump to:** [Home screens built as their own app](#home-screens-built-as-their-own-app) · [Forks of the launcher](#forks-of-the-launcher) · [Screensavers and add-ons](#screensavers-and-add-ons) · [Tools and companion apps](#tools-and-companion-apps) · [Other platforms: Fire TV and LG webOS](#other-platforms-fire-tv-and-lg-webos) · [Add-ons in this repo](addons/README.md) · [Guides and write-ups](#guides-and-write-ups) · [Find a project by TV brand](#find-a-project-by-tv-brand) · [Add yours](#add-yours)
 
-53 projects so far.
+54 projects so far.
 
 ## Home screens built as their own app
 
@@ -73,6 +73,7 @@ Small apps and scripts that run next to the launcher (or any launcher) and do on
 | [Cast Fix](https://github.com/thayford/castfix) | Keeps casting from phones working on a Chromecast with Google TV after setupwraith is disabled for the launcher ([#361](https://github.com/Gathin23/cleanyourtv/issues/361)): at every boot it pairs with the TV's own Wireless debugging, lets the Cast receiver load its credentials from the setup wizard, then switches the wizard off again. No internet access | Chromecast with Google TV HD, Google TV 14 | [thayford](https://github.com/thayford) |
 | [coocaa-home-shim](https://github.com/VincentYe123/coocaa-home-shim) | A 15 KB app under a Coocaa homepage package name that hands Home to the launcher on Skyworth's China-market Coocaa OS, where Home is a system property rather than an intent; for two minutes after boot it also moves the stock home aside. No internet permission | Skyworth 7S60_A5, Coocaa OS / Android 8 | [VincentYe123](https://github.com/VincentYe123) |
 | [3D Pipes: XP Screensaver for Android TV](https://github.com/TheWombRaider/pipes-tv) | The classic 3D Pipes screensaver, rebuilt from the original's published rules and checked against 184 scenes of the real one: a single pipe growing one whole segment at a time, a mix of elbows and ball joints, the 16 classic materials, the rare Utah teapot, a level camera that turns with each scene, and the small-square clear. No internet permission. TCL sets need one app-op (`AUTO_START`) before the system will start a sideloaded screensaver | TCL 75T7 (G08), Google TV 14 | [TheWombRaider](https://github.com/TheWombRaider) |
+| [Weather Clock](https://github.com/matyivagyok/weatherclock-tv) | A screensaver that adds the weather to the launcher's clock: the thin clock and date centred over the ambient glow, with the current conditions, high and low, "feels like" and the next three days from Open-Meteo (no key). Location is automatic from the IP address (ipwho.is, geojs.io as fallback) or a city picked by hand; it only runs while the screensaver is on | Chromecast with Google TV HD, Google TV 14 | [matyivagyok](https://github.com/matyivagyok) |
 
 ## Tools and companion apps
 
@@ -117,7 +118,7 @@ By the TV each project was built and tested on. Most of them run on other Androi
 
 - **Amazon Fire TV:** [Fire OS 6 Home watcher](https://github.com/ljis120301/tv-vibehack/tree/fire-tv-support), [Fire OS 7 fast Home](https://github.com/andrewsaad/fire-tv-cleanup), [Fire TV Glass](https://github.com/ivantrj/firetv-glass-launcher), [fire-tv-cleanup](https://github.com/itsmeterrylin/fire-tv-cleanup)
 - **BenQ:** [Navigation sounds](https://github.com/rocavence/tv-vibehack/tree/nav-sounds)
-- **Chromecast with Google TV:** [Cast Fix](https://github.com/thayford/castfix)
+- **Chromecast with Google TV:** [Cast Fix](https://github.com/thayford/castfix), [Weather Clock](https://github.com/matyivagyok/weatherclock-tv)
 - **Baron (CloudWalker OS):** [Baron Home](https://github.com/sethihq/baron-tv)
 - **Formovie:** [CleanTV by VGS](https://github.com/vgscity/vgs-cleantv)
 - **FPT Play:** [TV Remote](https://github.com/HoangTran0410/tv-remote)
