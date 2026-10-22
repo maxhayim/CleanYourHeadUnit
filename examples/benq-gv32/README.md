@@ -8,7 +8,6 @@ UKNV.260626.001. Both halves work: the debloat list and the Clean Your TV launch
 |---|---|
 | `debloat.txt` | The 8 packages that were disabled, grouped and commented, with what to keep and why (`build-and-install.sh` disables launcherx on top) |
 | `config.json` | Dock order, hidden tile, and the Settings and profile buttons; push it with `tools/theme.sh` |
-| `restore.sh` | Undo everything below in one go |
 
 All commands run from the repo root, with the projector's IP in `TV_HOST`.
 
@@ -74,11 +73,15 @@ TV_HOST=<projector-ip> tools/tv.py "settings put secure enabled_accessibility_se
 TV_HOST=<projector-ip> tools/tv.py 'pm enable com.instagram.airwave'
 ```
 
-Use the package name from `debloat.txt`. To put everything back, the launcher included:
+Use the package name from `debloat.txt`. To put everything back and give Home to launcherx again:
 
 ```bash
-TV_HOST=<projector-ip> examples/benq-gv32/restore.sh            # add --uninstall-launcher to remove it too
+TV_HOST=<projector-ip> tools/restore.sh examples/benq-gv32/debloat.txt com.google.android.apps.tv.launcherx
+TV_HOST=<projector-ip> tools/theme.sh --reset
 ```
+
+Switch the key helper off as shown under Remote buttons, and `tools/tv.py 'pm uninstall com.gathin.tvhome'`
+removes the launcher itself.
 
 ## Change the dock or the wallpaper
 
