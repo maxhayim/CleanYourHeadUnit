@@ -59,7 +59,6 @@
     <string name="library_recent">新安装 · 添加到主屏幕</string>
     <string name="library_hint_add">按下添加到主屏幕 · 长按查看选项</string>
     <string name="library_hint_open">按下打开 · 长按查看选项</string>
-    <string name="library_hint_toggle">确定：显示/隐藏</string>
     <plurals name="library_app_count">
         <item quantity="other">%1$d 个应用</item>
     </plurals>

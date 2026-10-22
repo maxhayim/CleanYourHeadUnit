@@ -335,6 +335,13 @@ final class AppLibraryDialog {
         panel.addView(title, new LinearLayout.LayoutParams(-1, -2));
     }
 
+    /** Reuse translated actions instead of shipping another hint in every locale. */
+    private String hint(boolean home) {
+        if (selectionMode) return activity.getString(android.R.string.ok) + ": "
+                + activity.getString(home ? R.string.library_remove_shortcut : R.string.library_add_home);
+        return activity.getString(home ? R.string.library_hint_open : R.string.library_hint_add);
+    }
+
     private void showCatalog() {
         stopHighlight();
         resize(catalogWidth, dp(280));
@@ -352,7 +359,7 @@ final class AppLibraryDialog {
         count.setSingleLine(true);
         header.addView(count, new LinearLayout.LayoutParams(-2, -2));
         panel.addView(header, new LinearLayout.LayoutParams(-1, dp(44)));
-        instructions = text(activity.getString(selectionMode ? R.string.library_hint_toggle : R.string.library_hint_add), 13, 0xBBFFFFFF);
+        instructions = text(hint(false), 13, 0xBBFFFFFF);
         instructions.setSingleLine(true);
         instructions.setEllipsize(TextUtils.TruncateAt.END);
         instructions.setPadding(dp(12), 0, dp(12), dp(6));
@@ -648,8 +655,7 @@ final class AppLibraryDialog {
             holder.itemView.setOnFocusChangeListener((v, focused) -> {
                 if (focused) {
                     selectedPackage = pkg;
-                    instructions.setText(selectionMode ? R.string.library_hint_toggle : onHome.test(pkg)
-                            ? R.string.library_hint_open : R.string.library_hint_add);
+                    instructions.setText(hint(onHome.test(pkg)));
                     v.post(() -> { if (v.hasFocus() && catalog != null) highlight(v, true); });
                     int index = holder.getBindingAdapterPosition();
                     if (index != RecyclerView.NO_POSITION) selectedPosition = index;

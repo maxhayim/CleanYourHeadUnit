@@ -111,7 +111,6 @@
     <string name="library_recent">New · Add to Home</string>
     <string name="library_hint_add">Press to add to Home · Hold for options</string>
     <string name="library_hint_open">Press to open · Hold for options</string>
-    <string name="library_hint_toggle">OK: show/hide on Home</string>
     <plurals name="library_app_count">
         <item quantity="one">%1$d app</item>
         <item quantity="other">%1$d apps</item>

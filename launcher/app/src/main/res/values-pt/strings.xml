@@ -108,5 +108,4 @@
     <string name="race_live">%1$s · ao vivo</string>
     <string name="race_finished">Bandeira quadriculada</string>
     <string name="last_opened">Aberto %1$s</string>
-    <string name="library_hint_toggle">OK: mostrar/ocultar</string>
 </resources>
