@@ -147,6 +147,7 @@ Anker Nebula, BYINTEK, Epson, Formovie, Gadnic, JMGO, Portronics, Stellamore, Wa
 | FFalcon (雷鸟) r34a0, China (V8-A920T01-LF1V147, Amlogic T920), 1 GB | Android 5.1.1 |
 | Formovie Laser 4K projector (hanlla, MediaTek T31 / m7632, 1.8 GB) | Android TV 14 |
 | Freebox Player POP (Free, fbx8am, Amlogic), IPTV/DVB-T box | Android TV 10 |
+| Formovie / Fengmi projector MiProjM05 (eva, Amlogic) | Android TV 9 |
 | Gadnic PROJ100W projector (built-in Google TV stick: SkyworthDigital YYT, Amlogic HP46B), Argentina | Google TV 14 |
 | Google TV Streamer 4K (kirkwood, GZRNL) | Google TV 14 |
 | Haier Android TV DVB2K (broadway, HaierATVT56DVB) | Android TV 11 |
