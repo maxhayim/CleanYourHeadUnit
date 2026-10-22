@@ -118,6 +118,8 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
     private String liveTvInputId;
     /** The app library is on (config.xml, app_library): only then can the tile menu take an app off Home. */
     private boolean appLibraryEnabled;
+    /** The same opt-in menu is available from either hold-OK or the remote's Menu key. */
+    private boolean tileMenuEnabled;
     private String inputAction;
     private String inputUriScheme;
     private String sourcePanelService;
@@ -364,6 +366,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         liveTvAction = cfg.liveTvAction;
         liveTvInputId = cfg.liveTvInputId;
         appLibraryEnabled = cfg.appLibrary;
+        tileMenuEnabled = cfg.tileMenu;
         inputAction = cfg.inputAction;
         inputUriScheme = cfg.inputUriScheme;
         sourcePanelService = cfg.sourcePanelService;
@@ -1088,6 +1091,17 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
         if (handleSettingsKey(event)) return true;
+        if (tileMenuEnabled && !reordering && openPopup == null && cardPrompt == null
+                && event.getKeyCode() == KeyEvent.KEYCODE_MENU) {
+            int position = focusedTilePosition();
+            if (position >= 0 && position < adapter.appCount()
+                    && !getPackageName().equals(adapter.packageAt(position))) {
+                if (event.getAction() == KeyEvent.ACTION_UP && !event.isCanceled()) {
+                    onTileLongPress(position, getCurrentFocus());
+                }
+                return true;
+            }
+        }
         if (!reordering) return super.dispatchKeyEvent(event);
         if (dockEditing) return dispatchDockEdit(event);
         boolean down = event.getAction() == KeyEvent.ACTION_DOWN;
