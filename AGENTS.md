@@ -22,6 +22,12 @@ this file repeats their rules in the form an agent needs, and links to them for 
 - **Leave alone what the TV needs to work:** the TV app and input services behind HDMI and the tuner,
   the input/source menu, remote and Bluetooth pairing, the on-screen keyboard, Play Store and Play
   Services. When a package name says nothing, read `dumpsys package <name>`, then ask.
+- **Never disable Android's core packages:** the permission controller, package installer, ext
+  services/shared and module metadata (`com.android.*` and `com.google.android.*`),
+  `com.google.android.overlay.modules*`, `com.android.providers.*` (calendar, contacts, user dictionary
+  and blocked numbers aside), `com.android.systemui`, `com.android.shell`, `com.android.phone`,
+  `com.android.settings`, `com.android.tv.settings`, `android`. Without them Android may not boot (#884);
+  `tools/disable.sh`, `disable.ps1` and `check.py --fix` refuse such a list, with no override.
 - **Never start a factory or test package** (`com.cvte.tv.hkcfac`, `mediatek.factorymenu.ui` and the like),
   not even to look. On some boards that flips a factory-mode flag the shell cannot undo.
 - **Keep the Home guard.** The stock launcher is disabled only after the new launcher is installed and

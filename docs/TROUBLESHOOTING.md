@@ -211,6 +211,18 @@ Things that bit us or contributors, so they don't bite you. Commands use `tools/
   test app does not count as something else: on a Xiaomi Mi TV 4A
   `com.duokan.factorytest/.FactoryLauncher` answers HOME, so the guard leaves it out, along with any
   package named `*factorytest*`, `*factory_test*` or `*factorymode*`.
+- **The TV no longer boots after a list that disabled Android's core packages** (original Mi TV
+  Stick, [#884](https://github.com/Gathin23/cleanyourtv/issues/884)). An agent's list took
+  `com.google.android.permissioncontroller`, `com.google.android.packageinstaller`,
+  `com.google.android.ext.services`, `com.google.android.ext.shared`,
+  `com.google.android.modulemetadata` and the `com.google.android.overlay.modules.*` overlays, plus
+  the stock launcher and setupwraith, and the stick never came back. Those are part of Android
+  itself, not bloat. `tools/disable.sh`, `disable.ps1` and `check.py --fix` now refuse any list that
+  names them (or `com.android.providers.*` other than calendar, contacts, user dictionary and
+  blocked numbers, `com.android.systemui`, `com.android.shell`, `com.android.phone`,
+  `com.android.settings`, `com.android.tv.settings` or `android`), with no switch to override it.
+  If a set is already stuck and still answers ADB, `pm enable` each of those packages and reboot;
+  if ADB is gone too, a factory reset from the recovery menu is usually the only way back.
 - **The TV stays on the boot logo after a list, and disabling the only Home app is enough to do
   it**, seen on a KitKat-era set ([COOP COTV-0001](https://github.com/Gathin23/cleanyourtv/issues/795):
   Realtek `rtd298x`, Android 4.4.2, SDK 19). 17 packages were disabled over Ethernet ADB, each
