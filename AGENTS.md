@@ -208,7 +208,7 @@ no switch. No new dependencies in `launcher/app/build.gradle` without an issue f
 
 ### Add a press entry
 
-1. Add a row `| Outlet | [Headline](url) | Date |` to the right country section of `docs/PRESS.md`, in the
+1. Add a row `| Outlet | [Headline](<url>) | Date |` to the right country section of `docs/PRESS.md`, in the
    headline's own language. The link must open and show the article: no syndicated copies, no auto-generated
    listings, nothing that cannot be checked.
 2. Update the counts in all four places `tests/test_press_counts.py` checks: the `docs/PRESS.md` intro line,
