@@ -76,7 +76,8 @@ it, and every one of them gets a home. Pick the smallest home that fits (CONTRIB
 - A PR that bundles several good, separable parts gets **rework**: split it (list each part). A device's list plus
   small fixes for that same device can be one PR. A list bundled inside a launcher feature PR goes as its own PR.
 - A PR that conflicts with main gets a kind rebase request (**rework**) naming the conflicting files, whatever
-  else is true of it (approved 22 Oct).
+  else is true of it (approved 22 Oct). A conflict only in README.md, examples/README.md or SHOWCASE.md is not
+  one: those tables are union-merged on merge, so no rebase is needed.
 - Duplicates: when an earlier open PR, or a PR merged in the last week, fixes the same issue in the same files
   (or adds mostly the same lines), the later PR is the duplicate: **close** it and name the other one (#873 after
   #842, #947 after #924). A stacked series (one PR built on another) is not a duplicate.
