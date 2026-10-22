@@ -2182,15 +2182,18 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         int res;
         // Locale-specific day parts (app language on Android 13+).
         // Indonesian: Pagi 00-10, Siang 10-15, Sore 15-18, Malam 18-24.
-        // Spanish: "Buenas tardes" runs into the evening; "Buenas noches" from 21 (English switches at 17,
-        // and both evening and night strings are "Buenas noches").
-        String lang = getResources().getConfiguration().getLocales().get(0).getLanguage();
+        // Spain (es-ES) and Catalan: "Buenas tardes" into the evening; "Buenas noches" from 21.
+        // Latin American Spanish (es-MX, es-AR, …) keeps the default hours: evening strings are also
+        // «Buenas noches», and there «Buenas noches» from ~17 matches local use better than Spain's 21.
+        Locale locale = getResources().getConfiguration().getLocales().get(0);
+        String lang = locale.getLanguage();
+        String country = locale.getCountry();
         if ("in".equals(lang) || "id".equals(lang)) {
             if (hour < 10) res = R.string.good_morning;
             else if (hour < 15) res = R.string.good_afternoon;
             else if (hour < 18) res = R.string.good_evening;
             else res = R.string.good_night;
-        } else if ("es".equals(lang) || "ca".equals(lang)) {
+        } else if (("es".equals(lang) && "ES".equals(country)) || "ca".equals(lang)) {
             if (hour < 6) res = R.string.good_night;
             else if (hour < 12) res = R.string.good_morning;
             else if (hour < 21) res = R.string.good_afternoon;
