@@ -20,10 +20,11 @@
 #   charge. Before applying the line, check whether it owns the saved Wi-Fi network: disable.sh will
 #   refuse it while it does. Rejoin the network in Settings first if necessary, and re-enable it before
 #   a factory reset or remote re-pairing.
-# - With launcherx disabled, some branded remote buttons which Google TV Home handled no longer work.
-#   The affected buttons and their keycodes have not been recorded yet, so no key-service mapping is
-#   claimed here. Test the real remote; see docs/TROUBLESHOOTING.md, "Accessibility helper enabled but
-#   the remote button does nothing", before adding a mapping.
+# - With launcherx disabled, the gear and Macro buttons that Google TV Home handled initially stopped
+#   working. examples/rocktek-gb1/config.json restores them through HomeKeyService: gear is Android
+#   keycode 83 and opens TV Settings; Macro is KEYCODE_GUIDE (172) and opens com.seena.app. Enable
+#   HomeKeyService at installation and test the physical remote, not an injected key. Other branded
+#   buttons are untested; see examples/rocktek-gb1/README.md before adding a mapping.
 
 # Android advertising / personalization and feedback
 com.android.ondevicepersonalization.services
