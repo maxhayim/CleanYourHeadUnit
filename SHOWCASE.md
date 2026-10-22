@@ -10,7 +10,7 @@ project's own issue tracker.
 
 **Jump to:** [Home screens built as their own app](#home-screens-built-as-their-own-app) · [Forks of the launcher](#forks-of-the-launcher) · [Screensavers and add-ons](#screensavers-and-add-ons) · [Tools and companion apps](#tools-and-companion-apps) · [Other platforms: Fire TV and LG webOS](#other-platforms-fire-tv-and-lg-webos) · [Add-ons in this repo](addons/README.md) · [Guides and write-ups](#guides-and-write-ups) · [Find a project by TV brand](#find-a-project-by-tv-brand) · [Add yours](#add-yours)
 
-53 projects so far.
+54 projects so far.
 
 ## Home screens built as their own app
 
@@ -72,6 +72,7 @@ Small apps and scripts that run next to the launcher (or any launcher) and do on
 | [AirPlay receiver installer](https://github.com/nguyenduchoai/tv-vibehack/tree/feat/airplay-receiver) | A script that builds and installs an open-source AirPlay receiver next to the launcher, for iPhone mirroring | Xiaomi MiTV-AESP0, Android TV 9 | [nguyenduchoai](https://github.com/nguyenduchoai) |
 | [Cast Fix](https://github.com/thayford/castfix) | Keeps casting from phones working on a Chromecast with Google TV after setupwraith is disabled for the launcher ([#361](https://github.com/Gathin23/cleanyourtv/issues/361)): at every boot it pairs with the TV's own Wireless debugging, lets the Cast receiver load its credentials from the setup wizard, then switches the wizard off again. No internet access | Chromecast with Google TV HD, Google TV 14 | [thayford](https://github.com/thayford) |
 | [coocaa-home-shim](https://github.com/VincentYe123/coocaa-home-shim) | A 15 KB app under a Coocaa homepage package name that hands Home to the launcher on Skyworth's China-market Coocaa OS, where Home is a system property rather than an intent; for two minutes after boot it also moves the stock home aside. No internet permission | Skyworth 7S60_A5, Coocaa OS / Android 8 | [VincentYe123](https://github.com/VincentYe123) |
+| [Homelab companion](https://github.com/epochcoder/cleanyourtv/tree/main/companion) ([how it works](https://github.com/epochcoder/cleanyourtv/blob/main/companion/README.md), [screenshots](https://raw.githubusercontent.com/epochcoder/cleanyourtv/d8454d32f53ad47b5f45ba1adfff7353e5c5c9b7/companion/docs/homelab.jpg)) | One app next to the launcher for a self-hosted homelab, with tabs for a Homepage dashboard, one search across Radarr and Sonarr that adds a film or show with one press, qBittorrent downloads named the way Sonarr and Radarr know them, the next two weeks of both calendars, and every setting edited with the remote or pushed from a computer. Its Immich screensaver crossfades recent photos with a slow zoom, pairs portraits side by side and captions the place, date and people, in the manner of Google Photos' ambient mode. Network only to the servers you configure, plus the public poster hosts the Sonarr and Radarr lookups point to; the launcher keeps no network permission | Formovie Laser 4K projector, Android TV 14 | [epochcoder](https://github.com/epochcoder) ([issues](https://github.com/epochcoder/cleanyourtv/issues)) |
 | [3D Pipes: XP Screensaver for Android TV](https://github.com/TheWombRaider/pipes-tv) | The classic 3D Pipes screensaver, rebuilt from the original's published rules and checked against 184 scenes of the real one: a single pipe growing one whole segment at a time, a mix of elbows and ball joints, the 16 classic materials, the rare Utah teapot, a level camera that turns with each scene, and the small-square clear. No internet permission. TCL sets need one app-op (`AUTO_START`) before the system will start a sideloaded screensaver | TCL 75T7 (G08), Google TV 14 | [TheWombRaider](https://github.com/TheWombRaider) |
 
 ## Tools and companion apps
@@ -119,7 +120,7 @@ By the TV each project was built and tested on. Most of them run on other Androi
 - **BenQ:** [Navigation sounds](https://github.com/rocavence/tv-vibehack/tree/nav-sounds)
 - **Chromecast with Google TV:** [Cast Fix](https://github.com/thayford/castfix)
 - **Baron (CloudWalker OS):** [Baron Home](https://github.com/sethihq/baron-tv)
-- **Formovie:** [CleanTV by VGS](https://github.com/vgscity/vgs-cleantv)
+- **Formovie:** [CleanTV by VGS](https://github.com/vgscity/vgs-cleantv), [Homelab companion](https://github.com/epochcoder/cleanyourtv/tree/main/companion)
 - **FPT Play:** [TV Remote](https://github.com/HoangTran0410/tv-remote)
 - **Haier:** [cleanyourtv for Haier](https://github.com/abuhasanrumi/cleanyourtv-haier)
 - **Hisense:** [Hisense 55U6K: reorder and weather](https://github.com/vlaship/cleanyourtv/tree/hisense-55u6k), [Hisense restyle](https://github.com/YouLop009/tv-vibehack/tree/style-modifications)
