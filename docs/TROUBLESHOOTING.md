@@ -607,7 +607,10 @@ alone, `InputKeyService` alone and both together all broke it, with `settings pu
 enabled_accessibility_services ''` plus `accessibility_enabled 0` restoring it. The dumps show
 `capabilities=8` (`CAPABILITY_CAN_FILTER_KEY_EVENTS`), so the platform routes every key through a filter
 path that drops the repeats, before an app sees them; the launcher's own helpers return `false` for keys
-they do not map, so they are not consuming the volume key. Check the state first, do not rewrite it blind:
+they do not map, so they are not consuming the volume key. The same was reported on a Xiaomi MiTV-MOSR4
+(`irobot`, Android 11, `RTM5.220609.003.1265`) with the launcher's own helpers, both and `InputKeyService`
+alone (#944), where the empty list was not tried because it also unhooks the buttons the helpers were
+installed for. Check the state first, do not rewrite it blind:
 
 ```sh
 tools/tv.py 'settings get secure enabled_accessibility_services'
