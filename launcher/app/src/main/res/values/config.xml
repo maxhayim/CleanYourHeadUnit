@@ -305,6 +305,10 @@
          dots, the focus glow takes the app's colour and the dock band turns translucent. false keeps the plain
          shelf. Can also be set with "cinematic_home": true in a theme's config.json. -->
     <bool name="cinematic_home">false</bool>
+    <!-- With cinematic_home, true keeps the focus highlight white on the dock instead of the focused app's colour,
+         for wallpapers and banners that clash with it; app_glow still colours every tile. Can also be set with
+         "cinematic_white_focus": true in a theme's config.json. -->
+    <bool name="cinematic_white_focus">false</bool>
 
     <!-- The glow behind the dock in the focused app's colour (red for YouTube, blue for Prime Video). false keeps
          only background_color or the wallpaper behind everything. Can also be set with "ambient_glow": false in a
