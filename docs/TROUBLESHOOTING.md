@@ -294,7 +294,13 @@ Things that bit us or contributors, so they don't bite you. Commands use `tools/
   tools/tv.py 'dumpsys package <new.launcher.package> | grep -o "[A-Z_]*DIRECT_BOOT_AWARE"'
   ```
   No `FallbackHome` in the first and nothing from the second: keep the stock launcher enabled and set
-  Home with `cmd package set-home-activity` only.
+  Home with `cmd package set-home-activity` only. That line is not proof the handover happened: on a set
+  whose stock launcher declares a HOME priority it can print `Success` and change nothing, with the Home
+  role already naming the new launcher while Home still opens the stock one, so read the resolver instead
+  (`tools/tv.py 'cmd package resolve-activity --brief -a android.intent.action.MAIN -c android.intent.category.HOME'`).
+  When it keeps naming the stock launcher, the set is debloat-only until someone runs these two checks on
+  that exact board (Thomson 40FG2S14W, Expressluck `nagata`, Android TV 14 `UKNV.260317.001`,
+  [notes](devices/thomson-40fg2s14w.md)).
 - **Stuck on the boot animation after the launcher change, ADB gone** (JVC LT-43N7115, CVTE
   `TP.SK706S.PC822`, Android 11, [#741](https://github.com/Gathin23/cleanyourtv/discussions/741)): the stock
   launcher `com.cvte.tv.launcher.space` was disabled and a remote-key helper enabled before one reboot.
