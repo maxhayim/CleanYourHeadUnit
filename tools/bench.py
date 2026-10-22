@@ -436,7 +436,7 @@ def idle_cpu(tv, package, seconds):
 
 def pss_of(tv, package):
     out = tv.shell(f"dumpsys meminfo {package}")
-    match = re.search(r"TOTAL:\s+(\d+)", out)
+    match = re.search(r"^\s*TOTAL(?: PSS)?:\s+(\d+)\b", out, re.M)
     return int(match.group(1)) // 1024 if match else None
 
 
