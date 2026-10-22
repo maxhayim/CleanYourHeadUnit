@@ -18,8 +18,10 @@ import android.widget.TextView;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -123,9 +125,10 @@ final class Prints {
         if (l == null) return;
         l.execute(() -> {
             Print[] batch = new Print[PRINTS];
+            Set<File> used = new HashSet<>();
             for (int i = 0; i < PRINTS; i++) {
                 try {
-                    batch[i] = nextPrint();
+                    batch[i] = nextPrint(used);
                 } catch (OutOfMemoryError e) {
                     batch[i] = null;
                 }
@@ -141,15 +144,20 @@ final class Prints {
         });
     }
 
-    /** Loader thread only (it owns the queue): the next photo in a shuffled round, decoded near its print size. */
-    private Print nextPrint() {
+    /**
+     * Loader thread only (it owns the queue): the next photo in a shuffled round, decoded near its print size. A
+     * photo already in this set ({@code used}) is not dealt twice, so with fewer photos than prints some stay empty.
+     */
+    private Print nextPrint(Set<File> used) {
         for (int tries = 0; tries < 4; tries++) {
             if (queue.isEmpty()) {
                 queue.addAll(Photos.list(context));
+                queue.removeAll(used);
                 Collections.shuffle(queue, random);
             }
             if (queue.isEmpty()) return null;
             File file = queue.remove(0);
+            if (!used.add(file)) continue;
             int[] size = Photos.size(file);
             if (size == null) continue;
             int w, h;

@@ -10,7 +10,7 @@ once, and Back to leave.
 
 - Package: `io.github.shivamsingh262.photoprints`
 - Author: [@shivamsingh262](https://github.com/shivamsingh262)
-- Tested on: Sony BRAVIA KD-65X82L (Google TV 12), test pending
+- Tested on: Sony BRAVIA KD-65X82L (Google TV 12)
 
 ## Permissions
 

@@ -15,7 +15,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/print_card"
-        android:elevation="16dp">
+        android:elevation="12dp">
 
         <ImageView
             android:id="@+id/printPhoto"
