@@ -13,6 +13,11 @@ Recording needs only `tools/requirements.txt` and a TV on Android 9 or later. Th
 downloads Perfetto's query engine (about 13 MB, SHA-256 checked) to `~/.local/share/perfetto`. To avoid
 that, download `trace_processor_shell` yourself and pass `--engine PATH`.
 
+On Android 9 and 10, the TV's tracing services must be enabled first; they are enabled by default only
+from Android 11. See Perfetto's [tracing-service setup](https://perfetto.dev/docs/quickstart/android-tracing#starting-the-tracing-services)
+for the `persist.traced.enable` prerequisite on non-Pixel devices. This tool does not change that setting.
+It sends a binary trace config, which Android 9 accepts without the `--txt` option added in Android 10.
+
 ## Record
 
 ```bash
