@@ -234,18 +234,25 @@ def frame_rows(framestats):
     """The PROFILEDATA rows as (flags, intended_vsync_ns, completed_ns)."""
     rows = []
     inside = False
+    columns = None
     for line in framestats.splitlines():
         if "---PROFILEDATA---" in line:
             inside = not inside
+            columns = None
             continue
-        if not inside or not re.match(r"^\d+,", line):
+        if not inside:
             continue
-        parts = line.split(",")
-        if len(parts) < 14:
+        parts = [part.strip() for part in line.split(",")]
+        if columns is None:
+            # Android versions add fields; the header names stay the same.
+            try:
+                columns = [parts.index(name) for name in ("Flags", "IntendedVsync", "FrameCompleted")]
+            except ValueError:
+                pass
             continue
         try:
-            rows.append((int(parts[0]), int(parts[1]), int(parts[13])))
-        except ValueError:
+            rows.append(tuple(int(parts[index]) for index in columns))
+        except (ValueError, IndexError):
             continue
     return rows
 
