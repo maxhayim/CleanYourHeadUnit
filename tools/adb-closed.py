@@ -44,7 +44,7 @@ def main():
     elif len(args) == 1 and endpoint_port is not None:
         port_str = endpoint_port
     else:
-        port_str = os.environ.get("TV_PORT") or endpoint_port or "5555"
+        port_str = endpoint_port or os.environ.get("TV_PORT") or "5555"
 
     try:
         port = int(port_str)

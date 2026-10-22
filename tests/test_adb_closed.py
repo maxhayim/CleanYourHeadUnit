@@ -72,6 +72,29 @@ class AdbClosedTest(unittest.TestCase):
         self.assertEqual(result.returncode, 1, result.stderr)
         self.assertIn(f"127.0.0.1:{port} is still open", result.stderr)
 
+    def test_endpoint_port_in_tv_host_env_overrides_tv_port_env(self):
+        with socket.socket() as server:
+            server.bind(("127.0.0.1", 0))
+            server.listen(1)
+            open_port = server.getsockname()[1]
+            with socket.socket() as probe:
+                probe.bind(("127.0.0.1", 0))
+                closed_port = probe.getsockname()[1]
+            env = dict(os.environ, TV_HOST=f"127.0.0.1:{open_port}", TV_PORT=str(closed_port))
+            result = check(env=env)
+        self.assertEqual(result.returncode, 1, result.stderr)
+        self.assertIn(f"127.0.0.1:{open_port} is still open", result.stderr)
+
+    def test_tv_port_env_used_when_tv_host_has_no_port(self):
+        with socket.socket() as server:
+            server.bind(("127.0.0.1", 0))
+            server.listen(1)
+            port = server.getsockname()[1]
+            env = dict(os.environ, TV_HOST="127.0.0.1", TV_PORT=str(port))
+            result = check(env=env)
+        self.assertEqual(result.returncode, 1, result.stderr)
+        self.assertIn(f"127.0.0.1:{port} is still open", result.stderr)
+
     def test_bad_arguments(self):
         self.assertEqual(check("127.0.0.1", "not-a-port").returncode, 2)
         self.assertEqual(check("127.0.0.1:not-a-port").returncode, 2)
