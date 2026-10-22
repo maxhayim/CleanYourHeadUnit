@@ -18,7 +18,7 @@ import android.widget.TextView;
 
 /**
  * The options, one switch each, for the remote's D-pad. Reached from the TV's screensaver settings (the
- * screensaver's own settings entry) and with Menu in the card's slideshow. All off: the plain slideshow.
+ * screensaver's own settings entry) and by holding OK or pressing Menu in the card's slideshow. All off: the plain slideshow.
  */
 public class SettingsActivity extends Activity {
 

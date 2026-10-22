@@ -7,12 +7,13 @@ fill the screen, then the loop moves on; a lone clip loops. Any key wakes the TV
 
 Package `com.gathin.photodream`. You see it as **Photos** (Dutch: **Foto's**) in the TV's screensaver
 settings. On cleanyourtv's Home it is also a module card, **Photos**: OK starts the same slideshow at once,
-Menu opens the settings, Back leaves.
+holding OK (or Menu) opens the settings, Back leaves.
 
 ## Options
 
 All off by default, which is the plain full-screen slideshow above. Switch them on in the screensaver's own
-settings (TV settings > screensaver > Photos > settings), or with Menu in the card's slideshow:
+settings (TV settings > screensaver > Photos > settings), or by holding OK (or pressing Menu) in the card's
+slideshow. Google TV has no settings entry for other screensavers, so there it is the slideshow only:
 
 | Option | What it does |
 |---|---|
