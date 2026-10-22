@@ -92,6 +92,7 @@ final class Prints {
             cards[i] = inflater.inflate(R.layout.print, stage, false);
             // Drawn into a layer with a clear margin, the tilted print is filtered as one image: smooth edges.
             cards[i].setLayerType(View.LAYER_TYPE_HARDWARE, null);
+            cards[i].setBackground(shadow(context, density));
             cards[i].findViewById(R.id.printCard).setClipToOutline(true);   // the photo takes the rounded corners
             photoViews[i] = cards[i].findViewById(R.id.printPhoto);
             dateViews[i] = cards[i].findViewById(R.id.printDate);
@@ -263,6 +264,12 @@ final class Prints {
                     .setInterpolator(new DecelerateInterpolator(2f)).start();
         }
         clock.bringToFront();
+    }
+
+    /** A soft halo all round each print, a little deeper below, the same under every print. */
+    private static PrintShadow shadow(Context context, float density) {
+        float inset = context.getResources().getDimensionPixelSize(R.dimen.print_shadow_room);
+        return new PrintShadow(inset, 16 * density, 22 * density, 4 * density, 0x73000000);
     }
 
     private void nudgeClock() {
