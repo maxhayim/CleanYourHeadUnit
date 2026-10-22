@@ -18,7 +18,6 @@ com.tcl.logkit                         # log capture and upload
 com.tcl.interactive                    # TCL TIAS background service
 com.google.android.feedback
 com.graymatrix.did                     # device analytics (data app; on the AS23 unit)
-com.mirakulo.astrotv.service           # analytics service (data app; on the AS23 unit)
 
 # TCL content, ads and promos
 com.tcl.channelplus                    # TCL Live FAST channels, also removes them from Live TV
@@ -33,12 +32,13 @@ com.tcl.smartlink.core                 # bundles a silent app installer
 com.tcl.guard                          # TGuard: device-use tracking, memory cleaner
 com.tcl.smartalexa                     # Alexa client (AS23 unit; keep it if you use Alexa)
 com.tcl.useragreement                  # EULA/privacy screens (AS23 unit)
+com.mirakulo.astrotv.service           # Ginga interactive TV for ISDB-Tb broadcasts, not analytics; off by area config on some units
 com.tcl.initsetup                      # TCL first-run setup incl. SambaTV ACR hooks; re-enable before rescanning channels
 com.tcl.usercenter                     # TCL account sign-in
 com.tcl.exhibit                        # store demo
 com.tcl.esticker                       # store demo stickers
 com.tcl.hotelmenu                      # hotel mode
-com.google.android.tv.remote.service   # Google TV phone-app remote
+com.google.android.tv.remote.service   # phone remote apps (Google TV app, Home Assistant) and the remote's mic: keep it if you use either
 
 # Preloaded apps
 com.tcl.ocean.instructions             # e-manual
