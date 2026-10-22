@@ -263,6 +263,7 @@ BYINTEK, JMGO, Portronics, Stellamore, Wanbo and XGIMI projectors
 | TCL 65C725 (Smart TV Pro, BeyondTV4) | Android TV 11 |
 | TCL 65C735 (Smart TV Pro, G05, MediaTek), France | Google TV 11 |
 | TCL 65C7K (Smart TV Pro, G08, G08_4K_GB, MediaTek mt5896), Brazil | Google TV 14 |
+| TCL 65Q550G (TCL Smart TV, Google TV 11, V8-R51MT08-LF1V095.021344) | Google TV |
 | TCL 85RM7L (G08, G08_4K_GB, MediaTek tcl9618) | Google TV 14 |
 | TCL 75T7 (Smart TV Pro, G08, G08_4K_US, MediaTek tcl9618), US firmware | Google TV 14 |
 | TCL Q7C (Smart TV Pro, G08, G08_4K_GB, MediaTek tcl9618), European firmware | Google TV 14 |
