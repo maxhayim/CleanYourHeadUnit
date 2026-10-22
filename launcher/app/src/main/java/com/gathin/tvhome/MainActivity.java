@@ -111,6 +111,8 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
      */
     private static final long TIME_VALID_AFTER_MS = 1_735_689_600_000L;
     private String liveTvPkg;
+    /** Launcher settings' change count this Home was built with (see onResume). */
+    private long settingsRevision;
     /** Idle time on Home before ClockActivity; 0 is off (config.xml, home_idle_clock_minutes). */
     private long idleClockMs;
     private final Runnable showIdleClock = () -> startActivity(new Intent(this, ClockActivity.class));
@@ -349,6 +351,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         // restore_key_services: after a force stop, put back the remote's accessibility helpers that Android took
         // off the list (needs WRITE_SECURE_SETTINGS, granted by build-and-install with RESTORE_KEY_SERVICES=1).
         if (cfg.restoreKeyServices) ServiceRepair.restore(this);
+        settingsRevision = settingsRevision();
         applyViewInputsHandler(cfg.handleViewInputs);
         settingsKeycodes = cfg.settingsKeycodes;
         settingsKeyPanel = cfg.settingsKeyPanel;
@@ -793,6 +796,13 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
             recreate();
             return;
         }
+        // Something changed in Launcher settings: rebuild with it, however the settings were left. Only Back
+        // delivered their RESULT_OK; Home (the remote's button) clears them off this task and the result comes
+        // back cancelled, so a new wallpaper or layout waited for the next process start.
+        if (Config.settingsChanged(settingsRevision, settingsRevision())) {
+            recreate();
+            return;
+        }
         restartIdleClock();
         promptsPaused = false;
         if (grid.getAdapter() == null) grid.setAdapter(adapter);   // dropped by onTrimMemory
@@ -837,16 +847,24 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         }
     }
 
+    /** Launcher settings' change count (Config.SETTINGS_REVISION_KEY); onResume rebuilds Home when it moved. */
+    private long settingsRevision() {
+        return getSharedPreferences(Config.SETTINGS_NAME, MODE_PRIVATE).getLong(Config.SETTINGS_REVISION_KEY, 0);
+    }
+
+    /**
+     * Only "Reorder tiles" in Launcher settings still answers with a result: Home rebuilds (the saved choices are
+     * reloaded) and then enters reorder mode. Every other change is picked up in onResume through the change count.
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == LAUNCHER_SETTINGS_REQUEST && resultCode == RESULT_OK) {
-            if (data != null && data.getBooleanExtra(LauncherSettingsActivity.EXTRA_REORDER, false)) {
-                getIntent().putExtra(LauncherSettingsActivity.EXTRA_REORDER, true);
-            }
-            // The old activity must not consume the pending action while recreation is queued.
+        if (requestCode == LAUNCHER_SETTINGS_REQUEST && resultCode == RESULT_OK
+                && data != null && data.getBooleanExtra(LauncherSettingsActivity.EXTRA_REORDER, false)) {
+            getIntent().putExtra(LauncherSettingsActivity.EXTRA_REORDER, true);
+            // The old activity must not consume the pending action, or rebuild a second time in onResume.
             settingsRecreationPending = true;
-            // Reload saved layout choices before entering the existing Home reorder mode.
+            settingsRevision = settingsRevision();
             recreate();
         }
     }

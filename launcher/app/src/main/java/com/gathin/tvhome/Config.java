@@ -40,6 +40,16 @@ final class Config {
     static final String ROWS_BELOW_DOCK_KEY = "rows_below_dock";
     static final String WALLPAPER_CHOICE_KEY = "wallpaper_choice";
     static final String DOCK_OPACITY_KEY = "dock_opacity";
+    /**
+     * Counts the changes made in Launcher settings. Home remembers the count it was built with and rebuilds on
+     * resume when it differs, however the settings were left (see MainActivity#onResume).
+     */
+    static final String SETTINGS_REVISION_KEY = "settings_revision";
+
+    /** True when Launcher settings changed something since Home was built at revision {@code seen}. */
+    static boolean settingsChanged(long seen, long current) {
+        return seen != current;
+    }
     private static final String THEME_REVISION_NAME = "theme_revision";
     private static final String THEME_SIGNATURE_KEY = "theme_signature";
 
@@ -425,21 +435,13 @@ final class Config {
         // An on-TV wallpaper pick overrides the theme: a filename from the wallpapers/
         // collection, or "none". Unset means the theme decides (off by default).
         String wallpaperChoice = choices.getString(WALLPAPER_CHOICE_KEY, null);
-        if ("none".equals(wallpaperChoice)) {
+        List<File> chosen = WallpaperRotation.chosen(dir == null ? Collections.emptyList()
+                : WallpaperRotation.images(new File(dir, "wallpapers")), wallpaper, wallpaperChoice);
+        if (chosen != null) {
             wallpapers.clear();
-            wallpaper = null;
-            wallpaperEnabled = false;
-        } else if (wallpaperChoice != null && dir != null) {
-            File picked = WallpaperRotation.find(
-                    WallpaperRotation.images(new File(dir, "wallpapers")), wallpaperChoice);
-            if (picked == null && wallpaperChoice.equals(
-                    wallpaper != null ? wallpaper.getName() : "")) picked = wallpaper;
-            if (picked != null) {
-                wallpapers.clear();
-                wallpapers.add(picked);
-                wallpaper = picked;
-                wallpaperEnabled = true;
-            }
+            wallpapers.addAll(chosen);
+            wallpaper = chosen.isEmpty() ? null : chosen.get(0);
+            wallpaperEnabled = !chosen.isEmpty();
         }
         // A festive skin comes only from a theme; config.xml has no festival.
         Festival festival = json == null ? Festival.NONE : Festival.parse(string(json, "festival", ""),
