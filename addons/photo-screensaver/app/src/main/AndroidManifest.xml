@@ -10,13 +10,13 @@
         android:icon="@drawable/icon"
         android:banner="@drawable/banner"
         android:allowBackup="false"
+        android:supportsRtl="true"
         android:theme="@style/Prints">
 
         <!-- The tile, and the card on cleanyourtv's Home (docs/modules.md): the slideshow, at once. -->
         <activity
             android:name=".SlideshowActivity"
-            android:exported="true"
-            android:screenOrientation="landscape">
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
