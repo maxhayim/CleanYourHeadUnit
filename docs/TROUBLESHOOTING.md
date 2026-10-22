@@ -247,14 +247,11 @@ Things that bit us or contributors, so they don't bite you. Commands use `tools/
   If it names setupwraith, forget the network and join it again in Settings > Network & Internet (it
   then belongs to `android.uid.system`), or use Ethernet. `tools/disable.sh` skips setupwraith while it
   owns the network (`FORCE_SETUPWRAITH=1` overrides). Already offline? Rejoin from the TV with its own
-<<<<<<< HEAD
   remote or a USB keyboard, then turn Wireless debugging back on if it was in use. Reconnecting is not
   enough; forget the network first (Xiaomi MiTV-MOSR4, where this also switched USB debugging off).
 - **A reboot on setupwraith's recovery screen factory-reset the TV** (Xiaomi MiTV-MOSR4). Disable
   setupwraith before launcherx. If `mFocusedApp` shows `.RecoveryActivity`, re-enable launcherx
   first and do not reboot. [Notes](devices/xiaomi-mitv-mosr4.md).
-=======
-  remote or a USB keyboard, then turn Wireless debugging back on if it was in use.
 - **The remote's mic button does nothing, or opens the Assistant and it never hears you**, seen on a
   Xiaomi TV Box S 3rd gen (`MiTV-AFMU0`, `twilight`, Google TV 14, `V816.0.7.0.UZFAABX`). Two
   packages have to stay enabled, and re-enabling only one of them is what makes this hard to
@@ -273,7 +270,6 @@ Things that bit us or contributors, so they don't bite you. Commands use `tools/
   `tcl-g09-google-tv`, `tcl-g10-google-tv`, `xgimi-horizon-s-pro`, `xgimi-mogo-3-pro` and
   `xiaomi-mi-box-s`. Those TVs haven't been tested for this, but any of them whose remote has a
   microphone may show the same symptom.
->>>>>>> refs/pr/757
 - **Casting from a phone fails with "Untrusted device" after setupwraith is disabled**, seen on
   Chromecast with Google TV HD (`boreal`) on Google TV 14 build UTTC.250917.004, the build the
   `examples/google-chromecast-gtv-4k/` list was made on. YouTube on the phone says "Untrusted device.
