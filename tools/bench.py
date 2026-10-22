@@ -55,6 +55,8 @@ class TV:
     """
 
     def __init__(self, host, port=5555, binary=None):
+        self.host = host
+        self.port = port
         self.serial = f"{host}:{port}"
         self.binary = binary
         self.client = None
@@ -81,8 +83,11 @@ class TV:
     def _run(self, *args, capture=True):
         """Run tools/tv.py with the given arguments."""
         cmd = [self._python(), "-I", self._tv_py(), *args]
+        # tv.py reads its target from the environment, including CLI overrides here.
+        env = os.environ.copy()
+        env.update(TV_HOST=self.host, TV_PORT=str(self.port))
         result = subprocess.run(cmd, capture_output=capture, text=True,
-                                errors="replace" if capture else None)
+                                errors="replace" if capture else None, env=env)
         if result and result.returncode != 0 and not result.stdout.strip():
             raise SystemExit(f"tools/tv.py failed: {result.stderr.strip()}")
         return result
