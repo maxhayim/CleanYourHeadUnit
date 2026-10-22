@@ -597,6 +597,44 @@ Android 11 (SDK 30), build RS8185.3885N:
 Debloat: `tools/disable.sh examples/amazon-fire-tv-aftdec012e/debloat.txt` disables telemetry, ACR, shopping and
 tutorial packages. Undo with `tools/restore.sh examples/amazon-fire-tv-aftdec012e/debloat.txt com.amazon.tv.launcher`.
 
+## Remapping the remote's app buttons without a key helper
+
+A process of your own can take the buttons the helpers exist for without binding an accessibility service,
+and the key auto-repeat a helper costs stays: a key-filtering service pushes every key through a filter
+path that drops the repeats, while reading the remote's input device leaves Android's input alone.
+It has to run as the `shell` user, because a normal app cannot open `/dev/input/event*`, so this is not
+something the launcher can grow into — it is a script and a supervisor on the TV. On a Google TV Streamer
+(`kirkwood`, Google TV 14, `UTTK.260317.003`) that was the one way to have both: `HomeKeyService` alone,
+`InputKeyService` alone and both together each stopped the ramp after roughly six steps, and it came back
+the moment the service was unbound ([#796](https://github.com/Gathin23/cleanyourtv/issues/796)).
+
+The Streamer's remote appears as `Google TV Remote Keyboard`, and these are the buttons it sends:
+
+| Button | HID usage | Android keycode |
+| --- | --- | --- |
+| YouTube | `0x000c0077` | `BUTTON_3` (190) |
+| Star | `0x000c0186` | `MACRO_1` (313) |
+| Netflix | `0x000c0078` | `BUTTON_4` |
+
+Find the node by name, not by number: `tools/tv.py 'getevent -pl'` lists every input device with its name
+and the key codes it declares, and the `/dev/input/event<N>` a remote lands on is not stable between boots,
+so a watcher pinned to `event5` stops working after the next reboot and reads as a dead button again.
+
+A reader cannot consume the press. `getevent` observes the events and Android still delivers them to
+whatever answers them today, so a remapped button's stock action runs as well: map the Netflix button and
+Netflix starts too, then sits in the activity back stack. A helper consumes the key it maps — which is why
+the vendor receiver in the "Which keycode" bullet above never sees it — so the buttons you have to
+suppress, rather than duplicate, still need a helper and its repeat trade.
+
+What runs it again after a reboot is the part that is not free. The `shell` user reads
+`/dev/input/eventX` on this unit without root and a script kept under `/data/local/tmp/` runs, but nothing
+there starts itself: Android gives the `shell` user no cron and no init hook without root, so the watcher is
+gone after every reboot and has to be started again from a debugging session you close afterwards. Two
+things fail silently when you do: the script must be detached from the `adb shell` session or it dies with
+it, and a supervisor must not start a second copy. Do not solve the reboot by leaving TCP ADB on so
+something local can restart it — port 5555 reachable from the LAN is a shell on the TV for anything on the
+network, which is why the closing step in [README](../README.md#questions-people-ask) turns it off.
+
 ## A key helper is bound and a held remote button stopped repeating
 
 Hold volume up or down and the volume moves one step per press instead of ramping. The remote may be
