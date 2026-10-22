@@ -14,9 +14,10 @@ import java.util.List;
 /**
  * Android takes an app's accessibility services off the enabled list when the app is force-stopped (Settings, a
  * cleaner app, or am force-stop), and the remote's Home, Input and app buttons then stop working until the helper
- * is turned on again over ADB. A running helper records itself here and drops the record when Android unbinds it
- * (the user turned it off); a force stop kills the process before that, so the record stays. Home starting again
- * puts recorded helpers back on the list, when the installer granted WRITE_SECURE_SETTINGS.
+ * is turned on again over ADB. With restore_key_services on, a running helper records itself here and drops the
+ * record when Android unbinds it (the user turned it off); a force stop kills the process before that, so the
+ * record stays. Home starting again puts recorded helpers back on the list, when the installer granted
+ * WRITE_SECURE_SETTINGS. With the flag off nothing is recorded and nothing is restored.
  */
 final class ServiceRepair {
     private static final String PREFS = "accessibility_helpers";
