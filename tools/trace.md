@@ -54,6 +54,11 @@ tools/venv/bin/python tools/trace_report.py traces/before --vs traces/after --ma
 
 With `--vs`, a third table shows the change in each median. A run over twice the median is starred.
 
+Frame times and missed deadlines need [FrameTimeline](https://perfetto.dev/docs/data-sources/frametimeline),
+available on Android 12 and later. Without its data for the launcher process, these metrics are omitted
+(or shown as `–` beside measured runs). `nav` still counts RenderThread draws and reports their duration
+and GPU waits where available; a draw's duration is not the full frame time.
+
 ## Rules
 
 - **Repeat runs.** Record 5 runs per build, on the same TV with the same config, theme and wallpaper.

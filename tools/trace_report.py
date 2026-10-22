@@ -106,9 +106,10 @@ def _start(q, package):
         out["frames"] = one(q, f"select count(*) from slice s join thread_track tt on s.track_id = tt.id "
                                f"where tt.utid = {render} and s.name like 'DrawFrame%' "
                                f"and s.ts >= {anchor} and s.ts < {anchor + WINDOW_NS}", 0)
-    out["missed"] = one(q, f"select count(*) from actual_frame_timeline_slice where upid = {upid} "
-                           f"and jank_type like '%App Deadline Missed%' "
-                           f"and ts >= {anchor} and ts < {anchor + WINDOW_NS}", 0)
+    if one(q, f"select 1 from actual_frame_timeline_slice where upid = {upid} limit 1"):
+        out["missed"] = one(q, f"select count(*) from actual_frame_timeline_slice where upid = {upid} "
+                               f"and jank_type like '%App Deadline Missed%' "
+                               f"and ts >= {anchor} and ts < {anchor + WINDOW_NS}", 0)
     return out, anchor, end
 
 
@@ -118,12 +119,15 @@ def nav_metrics(q, package):
     if upid is None:
         return {}
     frames = sorted(r["dur"] / MS for r in q(f"select dur from actual_frame_timeline_slice where upid = {upid}"))
-    out = {"frames": len(frames)}
+    out = {}
     if frames:
+        out["frames"] = len(frames)
         out["frame median"] = statistics.median(frames)
         out["frame p90"] = frames[min(len(frames) - 1, int(0.9 * len(frames)))]
     if render is not None:
         draws = [r["dur"] / MS for r in q(slices(render, "s.name like 'DrawFrame%'", "s.dur"))]
+        if not frames:
+            out["frames"] = len(draws)
         if draws:
             out["draw median"] = statistics.median(draws)
         waits = [r["dur"] / MS for r in q(f"select s.dur from slice s join thread_track tt on s.track_id = tt.id "
@@ -131,8 +135,9 @@ def nav_metrics(q, package):
                                            f"and s.name like 'waiting for GPU completion%'")]
         if waits:
             out["gpu median"] = statistics.median(waits)
-    out["missed"] = one(q, f"select count(*) from actual_frame_timeline_slice where upid = {upid} "
-                           f"and jank_type like '%App Deadline Missed%'", 0)
+    if frames:
+        out["missed"] = one(q, f"select count(*) from actual_frame_timeline_slice where upid = {upid} "
+                               f"and jank_type like '%App Deadline Missed%'", 0)
     return out
 
 
