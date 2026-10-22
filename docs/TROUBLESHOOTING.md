@@ -30,7 +30,10 @@ Things that bit us or contributors, so they don't bite you. Commands use `tools/
   then `adb connect`), run `adb tcpip 5555`, and `tools/tv.py` works from then on. `dns-sd -B
   _adb-tls-pairing._tcp` (or `adb mdns services`) shows the pairing port while the code is on screen.
   Android switches Wireless debugging off whenever Wi-Fi drops; turn it back on and `adb` reconnects
-  without a new code. Port 5555 from `adb tcpip` usually lasts only until the next reboot.
+  without a new code. Port 5555 from `adb tcpip` usually lasts only until the next reboot. When you
+  close up, switch Wireless debugging off on its own: on a Chromecast with Google TV 4K (`sabrina`)
+  turning USB debugging off left the Wireless debugging port accepting connections, and
+  `tools/adb-closed.py` only checks 5555. `adb mdns services` lists that port while it is open.
 - **USB devices go dead while USB debugging is on**, seen on the Xiaomi Mi Box S and the Xiaomi TV
   Box S 3rd gen ([MiTV-AFMU0, Google TV 14](https://github.com/Gathin23/cleanyourtv/issues/737)):
   their firmware switches the USB port to ADB device mode, which cuts the power to a USB speaker or
@@ -307,7 +310,13 @@ Things that bit us or contributors, so they don't bite you. Commands use `tools/
   the credentials in memory, so casting survives until the next reboot - and only in that process.
   `am force-stop com.google.android.apps.mediashell` followed by the receiver coming back prints
   `Retry loading factory credentials` and `No private key, hence empty signature` again, so anything
-  that restarts it (a crash, a force-stop, an update) needs the same sequence. Reported on Google's
+  that restarts it (a crash, a force-stop, an update) needs the same sequence. Re-enabling the
+  wizard is not always enough after a reboot: on a Chromecast with Google TV 4K (`sabrina`,
+  UTTC.250917.004) no `ClientAuthSigner` line came within 3 minutes and phones did not even list the
+  device. Restart the receiver while setupwraith is enabled instead: `am force-stop
+  com.google.android.apps.mediashell`, then `am start-foreground-service -n
+  com.google.android.apps.mediashell/.CastReceiverService` (after a force-stop nothing starts it
+  again), and the signer line and `MdnsAppFilter: Done announcing.` follow within seconds. Reported on Google's
   own Chromecast hardware (`boreal`) and, with the same log lines, on a Google TV Streamer
   (`kirkwood`, `UTTK.260317.003`), where the `CastInfoProvider` also lives inside the setupwraith
   APK; the Xiaomi Mi Box S 2nd gen list says casting from a Pixel still works there with
