@@ -24,6 +24,7 @@
     <string name="dream_name">Rellotge</string>
     <string name="launcher_settings">Configuració del llançador</string>
     <string name="columns_label">Aplicacions per fila</string>
+    <string name="dock_opacity_label">Opacitat de la barra del dock</string>
     <string name="animations_state">Animacions: %1$s</string>
     <string name="advanced_effects">Efectes avançats</string>
     <string name="advanced_effects_state">Efectes avançats: %1$s</string>
