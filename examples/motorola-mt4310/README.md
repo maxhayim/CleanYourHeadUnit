@@ -8,13 +8,11 @@ on Windows; replace `<tv ip>` with your TV's address.
 - **Disabled, not uninstalled:** every package in [debloat.txt](debloat.txt) (store demo, Hisense silent
   installs, telemetry, partner promo rows, calendar and printing, Play Movies, Play Games, TalkBack/TTS,
   Arkiv) plus the stock launcher `com.google.android.tvlauncher`.
-- **Removed for your user only (your choice):** voice search `com.google.android.katniss` and
-  `com.google.android.tvrecommendations`. The TV's factory manager re-enabled them at every boot, and
-  together they took about 63 MB of RAM. The APKs stay on the system partition, so nothing is lost.
+- **Not in the list:** voice search `com.google.android.katniss` and `com.google.android.tvrecommendations`.
+  The TV's factory manager turns them back on at every boot, so disabling them doesn't stick (see the notes
+  below).
 - **New Home:** the launcher in `launcher/` (`com.gathin.tvhome`), with this TV's dock in
   [theme/config.json](theme/config.json): Netflix, YouTube, Disney+, Magis TV.
-- **Ad-blocking DNS:** Private DNS set to `dns.adguard-dns.com`. It blocks ad and tracking domains in
-  apps, **not YouTube ads**.
 - **Left alone:** Netflix, Prime Video, YouTube, YouTube Music, Chromecast built-in, BrowseHere, the
   ambient screensaver, your own apps, and everything the TV needs (Live TV, HDMI, remote keys, Bluetooth,
   keyboard, Play Store, Play services).
@@ -41,13 +39,6 @@ tools\venv\Scripts\python.exe -I tools\tv.py 'pm enable --user 0 com.google.andr
 Swap in the package name from `debloat.txt`. To keep an app on for good, put `#` in front of its line
 in `debloat.txt`.
 
-The two removed for your user come back with `install-existing` instead:
-
-```powershell
-tools\venv\Scripts\python.exe -I tools\tv.py 'cmd package install-existing com.google.android.katniss'
-tools\venv\Scripts\python.exe -I tools\tv.py 'cmd package install-existing com.google.android.tvrecommendations'
-```
-
 `katniss` is voice search; the mic button also needs the remote paired over Bluetooth (the pairing screen
 the mic button opens).
 
@@ -57,12 +48,8 @@ the mic button opens).
 examples\motorola-mt4310\restore.ps1 -TvHost <tv ip>
 ```
 
-It reinstalls `katniss` and `tvrecommendations` for your user, re-enables everything the list disabled,
-re-enables the stock launcher and makes it Home again, and sets Private DNS back to automatic. To undo only the DNS:
-
-```powershell
-tools\venv\Scripts\python.exe -I tools\tv.py 'settings put global private_dns_mode opportunistic'
-```
+It re-enables everything the list disabled, re-enables the stock launcher and makes it Home again, and
+resets the voice search and notification-listener settings changed while testing.
 
 `backup/motorola-mt4310/restore-all.ps1` is a blunter safety net: it enables every package that is
 disabled now but wasn't in the backup.
@@ -101,10 +88,9 @@ as Home, disables the stock launcher and pushes the dock theme.
 
 - At every boot `com.at.factory.factorymanager` re-enables `katniss` and `tvrecommendations` (and TalkBack
   comes back too, but never runs). Disabling them, clearing the voice and notification-listener settings
-  and background restrictions were all undone at boot; removing the two for user 0 is what held. Never
-  open or disable the factory manager itself.
-- Memory after a reboot: about 315 MB available with those two running, about 349 MB without them
-  (of 934 MB). There is no reading from before the debloat started.
+  and background restrictions were all undone at boot, so the list leaves both on. Together they take
+  about 63 MB of RAM (about 315 MB available after a reboot with them running, about 349 MB without, of
+  934 MB). Never open or disable the factory manager itself.
 - The screen goes to sleep after 5 minutes without a key press (the factory setting) and Wi-Fi drops
   with it. If the TV is unreachable a few minutes after a reboot, it is asleep: press Power.
 

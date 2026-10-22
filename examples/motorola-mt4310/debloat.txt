@@ -3,24 +3,20 @@
 # Same platform as examples/polytron-2k-hayward. Classic Android TV home: com.google.android.tvlauncher.
 #
 # Apply:   TV_HOST=<tv ip> tools/disable.sh examples/motorola-mt4310/debloat.txt
-# Undo:    TV_HOST=<tv ip> examples/motorola-mt4310/restore.sh   (also re-enables tvlauncher and resets DNS)
+# Undo:    TV_HOST=<tv ip> examples/motorola-mt4310/restore.sh   (also re-enables tvlauncher)
 # Launcher: TV_HOST=<tv ip> examples/motorola-mt4310/install-launcher.sh   (dock theme in theme/config.json)
 # Everything is DISABLED, not uninstalled. Comment out any line you want to keep.
 #
 # Status: disabled in batches on one TV on 2026-10-21 with a Home screenshot after each, then launcher/ installed
-# as Home, a reboot, Live TV/HDMI switching and the real remote's buttons checked. Hours of use, not days.
+# as Home, a reboot, Live TV/HDMI switching and the real remote's buttons checked. Still working after a day of use, not days yet.
 #
 # RE-ENABLED AT EVERY BOOT: com.at.factory.factorymanager (CommonManager.enableApp, on BOOT_COMPLETED) turns
 #   com.google.android.katniss and com.google.android.tvrecommendations back on, and Android then rebinds katniss
 #   as the voice interaction service and tvrecommendations as a notification listener (~63 MB PSS together).
 #   Cleared voice settings, a revoked listener, RUN_ANY_IN_BACKGROUND ignore and the restricted bucket are all
-#   reset at boot, and shell may not disable single components on Android 11. What held across reboots on the
-#   tested set (owner's choice, an exception to "never uninstall"): removing both for user 0, one per call:
-#     pm uninstall --user 0 com.google.android.tvrecommendations
-#     pm uninstall --user 0 com.google.android.katniss
-#   The factory manager then skips them and its boot routine finishes normally; MemAvailable after boot went from
-#   ~315 MB to ~349 MB. Undo: cmd package install-existing <pkg> (restore.sh does it). Both stay commented out
-#   below. com.google.android.marvin.talkback also comes back enabled after a reboot but never runs.
+#   reset at boot, and shell may not disable single components on Android 11, so both stay commented out below.
+#   Without them MemAvailable after boot would be ~349 MB instead of ~315 MB.
+#   com.google.android.marvin.talkback also comes back enabled after a reboot but never runs.
 # The screen sleeps after 5 minutes idle (screen_off_timeout=300000, factory value) and Wi-Fi drops with it:
 #   a TV that "vanishes" a few minutes after a reboot is asleep, not broken; press Power.
 #
@@ -47,7 +43,7 @@ com.google.android.feedback
 com.google.android.partnersetup              # partner referral tracking (RLZ ping)
 
 # --- Batch 2: recommendation and promo rows
-# com.google.android.tvrecommendations       # removed for user 0 instead (header); fed the stock rows
+# com.google.android.tvrecommendations       # re-enabled at every boot (header); fed the stock rows
 com.mediatek.android.leanbacklauncher.partnercustomizer  # partner promo rows (and the stock top-bar icons)
 
 # --- Batch 3: unused system services
@@ -56,7 +52,7 @@ com.android.providers.calendar
 com.google.android.syncadapters.calendar
 
 # --- Batch 4: off by choice on the tested set (keep what you use)
-# com.google.android.katniss                 # removed for user 0 instead (header); voice search / Assistant
+# com.google.android.katniss                 # re-enabled at every boot (header); voice search / Assistant
 com.google.android.videos                    # Google TV / Play Movies
 com.google.android.play.games
 com.google.android.marvin.talkback           # screen reader
