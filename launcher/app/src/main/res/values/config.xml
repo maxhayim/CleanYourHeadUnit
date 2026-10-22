@@ -254,6 +254,14 @@
     <!-- Installed launchable apps, including ordinary Android apps. Also settable in config.json. -->
     <bool name="app_library">false</bool>
 
+    <!-- Apps pre-seeded into the App library's "added" set at startup (config.xml library_apps, or a theme's
+         config.json). They show on Home as if the owner had added them in the App library UI, and stay
+         removable there (a removed one stays hidden). For sets where almost no app declares a leanback entry
+         (many China-market TVs, e.g. Coocaa 8R145), a fresh Home with app_library on would otherwise be
+         nearly empty. Empty (off) by default, so existing setups change nothing. -->
+    <string-array name="library_apps" translatable="false">
+    </string-array>
+
     <!-- Module cards: an app that declares a card (docs/specs/card.md) can stand in for its tile with its own
          label, caption and glow colour, once you answer Show on the prompt. false: never look for cards or ask. -->
     <bool name="module_cards">true</bool>
