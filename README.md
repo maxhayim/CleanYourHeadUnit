@@ -27,6 +27,8 @@ It reached 7.4M views, people started doing the same to their own TVs, and their
 the lists here: 170+ TV models from 200+ contributors in four days. The repo was called tv-vibehack
 until the 19th; old links work.
 
+**Themes, switches and add-ons:** [cleanyour.tv/addons](https://cleanyour.tv/addons)
+
 ## How it works
 
 Android TVs have the same debug bridge as Android phones. Switch on USB debugging in the TV's

@@ -2,6 +2,19 @@
 
 Thanks for helping more TVs lose their ads. Three kinds of contributions are especially welcome.
 
+## Where does my idea go?
+
+The launcher stays small on purpose, so pick the smallest home that fits:
+
+| Your idea | Where it goes |
+|---|---|
+| A TV model, a fix, a translation, a small switch that is off by default | A pull request here (sections 1 to 3 below) |
+| A new look: colours, wallpaper, dock, columns | [`themes/`](themes/README.md), with a screenshot from a real TV |
+| A widget or tile that can be its own small app | [`addons/`](addons/README.md), as a module card; it never touches `launcher/` |
+| A whole new launcher, a heavy restyle, a port to another platform | Your own repo, plus one row in [`SHOWCASE.md`](SHOWCASE.md) (section 4) |
+
+Everything merged into `themes/` and `addons/` shows up on [cleanyour.tv/addons](https://cleanyour.tv/addons).
+
 ## 1. Add your TV model
 
 Every brand ships different bloat. If you ran the prompt (or did it by hand) on a TV that isn't in
