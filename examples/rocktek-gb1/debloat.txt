@@ -5,9 +5,7 @@
 # Undo:    TV_HOST=<box ip> tools/restore.sh examples/rocktek-gb1/debloat.txt com.google.android.apps.tv.launcherx
 # Everything is DISABLED, not uninstalled. Comment out anything you use.
 #
-# This is a provisional list reconstructed from the box's saved disabled-package list. The replacement
-# launcher, Home handover and a reboot were checked, but confirm ordinary day-to-day use for a few days
-# before submitting it upstream. No package in this list was recorded as needing to be re-enabled.
+# Home handover and reboot were checked; long-term use (streaming, voice, updates) is not yet confirmed.
 #
 # Keep these packages: com.android.tv.globalkeyhandler (physical remote global keys),
 # com.google.android.tv.remote.service (Bluetooth/phone remote bridge), Play Store, Play Services and
@@ -19,7 +17,7 @@
 # - com.google.android.tungsten.setupwraith was disabled on this box so the replacement Home can stay in
 #   charge. Before applying the line, check whether it owns the saved Wi-Fi network: disable.sh will
 #   refuse it while it does. Rejoin the network in Settings first if necessary, and re-enable it before
-#   a factory reset or remote re-pairing.
+#   a factory reset or remote re-pairing. Disabling it gives Home back but may cost casting.
 # - With launcherx disabled, the gear and Macro buttons that Google TV Home handled initially stopped
 #   working. examples/rocktek-gb1/config.json restores them through HomeKeyService: gear is Android
 #   keycode 83 and opens TV Settings; Macro is KEYCODE_GUIDE (172) and opens com.seena.app. Enable
