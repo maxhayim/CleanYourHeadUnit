@@ -10,7 +10,7 @@ project's own issue tracker.
 
 **Jump to:** [Home screens built as their own app](#home-screens-built-as-their-own-app) · [Forks of the launcher](#forks-of-the-launcher) · [Screensavers and add-ons](#screensavers-and-add-ons) · [Tools and companion apps](#tools-and-companion-apps) · [Other platforms: Fire TV and LG webOS](#other-platforms-fire-tv-and-lg-webos) · [Add-ons in this repo](addons/README.md) · [Guides and write-ups](#guides-and-write-ups) · [Find a project by TV brand](#find-a-project-by-tv-brand) · [Add yours](#add-yours)
 
-44 projects so far.
+45 projects so far.
 
 ## Home screens built as their own app
 
@@ -90,6 +90,7 @@ Fire OS won't let another launcher replace Amazon's home, and LG TVs run webOS r
 | [Fire TV Glass](https://github.com/ivantrj/firetv-glass-launcher) | Debloat scripts and a small Glass launcher for Fire OS 8, which protects Amazon's home: an accessibility service brings Glass back whenever Amazon's home appears. Dock, hidden apps and wallpaper change without a rebuild | Fire TV Stick 4K (AFTKRT), Fire OS 8 / Android 11 | [ivantrj](https://github.com/ivantrj) |
 | [fire-tv-cleanup](https://github.com/itsmeterrylin/fire-tv-cleanup) | A fork aimed at Fire TV: debloat plus a launcher with a macOS-style dock | Fire TV | [itsmeterrylin](https://github.com/itsmeterrylin) |
 | [webOS launcher](https://github.com/OmkarK97/webos-vibehack) | The same Apple TV-style home rebuilt as a webOS web app for LG TVs, installed through LG's Developer Mode, with a Home-button watcher that runs on another device | LG OLED C6, webOS 26 | [OmkarK97](https://github.com/OmkarK97) |
+| [Clear Your TV — LG webOS](https://github.com/Razdva122/clear-your-tv-lg-webos) ([screenshot](https://github.com/Razdva122/clear-your-tv-lg-webos/blob/main/docs/launcher-menu.png), [release](https://github.com/Razdva122/clear-your-tv-lg-webos/releases/tag/v0.6.12), [issues](https://github.com/Razdva122/clear-your-tv-lg-webos/issues)) | An experimental fork of webos-vibehack with an on-TV native Home-button helper, startup recovery, a Wi-Fi settings shortcut and watchdog cleanup. Short Home returns to the launcher; holding Home for 2 seconds releases interception. Uses Developer Mode, without root or a router process on the tested setup. Back-to-home can still flash LG Home, and cold boot has an initial black interval; other models are unverified | LG OLED55C3RLA (C3), firmware 43.21.71 | [Razdva122](https://github.com/Razdva122) |
 
 ## Add-ons in this repo
 
@@ -113,7 +114,7 @@ By the TV each project was built and tested on. Most of them run on other Androi
 - **FPT Play:** [TV Remote](https://github.com/HoangTran0410/tv-remote)
 - **Haier:** [cleanyourtv for Haier](https://github.com/abuhasanrumi/cleanyourtv-haier)
 - **Hisense:** [Hisense 55U6K: reorder and weather](https://github.com/vlaship/cleanyourtv/tree/hisense-55u6k), [Hisense restyle](https://github.com/YouLop009/tv-vibehack/tree/style-modifications)
-- **LG:** [CleanYourTV for LG webOS](https://github.com/lasharor/cleanyourtv-WebOS), [webOS launcher](https://github.com/OmkarK97/webos-vibehack)
+- **LG:** [Clear Your TV — LG webOS](https://github.com/Razdva122/clear-your-tv-lg-webos), [CleanYourTV for LG webOS](https://github.com/lasharor/cleanyourtv-WebOS), [webOS launcher](https://github.com/OmkarK97/webos-vibehack)
 - **Motorola:** [TV Motorola Launcher](https://github.com/kartikcool15/tv-motorola-launcher)
 - **MYO:** [MYO Launcher](https://github.com/faustinoaq/myo-launcher)
 - **NVIDIA Shield:** [Vibe Launcher](https://github.com/maydings/vibe-launcher)
