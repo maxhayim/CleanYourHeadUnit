@@ -80,6 +80,21 @@ class StartMetricsTest(unittest.TestCase):
         m = report.start_metrics(fake_trace(draws=[(1500, 8), (2600, 8)]), PKG)
         self.assertEqual(m["frames"], 2)
 
+    def test_without_frame_timeline_keeps_start_metrics_but_not_missed_deadlines(self):
+        for other_app_frames in (False, True):
+            with self.subTest(other_app_frames=other_app_frames):
+                q = fake_trace(draws=[(1100, 8)])
+                if other_app_frames:
+                    q("insert into actual_frame_timeline_slice values (1060000000, 16000000, 3, 'None')")
+                m = report.start_metrics(q, PKG)
+                self.assertEqual(m["first frame"], 65)
+                self.assertEqual(m["frames"], 2)
+                self.assertNotIn("missed", m)
+
+    def test_frame_timeline_can_measure_zero_missed_deadlines(self):
+        m = report.start_metrics(fake_trace(frames=[16, 16], missed=0), PKG)
+        self.assertEqual(m["missed"], 0)
+
     def test_newest_launcher_process_is_used(self):
         self.assertEqual(report.threads(fake_trace(), PKG), (2, 1, 2))
 
@@ -97,6 +112,26 @@ class NavMetricsTest(unittest.TestCase):
         self.assertEqual(m["draw median"], 8)
         self.assertEqual(m["gpu median"], 3)
         self.assertEqual(m["missed"], 2)
+
+    def test_without_frame_timeline_counts_draws_but_not_full_frame_times_or_deadlines(self):
+        for other_app_frames in (False, True):
+            with self.subTest(other_app_frames=other_app_frames):
+                q = fake_trace(draws=[(1100, 6), (1120, 8)], gpu=[(1101, 2), (1121, 4)])
+                if other_app_frames:
+                    q("insert into actual_frame_timeline_slice values (1060000000, 16000000, 3, 'None')")
+                m = report.nav_metrics(q, PKG)
+                self.assertEqual(m["frames"], 3)
+                self.assertEqual(m["draw median"], 8)
+                self.assertEqual(m["gpu median"], 3)
+                self.assertNotIn("frame median", m)
+                self.assertNotIn("frame p90", m)
+                self.assertNotIn("missed", m)
+
+    def test_frame_timeline_can_measure_zero_missed_deadlines(self):
+        m = report.nav_metrics(fake_trace(frames=[16, 16], missed=0), PKG)
+        self.assertEqual(m["frames"], 2)
+        self.assertEqual(m["frame median"], 16)
+        self.assertEqual(m["missed"], 0)
 
 
 class ReportTest(unittest.TestCase):
@@ -120,6 +155,16 @@ class ReportTest(unittest.TestCase):
     def test_metrics_no_run_has_are_left_out(self):
         text = report.report(self.RUNS, None, False, nav=False)
         self.assertNotIn("bindApplication", text)
+
+    def test_unavailable_missed_deadlines_are_distinct_from_measured_zero(self):
+        for nav in (False, True):
+            with self.subTest(nav=nav):
+                measure = report.nav_metrics if nav else report.start_metrics
+                runs = [("without-timeline", measure(fake_trace(), PKG)),
+                        ("with-timeline", measure(fake_trace(frames=[16], missed=0), PKG))]
+                text = report.report(runs, None, True, nav=nav)
+                missed = next(row for row in text.splitlines() if row.startswith("| frames that missed"))
+                self.assertEqual(missed.split(" | ")[1:], ["–", "0", "0", "0–0 |"])
 
 
 class FilesTest(unittest.TestCase):
