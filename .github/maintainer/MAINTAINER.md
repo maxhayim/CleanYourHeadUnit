@@ -44,6 +44,10 @@ it, and every one of them gets a home. Pick the smallest home that fits (CONTRIB
   remote and Bluetooth pairing, the keyboard, Play Store and Play Services. Disabling
   `com.google.android.tungsten.setupwraith` is normal on Google TV lists (it gives Home back but costs casting;
   the list header should say so). Factory/AT packages may be disabled, never launched.
+- Never Android's core packages (#884): the permission controller, package installer, ext services/shared,
+  module metadata, the mainline overlays (`com.google.android.overlay.modules*`), systemui, shell, phone,
+  settings, tv.settings, `android` and `com.android.providers.*` (calendar, contacts, userdictionary and
+  blockednumber are fine). `tools/disable.sh` refuses such a list, so it is a **rework**: remove them.
 - `pm uninstall` steps in a list folder → **rework**: keep the folder to disabling only.
 - A Private DNS / AdGuard setup inside a list folder is dropped on merge (the main README already has the
   optional DNS extra); a note that "Private DNS works on this set" is fine.
@@ -71,7 +75,14 @@ it, and every one of them gets a home. Pick the smallest home that fits (CONTRIB
   tile menu family is one design (#464, with #746); other tile menus fold into it (#687's Menu-key trigger).
 - A PR that bundles several good, separable parts gets **rework**: split it (list each part). A device's list plus
   small fixes for that same device can be one PR. A list bundled inside a launcher feature PR goes as its own PR.
-- A PR that conflicts with main in code (not just README table rows) gets a kind rebase request (**rework**).
+- A PR that conflicts with main gets a kind rebase request (**rework**) naming the conflicting files, whatever
+  else is true of it (approved 22 Oct).
+- Duplicates: when an earlier open PR, or a PR merged in the last week, fixes the same issue in the same files
+  (or adds mostly the same lines), the later PR is the duplicate: **close** it and name the other one (#873 after
+  #842, #947 after #924). A stacked series (one PR built on another) is not a duplicate.
+- A PR that already is an add-on (`addons/<name>/`) is judged on its merits (merge, merge-with-fix, rework),
+  never sent "to addons/". Its `gradle/wrapper/gradle-wrapper.jar` is required by the add-ons CI, not a
+  prebuilt binary. An add-on that duplicates an existing one (same source, same card) folds into it (#972).
 - Files nothing links to (screenshots, stray root files, unrelated build changes) are dropped on merge.
 - Press and coverage rows need a source that could be opened and checked; leave out what can't be verified.
 - Docs and README must stay in step: a new list needs its row in README and examples/README.
