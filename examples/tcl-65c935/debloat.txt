@@ -1,0 +1,87 @@
+# TCL 65C935 (reports as "Smart TV Pro", device G05, product G05_4K_GB, board C05, MediaTek MT9615),
+# Google TV 11 (SDK 30), firmware AR2101, incremental AR25, software V8-T615T03-LF1V614, 2.7 GB RAM.
+# France, Wi-Fi only. Same product and build as examples/tcl-65c735; this list started from that one.
+#
+# Apply:   TV_HOST=<tv ip> tools/disable.sh examples/tcl-65c935/debloat.txt
+# Undo:    TV_HOST=<tv ip> tools/restore.sh examples/tcl-65c935/debloat.txt com.google.android.apps.tv.launcherx
+# Theme:   TV_HOST=<tv ip> tools/theme.sh examples/tcl-65c935   (config.json: dock, Live TV, remote keys)
+# Windows: tools\disable.ps1 / tools\restore.ps1 -TvHost <tv ip> <list> -Stock com.google.android.apps.tv.launcherx
+# Everything is DISABLED, not uninstalled. Comment out any line you want to keep.
+#
+# Applied in five batches with a screenshot between each: Home, the TCL Quick panel (Input key), HDMI,
+# Wi-Fi, Play Store and YouTube worked after every batch and after a reboot. One evening of use.
+#
+# Stock launcher: com.google.android.apps.tv.launcherx. Live TV / HDMI: com.tcl.tv + com.tcl.tvinput.
+# Connection: USB debugging alone opens port 5555 on Wi-Fi; no Wireless debugging needed.
+#
+# Comes back on by itself, re-enabled by com.tcl.ttvs (kept here: on AR2101 it hosts the system updater):
+# com.tcl.esticker within minutes, com.tcl.usercenter, com.tcl.notereminder and com.tcl.smartalexa at
+# every boot. They stay in the list so restore records them; tools/check.py reports these four as drift.
+#
+# setupwraith (batch 5) owned TWO saved Wi-Fi networks on this unit: the one in use and an old SSID from
+# a previous ISP. Forgetting and re-joining the current one in Settings moved it to com.android.tv.settings,
+# but disable.sh still refused setupwraith because of the old one, which Settings offered no way to forget.
+# `cmd wifi list-networks` showed its id and `cmd wifi forget-network <id>` removed it. Disabling setupwraith
+# then survived a reboot, like the 65C735 and unlike examples/tcl-g05-google-tv (same AR2101 build id).
+#
+# Remote (keycodes read from logcat `TclPhoneWindowManager: handleKeyBeforeQueueing, key = N`):
+# gear 4077, Input 178 (opens the TCL Quick panel without any helper), Netflix 4062, YouTube 4065,
+# Prime Video 4099. config.json maps them for HomeKeyService; holding Volume+ still auto-repeats with
+# the helper bound (repeatCount climbed normally), so key_filter costs nothing on this build.
+# After tools/theme.sh restarted Home, HomeKeyService was left enabled but UNBOUND (dumpsys accessibility:
+# "Bound services:{}"), so the gear did nothing until the list was cleared and rewritten with
+# accessibility_enabled toggled off and on, plus `appops set com.gathin.tvhome AUTO_START allow; appops
+# write-settings`. restore_key_services is on in config.json so Home repairs it after a force stop.
+#
+# `tools/tv.py 'reboot'` never returns on this set (the connection drops mid-call); run it in the
+# background or with a timeout.
+#
+# Kept by choice: com.tcl.ttvs (updater), Google Assistant (com.google.android.katniss,
+# com.google.android.tv.assistant), Chromecast (com.google.android.apps.mediashell), the USB media
+# player (com.tcl.ui_mediaCenter) and com.tcl.gallery, com.tcl.gamebar, com.tcl.t_solo,
+# com.tcl.UpdatePeripheral (remote firmware), every streaming app.
+# DO NOT DISABLE (load-bearing): com.tcl.tv, com.tcl.tvinput, com.tcl.settings, com.tcl.system.server,
+# com.tcl.providers.config, com.tcl.initsetup, com.tcl.factory.view, com.tcl.autopair,
+# com.tcl.tcl_bt_rcu_service, com.tcl.keyhelp, com.tcl.inputmethod.international, com.tcl.eva,
+# com.tcl.suspension (Quick panel / Input key), com.tcl.micmanager, com.google.android.gms,
+# com.google.android.gsf, Play Store.
+
+# Batch 1 - telemetry and analytics
+com.tcl.guard                          # TGuard: device-use tracking, "health info", memory cleaner
+com.tcl.logkit                         # TCL diagnostics / log collector and upload
+com.google.android.feedback            # "send feedback"
+com.google.android.partnersetup        # partner-app attribution
+
+# Batch 2 - TCL content, ads and promos
+com.tcl.waterfall.overseas             # TCL content recommendations
+com.tcl.partnercustomizer              # TCL rows on the Google TV home
+com.tcl.messagebox                     # pushed messages and promos
+com.tcl.usercenter                     # TCL account sign-in nags (ttvs re-enables it at boot)
+com.tcl.dashboard                      # "TCL Home" panel, gift box and promos
+com.tcl.tv.tclhome_passive             # pushes TCL content at boot
+com.tcl.esticker                       # retail demo stickers (ttvs re-enables it within minutes)
+com.tcl.channelplus                    # TCL's free ad-supported channels
+com.tcl.useragreement                  # agreement screen shown once during setup
+android.autoinstalls.config.google.gtvpai # partner app auto-installer
+
+# Batch 3 - preloaded apps and services not used
+com.google.android.youtube.tvmusic     # YouTube Music
+com.google.android.play.games          # Play Games
+com.google.android.videos              # Google TV / Play Films storefront
+com.tcl.notereminder                   # notes/reminders (ttvs re-enables it at boot)
+com.tcl.hearaid                        # hearing test / volume adaptation
+com.google.android.marvin.talkback     # screen reader
+com.google.android.syncadapters.calendar
+com.google.android.onetimeinitializer
+com.tcl.ocean.instructions             # e-manual
+com.tcl.browser                        # TCL browser ("BrowseHere")
+
+# Batch 4 - voice and casting not used (Assistant and Chromecast kept)
+com.tcl.smartalexa                     # Alexa (ttvs re-enables it at boot)
+com.tcl.airplay2                       # AirPlay
+com.mediatek.AirplayAPK                # AirPlay
+com.tcl.miracast                       # Miracast mirroring
+
+# Batch 5 - only once the new launcher owns Home (launcher/build-and-install.sh disables launcherx)
+com.google.android.tungsten.setupwraith # first-run wizard; its RecoveryActivity claims HOME. See the
+                                        # Wi-Fi note above. Re-enable before a factory reset (restore.sh does it).
