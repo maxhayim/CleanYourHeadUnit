@@ -282,9 +282,14 @@ def main(argv=None):
         missing = [p for p in paths if not os.path.isfile(p)]
         if missing:
             sys.exit("not a file: " + ", ".join(missing))
+    families = [{"nav" if scenario_of(p) == "nav" else "start" for p in paths} for paths in sets]
+    if any(len(family) > 1 for family in families):
+        sys.exit("cannot mix nav and start traces in one set; report them separately")
+    if len(families) > 1 and families[0] != families[1]:
+        sys.exit("cannot compare nav and start traces with --vs; report them separately")
     open_trace = opener(args.engine)
     measured = [measure(paths, args.package, open_trace) for paths in sets]
-    nav = all(scenario_of(p) == "nav" for p in sets[0])
+    nav = families[0] == {"nav"}
     print(report(measured[0], measured[1] if len(measured) > 1 else None, args.markdown, nav))
 
 
