@@ -125,7 +125,7 @@ Walkthroughs other people wrote or recorded. Press coverage is listed in [docs/P
 
 By the TV each project was built and tested on. Most of them run on other Android TV sets too; check the project's README.
 
-- **Amazon Fire TV:** [Fire OS 6 Home watcher](https://github.com/ljis120301/tv-vibehack/tree/fire-tv-support), [Fire OS 7 fast Home](https://github.com/andrewsaad/fire-tv-cleanup), [Fire TV Glass](https://github.com/ivantrj/firetv-glass-launcher), [fire-tv-cleanup](https://github.com/itsmeterrylin/fire-tv-cleanup)
+- **Amazon Fire TV:** [CleanYourTV on Fire OS](https://github.com/GaneshVarma1/cleanyourtv/tree/fire-tv-launcher-settings-fix), [Fire OS 6 Home watcher](https://github.com/ljis120301/tv-vibehack/tree/fire-tv-support), [Fire OS 7 fast Home](https://github.com/andrewsaad/fire-tv-cleanup), [Fire TV Glass](https://github.com/ivantrj/firetv-glass-launcher), [fire-tv-cleanup](https://github.com/itsmeterrylin/fire-tv-cleanup)
 - **BenQ:** [Navigation sounds](https://github.com/rocavence/tv-vibehack/tree/nav-sounds)
 - **Chromecast with Google TV:** [Cast Fix](https://github.com/thayford/castfix), [Weather Clock](https://github.com/matyivagyok/weatherclock-tv)
 - **Baron (CloudWalker OS):** [Baron Home](https://github.com/sethihq/baron-tv)
