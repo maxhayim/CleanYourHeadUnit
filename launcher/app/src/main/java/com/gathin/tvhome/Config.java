@@ -152,6 +152,10 @@ final class Config {
     final int homeIdleClockMinutes;
     /** The dock band as light frosted glass like the pills (config.xml, dock_glass); false keeps the solid band. */
     final boolean dockGlass;
+    /** Shape of the glow behind the focused app (config.xml, glow_style): {@link #GLOW_RADIAL} or {@link #GLOW_HORIZON}. */
+    final String glowStyle;
+
+    static final String GLOW_RADIAL = "radial", GLOW_HORIZON = "horizon";
 
     private Config(List<String> dockApps, boolean fillDock, List<String> hiddenApps, String liveTvPackage,
                    String liveTvAction, String liveTvInputId, Map<String, String> launchActions, Map<String, String> appLabels,
@@ -164,7 +168,7 @@ final class Config {
                    int wallpaperRotationMinutes, int wallpaperDim, int dockOpacity, String wallpaperOrder, boolean overlayApplied,
                    Festival festival, int[] inputKeycodes, List<String> appKeys, String stockHomeRedirect,
                    List<RaceWeekend.Race> raceCalendar, boolean cinematicHome, boolean ambientGlow, boolean appGlow, int homeIdleClockMinutes,
-                   boolean keyFilter, boolean dockGlass) {
+                   boolean keyFilter, boolean dockGlass, String glowStyle) {
         this.inputKeycodes = inputKeycodes;
         this.appKeys = Collections.unmodifiableList(appKeys);
         this.keyFilter = keyFilter;
@@ -227,6 +231,12 @@ final class Config {
         this.appGlow = appGlow;
         this.homeIdleClockMinutes = homeIdleClockMinutes;
         this.dockGlass = dockGlass;
+        this.glowStyle = glowStyle(glowStyle);
+    }
+
+    /** A known glow_style, or radial (the default) for anything else. */
+    static String glowStyle(String value) {
+        return value != null && GLOW_HORIZON.equalsIgnoreCase(value.trim()) ? GLOW_HORIZON : GLOW_RADIAL;
     }
 
     /** The folder the theme tools push into; null when external storage is unavailable. */
@@ -288,6 +298,7 @@ final class Config {
         int idleClockMinutes = res.getInteger(R.integer.home_idle_clock_minutes);
         boolean keyFilter = res.getBoolean(R.bool.key_filter);
         boolean dockGlass = res.getBoolean(R.bool.dock_glass);
+        String glowStyle = res.getString(R.string.glow_style);
         boolean applied = false;
 
         File dir = dir(ctx);
@@ -348,6 +359,7 @@ final class Config {
             idleClockMinutes = integer(json, "home_idle_clock_minutes", idleClockMinutes, 0, 1440);
             keyFilter = bool(json, "key_filter", keyFilter);
             dockGlass = bool(json, "dock_glass", dockGlass);
+            glowStyle = string(json, "glow_style", glowStyle);
         }
         // A theme push or reset invalidates choices made on the TV. On first use, remember the
         // current theme without clearing choices from an older launcher version.
@@ -408,7 +420,7 @@ final class Config {
                 Math.max(0, Math.min(100, skyIntensity)), settingsKeycodes, settingsKeyPanel, wallpaperEnabled, wallpaper,
                 wallpapers, rotationMinutes, wallpaperDim, dockOpacity, wallpaperOrder, applied,
                 festival, inputKeycodes, appKeys, stockHomeRedirect, json == null ? Collections.emptyList() : raceCalendar(json), cinematic, ambientGlow, appGlow,
-                Math.max(0, idleClockMinutes), keyFilter, dockGlass);
+                Math.max(0, idleClockMinutes), keyFilter, dockGlass, glowStyle);
     }
 
     /**
