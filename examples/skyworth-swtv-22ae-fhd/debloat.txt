@@ -38,6 +38,7 @@ com.google.android.feedback
 
 # Google TV setup wizard: RecoveryActivity claims Home with priority 1.
 # Must be disabled to free Home and prevent crash loops on Google TV 14!
+# Trade-off: disabling setupwraith gives Home back but costs casting (Chromecast built-in may stop working); re-enable it if you need casting.
 com.google.android.tungsten.setupwraith
 
 # Preloaded / unused apps (user opted out)
