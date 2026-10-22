@@ -391,6 +391,17 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         greeting = findViewById(R.id.greeting);
         clockBlock = findViewById(R.id.leftBlock);
         greetingColor = greeting.getCurrentTextColor();
+        if (getResources().getBoolean(R.bool.rtl_menu_bar)) {
+            // Center Hebrew greetings over the numeric time, independent of a visible AM/PM label.
+            findViewById(R.id.clock).addOnLayoutChangeListener((v, l, t, right, bottom, ol, ot, or, ob) -> {
+                ViewGroup.LayoutParams params = greeting.getLayoutParams();
+                if (params.width != right - l) {
+                    params.width = right - l;
+                    greeting.setLayoutParams(params);
+                }
+                greeting.setTranslationX(l);
+            });
+        }
         btnWifi = findViewById(R.id.btnWifi);
         shamsiDate = findViewById(R.id.shamsiDate);
         stats = findViewById(R.id.stats);
@@ -1748,7 +1759,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         if (mem != null) appendStat(line, getString(R.string.stats_memory, mem[0], mem[1]));
         String free = formatGb(getResources(), Environment.getDataDirectory().getFreeSpace());
         if (!free.isEmpty()) appendStat(line, getString(R.string.stats_storage, free));
-        return line.toString();
+        return StatsText.forLocale(line.toString(), getResources().getConfiguration().getLocales().get(0));
     }
 
     // -1: need another sample. -2: this source cannot be read (Android 9 hides /proc/stat from apps).
