@@ -450,6 +450,26 @@ reads `[TclAppBoot]:forbid bind service ComponentInfo{com.gathin.tvhome/com.gath
 and whose `appops get` names the op `AUTO_START`: use the name `appops get` prints. When reporting, give the
 model, build, current user and the relevant redacted lines, not the raw dump.
 
+## Fire TV (Fire OS): debloat works, the launcher cannot take Home
+
+Why Google TV differs: on Google TV a third-party app can take the HOME role, so the launcher, the
+`set-home-activity` default and the stock-launcher disable all work. Fire OS keeps Home for Amazon's own
+launcher, and the same tools fail there. Checked on an Amazon Fire TV, model AFTDEC012E (codename ginza),
+Android 11 (SDK 30), build RS8185.3885N:
+
+- `cmd package query-activities` for HOME: `com.amazon.tv.launcher/.ui.HomeActivity_vNext` at priority 950,
+  `com.amazon.firehomestarter` at 1. A third-party launcher installed with `android:priority="1000"` on its
+  HOME filter still sits at 0. Fire OS ignores the priority of a non-system app.
+- `cmd package set-home-activity com.gathin.tvhome/.MainActivity` prints `Success`, and HOME still resolves
+  to Amazon's launcher.
+- `pm disable-user --user 0` on `com.amazon.tv.launcher`, on its component `HomeActivity_vNext`, and on the
+  other Fire OS home packages is refused: `Cannot disable a protected package`.
+- Intercepting the Home key with an AccessibilityService did not work: `onKeyEvent` received nothing for
+  injected keys (`input keyevent KEYCODE_HOME`) or for a 40-second window of remote presses.
+
+Debloat: `tools/disable.sh examples/amazon-fire-tv-aftdec012e/debloat.txt` disables telemetry, ACR, shopping and
+tutorial packages. Undo with `tools/restore.sh examples/amazon-fire-tv-aftdec012e/debloat.txt com.amazon.tv.launcher`.
+
 ## A key helper is bound and a held remote button stopped repeating
 
 Hold volume up or down and the volume moves one step per press instead of ramping. The remote may be
