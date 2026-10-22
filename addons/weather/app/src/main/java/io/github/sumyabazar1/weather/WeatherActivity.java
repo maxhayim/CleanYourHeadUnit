@@ -102,7 +102,7 @@ public final class WeatherActivity extends Activity {
         root.setBackground(Forecast.backdrop(r.code, r.day));
         ((TextView) findViewById(R.id.place)).setText(place.getString("name", ""));
         ((TextView) findViewById(R.id.temp)).setText(r.tempC + "°");
-        ((TextView) findViewById(R.id.sky)).setText(Forecast.sky(r));
+        ((TextView) findViewById(R.id.sky)).setText(Forecast.sky(r.code, r.day));
         ((TextView) findViewById(R.id.feels)).setText(getString(R.string.feels_like, r.feelsC));
 
         TextView air = findViewById(R.id.airQuality);

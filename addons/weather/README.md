@@ -15,8 +15,6 @@ sky-blue glow; on any other Android TV home it is an ordinary app.
 - **Snow, not rain, near freezing.** The models type precipitation by the air temperature and call snow
   "light rain" at 1 °C (ICON and GFS did, in a Ulaanbaatar blizzard). The app decides by the wet-bulb
   temperature instead, which counts how dry the air is: at 1 °C or below, rain and drizzle are shown as snow.
-- **Blizzard.** Snow with gusts of 50 km/h or more. The gusts are the stronger of ICON's and ECMWF's, as the two
-  disagreed most about the wind (26 against 52 to 62 km/h in that storm).
 - It reads Open-Meteo only while the page is on screen, every 30 minutes, or 5 minutes after a failure.
 - Degrees Celsius, English words; day names follow the TV's language.
 
