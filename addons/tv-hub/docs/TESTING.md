@@ -119,4 +119,6 @@ Passed on the TV:
 
 Fixed during this run: guide wiped when a source failed a refresh; focus switching the page after returning from the editor; card text drawn behind logos; zoomed focus clipped; error text for 404s; playlist status plurals.
 
+Rechecked the same day with the add-on build itself (Media3 1.4.1, SDK 34): first launch, adding the demo playlist, HLS playback (READY in about 3 s), the HTTP 404 message, and the player released on Back.
+
 Not tested yet: the module card (this TV's launcher does not read cards), HDHomeRun and Dispatcharr (no hardware or server on hand), Fire TV, Google TV, 720p and 4K output modes, a large real playlist and guide.
