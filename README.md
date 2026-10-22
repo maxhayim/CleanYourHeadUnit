@@ -415,7 +415,8 @@ only `INTERNET`.
 candidates in three groups, each with its evidence — named by the firmware's own
 `voice_interaction_service`, a known component from [`examples/`](examples/), or nothing but a
 matching name — plus whether the package declares `RECORD_AUDIO`, whether it shares the system UID,
-and whether `appops` shows the microphone op was ever used since boot.
+and whether the returned AppOps history contains microphone access. A configured mode or a rejected
+attempt alone is not evidence of access.
 
 `--write privacy.txt` turns the identified candidates into a normal debloat list, so applying it and
 undoing it are the commands you already use (`tools/disable.sh`, `tools/restore.sh`). Packages that
