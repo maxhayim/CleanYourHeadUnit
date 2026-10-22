@@ -94,7 +94,8 @@ different look, and tools around the launcher; this repo keeps one small referen
 points at everything else. The rules for a row are on that page.
 
 Things that stay in this repo: debloat lists, fixes and small, opt-in features for the reference
-launcher, prompt and tool improvements. Things that go in the showcase: a second launcher, a
+launcher, prompt and tool improvements. A feature that can be its own small app goes in [`addons/`](addons/README.md)
+as a module card. Things that go in the showcase: a second launcher, a
 restyle, a platform port, anything with its own background services or network access.
 
 ## Pull requests
