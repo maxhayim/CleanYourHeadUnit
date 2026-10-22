@@ -5,8 +5,26 @@ and MP4 clips, separate from the launcher. Pictures go in filename order, each s
 and crossfading into the next after 20 seconds (or what you set). A clip plays once, muted and cropped to
 fill the screen, then the loop moves on; a lone clip loops. Any key wakes the TV back to where it was.
 
-Package `com.gathin.photodream`, about 15 KB. It has no launcher icon: you see it as **Photos** (Dutch:
-**Foto's**) in the TV's screensaver settings.
+Package `com.gathin.photodream`. You see it as **Photos** (Dutch: **Foto's**) in the TV's screensaver
+settings. On cleanyourtv's Home it is also a module card, **Photos**: OK starts the same slideshow at once,
+Menu opens the settings, Back leaves.
+
+## Options
+
+All off by default, which is the plain full-screen slideshow above. Switch them on in the screensaver's own
+settings (TV settings > screensaver > Photos > settings), or with Menu in the card's slideshow:
+
+| Option | What it does |
+|---|---|
+| Time and date | A line along the bottom with the time and the date, moved a little every minute against burn-in |
+| When a picture was taken | Month and year, from a name ending in the date (`trip-20231202.jpg`) or else the camera's EXIF date |
+| Three prints | Three pictures at a time as tilted prints, the whole picture, never cropped; clips are skipped |
+| Sky | Behind the prints, a sky that follows the time of day |
+| Weather | Temperature and a symbol, from the TV's rough location and Open-Meteo, every 30 minutes |
+
+The weather needs location access (asked when you switch it on) and the TV's location services on; the
+settings say when they are off and open the TV's location settings. The prints, the sky and the date on a
+picture come from Photo Prints by [@shivamsingh262](https://github.com/shivamsingh262) (#936).
 
 ## Install
 
@@ -54,8 +72,14 @@ is decoded at screen size. On a TCL 43P69K (1.5 GB) a 1080p clip played with the
 
 ## Permissions
 
-None. No network, no storage permission, no background service: the pictures stay on the TV in the app's
-own folder (`Android/data/com.gathin.photodream/files/pictures`), removed with the app.
+No storage permission and no background service: the pictures stay on the TV in the app's own folder
+(`Android/data/com.gathin.photodream/files/pictures`), removed with the app.
+
+- **`INTERNET`** and **`ACCESS_COARSE_LOCATION`**: only for the weather option, off by default. With it on,
+  the TV's rough location, rounded to two decimals (about 1 km), goes to `api.open-meteo.com` every 30
+  minutes while the screensaver runs. Nothing else goes out; with it off, nothing goes over the network.
+- **`SlideshowActivity`** (exported) is the module card; **`SettingsActivity`** (exported) is opened by the
+  TV's screensaver settings. Both only show the slideshow or change its options.
 
 - **`FilesProvider`** (exported) is how `sync.sh` writes the pictures, so the app owns them: on TCL G10 a
   file the adb shell copies into `Android/data` is unreadable for the app. Only callers holding

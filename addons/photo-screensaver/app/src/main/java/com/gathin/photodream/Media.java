@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /** Which files the screensaver shows and FilesProvider accepts, and how big a picture is decoded. */
@@ -85,6 +86,16 @@ final class Media {
         } catch (NumberFormatException e) {
             return DEFAULT_SECONDS;
         }
+    }
+
+    private static final Pattern NAME_DATE = Pattern.compile("-(\\d{4})(\\d{2})(\\d{2})?\\.[A-Za-z0-9]+$");
+
+    /** {year, month} from a name ending in its date, photo-20231202.jpg or photo-202312.jpg; else null. */
+    static int[] dateFromName(String name) {
+        Matcher m = name == null ? null : NAME_DATE.matcher(name);
+        if (m == null || !m.find()) return null;
+        int year = Integer.parseInt(m.group(1)), month = Integer.parseInt(m.group(2));
+        return year >= 1900 && month >= 1 && month <= 12 ? new int[]{year, month} : null;
     }
 
     static boolean accepted(int width, int height) {

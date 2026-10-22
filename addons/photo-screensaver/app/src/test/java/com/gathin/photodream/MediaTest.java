@@ -67,6 +67,14 @@ public class MediaTest {
         assertNull(Media.coverScale(1920, 1080, 1920, 1080));
     }
 
+    @Test public void readsTheDateFromTheName() {
+        assertArrayEquals(new int[]{2023, 12}, Media.dateFromName("photo-0007-20231202.jpg"));
+        assertArrayEquals(new int[]{2023, 12}, Media.dateFromName("photo-202312.jpg"));
+        assertNull(Media.dateFromName("photo-20231302.jpg"));
+        assertNull(Media.dateFromName("holiday.jpg"));
+        assertNull(Media.dateFromName(null));
+    }
+
     private static void write(File file, int bytes) throws Exception {
         try (FileOutputStream out = new FileOutputStream(file)) {
             out.write(new byte[bytes]);
