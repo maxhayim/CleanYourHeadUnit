@@ -258,6 +258,8 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
     private boolean dockEditing;
     /** Dock place being changed in edit-dock mode, or -1 while the place is still being chosen. */
     private int dockEditSlot = -1;
+    /** Tile menu's "Add to dock": the app waiting for a dock place in edit-dock mode, or null. */
+    private String dockEditAppKey;
     private AppLibraryDialog appLibrary;
     private boolean libraryFocusPending;
     private RecyclerView.OnScrollListener pendingFocusScroll;
@@ -1150,7 +1152,9 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         boolean back = code == KeyEvent.KEYCODE_BACK || code == KeyEvent.KEYCODE_ESCAPE;
         if (back) {
             if (!down) {
-                if (dockEditSlot >= 0) {
+                if (dockEditAppKey != null) {
+                    endReorder();   // "Add to dock" cancelled before a place was chosen
+                } else if (dockEditSlot >= 0) {
                     int slot = dockEditSlot;
                     dockEditSlot = -1;
                     dimOthers();
@@ -1165,7 +1169,13 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         if (ok && pos >= 0) {
             if (!down) {
                 int n = adapter.movableCount();
-                if (dockEditSlot < 0) {
+                if (dockEditAppKey != null) {
+                    if (pos < Math.min(COLUMNS, n)) {
+                        int from = adapter.positionOf(dockEditAppKey);
+                        if (from >= 0) swapIntoDock(pos, from);
+                        else endReorder();
+                    }
+                } else if (dockEditSlot < 0) {
                     if (pos < Math.min(COLUMNS, n)) {
                         dockEditSlot = pos;
                         dimOthers();
@@ -1179,6 +1189,30 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
             return true;   // never opens the app while editing
         }
         return super.dispatchKeyEvent(event);   // arrows navigate as usual
+    }
+
+    /**
+     * Edit-dock mode started from the tile menu. A dock app: its place is already chosen, so focus goes to the grid
+     * for the app to put there. A grid app: it is already chosen, so focus goes to the dock for the place.
+     */
+    private void startDockEditFor(String key, boolean inDock) {
+        if (reordering) endReorder();
+        if (!beginReorder()) return;
+        dockEditing = true;
+        int pos = adapter.positionOf(key);   // beginReorder can rebuild the tiles
+        int n = adapter.movableCount();
+        if (pos < 0) {
+            endReorder();
+        } else if (inDock) {
+            dockEditSlot = pos;
+            dimOthers();
+            focusTile(Math.min(COLUMNS, n - 1));
+            Toast.makeText(this, R.string.dock_edit_pick_app, Toast.LENGTH_LONG).show();
+        } else {
+            dockEditAppKey = key;
+            focusTile(0);
+            Toast.makeText(this, R.string.dock_edit_pick_place, Toast.LENGTH_LONG).show();
+        }
     }
 
     /** Puts the app at pos into dock place slot, and the app that was there where the chosen one was; then saves. */
@@ -1230,6 +1264,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         if (!reordering) return;
         dockEditing = false;
         dockEditSlot = -1;
+        dockEditAppKey = null;
         drop();
         reordering = false;
         adapter.setReordering(false);
@@ -2806,6 +2841,11 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         View panel = getLayoutInflater().inflate(R.layout.popup_inputs, root, false);
         LinearLayout rows = panel.findViewById(R.id.rows);
         PopupWindow popup = glassPopup(panel, (int) (200 * density));
+        if (dockRow && position < adapter.movableCount()) {
+            boolean inDock = position < COLUMNS;
+            addSettingsMenuRow(rows, popup, inDock ? R.string.tile_replace_in_dock : R.string.tile_add_to_dock,
+                    () -> startDockEditFor(key, inDock));
+        }
         if (position < adapter.movableCount()) addSettingsMenuRow(rows, popup, R.string.tile_move, () -> {
             if (!beginReorder()) return;
             int at = adapter.positionOf(key);   // beginReorder can rebuild the tiles

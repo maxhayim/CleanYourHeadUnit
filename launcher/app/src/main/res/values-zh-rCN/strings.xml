@@ -41,6 +41,9 @@
     <string name="dock_edit">编辑程序坞</string>
     <string name="dock_edit_hint">选择要更改的程序坞位置，然后按确定。按返回完成。</string>
     <string name="dock_edit_pick_app">现在选择要放在那里的应用，然后按确定。按返回重新选择位置。</string>
+    <string name="tile_add_to_dock">添加到程序坞</string>
+    <string name="tile_replace_in_dock">替换为其他应用</string>
+    <string name="dock_edit_pick_place">为此应用选择程序坞位置，然后按确定。按返回取消。</string>
     <string name="reorder">调整应用顺序</string>
     <string name="tile_move">移动</string>
     <string name="reorder_hint">按确定选中应用，方向键移动，按返回放下。再按一次返回完成。</string>

@@ -69,6 +69,9 @@
     <string name="dock_edit">Chỉnh sửa dock</string>
     <string name="dock_edit_hint">Chọn vị trí trên dock cần đổi rồi nhấn OK. Nhấn Quay lại để kết thúc.</string>
     <string name="dock_edit_pick_app">Giờ chọn ứng dụng để đặt vào đó rồi nhấn OK. Nhấn Quay lại để chọn vị trí khác.</string>
+    <string name="tile_add_to_dock">Thêm vào dock</string>
+    <string name="tile_replace_in_dock">Thay bằng ứng dụng khác</string>
+    <string name="dock_edit_pick_place">Chọn vị trí trên dock cho ứng dụng này rồi nhấn OK. Nhấn Quay lại để hủy.</string>
     <string name="festival_dussehra_greeting">Chúc mừng lễ Dussehra</string>
     <string name="festival_diwali_greeting">Chúc mừng lễ Diwali</string>
     <string name="stats_memory">Bộ nhớ %1$d / %2$d MB</string>
