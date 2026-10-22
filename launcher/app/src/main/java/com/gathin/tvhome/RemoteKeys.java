@@ -8,18 +8,27 @@ import android.content.Intent;
 import android.media.tv.TvContract;
 import android.view.KeyEvent;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.function.ToIntFunction;
 
 /**
  * Remote buttons that only the stock launcher answered, for InputKeyService and HomeKeyService: app_keys
  * (config.xml or a theme) maps a keycode to the app it opens, as "190:com.google.android.youtube.tv" or
- * "KEYCODE_BUTTON_3:com.google.android.youtube.tv", or a scancode as "scan:490:com.wbd.hbomax". One map for both services; whichever filters the key first
- * consumes it. A target of "input:<input id>" switches to that TV input (an HDMI port) instead of opening an app.
+ * "KEYCODE_BUTTON_3:com.google.android.youtube.tv", or a scancode as "scan:490:com.wbd.hbomax". A "hold:"
+ * prefix makes an entry the long-press action instead: "hold:KEYCODE_BUTTON_8:org.xbmc.kodi" opens Kodi when
+ * that button is held for HOLD_MS, while the unprefixed entry still opens on a tap; "hold:scan:490:..." does
+ * the same for a scancode. One set of maps for both services; whichever filters the key first consumes it.
+ * A target of "input:<input id>" switches to that TV input (an HDMI port) instead of opening an app.
  */
 final class RemoteKeys {
+
+    /** How long a button is held before its "hold:" entry wins (Android's long-press timeout). */
+    static final long HOLD_MS = 500;
+
     private RemoteKeys() { }
 
     /** keycode -> package, with key names resolved by Android. */
@@ -54,6 +63,19 @@ final class RemoteKeys {
             if (code > 0) keys.put(code, parts[1].trim());
         }
         return keys;
+    }
+
+    /** keycode -> package from the "hold:" entries; the rest of each entry reads as it does in parseAppKeys. */
+    static Map<Integer, String> parseHoldAppKeys(String[] entries) {
+        return parseHoldAppKeys(Arrays.asList(entries), KeyEvent::keyCodeFromString);
+    }
+
+    static Map<Integer, String> parseHoldAppKeys(Iterable<String> entries) {
+        return parseHoldAppKeys(entries, KeyEvent::keyCodeFromString);
+    }
+
+    static Map<Integer, String> parseHoldAppKeys(Iterable<String> entries, ToIntFunction<String> names) {
+        return parseAppKeys(holdEntries(entries), names);
     }
 
     /**
@@ -91,6 +113,39 @@ final class RemoteKeys {
         return keys;
     }
 
+    /** scancode -> package from the "hold:scan:..." entries; the rest reads as it does in parseAppScancodes. */
+    static Map<Integer, String> parseHoldAppScancodes(Iterable<String> entries) {
+        return parseAppScancodes(holdEntries(entries));
+    }
+
+    /** The entries with the "hold:" prefix removed, so the normal parsers can read them. */
+    private static Iterable<String> holdEntries(Iterable<String> entries) {
+        List<String> holds = new ArrayList<>();
+        for (String entry : entries) {
+            if (entry == null) continue;
+            String text = entry.trim();
+            if (text.startsWith("hold:")) holds.add(text.substring(5).trim());
+        }
+        return holds;
+    }
+
+    /**
+     * Consumes a key mapped by either list. On release it opens the hold app after HOLD_MS, otherwise the normal
+     * one; false means neither list has this key, so the caller can pass it on.
+     */
+    static boolean handle(Context ctx, KeyEvent event, String app, String holdApp) {
+        if (app == null && holdApp == null) return false;
+        if (event.getAction() == KeyEvent.ACTION_UP && !event.isCanceled()) {
+            launch(ctx, target(app, holdApp, event.getEventTime() - event.getDownTime()));
+        }
+        return true;
+    }
+
+    /** The app a mapped key opens: its hold entry after HOLD_MS, otherwise its normal one. */
+    static String target(String app, String holdApp, long heldMs) {
+        return heldMs >= HOLD_MS && holdApp != null ? holdApp : app;
+    }
+
     /** The TV input id of an "input:<id>" target, e.g. "input:com.tcl.tvinput/.passthroughinput.TvPassThroughService/HW1413743104"; null for a package. */
     static String inputId(String target) {
         if (target == null || !target.startsWith("input:")) return null;
@@ -101,6 +156,7 @@ final class RemoteKeys {
     /** Opens an app from a remote button: its TV entry if it has one, else its phone entry. An "input:<id>" target
      *  switches to that TV input (an HDMI port) instead. */
     static void launch(Context ctx, String pkg) {
+        if (pkg == null) return;
         String inputId = inputId(pkg);
         if (inputId != null) {
             // The same passthrough URI the Inputs menu opens, which the Live TV app handles.

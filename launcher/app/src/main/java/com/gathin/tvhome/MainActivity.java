@@ -9,6 +9,7 @@ import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.IntentFilter;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.ResolveInfo;
@@ -134,6 +135,10 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
     /** config.xml ambient_glow, overridable by a theme. Off: the glow view is gone and no fade or colour animator
      *  is started for it, so a focus move costs nothing extra on a launcher that runs all day. */
     private boolean ambientGlow;
+    /** config.xml app_glow: the highlight takes the focused app's colour on every tile. */
+    private boolean appGlow;
+    /** config.xml glow_style: the shape setAmbient paints the glow mask in. */
+    private String glowStyle;
     private ImageView heroArt;
     private static final float HERO_ART_ALPHA = 0.5f;
     /** Softened artwork per app (HeroArt, about 5 KB each), made the first time its dock tile is focused. */
@@ -150,6 +155,8 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
     private TextView greeting;
     private View clockBlock;
     private View btnInputs;
+    /** config show_inputs_pill: false keeps the Inputs pill hidden even when the TV has inputs. */
+    private boolean showInputsPill = true;
     private TextView btnWifi;
     /** The network pill's icon as last set, so a refresh that changes nothing does not lay the top bar out again. */
     private int wifiIcon;
@@ -192,6 +199,8 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
     private boolean reducedMotion;
     /** config.xml dock_row: the first row is a separate dock (band, parked low, top shelf) rather than plain grid. */
     private boolean dockRow;
+    /** The highlight springs past its target (config.xml, focus_overshoot); false goes straight there. */
+    private boolean focusOvershoot;
     /** Festive skin from the theme (see Festival); applied while it is active today. */
     private Festival festival = Festival.NONE;
     private boolean festive;
@@ -201,6 +210,8 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
     private int greetingColor;
     /** The day the petal shower last played, so it greets the first Home of each day only. */
     private static LocalDate lastPetalShower;
+    /** boot_to_live_tv: open the Live TV app on the first Home of each boot. */
+    private boolean bootToLiveTv;
     /** hidden_apps as the adapter sees them (config.xml or a theme's config.json): a hidden app gets no card either. */
     private Set<String> hiddenApps = Collections.emptySet();
     private List<Cards.Card> cards = Collections.emptyList();
@@ -331,10 +342,12 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         advancedEffects = cfg.animations && cfg.advancedEffects;
         reducedMotion = cfg.reducedMotion;
         dockRow = cfg.dockRow;
+        focusOvershoot = cfg.focusOvershoot;
         festival = cfg.festival;
         festive = festival.active(LocalDate.now());
         liveTvPkg = cfg.liveTvPackage;
         idleClockMs = cfg.homeIdleClockMinutes * MINUTE_MS;
+        bootToLiveTv = cfg.bootToLiveTv;
         liveTvAction = cfg.liveTvAction;
         liveTvInputId = cfg.liveTvInputId;
         inputAction = cfg.inputAction;
@@ -360,6 +373,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         // a fade renders it into a full-screen offscreen buffer first.
         ambient.forceHasOverlappingRendering(false);
         ambientGlow = cfg.ambientGlow;
+        appGlow = cfg.appGlow;
         if (!ambientGlow) ambient.setVisibility(View.GONE);
         heroName = findViewById(R.id.heroName);
         hero = findViewById(R.id.hero);
@@ -370,6 +384,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         heroDots = findViewById(R.id.heroDots);
         heroArt = findViewById(R.id.heroArt);
         cinematic = cfg.cinematicHome;
+        glowStyle = cfg.glowStyle;
         if (cinematic) setUpCinematicShelf();
         // dock_title false: the name above the dock (and the cinematic lines under it) never shows; the glow
         // still follows the dock.
@@ -454,7 +469,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
             public void onChildViewDetachedFromWindow(@NonNull View v) {
             }
         });
-        if (dockRow) grid.addItemDecoration(new DockDecoration(COLUMNS, density, cinematic, cfg.alwaysShowNames));
+        if (dockRow) grid.addItemDecoration(new DockDecoration(COLUMNS, density, cinematic, cfg.alwaysShowNames, cfg.dockOpacity, cfg.dockGlass));
         // Reduced motion: the tiles are simply there, with no entrance (reloadApps skips it there too).
         if (animations && !reducedMotion) {
             grid.setLayoutAnimation(new LayoutAnimationController(
@@ -522,6 +537,9 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         for (SpringAnimation s : new SpringAnimation[]{springX, springY}) {
             if (reducedMotion) {
                 Motion.reduce(s);
+            } else if (!focusOvershoot) {
+                // Critically damped: glides straight onto the tile without swinging past it.
+                s.setSpring(new SpringForce().setStiffness(advancedEffects ? 520f : 440f).setDampingRatio(1f));
             } else {
                 s.setSpring(new SpringForce().setStiffness(advancedEffects ? 320f : 260f)
                         .setDampingRatio(advancedEffects ? 0.76f : 0.58f));
@@ -541,6 +559,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         btnReorder.setOnClickListener(v -> toggleReorder());
         btnReorder.setVisibility(cfg.reorderButton ? View.VISIBLE : View.GONE);
         if (!cfg.showNetworkPill) btnWifi.setVisibility(View.GONE);
+        showInputsPill = cfg.showInputsPill;
         btnLibraryTop = findViewById(R.id.btnLibraryTop);
         btnLibraryTop.setOnClickListener(v -> {
             onLibraryRequested();
@@ -690,6 +709,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
             default:
                 break;
         }
+        if (openLiveTvAfterBoot()) return;
         updateGreeting();
         updateRace();
         // The network and Inputs pills keep their state while Home is in the background, and callbacks update them
@@ -1281,9 +1301,10 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         glassCardW = card.getWidth();
         glassTargetX = x;
         glassTargetY = y;
-        // Cinematic shelf: the highlight glows in the dock app's colour, plain white in the grid.
-        int accent = cinematic && !festive && position < COLUMNS ? adapter.ambientColorAt(position) : 0;
-        if (cinematic && !festive && accent != glassAccent) {
+        // Cinematic shelf: the highlight glows in the dock app's colour, plain white in the grid. app_glow: every tile.
+        boolean coloured = (appGlow || cinematic && position < COLUMNS) && !festive;
+        int accent = coloured ? adapter.ambientColorAt(position) : 0;
+        if ((cinematic || appGlow) && !festive && accent != glassAccent) {
             glassAccent = accent;
             glass.setAccent(accent);
         }
@@ -1551,6 +1572,19 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
                         w * (rtl ? 0.20f : 0.80f), h * 0.06f, w * 0.78f,
                         new int[]{0xA6FFFFFF, 0x47FFFFFF, 0x00FFFFFF},
                         new float[]{0f, 0.5f, 1f},
+                        Shader.TileMode.CLAMP));
+            } else if (Config.GLOW_HORIZON.equals(glowStyle)) {
+                // The colour washes down from the top edge and fades out three quarters of the way down,
+                // with a brighter band along the top like light over a horizon.
+                paint.setShader(new LinearGradient(0, 0, 0, h * 0.75f,
+                        new int[]{0x66FFFFFF, 0x24FFFFFF, 0x00FFFFFF},
+                        new float[]{0f, 0.4f, 1f},
+                        Shader.TileMode.CLAMP));
+                canvas.drawRect(0, 0, w, h, paint);
+                paint.setShader(new RadialGradient(
+                        w * 0.5f, -h * 0.25f, w * 0.55f,
+                        new int[]{0x40FFFFFF, 0x00FFFFFF},
+                        null,
                         Shader.TileMode.CLAMP));
             } else {
                 paint.setShader(new RadialGradient(
@@ -2268,6 +2302,10 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
 
     /** Hides the Inputs pill when it would have nothing to list: streaming boxes have no HDMI-in, AV or tuner. */
     private void updateInputsButton() {
+        if (!showInputsPill) {
+            btnInputs.setVisibility(View.GONE);
+            return;
+        }
         boolean any = liveTvIntent() != null || !sourcePanelService.isEmpty()
                 || (coocaaSources && !CoocaaSources.list(this).isEmpty());
         TvInputManager tim = (TvInputManager) getSystemService(TV_INPUT_SERVICE);
@@ -2281,6 +2319,20 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
             }
         }
         btnInputs.setVisibility(any ? View.VISIBLE : View.GONE);
+    }
+
+    /** boot_to_live_tv: the first time Home comes up after the TV starts, open the Live TV app instead. Once per
+     *  boot, keyed on Settings.Global.BOOT_COUNT, so a later Home press stays on Home. */
+    private boolean openLiveTvAfterBoot() {
+        if (!bootToLiveTv) return false;
+        int boot = Settings.Global.getInt(getContentResolver(), Settings.Global.BOOT_COUNT, -1);
+        SharedPreferences prefs = getSharedPreferences("boot", MODE_PRIVATE);
+        if (boot < 0 || prefs.getInt("live_tv_boot", -1) == boot) return false;
+        prefs.edit().putInt("live_tv_boot", boot).apply();
+        Intent i = liveTvIntent();
+        if (i == null) return false;
+        open(i);
+        return true;
     }
 
     /** The Live TV app's launch intent: its leanback entry point, or the configured action if it has none. */

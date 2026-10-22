@@ -8,7 +8,7 @@ Nothing here is reviewed or maintained by this repo. Read the project's own READ
 it was built on, and treat it the way you'd treat any app you sideload. Each row links to the
 project's own issue tracker.
 
-**Jump to:** [Home screens built as their own app](#home-screens-built-as-their-own-app) · [Forks of the launcher](#forks-of-the-launcher) · [Screensavers and add-ons](#screensavers-and-add-ons) · [Tools and companion apps](#tools-and-companion-apps) · [Other platforms: Fire TV and LG webOS](#other-platforms-fire-tv-and-lg-webos) · [Guides and write-ups](#guides-and-write-ups) · [Find a project by TV brand](#find-a-project-by-tv-brand) · [Add yours](#add-yours)
+**Jump to:** [Home screens built as their own app](#home-screens-built-as-their-own-app) · [Forks of the launcher](#forks-of-the-launcher) · [Screensavers and add-ons](#screensavers-and-add-ons) · [Tools and companion apps](#tools-and-companion-apps) · [Other platforms: Fire TV and LG webOS](#other-platforms-fire-tv-and-lg-webos) · [Add-ons in this repo](addons/README.md) · [Guides and write-ups](#guides-and-write-ups) · [Find a project by TV brand](#find-a-project-by-tv-brand) · [Add yours](#add-yours)
 
 44 projects so far.
 
@@ -90,6 +90,10 @@ Fire OS won't let another launcher replace Amazon's home, and LG TVs run webOS r
 | [Fire TV Glass](https://github.com/ivantrj/firetv-glass-launcher) | Debloat scripts and a small Glass launcher for Fire OS 8, which protects Amazon's home: an accessibility service brings Glass back whenever Amazon's home appears. Dock, hidden apps and wallpaper change without a rebuild | Fire TV Stick 4K (AFTKRT), Fire OS 8 / Android 11 | [ivantrj](https://github.com/ivantrj) |
 | [fire-tv-cleanup](https://github.com/itsmeterrylin/fire-tv-cleanup) | A fork aimed at Fire TV: debloat plus a launcher with a macOS-style dock | Fire TV | [itsmeterrylin](https://github.com/itsmeterrylin) |
 | [webOS launcher](https://github.com/OmkarK97/webos-vibehack) | The same Apple TV-style home rebuilt as a webOS web app for LG TVs, installed through LG's Developer Mode, with a Home-button watcher that runs on another device | LG OLED C6, webOS 26 | [OmkarK97](https://github.com/OmkarK97) |
+
+## Add-ons in this repo
+
+Small optional apps that plug into the launcher as module cards live in [`addons/`](addons/README.md), with their own index. They are built separately and never make the launcher bigger.
 
 ## Guides and write-ups
 

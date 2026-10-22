@@ -74,6 +74,13 @@ if [ -d "$THEME/wallpapers" ]; then
     esac
   done
 fi
+# The collection's names (wallpaper_captions); a theme without them leaves no stale names behind.
+if [ -f "$THEME/wallpapers/captions.txt" ]; then
+  "$PY" -I b64push.py "$THEME/wallpapers/captions.txt" "$(stage wallpapers/captions.txt)"
+  tv "$(put wallpapers/captions.txt)" >/dev/null
+else
+  tv "$(del wallpapers/captions.txt)" >/dev/null
+fi
 tv "printf '%s' '$REVISION' > $TMP-theme_revision; $(put theme_revision)" >/dev/null
 tv "$RESTART; echo applied" | tail -n 1
 echo "Theme $(basename "$THEME") is on the TV. Undo with: tools/theme.sh --reset"
