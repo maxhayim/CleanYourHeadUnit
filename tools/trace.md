@@ -1,7 +1,8 @@
 # tools/trace.py and tools/trace_report.py
 
 Record Perfetto traces of the launcher on the TV, then report where its time goes. For headline numbers
-only (key latency, jank, cold start, PSS), use `tools/bench.py` instead: it needs no extra install.
+only (key latency, jank, cold start, PSS), use `tools/bench.py` instead: it needs no extra install. To draw the
+result for a pull request, use `tools/flamechart.py` ([guide](flamechart.md)).
 
 ## Setup
 
@@ -58,3 +59,5 @@ With `--vs`, a third table shows the change in each median. A run over twice the
 - **Expect no latency gain from off-main-thread work.** It removes work, but doesn't shorten the time to
   the first frame.
 - **Never commit the `.pftrace` files.** They hold the TV's process list.
+
+The whole before/after method for a pull request is in [`docs/workflows/perf-ab.md`](../docs/workflows/perf-ab.md).

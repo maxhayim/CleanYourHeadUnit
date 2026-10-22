@@ -60,14 +60,25 @@ def slices(utid, where, columns="s.ts, s.dur"):
 
 def start_metrics(q, package):
     """The numbers for a launcher start: cold, coldsys, home or a custom trace that brings Home up."""
+    return _start(q, package)[0]
+
+
+def start_window(q, package):
+    """(start, first frame drawn) in ns for a launcher start; either is None when the trace lacks it."""
+    return _start(q, package)[1:]
+
+
+def _start(q, package):
+    """(metrics, start ns, first frame drawn ns) for a launcher start."""
     upid, main, render = threads(q, package)
     if main is None:
-        return {}
+        return {}, None, None
     bind = q(slices(main, "s.name = 'bindApplication'"))
     start = q(slices(main, "s.name like 'performStart%'"))
     anchor = bind[0]["ts"] if bind else (start[0]["ts"] if start else None)
     if anchor is None:
-        return {}
+        return {}, None, None
+    end = None
     resume = q(slices(main, f"s.name = 'activityResume' and s.ts >= {anchor}"))
     out = {}
     if bind:
@@ -98,7 +109,7 @@ def start_metrics(q, package):
     out["missed"] = one(q, f"select count(*) from actual_frame_timeline_slice where upid = {upid} "
                            f"and jank_type like '%App Deadline Missed%' "
                            f"and ts >= {anchor} and ts < {anchor + WINDOW_NS}", 0)
-    return out
+    return out, anchor, end
 
 
 def nav_metrics(q, package):
