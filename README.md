@@ -756,6 +756,19 @@ The people whose work is in this repo:
 | **Press and partnerships** | [hello@itsgathin.com](mailto:hello@itsgathin.com) |
 | **Security issues** | Report them privately through the [Security tab](https://github.com/Gathin23/cleanyourtv/security), see [`SECURITY.md`](SECURITY.md) |
 
+## Legal
+
+- CleanYourTV is an independent open-source project. It is not affiliated with, endorsed by or sponsored
+  by any TV maker or platform. Brand and model names are used only to say which TV a list was tested on,
+  and remain the trademarks of their owners.
+- It works only through settings the TV itself offers to its owner: Developer options, ADB debugging and
+  Android's own `pm disable-user`, the same switch as Settings > Apps > Disable. It does not root the TV,
+  flash firmware, or bypass any lock, DRM or copy protection, and the repo contains no manufacturer
+  software, firmware or APKs.
+- Nothing is uninstalled, and `tools/restore.sh` puts everything back. You run it on a TV you own, at your
+  own risk, and changing a TV's software may affect its warranty or support.
+- Everything here is provided as is, without warranty of any kind, under the MIT licence below.
+
 ## Licence
 
 MIT, see [`LICENSE`](LICENSE). The Outfit typeface is under the SIL Open Font License, see
