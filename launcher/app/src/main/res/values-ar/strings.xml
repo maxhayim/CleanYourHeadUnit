@@ -65,7 +65,11 @@
     <string name="dock_edit">تعديل شريط التطبيقات</string>
     <string name="dock_edit_hint">اختر الموضع الذي تريد تغييره في الشريط واضغط موافق. اضغط رجوع للإنهاء.</string>
     <string name="dock_edit_pick_app">اختر الآن التطبيق الذي تريد وضعه هناك واضغط موافق. اضغط رجوع لاختيار موضع آخر.</string>
+    <string name="tile_add_to_dock">إضافة إلى الشريط</string>
+    <string name="tile_replace_in_dock">استبدال بتطبيق آخر</string>
+    <string name="dock_edit_pick_place">اختر موضعًا في الشريط لهذا التطبيق واضغط موافق. اضغط رجوع للإلغاء.</string>
     <string name="reorder">إعادة ترتيب التطبيقات</string>
+    <string name="tile_move">نقل</string>
     <string name="reorder_hint">اضغط موافق لالتقاط تطبيق، والأسهم لتحريكه، ورجوع لتثبيته. اضغط رجوع مرة أخرى للإنهاء.</string>
     <string name="reorder_not_saved">تعذّر حفظ الترتيب الجديد</string>
     <string name="app_library">مكتبة التطبيقات</string>
@@ -88,5 +92,5 @@
         <item quantity="other">%1$d تطبيق</item>
     </plurals>
     <string name="greeting_with_name">%1$s، %2$s</string>
-    <string name="library_hint_toggle">اضغط موافق لتبديل علامة الشاشة الرئيسية. تظهر التطبيقات المحددة أولاً.</string>
+    <string name="library_hint_toggle">موافق: إظهار/إخفاء</string>
 </resources>

@@ -69,6 +69,9 @@
     <string name="dock_edit">Chỉnh sửa dock</string>
     <string name="dock_edit_hint">Chọn vị trí trên dock cần đổi rồi nhấn OK. Nhấn Quay lại để kết thúc.</string>
     <string name="dock_edit_pick_app">Giờ chọn ứng dụng để đặt vào đó rồi nhấn OK. Nhấn Quay lại để chọn vị trí khác.</string>
+    <string name="tile_add_to_dock">Thêm vào dock</string>
+    <string name="tile_replace_in_dock">Thay bằng ứng dụng khác</string>
+    <string name="dock_edit_pick_place">Chọn vị trí trên dock cho ứng dụng này rồi nhấn OK. Nhấn Quay lại để hủy.</string>
     <string name="festival_dussehra_greeting">Chúc mừng lễ Dussehra</string>
     <string name="festival_diwali_greeting">Chúc mừng lễ Diwali</string>
     <string name="stats_memory">Bộ nhớ %1$d / %2$d MB</string>
@@ -112,5 +115,6 @@
     <string name="race_countdown_hours">%1$d giờ %2$d phút</string>
     <string name="race_countdown_days">%1$d ngày %2$d giờ</string>
     <string name="last_opened">Mở lần cuối %1$s</string>
-    <string name="library_hint_toggle">Nhấn OK để bật hoặc tắt hiển thị trên màn hình chính. Ứng dụng được chọn xếp trước.</string>
+    <string name="library_hint_toggle">OK: hiện/ẩn</string>
+    <string name="tile_move">Di chuyển</string>
 </resources>

@@ -42,7 +42,11 @@
     <string name="dock_edit">Dock bearbeiten</string>
     <string name="dock_edit_hint">Wähle den Dock-Platz, den du ändern willst, und drücke OK. Zurück zum Beenden.</string>
     <string name="dock_edit_pick_app">Wähle jetzt die App für diesen Platz und drücke OK. Zurück, um einen anderen Platz zu wählen.</string>
+    <string name="tile_add_to_dock">Zum Dock hinzufügen</string>
+    <string name="tile_replace_in_dock">Durch andere App ersetzen</string>
+    <string name="dock_edit_pick_place">Wähle den Dock-Platz für diese App und drücke OK. Zurück zum Abbrechen.</string>
     <string name="reorder">Apps anordnen</string>
+    <string name="tile_move">Verschieben</string>
     <string name="reorder_hint">OK hebt eine App an, Pfeiltasten verschieben sie, Zurück legt sie ab. Nochmals Zurück zum Beenden.</string>
     <string name="reorder_not_saved">Neue Reihenfolge konnte nicht gespeichert werden</string>
     <string name="app_library">App-Bibliothek</string>
@@ -61,5 +65,5 @@
         <item quantity="other">%1$d Apps</item>
     </plurals>
     <string name="greeting_with_name">%1$s, %2$s</string>
-    <string name="library_hint_toggle">OK schaltet die Anzeige auf der Startseite um. Markierte Apps stehen vorne.</string>
+    <string name="library_hint_toggle">OK: anzeigen/ausblenden</string>
 </resources>

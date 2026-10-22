@@ -75,7 +75,11 @@
     <string name="dock_edit">Dockni tahrirlash</string>
     <string name="dock_edit_hint">Oʻzgartiriladigan joyni tanlab, OK ni bosing. Tugatish uchun Back.</string>
     <string name="dock_edit_pick_app">Endi u yerga qoʻyiladigan ilovani tanlab, OK ni bosing. Boshqa joy tanlash uchun Back.</string>
+    <string name="tile_add_to_dock">Dockga qoʻshish</string>
+    <string name="tile_replace_in_dock">Boshqa ilova bilan almashtirish</string>
+    <string name="dock_edit_pick_place">Bu ilova uchun dockdagi joyni tanlab, OK ni bosing. Bekor qilish uchun Back.</string>
     <string name="reorder">Ilovalar tartibini oʻzgartirish</string>
+    <string name="tile_move">Koʻchirish</string>
     <string name="reorder_hint">OK ilovani ushlaydi, strelkalar suradi, Back joyiga qoʻyadi. Tugatish uchun yana Back.</string>
     <string name="reorder_not_saved">Yangi tartib saqlanmadi</string>
     <string name="app_library">Ilovalar kutubxonasi</string>
@@ -101,5 +105,5 @@
     <string name="race_live">%1$s · jonli</string>
     <string name="race_finished">Marra</string>
     <string name="last_opened">Oxirgi marta ochilgan: %1$s</string>
-    <string name="library_hint_toggle">Bosh ekranda ko‘rsatish yoki yashirish uchun OK bosing. Belgilangan ilovalar oldin turadi.</string>
+    <string name="library_hint_toggle">OK: ko‘rsatish/yashirish</string>
 </resources>

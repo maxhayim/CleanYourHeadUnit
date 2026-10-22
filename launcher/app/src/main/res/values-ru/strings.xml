@@ -92,7 +92,11 @@
     <string name="dock_edit">Изменить док</string>
     <string name="dock_edit_hint">Выберите место в доке и нажмите ОК. Назад — готово.</string>
     <string name="dock_edit_pick_app">Теперь выберите приложение для этого места и нажмите ОК. Назад — выбрать другое место.</string>
+    <string name="tile_add_to_dock">Добавить в док</string>
+    <string name="tile_replace_in_dock">Заменить другим приложением</string>
+    <string name="dock_edit_pick_place">Выберите место в доке для этого приложения и нажмите ОК. Назад — отмена.</string>
     <string name="reorder">Изменить порядок приложений</string>
+    <string name="tile_move">Переместить</string>
     <string name="reorder_hint">ОК — взять приложение, стрелки — переместить, Назад — поставить. Ещё раз Назад — готово.</string>
     <string name="reorder_not_saved">Не удалось сохранить новый порядок</string>
     <string name="app_library">Библиотека приложений</string>
@@ -141,5 +145,5 @@
     <!-- Cinematic top shelf (cinematic_home): the line under the focused dock app's name; %1$s is when it was
          last opened, e.g. "5 minutes ago" or "yesterday, 9:40 pm". -->
     <string name="last_opened">Последний запуск: %1$s</string>
-    <string name="library_hint_toggle">Нажмите OK, чтобы показать или скрыть на главном экране. Отмеченные приложения идут первыми.</string>
+    <string name="library_hint_toggle">OK: показать/скрыть</string>
 </resources>

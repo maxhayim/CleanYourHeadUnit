@@ -41,7 +41,9 @@ $uri = "content://$pkg.theme"
 $tmp = '/data/local/tmp/cyt-theme'
 # A file's staging path; wallpapers/a.jpg is staged as $tmp-wallpapers-a.jpg.
 function Stage($name) { "$tmp-$($name -replace '/', '-')" }
-function Put($name) { $t = Stage $name; "rm -f $dir/$name 2>/dev/null; content write --uri $uri/$name < $t 2>/dev/null || cp $t $dir/$name 2>/dev/null; rm -f $t" }
+# Android 8 and 9 have no `content write`: they print "[ERROR] Unsupported operation: write" but exit 0, so
+# that message counts as a failure and cp runs.
+function Put($name) { $t = Stage $name; "rm -f $dir/$name 2>/dev/null; { o=`$(content write --uri $uri/$name < $t 2>&1) && case `"`$o`" in *'Unsupported operation'*) false ;; esac; } || cp $t $dir/$name 2>/dev/null; rm -f $t" }
 function Drop($name) { "rm -f $dir/$name 2>/dev/null; content delete --uri $uri/$name 2>/dev/null" }
 
 if ($Reset) {

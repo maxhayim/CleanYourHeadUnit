@@ -53,7 +53,11 @@
     <string name="dock_edit">Editar a dock</string>
     <string name="dock_edit_hint">Escolha o lugar da dock a mudar e prima OK. Voltar para terminar.</string>
     <string name="dock_edit_pick_app">Agora escolha a app a colocar lá e prima OK. Voltar para escolher outro lugar.</string>
+    <string name="tile_add_to_dock">Adicionar à dock</string>
+    <string name="tile_replace_in_dock">Substituir por outra app</string>
+    <string name="dock_edit_pick_place">Escolha o lugar da dock para esta app e prima OK. Voltar para cancelar.</string>
     <string name="reorder">Reordenar apps</string>
+    <string name="tile_move">Mover</string>
     <string name="reorder_hint">OK pega numa app, as setas movem-na, Voltar pousa-a. Voltar outra vez para terminar.</string>
     <string name="reorder_not_saved">Não foi possível guardar a nova ordem</string>
     <string name="app_library">Biblioteca de apps</string>
@@ -104,5 +108,5 @@
     <string name="race_live">%1$s · ao vivo</string>
     <string name="race_finished">Bandeira quadriculada</string>
     <string name="last_opened">Aberto %1$s</string>
-    <string name="library_hint_toggle">Prima OK para mostrar ou ocultar no ecrã inicial. As aplicações selecionadas aparecem primeiro.</string>
+    <string name="library_hint_toggle">OK: mostrar/ocultar</string>
 </resources>

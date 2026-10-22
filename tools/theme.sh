@@ -55,7 +55,9 @@ URI=content://$PKG.theme
 TMP=/data/local/tmp/cyt-theme
 # A file's staging path; wallpapers/a.jpg is staged as $TMP-wallpapers-a.jpg.
 stage() { echo "$TMP-${1//\//-}"; }
-put() { echo "rm -f $DIR/$1 2>/dev/null; content write --uri $URI/$1 < $(stage "$1") 2>/dev/null || cp $(stage "$1") $DIR/$1 2>/dev/null; rm -f $(stage "$1")"; }
+# Android 8 and 9 have no `content write`: they print the usage and "[ERROR] Unsupported operation: write" but
+# exit 0, so the exit status alone would skip cp and leave the file deleted. Treat that message as a failure.
+put() { echo "rm -f $DIR/$1 2>/dev/null; { o=\$(content write --uri $URI/$1 < $(stage "$1") 2>&1) && case \"\$o\" in *'Unsupported operation'*) false ;; esac; } || cp $(stage "$1") $DIR/$1 2>/dev/null; rm -f $(stage "$1")"; }
 del() { echo "rm -f $DIR/$1 2>/dev/null; content delete --uri $URI/$1 2>/dev/null"; }
 
 if [ "${1:-}" = --reset ]; then
