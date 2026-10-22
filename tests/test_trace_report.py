@@ -11,6 +11,7 @@ Run from the repository root: python3 -m unittest discover -s tests -v
 import contextlib
 import importlib.util
 import io
+import json
 import os
 from pathlib import Path
 import sqlite3
@@ -58,7 +59,9 @@ def fake_trace(cold=False, frames=(), draws=(), missed=1, gpu=()):
     for i, dur in enumerate(frames):
         jank = "App Deadline Missed" if i < missed else "Buffer Stuffing"
         db.execute("insert into actual_frame_timeline_slice values (?, ?, 2, ?)", ((1060 + 20 * i) * MS, dur * MS, jank))
-    return lambda sql: [dict(r) for r in db.execute(sql)]
+    q = lambda sql: [dict(r) for r in db.execute(sql)]
+    q.close = db.close
+    return q
 
 
 class StartMetricsTest(unittest.TestCase):
@@ -142,6 +145,78 @@ class FilesTest(unittest.TestCase):
                 contextlib.redirect_stderr(io.StringIO()), self.assertRaises(SystemExit) as caught:
             report.opener()
         self.assertIn("requirements-perf.txt", str(caught.exception.code))
+
+
+class MainTest(unittest.TestCase):
+    def open_trace(self, path):
+        q = fake_trace(frames=[16])
+        return q, q.close
+
+    def trace(self, folder, name, scenario=None):
+        path = Path(folder, name + ".pftrace")
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_bytes(b"")
+        if scenario is not None:
+            path.with_suffix(".json").write_text(json.dumps({"scenario": scenario}))
+        return str(path)
+
+    def assert_rejected_before_opening_engine(self, argv):
+        with mock.patch.object(report, "opener", return_value=self.open_trace) as opener, \
+                contextlib.redirect_stdout(io.StringIO()):
+            with self.assertRaisesRegex(SystemExit, "nav.*start.*separately"):
+                report.main(argv)
+            opener.assert_not_called()
+
+    def test_mixed_folder_is_rejected_in_either_input_set(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            mixed, starts = Path(tmp, "mixed"), Path(tmp, "starts")
+            self.trace(mixed, "cold-1")
+            self.trace(mixed, "nav-1")
+            self.trace(starts, "home-1")
+            for argv in ([str(mixed)], [str(starts), "--vs", str(mixed)]):
+                with self.subTest(argv=argv):
+                    self.assert_rejected_before_opening_engine(argv)
+
+    def test_vs_rejects_nav_against_start_in_both_directions(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            nav = self.trace(tmp, "nav-1")
+            start = self.trace(tmp, "cold-1")
+            for before, after in ((nav, start), (start, nav)):
+                with self.subTest(before=before):
+                    self.assert_rejected_before_opening_engine([before, "--vs", after])
+
+    def test_sidecar_can_make_matching_file_names_incompatible(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            cold = self.trace(tmp, "cold-1")
+            renamed_nav = self.trace(tmp, "cold-2", scenario="nav")
+            self.assert_rejected_before_opening_engine([cold, renamed_nav])
+
+    def test_sidecar_can_make_different_file_names_a_valid_nav_set(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            nav = self.trace(tmp, "nav-1")
+            renamed_nav = self.trace(tmp, "cold-2", scenario="nav")
+            with mock.patch.object(report, "opener", return_value=self.open_trace), \
+                    contextlib.redirect_stdout(io.StringIO()) as out:
+                report.main([nav, renamed_nav, "--markdown"])
+            self.assertIn("| frame time, median (ms) |", out.getvalue())
+            self.assertNotIn("| frames drawn in 1.5 s |", out.getvalue())
+
+    def test_matching_nav_and_start_sets_still_report_and_compare(self):
+        for scenarios, label in ((["nav"], "| frame time, median (ms) |"),
+                                 (["cold", "home", "coldsys", "custom"], "| frames drawn in 1.5 s |")):
+            with self.subTest(scenarios=scenarios), tempfile.TemporaryDirectory() as tmp:
+                before, after = Path(tmp, "before"), Path(tmp, "after")
+                for folder in (before, after):
+                    for name in scenarios:
+                        self.trace(folder, name + "-1")
+                open_trace = mock.Mock(side_effect=self.open_trace)
+                with mock.patch.object(report, "opener", return_value=open_trace) as opener, \
+                        contextlib.redirect_stdout(io.StringIO()) as out:
+                    report.main([str(before), "--vs", str(after), "--markdown"])
+                opener.assert_called_once_with(None)
+                self.assertEqual(open_trace.call_count, 2 * len(scenarios))
+                self.assertIn(label, out.getvalue())
+                self.assertIn("Change in the median:", out.getvalue())
 
 
 @unittest.skipUnless(os.environ.get("CLEANYOURTV_TRACE") and importlib.util.find_spec("perfetto"),

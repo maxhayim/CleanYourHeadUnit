@@ -33,6 +33,10 @@ TV_HOST=<tv ip> tools/venv/bin/python -I tools/trace.py home --runs 5 --out trac
 
 ## Report
 
+Keep `nav` traces separate from start traces (`home`, `cold`, `coldsys`, `custom`), since their frame
+counts use different time windows. Each input set and both sides of `--vs` must use the same family.
+For a folder containing both, pass matching files such as `traces/nav-*.pftrace` instead of the folder.
+
 ```bash
 tools/venv/bin/python tools/trace_report.py traces/before --vs traces/after --markdown
 ```
