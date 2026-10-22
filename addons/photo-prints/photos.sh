@@ -6,8 +6,8 @@
 # month and year. Nothing is uploaded anywhere else: the files go straight to the app's own folder on the TV.
 #
 # Uses the repo's tools/tv.py and tools/b64push.py (set up as in the main README: tools/venv).
-# Usage: TV_HOST=192.168.1.50 addons/photo-screensaver/photos.sh ~/Pictures/TV
-#        TV_HOST=192.168.1.50 addons/photo-screensaver/photos.sh --clear
+# Usage: TV_HOST=192.168.1.50 addons/photo-prints/photos.sh ~/Pictures/TV
+#        TV_HOST=192.168.1.50 addons/photo-prints/photos.sh --clear
 set -euo pipefail
 SRC="${1:-}"
 case "$SRC" in --clear|"") ;; /*) ;; *) SRC="$(pwd)/$SRC" ;; esac

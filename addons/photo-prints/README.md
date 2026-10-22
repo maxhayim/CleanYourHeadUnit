@@ -23,8 +23,8 @@ the slideshow is on screen.
 JDK 17 and Android SDK 34, as for the launcher. From the repo root:
 
 ```bash
-cd addons/photo-screensaver && ./gradlew assembleRelease && cd ../..
-TV_HOST=<tv ip> tools/venv/bin/python -I tools/tv.py --push addons/photo-screensaver/app/build/outputs/apk/release/app-release.apk /data/local/tmp/addon.apk
+cd addons/photo-prints && ./gradlew assembleRelease && cd ../..
+TV_HOST=<tv ip> tools/venv/bin/python -I tools/tv.py --push addons/photo-prints/app/build/outputs/apk/release/app-release.apk /data/local/tmp/addon.apk
 TV_HOST=<tv ip> tools/venv/bin/python -I tools/tv.py 'pm install -r /data/local/tmp/addon.apk; rm -f /data/local/tmp/addon.apk'
 ```
 
@@ -37,14 +37,18 @@ The photos live in the app's own folder on the TV:
 folder, resizing each photo to 1280 px first (HEIC included) and writing the date it was taken into the name:
 
 ```bash
-TV_HOST=<tv ip> addons/photo-screensaver/photos.sh ~/Pictures/TV
-TV_HOST=<tv ip> addons/photo-screensaver/photos.sh --clear     # remove them all
+TV_HOST=<tv ip> addons/photo-prints/photos.sh ~/Pictures/TV
+TV_HOST=<tv ip> addons/photo-prints/photos.sh --clear     # remove them all
 ```
 
 Any `jpg`, `jpeg`, `png` or `webp` copied into that folder by other means works too. A name ending in the date,
 `something-20231202.jpg`, gives the print its date; otherwise the camera's own date is used when the photo has
 one, and the print shows no date when it has neither. Photos added while the TV is on show up at the next sweep.
 With no photos, the screen shows the folder to copy them into.
+
+`photos.sh` and `adb push` were tested on the Sony above, where the app reads files the shell copies into its
+folder. Some firmware does not allow that (#921 found files copied this way unreadable on a TCL G10); there, the
+prints stay empty and the screen keeps showing the folder.
 
 ## Use it as the screensaver
 
