@@ -175,6 +175,10 @@ final class Config {
     final boolean dockGlass;
     /** The dock band's padding equals the gap between its tiles (config.xml, dock_even_padding); false keeps the fixed padding. */
     final boolean dockEvenPadding;
+    /** Opacity of the app's artwork behind the cinematic shelf, 0 to 100 (config.xml, cinematic_art); 50 as before. */
+    final int cinematicArt;
+    /** Strength of the cinematic shelf's dark scrim, 0 to 100 percent (config.xml, cinematic_scrim); 100 as before. */
+    final int cinematicScrim;
     /** Shape of the glow behind the focused app (config.xml, glow_style): {@link #GLOW_RADIAL} or {@link #GLOW_HORIZON}. */
     final String glowStyle;
 
@@ -198,7 +202,7 @@ final class Config {
                    Festival festival, int[] inputKeycodes, List<String> appKeys, String stockHomeRedirect,
                    List<RaceWeekend.Race> raceCalendar, boolean cinematicHome, boolean ambientGlow, boolean appGlow, int homeIdleClockMinutes,
                    boolean keyFilter, boolean dockGlass, String glowStyle, boolean wallpaperCaptions,
-                   boolean handleViewInputs, boolean tileMenu, boolean dockEvenPadding) {
+                   boolean handleViewInputs, boolean tileMenu, boolean dockEvenPadding, int cinematicScrim, int cinematicArt) {
         this.handleViewInputs = handleViewInputs;
         this.tileMenu = tileMenu;
         this.inputKeycodes = inputKeycodes;
@@ -269,6 +273,8 @@ final class Config {
         this.homeIdleClockMinutes = homeIdleClockMinutes;
         this.dockGlass = dockGlass;
         this.dockEvenPadding = dockEvenPadding;
+        this.cinematicArt = cinematicArt;
+        this.cinematicScrim = cinematicScrim;
         this.glowStyle = glowStyle(glowStyle);
         this.wallpaperCaptions = wallpaperCaptions;
     }
@@ -346,6 +352,8 @@ final class Config {
         boolean keyFilter = res.getBoolean(R.bool.key_filter);
         boolean dockGlass = res.getBoolean(R.bool.dock_glass);
         boolean dockEvenPadding = res.getBoolean(R.bool.dock_even_padding);
+        int cinematicArt = res.getInteger(R.integer.cinematic_art);
+        int cinematicScrim = res.getInteger(R.integer.cinematic_scrim);
         String glowStyle = res.getString(R.string.glow_style);
         boolean applied = false;
 
@@ -416,6 +424,8 @@ final class Config {
             keyFilter = bool(json, "key_filter", keyFilter);
             dockGlass = bool(json, "dock_glass", dockGlass);
             dockEvenPadding = bool(json, "dock_even_padding", dockEvenPadding);
+            cinematicArt = integer(json, "cinematic_art", cinematicArt, 0, 100);
+            cinematicScrim = integer(json, "cinematic_scrim", cinematicScrim, 0, 100);
             glowStyle = string(json, "glow_style", glowStyle);
         }
         // A theme push or reset invalidates choices made on the TV. On first use, remember the
@@ -470,7 +480,7 @@ final class Config {
                 Math.max(0, Math.min(100, skyIntensity)), settingsKeycodes, settingsKeyPanel, restoreKeyServices, wallpaperEnabled, wallpaper,
                 wallpapers, rotationMinutes, wallpaperDim, dockOpacity, wallpaperOrder, applied,
                 festival, inputKeycodes, appKeys, stockHomeRedirect, json == null ? Collections.emptyList() : raceCalendar(json), cinematic, ambientGlow, appGlow,
-                Math.max(0, idleClockMinutes), keyFilter, dockGlass, glowStyle, wallpaperCaptions, handleViewInputs, tileMenu, dockEvenPadding);
+                Math.max(0, idleClockMinutes), keyFilter, dockGlass, glowStyle, wallpaperCaptions, handleViewInputs, tileMenu, dockEvenPadding, cinematicScrim, cinematicArt);
     }
 
     /**

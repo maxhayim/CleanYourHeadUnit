@@ -150,7 +150,8 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
     /** config.xml glow_style: the shape setAmbient paints the glow mask in. */
     private String glowStyle;
     private ImageView heroArt;
-    private static final float HERO_ART_ALPHA = 0.5f;
+    /** The artwork's opacity behind the cinematic shelf (config.xml cinematic_art); 0 leaves it out. */
+    private float heroArtAlpha = 0.5f;
     /** Softened artwork per app (HeroArt, about 5 KB each), made the first time its dock tile is focused. */
     private final Map<String, Bitmap> heroArtCache = new HashMap<>();
     /** The app whose artwork heroArt shows, so focusing it again only fades it back in. */
@@ -405,7 +406,8 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         heroArt = findViewById(R.id.heroArt);
         cinematic = cfg.cinematicHome;
         glowStyle = cfg.glowStyle;
-        if (cinematic) setUpCinematicShelf();
+        heroArtAlpha = cfg.cinematicArt / 100f;
+        if (cinematic) setUpCinematicShelf(cfg.cinematicScrim);
         // dock_title false: the name above the dock (and the cinematic lines under it) never shows; the glow
         // still follows the dock.
         if (!cfg.dockTitle) hero.setVisibility(View.GONE);
@@ -1552,7 +1554,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         int color = adapter.ambientColorAt(position);
         float y = dockTopInRoot - 14 * density - 26 * density - hero.getHeight();
         boolean changed = !label.contentEquals(heroName.getText());
-        if (cinematic) showHeroArt(position);
+        if (cinematic && heroArtAlpha > 0f) showHeroArt(position);
 
         if (!animations || reducedMotion) {
             // Snap the shelf instead of sliding and fading it: each of those frames repaints the
@@ -1615,17 +1617,24 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
 
     // ---- cinematic shelf -------------------------------------------------------------------------
 
-    /** The parts that never change: a larger name, the meta line and the dots, the artwork and the scrim. */
-    private void setUpCinematicShelf() {
+    /**
+     * The parts that never change: a larger name, the meta line and the dots, the artwork and the scrim, at
+     * scrimPercent of its strength (cinematic_scrim). cinematic_art 0 leaves the artwork out, 0 percent the scrim.
+     */
+    private void setUpCinematicShelf(int scrimPercent) {
         heroName.setTextSize(TypedValue.COMPLEX_UNIT_SP, 68f);
         heroName.setLetterSpacing(-0.025f);
         heroMeta.setVisibility(View.INVISIBLE);   // keeps its height, so the name does not jump when it fills in
         heroDots.setVisibility(View.VISIBLE);
-        heroArt.setVisibility(View.VISIBLE);
+        heroArt.setVisibility(heroArtAlpha > 0f ? View.VISIBLE : View.GONE);
         // One stretched bitmap: apply its alpha while drawing instead of through an offscreen buffer.
         heroArt.forceHasOverlappingRendering(false);
+        if (scrimPercent <= 0) return;   // cinematic_scrim 0: no scrim at all
         View scrim = findViewById(R.id.heroScrim);
-        scrim.setBackground(scrimDrawable());
+        Drawable shade = scrimDrawable();
+        // On the bitmap's paint, not the view: a view's alpha would draw the full screen through an offscreen buffer.
+        shade.setAlpha(scrimPercent * 255 / 100);
+        scrim.setBackground(shade);
         scrim.setVisibility(View.VISIBLE);
     }
 
@@ -1674,13 +1683,13 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         }
         heroArt.animate().alpha(0f).setDuration(140).withEndAction(() -> {
             heroArt.setImageBitmap(next);
-            heroArt.animate().alpha(HERO_ART_ALPHA).setDuration(420).start();
+            heroArt.animate().alpha(heroArtAlpha).setDuration(420).start();
         }).start();
     }
 
     private void fadeHeroArt(int ms) {
-        if (!animations) heroArt.setAlpha(HERO_ART_ALPHA);
-        else heroArt.animate().alpha(HERO_ART_ALPHA).setDuration(reducedMotion ? Math.min(ms, Motion.REDUCED_MS) : ms).start();
+        if (!animations) heroArt.setAlpha(heroArtAlpha);
+        else heroArt.animate().alpha(heroArtAlpha).setDuration(reducedMotion ? Math.min(ms, Motion.REDUCED_MS) : ms).start();
     }
 
     /** "Last opened yesterday, 9:40 PM", the time in white; nothing (but the same height) when it was never seen. */
