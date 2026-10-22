@@ -9,6 +9,7 @@ import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.IntentFilter;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.ResolveInfo;
@@ -202,6 +203,8 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
     private int greetingColor;
     /** The day the petal shower last played, so it greets the first Home of each day only. */
     private static LocalDate lastPetalShower;
+    /** boot_to_live_tv: open the Live TV app on the first Home of each boot. */
+    private boolean bootToLiveTv;
     /** hidden_apps as the adapter sees them (config.xml or a theme's config.json): a hidden app gets no card either. */
     private Set<String> hiddenApps = Collections.emptySet();
     private List<Cards.Card> cards = Collections.emptyList();
@@ -332,6 +335,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         festive = festival.active(LocalDate.now());
         liveTvPkg = cfg.liveTvPackage;
         idleClockMs = cfg.homeIdleClockMinutes * MINUTE_MS;
+        bootToLiveTv = cfg.bootToLiveTv;
         liveTvAction = cfg.liveTvAction;
         liveTvInputId = cfg.liveTvInputId;
         inputAction = cfg.inputAction;
@@ -674,6 +678,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
             reloadApps(true);
         }
         rebuildOnResume = false;
+        if (openLiveTvAfterBoot()) return;
         updateGreeting();
         updateRace();
         // The network and Inputs pills keep their state while Home is in the background, and callbacks update them
@@ -2240,6 +2245,20 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
             }
         }
         btnInputs.setVisibility(any ? View.VISIBLE : View.GONE);
+    }
+
+    /** boot_to_live_tv: the first time Home comes up after the TV starts, open the Live TV app instead. Once per
+     *  boot, keyed on Settings.Global.BOOT_COUNT, so a later Home press stays on Home. */
+    private boolean openLiveTvAfterBoot() {
+        if (!bootToLiveTv) return false;
+        int boot = Settings.Global.getInt(getContentResolver(), Settings.Global.BOOT_COUNT, -1);
+        SharedPreferences prefs = getSharedPreferences("boot", MODE_PRIVATE);
+        if (boot < 0 || prefs.getInt("live_tv_boot", -1) == boot) return false;
+        prefs.edit().putInt("live_tv_boot", boot).apply();
+        Intent i = liveTvIntent();
+        if (i == null) return false;
+        open(i);
+        return true;
     }
 
     /** The Live TV app's launch intent: its leanback entry point, or the configured action if it has none. */
