@@ -81,6 +81,11 @@ with open(os.environ["FAKE_CONTENT_LOG"], "a") as f:
     f.write(json.dumps({"content": args}) + "\n")
 if os.environ.get("FAKE_NO_PROVIDER"):
     sys.exit(1)
+if os.environ.get("FAKE_NO_CONTENT_WRITE") and args[0] == "write":
+    # Android 8 and 9: `content` has no write subcommand; it prints its usage and this line, and exits 0.
+    print("usage: adb shell content [subcommand] [options]")
+    print("[ERROR] Unsupported operation: write")
+    sys.exit(0)
 action, uri = args[0], args[args.index("--uri") + 1]
 path = os.path.join(os.environ["FAKE_DIR"], uri.split("com.gathin.tvhome.theme/", 1)[1])
 if action == "write":
@@ -170,6 +175,16 @@ class ThemePushTest(unittest.TestCase):
                          "firmware without the provider keeps the old path")
         self.assertTrue(self.provider_calls(), "the provider is tried first")
 
+    def test_android_8_without_content_write_falls_back_to_cp(self):
+        """Android 8/9 `content` has no write: it exits 0 after printing an error, so the status alone is not enough."""
+        (self.theme / "wallpaper.jpg").write_bytes(b"\xff\xd8jpeg bytes")
+        result = self.run_theme(str(self.theme), FAKE_NO_CONTENT_WRITE="1")
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        self.assertEqual((self.device / "config.json").read_bytes(), self.config,
+                         "put() removes the file first, so without cp the theme would be gone")
+        self.assertEqual((self.device / "wallpaper.jpg").read_bytes(), b"\xff\xd8jpeg bytes")
+        self.assertEqual((self.device / "theme_revision").stat().st_size, 32)
+
     def test_reset_clears_the_overlay_through_the_provider(self):
         (self.device / "config.json").write_bytes(self.config)
         (self.device / "wallpaper.jpg").write_bytes(b"old wallpaper")
@@ -202,6 +217,7 @@ class ThemePushTest(unittest.TestCase):
         self.assertIn("rm -f $dir/$name", put)
         self.assertLess(put.index("rm -f $dir/$name"), put.index("content write"), put)
         self.assertLess(put.index("content write"), put.index("cp $t $dir/$name"), put)
+        self.assertIn("Unsupported operation", put, "Android 8/9 exit 0 without writing; cp has to run then")
 
 
 if __name__ == "__main__":
