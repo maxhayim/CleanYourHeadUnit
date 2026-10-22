@@ -3,8 +3,12 @@
 Both PRs were merged for the same stick - same board, product and firmware - so the two folders were
 folded into `examples/xiaomi-mitv-afmu1/`. Consolidating by hand is easy to get wrong in a quiet way:
 a package can disappear, or a fact that only one of the two owners recorded can go with it, and nothing
-in the repo would notice. These tests compare the merged list against the two reports it came from, so
-the merge is either exact or it fails here.
+in the repo would notice. These tests compare the merged list against the two reports it came from.
+
+The comparison is one-directional on purpose: it fails when something one of the two units verified is
+no longer named anywhere in the file, never when a package is added to it. The list is meant to keep
+growing (a later owner adds a package, or uncomments one of the disputed lines), and a test that pinned
+its contents would turn every honest update into a merge blocker.
 
 Run from the repository root: python3 -m unittest discover -s tests -v
 """
@@ -144,8 +148,11 @@ class MergedListTest(unittest.TestCase):
         self.assertEqual({k: v for k, v in dropped.items() if v}, {},
                          "packages the merge lost")
 
-    def test_the_merged_list_invents_nothing(self):
-        self.assertEqual(invented(self.merged(), SOURCES), [])
+    def test_a_package_added_later_is_free_to_land(self):
+        # The point of the comparison is data lost, not data gained: a later contributor may add a
+        # package (or uncomment one of the disputed lines) without tripping this file.
+        grown = self.merged() + "com.example.newly_found\n"
+        self.assertEqual({k: v for k, v in missing(grown, SOURCES).items() if v}, {})
 
     def test_both_reports_are_named_and_their_facts_survive(self):
         text = self.merged()
@@ -165,14 +172,16 @@ class MergedListTest(unittest.TestCase):
             with self.subTest(fact=fact):
                 self.assertIn(fact, text)
 
-    def test_the_two_units_disagreements_are_still_readable(self):
+    def test_the_fold_records_where_the_two_units_disagreed(self):
         text = self.merged()
         self.assertIn("disagreed", text, "the kept/did-not-keep choices need saying, not a silent pick")
         for choice in ("com.google.android.katniss", "com.google.android.apps.mediashell",
-                       "com.google.android.tv.remote.service", "com.google.android.apps.tv.dreamx"):
+                       "com.google.android.tv.remote.service", "com.google.android.apps.tv.dreamx",
+                       "com.xiaomi.mitv.smartshare", "com.xiaomi.wfdsinkhelperservice",
+                       "com.xiaomi.mi_connect_service"):
             with self.subTest(package=choice):
-                self.assertNotIn(choice, packages(text),
-                                 "a package only one unit was happy to lose must stay a choice")
+                self.assertIn(choice, mentioned(text),
+                              "a package only one unit was happy to lose has to stay a documented choice")
 
 
 class CheckerTest(unittest.TestCase):
