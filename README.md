@@ -106,6 +106,9 @@ Karbonn · Kogan · Motorola · MTC · Noblex · Nokia · OK. · Polytron · PRI
 Tele System · Verizon · Vidda · Vision ·
 Anker Nebula, BYINTEK, JMGO, Portronics, Stellamore, Wanbo and XGIMI projectors
 BYINTEK, Gadnic, JMGO, Portronics, Stellamore, Wanbo and XGIMI projectors
+Karbonn · Kogan · Motorola · MTC · Noblex · OK. · Polytron · PRISM+ · RCA · Sankey · SANYO · SHARP · Super General · Tele System ·
+Verizon · Vidda · Vision ·
+BYINTEK, JMGO, Portronics, Stellamore, Wanbo and XGIMI projectors
 
 <details>
 <summary><strong>The full list</strong></summary>
@@ -227,6 +230,7 @@ BYINTEK, Gadnic, JMGO, Portronics, Stellamore, Wanbo and XGIMI projectors
 | Sony BRAVIA XBR-65X900F (2018, BRAVIA_ATV3_4K, MediaTek MT5891), US/Canada | Android TV 9 |
 | Sony XR-65A80J (65-inch OLED, 2021, BRAVIA_VH2), EU | Google TV 12 |
 | Stellamore T950S projector (Droidlogic be30a3, Amlogic txhd2) | Android 13 |
+| Super General 55" 4K (CVTE TP.SK708D.PC821, Amlogic T972, x30a4, 1 GB), Saudi Arabia | Android 9 |
 | TCL / FFalcon China (tcl9655_cn, MediaTek MT9655 "merak", UTT2.250416.001 AU01) | Android 14 |
 | TCL 32L5A (C06, model "Smart TV", 1 GB) | Android TV 11 |
 | TCL 32S5400A (C06, C06_2K_GB, MediaTek MT9221, 1 GB), 2023 | Android TV 11 |
