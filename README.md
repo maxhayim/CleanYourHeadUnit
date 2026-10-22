@@ -108,7 +108,7 @@ Tested lists from contributors, one folder per model in [`examples/`](examples/)
 AiPro2K · AIWA · Artel · Caxium · Cecotec · Challenger · Compac · Dialog · EKO · Freebox · Insignia Fire TV · JVC ·
 Karbonn · Kogan · Motorola · MTC · Noblex · OK. · PEAQ · Polytron · PRISM+ · RCA · Sankey · SANYO · SHARP ·
 Super General · Tele System · Tornado · Turkcell · Verizon · Vidda · Vision ·
-Anker Nebula, BYINTEK, Epson, Gadnic, JMGO, Portronics, Stellamore, Wanbo and XGIMI projectors
+Anker Nebula, BYINTEK, Epson, Formovie, Gadnic, JMGO, Portronics, Stellamore, Wanbo and XGIMI projectors
 
 <details>
 <summary><strong>The full list</strong></summary>
@@ -145,6 +145,7 @@ Anker Nebula, BYINTEK, Epson, Gadnic, JMGO, Portronics, Stellamore, Wanbo and XG
 | Epson LS800 laser projector (Askey HA90 module, sti6202d101, Amlogic) | Android TV 14 |
 | FFalcon (雷鸟) 鹤6 PRO 65S585C Pro (China, tcl_mt5879_cn, MediaTek MT9653) | Android TV 11 |
 | FFalcon (雷鸟) r34a0, China (V8-A920T01-LF1V147, Amlogic T920), 1 GB | Android 5.1.1 |
+| Formovie Laser 4K projector (hanlla, MediaTek T31 / m7632, 1.8 GB) | Android TV 14 |
 | Freebox Player POP (Free, fbx8am, Amlogic), IPTV/DVB-T box | Android TV 10 |
 | Gadnic PROJ100W projector (built-in Google TV stick: SkyworthDigital YYT, Amlogic HP46B), Argentina | Google TV 14 |
 | Google TV Streamer 4K (kirkwood, GZRNL) | Google TV 14 |
