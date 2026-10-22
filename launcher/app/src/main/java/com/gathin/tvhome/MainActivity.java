@@ -15,6 +15,7 @@ import android.content.pm.PackageManager;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.ResolveInfo;
 import android.content.pm.ChangedPackages;
+import android.content.res.ColorStateList;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -609,6 +610,10 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         iconOnlyButtons = cfg.iconOnlyButtons;
         topMenu = cfg.topMenu;
         wifiIconOnly = iconOnlyButtons && cfg.wifiLabelWidth <= 0;
+        if (cfg.wifiStatusColor) {
+            wifiPlainTint = btnWifi.getCompoundDrawableTintList();
+            wifiOnlineTint = getColorStateList(R.color.pill_icon_online);
+        }
         if (cfg.topMenu) {
             // One gear: Inputs and Wi-Fi move into its dropdown. The Wi-Fi pill stays hidden but keeps its
             // label up to date, which the menu's Wi-Fi row shows.
@@ -2394,6 +2399,10 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
                 wifiIcon = icon;
                 btnWifi.setCompoundDrawablesRelativeWithIntrinsicBounds(icon, 0, 0, 0);
             }
+            ColorStateList tint = online ? wifiOnlineTint : wifiPlainTint;
+            if (wifiOnlineTint != null && btnWifi.getCompoundDrawableTintList() != tint) {
+                btnWifi.setCompoundDrawableTintList(tint);
+            }
         }
     }
 
@@ -2404,6 +2413,8 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
     private boolean launcherSettingsButton;
     /** icon_only_buttons without wifi_label_width: the Wi-Fi pill shows no network name. */
     private boolean wifiIconOnly;
+    /** config.xml wifi_status_color: the Wi-Fi icon's green while online and its usual pill colours; null while off. */
+    private ColorStateList wifiOnlineTint, wifiPlainTint;
     /** The app library button in the top bar (library_button). */
     private View btnLibraryTop;
     /** The open library came from that button: closing it returns there instead of scrolling to the grid's end. */
