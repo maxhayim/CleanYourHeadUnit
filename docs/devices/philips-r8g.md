@@ -36,7 +36,7 @@ Each call answers `Result: Parcel(NULL)`. `service call com.realtek.power.ILedMa
 
 With the TV on, the light was already off. On the power key the light comes on for a few seconds while the TV
 shuts down (that sequence isn't covered by these states), then goes off and stays off in standby. To undo, send
-setting 1 instead of 0 for the same states. Not yet checked: whether it survives a full power cut or a firmware
+setting 1 instead of 0 for the same states (the undo hasn't been tried yet). Not yet checked: whether it survives a full power cut or a firmware
 update; if the light comes back, run the line again.
 
 Other Realtek-based sets may have the same service under the same name (`service list | grep -i led`); the state

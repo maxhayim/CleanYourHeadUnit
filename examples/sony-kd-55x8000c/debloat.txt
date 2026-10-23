@@ -2,8 +2,9 @@
 # Android TV 7.0 (API 24), build SVP4KDTV15_CN-user 7.0 NRD91N.S35 5.435, 1.5 GB RAM, Ethernet
 #
 # Apply:   $env:TV_HOST="<tv ip>"; tools\disable.ps1  examples\sony-kd-55x8000c\debloat.txt   (Windows)
-# Undo:    $env:TV_HOST="<tv ip>"; tools\restore.ps1 examples\sony-kd-55x8000c\debloat.txt   (Windows)
 #          TV_HOST=<tv ip> tools/disable.sh  examples/sony-kd-55x8000c/debloat.txt            (macOS/Linux)
+# Undo:    $env:TV_HOST="<tv ip>"; tools\restore.ps1 examples\sony-kd-55x8000c\debloat.txt   (Windows)
+#          TV_HOST=<tv ip> tools/restore.sh  examples/sony-kd-55x8000c/debloat.txt            (macOS/Linux)
 # Everything is DISABLED, not uninstalled. Comment out any line you want to keep.
 #
 # Stock launcher: com.google.android.leanbacklauncher (the 2015 Sony launcher, NOT tvlauncher).
