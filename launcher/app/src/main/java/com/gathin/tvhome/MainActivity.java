@@ -1149,6 +1149,15 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
             return true;
         }
         int pos = focusedTilePosition();
+        View focus = getCurrentFocus();
+        if (ok && focus != null && focus.getId() == R.id.btnLibrary) {
+            // The App library pill sits in the grid but is no tile: OK ends the mode (saving the order) and opens it.
+            if (event.getAction() == KeyEvent.ACTION_UP && !event.isCanceled()) {
+                endReorder();
+                onLibraryRequested();
+            }
+            return true;
+        }
         if (ok && grid.hasFocus()) {
             // RecyclerView can briefly report NO_POSITION during a move or rebind. Still consume
             // OK on the grid: falling through would let the focused card open its app in reorder mode.
