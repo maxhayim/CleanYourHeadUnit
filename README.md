@@ -119,7 +119,7 @@ Tested lists from contributors, one folder per model in [`examples/`](examples/)
 AiPro2K · AIWA · Artel · Caxium · Cecotec · Challenger · Compac · Dialog · EKO · Freebox · Grundig · Insignia Fire TV ·
 JVC · Karbonn · Kogan · Lumio · MTC · Noblex · OK. · PEAQ · Polytron · PRISM+ · RCA · RockTek · Sankey · SANYO · SHARP ·
 Super General · Tele System · TiVo · Tornado · Turkcell · Verizon · Vidda · Vision ·
-Anker Nebula, BYINTEK, Epson, Formovie, Gadnic, JMGO, Portronics, Stellamore, Wanbo and XGIMI projectors
+Anker Nebula, BYINTEK, Epson, Formovie, Gadnic, JMGO, Magcubic, Portronics, Stellamore, Wanbo and XGIMI projectors
 
 <details>
 <summary><strong>The full list</strong></summary>
@@ -187,6 +187,7 @@ Anker Nebula, BYINTEK, Epson, Formovie, Gadnic, JMGO, Portronics, Stellamore, Wa
 | KTC 4K Smart TV (device hongkong, MediaTek), Taiwan | Google TV 14 |
 | Liberton LTV 24H01AT (Liberton, built by Changhong, device redwood), Ukraine | Android TV 11 |
 | Lumio Vision 7 55" (KTC ODM, Realtek, khardi, KTC_LUMIO_4K_EU_23GV1), India | Google TV 14 |
+| Magcubic HY300 Pro projector (rk3566_rgo, device adt3, Askey) | Android 11 |
 | Motorola MT4310 (Newsan; Hisense board, hayward, MediaTek), Argentina | Android TV 11 |
 | Motorola SWTV-24AE-FHD (Skyworth OEM, beomil, MediaTek), India/Global | Google TV 14 |
 | MTC UK 2K Android TV (tabata, MediaTek m5621; JVC-family firmware, `android.autoinstalls.config.JVC` present), UK | Android TV 11 |
