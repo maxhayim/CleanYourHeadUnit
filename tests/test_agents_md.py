@@ -111,6 +111,22 @@ class AgentsPathsTest(unittest.TestCase):
             self.assertIn(expected, paths)
 
 
+class AgentsSizeTest(unittest.TestCase):
+    """Every agent loads AGENTS.md into every session, so its size is a cost on every task.
+
+    Anthropic's Claude Code docs target under 200 lines for a CLAUDE.md, which imports this file, and
+    Codex stops reading project instructions at 32 KiB across all AGENTS.md files. A procedure that is
+    only sometimes needed belongs in docs/workflows/, with one line in the Workflows section.
+    """
+
+    def test_under_200_lines(self):
+        self.assertLess(len(text().split("\n")), 200, "AGENTS.md is 200 lines or more: move a procedure to docs/workflows/")
+
+    def test_under_half_of_codex_limit(self):
+        self.assertLess(len(text().encode("utf-8")), 16 * 1024,
+                        "AGENTS.md is over 16 KiB, half of Codex's 32 KiB limit: move a procedure to docs/workflows/")
+
+
 class AgentsNumbersTest(unittest.TestCase):
     def test_apk_gate_matches_ci(self):
         gate = int(re.search(r'test "\$size" -lt (\d+)', CI.read_text(encoding="utf-8")).group(1))

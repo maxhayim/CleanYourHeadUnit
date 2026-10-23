@@ -62,17 +62,17 @@ share their TV's list afterwards, follow [`docs/workflows/tv-list.md`](docs/work
 | Path | What it is |
 |---|---|
 | `PROMPT.md` | The prompt people paste into their agent. Brand-neutral; safety rules live here. |
-| `README.md` | Front page: quick start, supported TVs and the TV table, tools, launcher, restore, firmware updates, FAQ. `README.zh-CN.md` and `README.vi.md` are translations. |
+| `README.md` | Front page, with the TV table and the Tools table. `README.zh-CN.md` and `README.vi.md` are translations. |
 | `CONTRIBUTING.md` | The contributor guide for people. "Where does my idea go?" is the routing table. |
 | `SECURITY.md` | Private vulnerability reporting. |
 | `SHOWCASE.md` | Projects built on this repo that live in their own repositories. |
 | `CODE_OF_CONDUCT.md` | Includes the rule against publishing device identifiers, Wi-Fi names and IPs. |
 | `examples/` | One folder per tested TV model: `debloat.txt`, sometimes a `README.md` and a `config.json`. Indexed in `examples/README.md`. |
-| `docs/` | `docs/TROUBLESHOOTING.md`, `docs/REMOTE.md` (another home, over Tailscale), `docs/modules.md` and `docs/specs/card.md` (module cards), `docs/PRESS.md`, `docs/devices/` for models with notes but no tested list, and `docs/workflows/` for multi-step methods (see [Workflows](#workflows)). |
+| `docs/` | `docs/TROUBLESHOOTING.md`, the module-card contract (`docs/modules.md`), `docs/devices/` for models with notes but no tested list, and the [workflows](#workflows). |
 | `launcher/` | The reference launcher, package `com.gathin.tvhome`: plain Java, AndroidX RecyclerView and DynamicAnimation, `minSdk` 26, no `INTERNET` permission. |
 | `themes/` | One folder per theme: `config.json`, a required `screenshot.jpg`, optional wallpapers. Keys are documented in `themes/README.md`. |
 | `addons/` | Optional module-card apps, each its own Gradle project, never built into the launcher. |
-| `tools/` | The ADB client and the scripts: `tv.py`, `b64push.py`, `relay.py` (guide: `tools/relay.md`), `disable.sh`, `restore.sh`, `recovery.py`, `check.py`, `privacy.py`, `theme.sh`, `adb-closed.py`, `bench.py`, `trace.py` and `trace_report.py` (guide: `tools/trace.md`, optional `tools/requirements-perf.txt`), `flamechart.py` (guide: `tools/flamechart.md`), `screendiff.py` (guide: `tools/screendiff.md`), `race_calendar.py`. Shell scripts have PowerShell twins (`disable.ps1` and the like). `readme_stats.py`, `readme_featured.py` and `readme_card.py` draw the README card. Each script's usage is in its first lines: read it before running it. |
+| `tools/` | The ADB client (`tv.py`) and the scripts, listed in the README's Tools table. Shell scripts have PowerShell twins. Each script's usage is in its first lines, and the larger ones have a guide beside them (`tools/*.md`): read it before running the script. |
 | `tests/` | Python `unittest` suite: list format, README tables, press counts, themes, add-ons, the Home guard and the tools against fake TVs. |
 | `.github/workflows/` | `ci.yml` (tests, launcher build, APK size gate), `addons.yml`, `maintainer-bot.yml`. |
 | `.github/maintainer/MAINTAINER.md` | The review policy the maintainer and the PR bot apply. |
@@ -91,19 +91,9 @@ The core stays small on purpose. Pick the smallest home that fits (CONTRIBUTING,
 | A whole new launcher, a heavy restyle, a port to another platform, a lower `minSdk`, new permissions or network access, Fire TV Home takeover, a changed default for every TV | Your own repository, plus one row in `SHOWCASE.md` |
 | Safety rules in `PROMPT.md`, the Home-safety logic in the scripts, protected packages, CI and workflows, the APK size gate | Open an issue for the maintainer; do not change it in a PR |
 
-### What gets merged, sent back or closed
-
-Every PR is reviewed by the maintainer and by a bot that applies `.github/maintainer/MAINTAINER.md`.
-Read that file before a non-trivial PR; the verdicts are:
-
-| Verdict | When |
-|---|---|
-| merge | Correct, in scope, tested where it matters. |
-| merge-with-fix | One small mechanical change on merge: a missing README or examples row, a string missing in one or two locales, a stray file, an untested entry commented out. |
-| rework | One real change needed: split a PR that bundles separable parts, rebase a code conflict, fold a second unit of an existing TV into its folder, turn a switch's default off. |
-| theme, addon, showcase | A kind close or a move: the idea is good and belongs in that home. |
-| hold | A maintainer decision, or a run on a real TV first. Changes to the Home or launch path (Home key, boot, return to Home, the install scripts) usually need one. |
-| close | A duplicate, superseded, or against the base rule: no root, nothing uninstalled, you build it yourself. |
+Every PR is reviewed by the maintainer and by a bot that apply `.github/maintainer/MAINTAINER.md`: read its
+verdicts before a non-trivial PR. Changes to the Home or launch path (Home key, boot, return to Home, the
+install scripts) are usually held for a run on a real TV.
 
 ## Workflows
 
@@ -158,20 +148,13 @@ Never do these in a PR:
   serial numbers, Android IDs, MAC addresses or ADB keys. Use `<tv ip>` or `192.168.1.50` in docs.
 - **Don't edit `.github/workflows/`** or the APK size gate in a normal PR. A PR whose main content is a new CI
   workflow that builds or publishes releases is closed.
-- **Don't open factory or test menus** on a TV to see what they do. Factory packages may be disabled, never
-  launched.
 - **No root, no getting around app-store protection, no private builds** others cannot reproduce from this repo.
 - **No extras added to the PROMPT flow** beyond debloating and the launcher.
 - **Don't relax `minSdk`** (26) or the launcher's permissions; those are forks for `SHOWCASE.md`.
-
-## Privacy and screenshots
-
-- The launcher's top bar shows the Wi-Fi network name, and a theme's `greeting_name` shows a name. Blur
-  Wi-Fi names, people's names and cities, or crop them out, before a screenshot goes anywhere public.
-- Never commit or post TV Settings screenshots that show accounts, email addresses or device names.
-- `tools/tv.py --probe`, `getprop` and backups contain the serial number and device names. Quote only the model,
-  Android version and firmware build.
-- Keep session files in `backup/`, `shots/` and `work/`, which git ignores.
+- **Blur or crop** Wi-Fi names, people's names and cities (the top bar, a theme's `greeting_name`) before a
+  screenshot goes anywhere public. No TV Settings screenshots that show accounts, emails or device names.
+  From `tools/tv.py --probe`, `getprop` and backups, quote only the model, Android version and firmware build.
+- **Security problems are reported privately**, as [SECURITY.md](SECURITY.md) describes, never in a public issue.
 
 ## Commit and PR style
 
@@ -187,9 +170,6 @@ Never do these in a PR:
 
 ## Where to ask
 
-| For | Where |
-|---|---|
-| "Does it work on my TV?" and other questions | [GitHub Discussions](https://github.com/Gathin23/cleanyourtv/discussions) |
-| Bugs and TV lists | Issues, with the templates in `.github/ISSUE_TEMPLATE/` |
-| An idea that needs a launcher change, a new dependency, a tool replacement | An issue first, before the PR |
-| A security problem in the prompt, tools, launcher or a list | Privately, as [SECURITY.md](SECURITY.md) describes. Never in a public issue. |
+Questions go to [GitHub Discussions](https://github.com/Gathin23/cleanyourtv/discussions); bugs, TV lists and
+ideas that need a launcher change or a new dependency go to an issue first, with the templates in
+`.github/ISSUE_TEMPLATE/`.
