@@ -31,6 +31,10 @@ until the 19th; old links work.
 
 **Themes, switches and add-ons:** [cleanyour.tv/addons](https://cleanyour.tv/addons)
 
+**Official links:** the website is [cleanyour.tv](https://cleanyour.tv) and the code, launcher and
+tools live only in this repo. Other domains using the name, such as cleanyourtv.com, are not run by
+this project ([#1004](https://github.com/Gathin23/cleanyourtv/issues/1004)).
+
 ## How it works
 
 Android TVs have the same debug bridge as Android phones. Switch on USB debugging in the TV's
