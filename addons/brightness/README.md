@@ -5,6 +5,8 @@ TV and the home screen. For the [Clean Your TV](../../README.md) launcher it dec
 [module card](../../docs/modules.md): once you answer **Show card** its tile reads "Brightness" with an amber
 glow. On any other Android TV home it is an ordinary app.
 
+![Brightness in night mode at 40 %, warm, over its own settings](screenshot.jpg)
+
 Opening it shows one list, worked with the remote alone:
 
 | Row | What it does |
@@ -83,19 +85,21 @@ with your own key if you hand them out; the launcher pins its Show answer to the
 
 ## Tested on
 
-Not yet on a TV. The JVM tests cover the levels, the colour arithmetic, the schedule (past midnight, edges,
-empty windows), the 20 % floor and the clamping of stored values. These checks need a TV:
+MOKA R8G (Android 14), over ADB, with its own home app: the overlay permission granted by ADB, the layer drawn
+over the settings screen and over Home, the scheduled night mode taking over at 21:13 inside a 21:00 to 07:00
+window (40 %, then 25 % and 20 %, warm), each slider changing the layer at once, **Dimming** Off and the ADB
+broadcast removing the layer at once and On bringing it back. Memory: about 22 MB with the layer up.
+
+The JVM tests cover the levels, the colour arithmetic, the schedule (past midnight, edges, empty windows), the
+20 % floor and the clamping of stored values.
+
+Still to check on a TV running this repo's launcher (the test TV's home app has no module cards):
 
 1. The card prompt and **Show card**; the card opens the app.
-2. Each slider moves the layer at once; the 20 % floor holds.
-3. **Dimming** Off removes the layer at once, and so do the ADB broadcast and a force stop.
-4. Night mode On, then Scheduled, with a window starting a minute or two ahead: it switches at the start and
-   at the end without opening the app.
-5. The layer over Home, a streaming app playing video, Live TV and an HDMI input, with every remote key still
+2. The switch at the end and start of the night without opening the app.
+3. The layer over a streaming app playing video, Live TV and an HDMI input, with every remote key still
    reaching the app below.
-6. A reboot with dimming on brings the layer and the schedule back.
-7. On a TV that hides the overlay setting, the app's message and `install.sh` grant.
-8. Memory with the layer up (`dumpsys meminfo io.github.maxhayim.brightness`).
+4. A reboot with dimming on brings the layer and the schedule back.
 
 ## Maintainer
 
