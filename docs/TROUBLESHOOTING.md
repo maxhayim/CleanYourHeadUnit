@@ -460,18 +460,6 @@ Things that bit us or contributors, so they don't bite you. Commands use `tools/
   once by hand. On a TV whose list disables the updater, this only happens when you install an
   update on purpose: enable the updater, update, `check.py --fix`, disable it again.
 
-## Held-down remote keys do not repeat (volume steps once per long press)
-
-On some firmware — seen on a TCL Google TV 12 build — enabling any accessibility service that requests
-key filtering (the launcher's `HomeKeyService` and `InputKeyService`) breaks key auto-repeat: the held
-button produces a single press. With every such service disabled the repeat returns.
-
-There is no way to keep the remote buttons those helpers power *and* the repeat on those builds; choose
-one. To keep the helpers enabled but stop them filtering (repeat works, the buttons they handled go
-dead), push a theme with `"key_filter": false` in `config.json` — the service drops
-`FLAG_REQUEST_FILTER_KEY_EVENTS` at runtime instead of needing the whole service disabled. `config.xml`
-has the same switch as the `key_filter` bool for a rebuild.
-
 ## Accessibility helper enabled but the remote button does nothing
 
 The optional `HomeKeyService` and `InputKeyService` only filter remote keys once Android has bound to
@@ -644,5 +632,9 @@ This is a trade, not a defect to fix: the buttons the helpers exist for (a gear 
 `KEYCODE_NOTIFICATION` 83, app buttons sending vendor keycodes such as 4062) were answered by the stock
 home, so on a set whose list disabled launcherx only a helper can answer them. Either keep the repeat and
 install without `INPUT_KEY_SERVICE=1`/`HOME_KEY_SERVICE=1`, or keep the buttons and accept one step per
-press, or leave launcherx enabled and bind nothing. Write back the exact string the first read printed;
-the empty list also unbinds TalkBack. Bisect, keycodes and limits: [the G09 note](devices/tcl-55p71b-g09-key-repeat.md).
+press, or leave launcherx enabled and bind nothing, or keep the services bound and stop them filtering:
+`"key_filter": false` in a theme's `config.json` — the same bool in `config.xml` for a rebuild — makes
+them drop `FLAG_REQUEST_FILTER_KEY_EVENTS` at runtime, so the ramp comes back and the buttons they
+handled go dead, the same trade without a `settings` write. Write back the exact string the first read
+printed; the empty list also unbinds TalkBack. Bisect, keycodes and limits:
+[the G09 note](devices/tcl-55p71b-g09-key-repeat.md).
