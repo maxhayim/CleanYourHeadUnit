@@ -30,9 +30,14 @@ Every brand ships different bloat. If you ran the prompt (or did it by hand) on 
    whether it matches theirs. `tools/tv.py --probe` prints all three.
 3. Only list packages you have actually disabled and lived with for a few days. Note anything that
    broke and what you re-enabled.
-4. Add a row to `examples/README.md`.
-5. If your TV's Live TV app or stock launcher has a different package name, say so in the header;
-   `tools/restore.sh` and `launcher/build-and-install.sh` accept them as arguments.
+4. Add a row to `examples/README.md` and one to the TV table in `README.md`: the tests compare them,
+   so a list with a row in only one of the two fails.
+5. If your TV's Live TV app or stock launcher has a different package name, say so in the header. Where
+   a script needs the stock launcher, `tools/restore.sh` takes it as its second argument
+   (`tools/restore.sh <list> <package>`) and `launcher/build-and-install.sh` takes it in the
+   environment, as `STOCK_LAUNCHER=<package>` (`-StockLauncher` on the PowerShell twin, and `none`
+   keeps it enabled) - not as an argument. The launcher shows your Live TV app in its Inputs menu from
+   `live_tv_package`, in `config.xml` or a theme.
 
 Never list packages to *uninstall*. Everything in this repo disables with `pm disable-user`, which
 is reversible from the TV's own settings if the tools are gone.
