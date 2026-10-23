@@ -19,9 +19,9 @@
 # Live TV, HDMI and YouTube/Netflix playback; the real remote's Home, Input, Settings and app buttons
 # all worked with INPUT_KEY_SERVICE=1 HOME_KEY_SERVICE=1 and settings_key_keycodes 83.
 # Launcher config: live_tv_package com.cltv.hybrid (also hidden from the grid).
-# Private DNS was set to dns.adguard-dns.com, then switched to Cloudflare (one.one.one.one) on 2026-10-23:
-# streaming buffered more often with AdGuard here. Likely this ISP's route to AdGuard rather than AdGuard
-# itself, so try it on your connection first. Undo with `settings put global private_dns_mode opportunistic`.
+# Private DNS works on this set (streams buffered with AdGuard on this ISP, not with Cloudflare).
+# Voice search for content ("open YouTube to search ...") fails with `provider.OPEN ... UNKNOWN_ERROR`
+# once launcherx is off (docs/TROUBLESHOOTING.md); app commands ("open YouTube") still work. Kept off.
 #
 # Kept on purpose: com.smartdevice.global.service (global keys, BLE remote, find-my-remote),
 # com.smartdevice.dailyshortcut (GLOBAL_BUTTON receiver), com.tianci.localmedia (USB media player),
