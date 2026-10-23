@@ -704,7 +704,7 @@ three that matter most:
 
 Yes. [@udhaykumarbala](https://github.com/udhaykumarbala) built a free, open-source [phone app](https://cleanyour.tv/app)
 for Android that does the same cleanup over Wi-Fi: it connects to the TV, shows a plan first, saves a restore
-point, and only switches apps off, so everything can be put back. It's community-built, with the project's blessing.
+point, and only switches apps off, so everything can be put back. It's community-built.
 
 </details>
 
