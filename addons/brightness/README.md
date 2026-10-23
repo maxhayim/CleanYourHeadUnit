@@ -47,8 +47,8 @@ On other TVs these rows don't appear.
 ## How it works
 
 This is software dimming. A full-screen window of one colour sits over everything (`TYPE_APPLICATION_OVERLAY`),
-black at the missing brightness with the amber folded in for warmth. It never takes focus, keys or touches, so
-the remote keeps controlling whatever is on screen. A foreground service holds the window and switches night
+black at the missing brightness with the amber folded in for warmth. It never takes focus or keys, so the remote
+keeps controlling whatever is on screen. A foreground service holds the window and switches night
 mode at the scheduled times, and it stops itself when there is nothing to draw and no schedule to follow.
 
 ## Permissions
@@ -102,6 +102,9 @@ with your own key if you hand them out; the launcher pins its Show answer to the
   other apps; `install.sh` allows it over ADB, or the app shows the ADB command.
 - **Aggressive memory managers** can stop the service on 1 GB TVs. If they do, the layer goes and the screen
   is brighter, never darker; opening the app starts it again.
+- **Below 20 % an air-mouse pointer can't click through.** Since Android 12 a window that lets touches through
+  is drawn at most 80 % opaque, so darker than that the layer keeps touches. TVs have no touchscreen and the
+  remote's keys are never affected; only a pointer (an air mouse) is.
 - Screenshots and screen recordings include the layer.
 
 ## Tested on
