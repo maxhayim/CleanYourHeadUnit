@@ -730,3 +730,8 @@ tools/tv.py 'settings put global private_dns_mode opportunistic'
 The other failure mode reads differently: when the TV itself says "No internet", the resolver is down
 or unreachable, and the same command restores it. What the optional resolver does, and what it costs,
 is in the README's "Can it block ads inside apps too?".
+
+When you report how an app does on your TV, say how far it got, because each step can fail on its
+own: installed, opened, usable with the physical remote, signed in, and played a title with sound.
+Reaching the login screen is not playback. Quote the app's full error code (Netflix's `UI-800-3`,
+for example) rather than "doesn't work", since that is what the app's own help pages look up (#1008).
