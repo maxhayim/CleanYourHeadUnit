@@ -97,7 +97,9 @@
     <!-- Whether HomeKeyService and InputKeyService actually request key filtering (config.xml or a theme's
          "key_filter"). Some firmware (TCL Google TV on Android 12) drops key auto-repeat once ANY service
          filters keys, so long-pressing volume only steps once: set false and the service keeps running but
-         stops filtering, which brings repeat back at the price of the remote buttons below doing nothing. -->
+         stops filtering, which brings repeat back at the price of the remote buttons below doing nothing.
+         With it true, filtering still pauses while a game controller is connected, so games see its buttons
+         (Steam Link with an Xbox controller); the remote buttons below come back when it disconnects. -->
     <bool name="key_filter">true</bool>
 
     <!-- Vendor source numbers for the Inputs menu, "HW<n>=<number>" by the framework input id's last part

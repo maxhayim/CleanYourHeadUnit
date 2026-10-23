@@ -50,6 +50,8 @@ public class HomeKeyService extends AccessibilityService {
     private BroadcastReceiver unlockReceiver;
     /** The stock launcher's HOME activities (stock_home_redirect), disabled ones included. */
     private final Set<String> stockHome = new HashSet<>();
+    /** Stops key filtering while a game controller is connected; null with key_filter off or before the unlock. */
+    private GamepadPassthrough gamepads;
 
     @Override
     protected void onServiceConnected() {
@@ -87,6 +89,7 @@ public class HomeKeyService extends AccessibilityService {
     @Override
     public void onDestroy() {
         stopWaitingForUnlock();
+        if (gamepads != null) gamepads.stop();
         super.onDestroy();
     }
 
@@ -117,6 +120,11 @@ public class HomeKeyService extends AccessibilityService {
         }
         holdAppKeys = RemoteKeys.parseHoldAppKeys(config.appKeys);
         holdAppScancodes = RemoteKeys.parseHoldAppScancodes(config.appKeys);
+        // key_filter off: the service never filters, so there is nothing to hand over to a game controller.
+        if (config.keyFilter && gamepads == null) {
+            gamepads = new GamepadPassthrough(this);
+            gamepads.start();
+        }
     }
 
     private boolean isSettingsKey(KeyEvent event) {
