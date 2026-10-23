@@ -260,6 +260,7 @@ Anker Nebula, BYINTEK, Epson, Gadnic, JMGO, Portronics, Stellamore, Wanbo and XG
 | TCL 55S470G (G10, G10_4K_US_NF, Realtek), US | Google TV 12 |
 | TCL 65C725 (Smart TV Pro, BeyondTV4) | Android TV 11 |
 | TCL 65C735 (Smart TV Pro, G05, MediaTek), France | Google TV 11 |
+| TCL 65C7L (Smart TV Pro, G08, G08_4K_GB, MediaTek tcl9618), 2025, Australia | Google TV 14 |
 | TCL 65C7K (Smart TV Pro, G08, G08_4K_GB, MediaTek mt5896), Brazil | Google TV 14 |
 | TCL 65Q550G (TCL Smart TV, Google TV 11, V8-R51MT08-LF1V095.021344) | Google TV |
 | TCL 85RM7L (G08, G08_4K_GB, MediaTek tcl9618) | Google TV 14 |
