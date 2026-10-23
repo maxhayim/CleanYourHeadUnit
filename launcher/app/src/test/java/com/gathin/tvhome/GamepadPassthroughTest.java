@@ -14,6 +14,10 @@ public class GamepadPassthroughTest {
         assertFalse(GamepadPassthrough.isGamepad(0x01000311));
     }
 
+    @Test public void virtualSearchKeyboardIsNot() {
+        assertFalse(GamepadPassthrough.isGamepad(0x00000701));
+    }
+
     @Test public void keypadIsNot() {
         assertFalse(GamepadPassthrough.isGamepad(0x00000101));
     }

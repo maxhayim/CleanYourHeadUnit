@@ -33,11 +33,14 @@ final class GamepadPassthrough implements InputManager.InputDeviceListener {
     }
 
     /**
-     * A gamepad has all the SOURCE_GAMEPAD bits. SOURCE_JOYSTICK alone is not enough: Bluetooth voice remotes report
-     * it too (TCL's BT_RC833_U1: 0x01000311, an Xbox controller: 0x01000511).
+     * A gamepad has all the SOURCE_GAMEPAD bits and the SOURCE_JOYSTICK ones, as dumpsys input reports them on a TCL
+     * G07. Either alone is not enough: the Bluetooth voice remote reports a joystick (BT_RC833_U1: 0x01000311), and
+     * the firmware's virtual-search keyboard, which isVirtual() misses, reports a gamepad (0x00000701). An Xbox
+     * controller reports both (0x01000511).
      */
     static boolean isGamepad(int sources) {
-        return (sources & InputDevice.SOURCE_GAMEPAD) == InputDevice.SOURCE_GAMEPAD;
+        return (sources & InputDevice.SOURCE_GAMEPAD) == InputDevice.SOURCE_GAMEPAD
+                && (sources & InputDevice.SOURCE_JOYSTICK) == InputDevice.SOURCE_JOYSTICK;
     }
 
     private boolean gamepadConnected() {
