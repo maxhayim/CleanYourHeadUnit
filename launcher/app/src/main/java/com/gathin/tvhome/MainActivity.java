@@ -2588,6 +2588,16 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
      *  throws SecurityException, which used to take Home down with it (YaOS before the manifest asked
      *  for ACCESS_TV_SOURCE). */
     private void openInput(String inputId) {
+        TvInputManager tim = (TvInputManager) getSystemService(TV_INPUT_SERVICE);
+        if (tim != null) {
+            try {
+                TvInputInfo info = tim.getTvInputInfo(inputId);
+                if (info != null && info.getParentId() != null) {
+                    inputId = info.getParentId();
+                }
+            } catch (Throwable ignored) {
+            }
+        }
         Integer source = mappedSource(inputId);
         if (source != null && source >= 0 && !inputAction.isEmpty()) {
             try {
