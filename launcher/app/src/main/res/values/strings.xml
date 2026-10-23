@@ -145,4 +145,11 @@
     <!-- Cinematic top shelf (cinematic_home): the line under the focused dock app's name; %1$s is when it was
          last opened, e.g. "5 minutes ago" or "yesterday, 9:40 pm". -->
     <string name="last_opened">Last opened %1$s</string>
+    <!-- Optional Jewish holiday greetings; enabled explicitly in config.xml or a theme. -->
+    <string name="jewish_rosh_hashanah">Happy New Year</string>
+    <string name="jewish_yom_kippur">Gmar tov</string>
+    <string name="jewish_simchat_torah">Happy holiday</string>
+    <string name="jewish_hanukkah">Happy Hanukkah</string>
+    <string name="jewish_purim">Happy Purim</string>
+    <string name="jewish_happy_holiday">Happy holiday</string>
 </resources>

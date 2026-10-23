@@ -30,6 +30,11 @@ class HebrewResourcesTest(unittest.TestCase):
                     self.assertEqual(sorted(placeholders.findall(value.text or "")),
                                      sorted(placeholders.findall(hebrew[name].text or "")))
 
+    def test_jewish_calendar_features_are_off_by_default(self):
+        config = ET.parse(RES / "values/config.xml").getroot()
+        for key in ("hebrew_date", "jewish_holiday_greetings"):
+            self.assertEqual("false", config.find("bool[@name='" + key + "']").text)
+
     def test_hebrew_home_keeps_all_default_view_ids_and_types(self):
         default, hebrew = views("layout"), views("layout-iw")
         for view_id, tag in default.items():
