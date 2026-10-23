@@ -206,6 +206,7 @@ Anker Nebula, BYINTEK, Epson, Formovie, Gadnic, JMGO, Portronics, Stellamore, Wa
 | RCA AI PONT SA (Changhong, redwood, ISDB92RC; also sold as realme 40-inch) | Android 14 |
 | Redmi TV (MiTV-ANTL0, starwars) | Android 5.1.1 (not Android TV) |
 | Redmi TV (MiTV-MFTP0, alita), China firmware 23.2.10.6129 | Android TV 9 (CN build) |
+| RockTek GB1 | Google TV 14 |
 | SANYO ATV R2 (SCBC, Realtek RTD285O) | Android TV 9 |
 | Sankey SMART2KTVSE (Whale OS, SiliconPlayer am30bm) | Android TV 13 |
 | SHARP AQUOS TVE21F (AQUOS-TVE21F, banqiao, CVTE/MediaTek), UK | Android TV 14 |
