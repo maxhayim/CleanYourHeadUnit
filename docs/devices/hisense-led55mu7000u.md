@@ -1,6 +1,4 @@
-# Hisense LED55MU7000U: device and advertising notes
-
-This note records one owner's TV. It is not a tested debloat list.
+# Hisense LED55MU7000U
 
 | Field | Reported value |
 |---|---|
@@ -12,8 +10,8 @@ This note records one owner's TV. It is not a tested debloat list.
 
 ## Advertising behavior
 
-The boot ad remained after the TV's advertising preference was changed. The owner restored that preference to its original value (`0`). On this firmware, the attempted `pm disable-user` request for the advertising service was rejected, so it remains enabled. This is a single-TV report; do not retry the same request on this build.
+The owner changed the advertising preference, but the boot ad remained. They restored the preference to its original value (`0`). The firmware rejected `pm disable-user` for the advertising service, which remains enabled. Do not retry that command on this firmware.
 
 ## Debloat status
 
-No package list has been validated for this TV, and the stock launcher has not been disabled.
+No debloat list has been validated for this TV. The stock launcher remains enabled.
