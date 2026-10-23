@@ -20,27 +20,20 @@ Everything merged into `themes/` and `addons/` shows up on [cleanyour.tv/addons]
 ## 1. Add your TV model
 
 Every brand ships different bloat. If you ran the prompt (or did it by hand) on a TV that isn't in
-`examples/`, add it:
+`examples/`, add it. [`docs/workflows/tv-list.md`](docs/workflows/tv-list.md) has the steps: the list's
+format, the header with the exact model and firmware, and the two README rows the tests check.
 
-1. Create `examples/<brand>-<model>/debloat.txt`. Copy the format from
-   `examples/xiaomi-mi-tv-4a/debloat.txt`: one package per line, grouped with a comment that says
-   what the group is, and a trailing comment on anything non-obvious ("re-enable for firmware
-   updates", "needed for HDMI-CEC", etc.).
-2. Put the exact model name, Android version and firmware build in the header so people can tell
-   whether it matches theirs. `tools/tv.py --probe` prints all three.
-3. Only list packages you have actually disabled and lived with for a few days. Note anything that
-   broke and what you re-enabled.
-4. Add a row to `examples/README.md`.
-5. If your TV's Live TV app or stock launcher has a different package name, say so in the header;
-   `tools/restore.sh` and `launcher/build-and-install.sh` accept them as arguments.
-
-Never list packages to *uninstall*. Everything in this repo disables with `pm disable-user`, which
-is reversible from the TV's own settings if the tools are gone.
+List only packages you have actually disabled and lived with for a few days. Never list packages to
+*uninstall*. Everything in this repo disables with `pm disable-user`, which is reversible from the TV's
+own settings if the tools are gone.
 
 ## 2. Improve the launcher
 
 The launcher lives in `launcher/` and is deliberately small: plain Java, AndroidX RecyclerView and
-DynamicAnimation, no Kotlin, no Compose, no network. It targets TVs with 1 GB of RAM, so:
+DynamicAnimation, no Kotlin, no Compose, no network. It targets TVs with 1 GB of RAM. A new switch follows
+[`docs/workflows/launcher-switch.md`](docs/workflows/launcher-switch.md), a new language
+[`docs/workflows/translation.md`](docs/workflows/translation.md), and a speed-up or slow-down is measured with
+[`docs/workflows/perf-ab.md`](docs/workflows/perf-ab.md). In every change:
 
 - No blur, no video backgrounds, no polling, no background services.
 - Anything that depends on a specific TV goes in `app/src/main/res/values/config.xml`, not in code.
