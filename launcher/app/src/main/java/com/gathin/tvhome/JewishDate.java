@@ -11,6 +11,8 @@ import java.util.Locale;
 
 /** Optional civil display, computed offline; sunset is approximate, not a source of religious times. */
 final class JewishDate {
+    // One-based indices into jewish_greetings; zero keeps the ordinary greeting.
+    static final int NEW_YEAR = 1, KIPPUR = 2, HANUKKAH = 3, PURIM = 4, HOLIDAY = 5, SHABBAT = 6;
     final boolean showDate, greetings;
     private final double latitude, longitude;
     private final String region;
@@ -94,6 +96,20 @@ final class JewishDate {
     }
 
     int greeting(LocalDate day, Locale locale) {
+        int today = holidayOn(day, locale);
+        if (today != 0) return today;
+        return preferredGreeting(0, holidayOn(day.plusDays(1), locale), day);
+    }
+
+    static int preferredGreeting(int holiday, int eve, LocalDate day) {
+        if (holiday != 0) return holiday;
+        if (eve != 0) return eve;
+        // Epoch day 2 was Saturday; Java's signed remainder is -5 for pre-1970 Saturdays.
+        long weekday = day.toEpochDay() % 7;
+        return weekday == 2 || weekday == -5 ? SHABBAT : 0;
+    }
+
+    private int holidayOn(LocalDate day, Locale locale) {
         HebrewCalendar c = calendar(day);
         int month = c.get(HebrewCalendar.MONTH), date = c.get(HebrewCalendar.DAY_OF_MONTH);
         // Kislev may have 29 or 30 days; Hanukkah always lasts eight days.
@@ -105,17 +121,17 @@ final class JewishDate {
     /** ICU month numbers: Tishri=0, Kislev=2, Tevet=3, Adar/Adar II=6, Nisan=7, Sivan=9. */
     static int holiday(int month, int day, int kislevDays, boolean israel) {
         if (month == 0) {
-            if (day == 1 || day == 2) return R.string.jewish_rosh_hashanah;
-            if (day == 10) return R.string.jewish_yom_kippur;
-            if (day >= 15 && day <= 21) return R.string.jewish_happy_holiday;
-            if (day == 22) return R.string.jewish_happy_holiday;
-            if (day == 23 && !israel) return R.string.jewish_happy_holiday;
+            if (day == 1 || day == 2) return NEW_YEAR;
+            if (day == 10) return KIPPUR;
+            if (day >= 15 && day <= 21) return HOLIDAY;
+            if (day == 22) return HOLIDAY;
+            if (day == 23 && !israel) return HOLIDAY;
         }
         if ((month == 2 && day >= 25 && day <= kislevDays)
-                || (month == 3 && day >= 1 && day <= 32 - kislevDays)) return R.string.jewish_hanukkah;
-        if (month == 6 && (day == 14 || day == 15)) return R.string.jewish_purim;
-        if (month == 7 && day >= 15 && day <= (israel ? 21 : 22)) return R.string.jewish_happy_holiday;
-        if (month == 9 && (day == 6 || (day == 7 && !israel))) return R.string.jewish_happy_holiday;
+                || (month == 3 && day >= 1 && day <= 32 - kislevDays)) return HANUKKAH;
+        if (month == 6 && (day == 14 || day == 15)) return PURIM;
+        if (month == 7 && day >= 15 && day <= (israel ? 21 : 22)) return HOLIDAY;
+        if (month == 9 && (day == 6 || (day == 7 && !israel))) return HOLIDAY;
         return 0;
     }
 }

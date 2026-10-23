@@ -71,7 +71,7 @@ A new key needs one there in the same pull request.
 | `library_apps` | list of package names | Packages pre-seeded into the App library's "added" set at startup (config.xml `library_apps`, or a theme's `config.json`). They show on Home as if the owner had added them in the App library UI, and stay removable there (a removed one stays hidden); empty (off) by default |
 | `shamsi_date` | bool | Show the Solar Hijri date above the Gregorian one |
 | `hebrew_date` | bool | Off by default; show the Hebrew calendar date below the Gregorian one. Requires the manual location described below for offline sunset rollover |
-| `jewish_holiday_greetings` | bool | Off by default; replace the normal greeting during major Jewish holidays, Hanukkah and Purim (including Shushan Purim). An explicit festival-theme greeting has priority |
+| `jewish_holiday_greetings` | bool | Off by default; replace the normal greeting during major Jewish holidays, their eves, Hanukkah, Purim (including Shushan Purim) and Shabbat. An explicit festival-theme greeting has priority |
 | `jewish_holiday_region` | string | `auto` (default): country `IL` uses Israel, other countries use Diaspora; Hebrew without a country uses Israel. Override with `israel` or `diaspora` |
 | `greeting_name` | string | A name after the greeting, e.g. `"Mr. Trịnh"` for GOOD MORNING, MR. TRỊNH; empty for the greeting alone |
 | `module_cards` | bool | Look for module cards and ask about them (`true`); `false` turns the feature off |
@@ -226,3 +226,9 @@ on the development computer only; the launcher never calls them.
 The Gregorian date stays on top of the optional Hebrew date. Hebrew years omit the thousands prefix
 (for example תשפ״ז); day-number and Adar I/II marks remain intact. Shemini Atzeret and Simchat Torah use
 the same general holiday greeting in Israel and the Diaspora, while their observed dates still differ.
+
+With greetings enabled, priority is: an explicit festival-theme greeting, today’s Jewish holiday,
+a holiday beginning the following Hebrew day (holiday eve), Shabbat, then the normal time-of-day greeting.
+Shabbat follows the same sunset-based date: Friday sunset through Saturday sunset (approximate display,
+not Havdalah timing). Holiday-eve greetings use the upcoming holiday’s wording. The optional date pair
+uses the same 14sp regular font and letter spacing on both lines, with a 6dp downward offset.

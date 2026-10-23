@@ -447,23 +447,27 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         shamsi = cfg.shamsiDate;
         jewishDate = cfg.jewishDate;
         greetingName = cfg.greetingName;
-        if (shamsi || (jewishDate != null && jewishDate.showDate)) {
-            if (shamsi && jewishDate != null && jewishDate.showDate) {
+        boolean hebrewDate = jewishDate != null && jewishDate.showDate;
+        if (shamsi || hebrewDate) {
+            if (shamsi && hebrewDate) {
                 shamsiDate.setSingleLine(false);
                 shamsiDate.setMaxLines(2);
             }
-            if (jewishDate != null && jewishDate.showDate) {
+            if (hebrewDate) {
                 shamsiDate.getLayoutParams().width = ViewGroup.LayoutParams.WRAP_CONTENT;
                 ViewGroup dates = (ViewGroup) shamsiDate.getParent();
                 dates.removeView(shamsiDate);
                 dates.addView(shamsiDate);
+                dates.setTranslationY(6 * density);
             }
             shamsiDate.setVisibility(View.VISIBLE);
             TextView date = findViewById(R.id.date);
-            if (jewishDate != null && jewishDate.showDate) {
-                date.getLayoutParams().width = ViewGroup.LayoutParams.MATCH_PARENT;
+            if (hebrewDate) {
+                date.getLayoutParams().width = ViewGroup.LayoutParams.WRAP_CONTENT;
+                shamsiDate.setTextSize(14f);
+                date.setLetterSpacing(0.02f);
             }
-            date.setTextSize(11f);
+            date.setTextSize(hebrewDate ? 14f : 11f);
             date.setPadding(0, (int) (4 * density), 0, 0);
         }
         vpnApp = cfg.vpnApp;
@@ -2294,7 +2298,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
                 : jewishDate.day(java.time.ZonedDateTime.now());
         int holiday = jewishDay != null && jewishDate.greetings ? jewishDate.greeting(jewishDay, locale) : 0;
         String festiveGreeting = festive ? festival.greetingText(getResources()) : "";
-        if (festiveGreeting.isEmpty() && holiday != 0) festiveGreeting = getString(holiday);
+        if (festiveGreeting.isEmpty() && holiday != 0) festiveGreeting = getResources().getStringArray(R.array.jewish_greetings)[holiday - 1];
         if (!festiveGreeting.isEmpty()) {
             greeting.setText(festiveGreeting);
             greeting.setTextColor(festive ? liftTowardsWhite(festival.accentColor(), 0.25f) : greetingColor);
