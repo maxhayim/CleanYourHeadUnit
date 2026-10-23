@@ -5,6 +5,7 @@
 # Apply:   TV_HOST=<ip> tools/disable.sh examples/google-chromecast-gtv-4k/debloat.txt
 # Undo:    TV_HOST=<ip> tools/restore.sh examples/google-chromecast-gtv-4k/debloat.txt com.google.android.apps.tv.launcherx
 # Everything is DISABLED, not uninstalled. Comment out any line you want to keep.
+# To keep phone casting and the stock home (no new launcher), use debloat-keep-cast.txt in this folder instead.
 #
 # Stock launcher: com.google.android.apps.tv.launcherx. No Live TV app and no HDMI inputs (it's a dongle):
 # leave live_tv_package empty in config.xml.
