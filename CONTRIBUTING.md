@@ -42,6 +42,15 @@ Every brand ships different bloat. If you ran the prompt (or did it by hand) on 
 Never list packages to *uninstall*. Everything in this repo disables with `pm disable-user`, which
 is reversible from the TV's own settings if the tools are gone.
 
+Android's own packages are not bloat either. Never list the permission controller, the package
+installer, ext services or ext shared, module metadata, a `com.google.android.overlay.modules*`
+overlay, systemui, shell, phone, settings, tv.settings, `android`, or a `com.android.providers.*`
+package other than calendar, contacts, user dictionary and blocked numbers. A TV that loses one of
+them may never boot again ([#884](https://github.com/Gathin23/cleanyourtv/issues/884), and
+[what to do if it already happened](docs/TROUBLESHOOTING.md#working-on-the-tv)), so
+`tools/disable.sh`, `disable.ps1` and `check.py --fix` refuse such a list outright, with no switch to
+override it, and a pull request that names them comes back for a rework.
+
 ## 2. Improve the launcher
 
 The launcher lives in `launcher/` and is deliberately small: plain Java, AndroidX RecyclerView and
