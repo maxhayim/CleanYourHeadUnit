@@ -149,6 +149,8 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
     private boolean appGlow;
     /** config.xml glow_style: the shape setAmbient paints the glow mask in. */
     private String glowStyle;
+    /** config.xml cinematic_white_focus: the cinematic shelf keeps the white highlight. */
+    private boolean cinematicWhiteFocus;
     private ImageView heroArt;
     private static final float HERO_ART_ALPHA = 0.5f;
     /** config.xml cinematic_dots: false leaves the dock position dots out of the cinematic shelf. */
@@ -408,6 +410,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         cinematic = cfg.cinematicHome;
         glowStyle = cfg.glowStyle;
         heroDotsShown = cfg.cinematicDots;
+        cinematicWhiteFocus = cfg.cinematicWhiteFocus;
         if (cinematic) setUpCinematicShelf();
         // dock_title false: the name above the dock (and the cinematic lines under it) never shows; the glow
         // still follows the dock.
@@ -1496,8 +1499,9 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         glassCardW = card.getWidth();
         glassTargetX = x;
         glassTargetY = y;
-        // Cinematic shelf: the highlight glows in the dock app's colour, plain white in the grid. app_glow: every tile.
-        boolean coloured = (appGlow || cinematic && position < COLUMNS) && !festive;
+        // Cinematic shelf: the highlight glows in the dock app's colour, plain white in the grid (and on the dock with
+        // cinematic_white_focus). app_glow: every tile.
+        boolean coloured = (appGlow || cinematic && !cinematicWhiteFocus && position < COLUMNS) && !festive;
         int accent = coloured ? adapter.ambientColorAt(position) : 0;
         if ((cinematic || appGlow) && !festive && accent != glassAccent) {
             glassAccent = accent;
