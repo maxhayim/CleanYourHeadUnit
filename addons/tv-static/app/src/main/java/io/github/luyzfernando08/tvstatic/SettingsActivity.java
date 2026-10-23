@@ -16,7 +16,9 @@ import android.widget.TextView;
  * without sound, how long it runs, and a button to try it now. Each row changes its value on OK.
  */
 public class SettingsActivity extends Activity {
-    private TextView enabled, sound, seconds;
+    private TextView enabled, style, sound, seconds;
+    private static final int[] STYLE_NAMES = {R.string.style_snow, R.string.style_bars, R.string.style_no_signal,
+            R.string.style_random};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +47,11 @@ public class SettingsActivity extends Activity {
             Prefs.setEnabled(this, !Prefs.enabled(this));
             refresh();
         });
+        style = row(root);
+        style.setOnClickListener(v -> {
+            Prefs.setStyle(this, (Prefs.style(this) + 1) % Prefs.STYLES);
+            refresh();
+        });
         sound = row(root);
         sound.setOnClickListener(v -> {
             Prefs.setSound(this, !Prefs.sound(this));
@@ -71,6 +78,7 @@ public class SettingsActivity extends Activity {
     private void refresh() {
         enabled.setText(getString(R.string.enabled_state,
                 getString(Prefs.enabled(this) ? R.string.on : R.string.off)));
+        style.setText(getString(R.string.style_state, getString(STYLE_NAMES[Prefs.style(this)])));
         sound.setText(getString(R.string.sound_state,
                 getString(Prefs.sound(this) ? R.string.with_sound : R.string.without_sound)));
         seconds.setText(getString(R.string.seconds_state, Prefs.seconds(this)));

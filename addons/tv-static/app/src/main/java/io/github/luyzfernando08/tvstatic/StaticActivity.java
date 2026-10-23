@@ -16,18 +16,22 @@ public class StaticActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        StaticView view = new StaticView(this, Prefs.seconds(this), this::finish);
+        int style = Prefs.style(this);
+        if (style == Prefs.STYLE_RANDOM) style = new java.util.Random().nextInt(Prefs.STYLE_RANDOM);
+        StaticView view = new StaticView(this, Prefs.seconds(this), style, this::finish);
         view.setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                 | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
         setContentView(view);
-        hiss = Prefs.sound(this) ? makeHiss(view.snowMs) : null;
+        // Snow hisses, the bars hold a 1 kHz tone, "no signal" is silent.
+        hiss = Prefs.sound(this) && style != Prefs.STYLE_NO_SIGNAL
+                ? makeSound(view.snowMs, style == Prefs.STYLE_BARS) : null;
         if (hiss != null) view.postDelayed(() -> {
             if (hiss != null) hiss.play();
         }, StaticView.OPEN_MS);
     }
 
-    /** White noise for the snow's length, shaped so it starts and dies away with the picture. */
-    private static AudioTrack makeHiss(int snowMs) {
+    /** White noise, or a 1 kHz tone, for the picture's length, shaped to start and die away with it. */
+    private static AudioTrack makeSound(int snowMs, boolean tone) {
         int samples = RATE * (snowMs + StaticView.FADE_MS) / 1000;
         short[] pcm = new short[samples];
         int fadeIn = RATE / 20, fadeOut = RATE * StaticView.FADE_MS / 1000;
@@ -36,10 +40,11 @@ public class StaticActivity extends Activity {
             seed ^= seed << 13;
             seed ^= seed >>> 7;
             seed ^= seed << 17;
-            float gain = 0.3f;
+            float gain = tone ? 0.2f : 0.3f;
             if (i < fadeIn) gain *= i / (float) fadeIn;
             if (i > samples - fadeOut) gain *= (samples - i) / (float) fadeOut;
-            pcm[i] = (short) ((int) seed * gain / 65536f);
+            pcm[i] = tone ? (short) (32767 * gain * Math.sin(2 * Math.PI * 1000 * i / RATE))
+                    : (short) ((int) seed * gain / 65536f);
         }
         try {
             AudioTrack track = new AudioTrack.Builder()

@@ -7,6 +7,13 @@
     <string name="sound_state">Som: %1$s</string>
     <string name="seconds_state">Duração: %1$d segundos</string>
     <string name="test">Testar agora</string>
+    <string name="style_state">Estilo: %1$s</string>
+    <string name="style_snow">chiado</string>
+    <string name="style_bars">barras coloridas</string>
+    <string name="style_no_signal">sem sinal</string>
+    <string name="style_random">aleatório</string>
+    <string name="no_signal">SEM SINAL</string>
+    <string name="osd_channel">CANAL 03</string>
     <string name="on">ligado</string>
     <string name="off">desligado</string>
     <string name="with_sound">com som</string>

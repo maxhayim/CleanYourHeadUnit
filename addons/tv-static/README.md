@@ -14,9 +14,15 @@ Open the card (or the app's own tile). OK on a row changes it:
 | Setting | Choices |
 |---|---|
 | Effect on wake | on (default), off |
+| Style | snow (default), colour bars, no signal, random |
 | Sound | on (default), muted |
 | Length | 3 s (default), 5 s, 10 s |
 | Try it now | plays it once |
+
+The styles: **snow**, hard-edged static with a dark band rolling down and a hiss; **colour bars**, a 75% SMPTE
+test card with a 1 kHz tone; **no signal**, an old set's blue screen with a blocky on-screen display (a green
+"CH 03" in the corner, "NO SIGNAL" blinking in the middle, scan lines and dark tube corners), silent; and
+**random**, one of the three each time.
 
 A TV with Android built in shows a picture as soon as it wakes, and 3 seconds is plenty. A box behind HDMI is
 different: its screen turns on before the TV has switched itself on and over to that input. On a Mi Box S
