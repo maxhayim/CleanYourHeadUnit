@@ -720,24 +720,26 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
      * VIEW_INPUTS, forwarded by InputsRequestActivity while handle_view_inputs is on: open the Inputs menu once
      * the pill is on screen. The intent is replaced so a later recreate() does not
      * open it again. Nothing to do when the TV has no inputs to list (the pill is hidden then).
+     * top_menu hides the pill, so the list hangs under the gear there, as in showInputs().
      */
     private boolean openInputsIfAsked(Intent intent) {
         if (intent == null || !ACTION_VIEW_INPUTS.equals(intent.getAction())) return false;
         setIntent(new Intent(Intent.ACTION_MAIN));
-        if (btnInputs.getVisibility() != View.VISIBLE) return true;
-        if (btnInputs.isLaidOut()) {
-            btnInputs.requestFocus();
+        View anchor = topMenu ? findViewById(R.id.btnSettings) : btnInputs;
+        if (anchor.getVisibility() != View.VISIBLE) return true;
+        if (anchor.isLaidOut()) {
+            anchor.requestFocus();
             showInputs();
             return true;
         }
-        // Cold start: the popup anchors to the pill, so wait for the first layout.
-        btnInputs.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+        // Cold start: the popup anchors to the pill (or the gear), so wait for the first layout.
+        anchor.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
-                btnInputs.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                btnInputs.post(() -> {
-                    if (isFinishing() || btnInputs.getVisibility() != View.VISIBLE) return;
-                    btnInputs.requestFocus();
+                anchor.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                anchor.post(() -> {
+                    if (isFinishing() || anchor.getVisibility() != View.VISIBLE) return;
+                    anchor.requestFocus();
                     showInputs();
                 });
             }
