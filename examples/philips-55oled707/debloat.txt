@@ -26,6 +26,15 @@
 # - All of them were still disabled after a restart, and the replacement launcher stayed Home.
 #   Idle-loop check after the debloat (50PUS8517 quirk 5 method, 30 s): 186 lines, no line repeating
 #   more than 10 times; the top repeater was WifiVendorHal's link-layer stats poll.
+# - Screensaver on an OLED: the firmware does not let Android's screensaver start on a timer. At every
+#   boot org.droidtv.tv.tptvservice (TPTvServiceReceiver) puts screen_off_timeout and sleep_timeout back
+#   to 604800000 ms, "Never", logging "screensaver put when to start is not never". A shorter "When to
+#   start", from the TV's settings or `settings put system screen_off_timeout`, works until the next
+#   boot and is then reset. Read from the receiver's code; the same strings are in the Android 9 build
+#   of tptvservice on PH9M_EA_5599 (examples/philips-tpm191e). What survives a reboot is the launcher's
+#   own idle clock: "home_idle_clock_minutes": 3 in a theme. It drifts the clock to spare the panel and
+#   starts only on Home, never over an app or Live TV. Checked here: the clock came up after 3 minutes
+#   on Home.
 #
 # Apply:   TV_HOST=<tv ip> tools/disable.sh examples/philips-55oled707/debloat.txt
 # Undo:    TV_HOST=<tv ip> tools/restore.sh examples/philips-55oled707/debloat.txt com.google.android.tvlauncher
