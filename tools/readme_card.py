@@ -1,7 +1,8 @@
-"""Stacks the README stat strip, the Featured in panel and the before/after TVs into one card (docs/card.png).
+"""Stacks the README stat strip, the Featured in panel and the before/after TVs into one card (docs/card.jpg),
+the file the front page displays.
 
 Run tools/readme_stats.py and tools/readme_featured.py first, then:
-python3 tools/readme_card.py Fredoka.ttf docs/card.png
+python3 tools/readme_card.py Fredoka.ttf docs/card.jpg
 """
 import sys
 

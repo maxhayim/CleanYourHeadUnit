@@ -8,9 +8,17 @@ what to install. The three card scripts now name that file the way tools/flamech
 tools/screendiff.py already did, and this test keeps the three of them, the requirements file and the
 workflow page in step.
 
+readme_card.py had the second half of the same problem: its own usage line said `docs/card.png`, a file
+the repo does not ship and no page links, while the front page displays `docs/card.jpg` - so a
+contributor who ran the command the script documents wrote a stray file and left the README card stale.
+The picture every card script names is checked against the files in the repo, and readme_card.py's
+against the one README.md shows.
+
 Run from the repository root: python3 -m unittest discover -s tests -v
 """
+import ast
 import os
+import re
 import subprocess
 import sys
 import tempfile
@@ -78,6 +86,46 @@ class CardScriptsPillowTest(unittest.TestCase):
         for name in ("readme_featured.py", "readme_card.py"):
             with self.subTest(script=name):
                 self.assertIn(name, text, f"press.md does not name {name}")
+
+
+DOCS_PICTURE = re.compile(r"docs/[\w.\-]+\.(?:png|jpg|jpeg|webp)")
+
+
+def docstring_of(path):
+    """The module docstring of a tools/ script, which is where each one documents its two arguments."""
+    return ast.get_docstring(ast.parse(path.read_text(encoding="utf-8"))) or ""
+
+
+class CardScriptOutputTest(unittest.TestCase):
+    def test_every_picture_a_card_script_names_is_one_the_repo_ships(self):
+        for name in CARD_SCRIPTS:
+            named = set(DOCS_PICTURE.findall(docstring_of(TOOLS / name)))
+            self.assertTrue(named, f"{name}'s docstring names no picture, so this check would prove nothing")
+            for rel in sorted(named):
+                with self.subTest(script=name, picture=rel):
+                    self.assertTrue((ROOT / rel).is_file(),
+                                    f"{name}'s usage line names {rel}, which the repo does not ship: "
+                                    "a reader who follows it writes a new file that nothing links")
+
+    def test_the_card_script_writes_the_picture_the_front_page_shows(self):
+        readme = (ROOT / "README.md").read_text(encoding="utf-8")
+        shown = set(re.findall(r'<img src="(docs/[^"]*card[^"]*)"', readme))
+        self.assertTrue(shown, "README.md no longer displays a card image, so this check would prove nothing")
+        named = set(DOCS_PICTURE.findall(docstring_of(TOOLS / "readme_card.py")))
+        for rel in sorted(shown):
+            with self.subTest(picture=rel):
+                self.assertIn(rel, named,
+                              f"README.md displays {rel} but readme_card.py's usage line writes {sorted(named)}")
+
+    def test_the_docstring_reader_reads_a_script_and_not_its_comments(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            made = Path(tmp) / "example.py"
+            made.write_text('"""Writes docs/one.png.\n\npython3 example.py docs/one.png\n"""\n'
+                            '# docs/two.png is only a comment\n', encoding="utf-8")
+            self.assertIn("docs/one.png", docstring_of(made))
+            self.assertNotIn("docs/two.png", docstring_of(made))
+            made.write_text("import sys  # no docstring at all\n", encoding="utf-8")
+            self.assertEqual(docstring_of(made), "")
 
 
 if __name__ == "__main__":
