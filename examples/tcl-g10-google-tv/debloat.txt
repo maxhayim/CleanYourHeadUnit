@@ -11,6 +11,9 @@
 # Its TCL Channel package is com.tcl.waterfall.overseas. That unit also disabled TGuard and
 # MagiConnect, but kept TalkBack and re-enabled dreamx to keep the screensaver menu in Settings.
 # Comment out TalkBack and dreamx below to match that choice; the unit-specific additions are optional.
+# Tweakers groups the Netherlands range as "TCL P6K/P69K/P61K":
+# https://tweakers.net/televisies/tcl/p6k-p69k-p61k_p1739438/vergelijken/
+# Only the 43P69K unit above was tested here; check the product and build before using this list.
 #
 # Also used on a TCL C69B (EU, product G10_4K_GB, software V8-R75PT01-LF1V548, same build
 # STT2.230203.001; tv.plus and smartlink.core are not installed there). That set kept
@@ -35,7 +38,7 @@
 # - Disabling dreamx leaves screensaver_components pointing at it. Switch to the AOSP fallback with
 #   tools/tv.py 'settings put secure screensaver_components com.android.dreams.basic/.Colors'
 #   On the 43P69K it also removes the screensaver menu from Settings. dreamx was re-enabled there;
-#   leave its line commented out if you need that menu, even when using a third-party screensaver.
+#   leave its line commented out if you need that menu, even when using a third-party screensaver or the add-on photo-screensaver.
 # - screencap writes an empty file while Live TV/HDMI is on screen. Press Home first.
 # - The Google TV promo banner is drawn by launcherx itself, so only launcher/ removes it.
 # - Disabling the stock launcher alone is not enough to install a replacement:
