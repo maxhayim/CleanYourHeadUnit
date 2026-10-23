@@ -556,7 +556,10 @@ running back on the list the next time it starts; a helper turned off in Setting
   `accessibility_enabled 1` only on the path that also puts a missing helper back on the list, and here
   the list was complete. Write the flag back, then read the dump again; toggling the service off and on
   in Accessibility, which is what the owner did, brought the redirect back for that session. Whether the
-  flag survives the next reboot was not retested on that set, and what cleared it is not established:
+  flag survives the next reboot was not retested on that set, and what cleared it is not established.
+  On a TCL 65C655 Pro (`G03`, Android 11, [`examples/tcl-55c725`](../examples/tcl-55c725/README.md)) every
+  one of three reboots left the same state, and there writing the flag back alone bound nothing; clearing
+  `enabled_accessibility_services` and writing it back, as `build-and-install` does, did:
 
   ```sh
   tools/tv.py 'settings get secure accessibility_enabled'
