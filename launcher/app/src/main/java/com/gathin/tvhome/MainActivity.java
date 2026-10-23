@@ -151,6 +151,8 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
     private String glowStyle;
     private ImageView heroArt;
     private static final float HERO_ART_ALPHA = 0.5f;
+    /** config.xml cinematic_dots: false leaves the dock position dots out of the cinematic shelf. */
+    private boolean heroDotsShown = true;
     /** Softened artwork per app (HeroArt, about 5 KB each), made the first time its dock tile is focused. */
     private final Map<String, Bitmap> heroArtCache = new HashMap<>();
     /** The app whose artwork heroArt shows, so focusing it again only fades it back in. */
@@ -405,6 +407,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         heroArt = findViewById(R.id.heroArt);
         cinematic = cfg.cinematicHome;
         glowStyle = cfg.glowStyle;
+        heroDotsShown = cfg.cinematicDots;
         if (cinematic) setUpCinematicShelf();
         // dock_title false: the name above the dock (and the cinematic lines under it) never shows; the glow
         // still follows the dock.
@@ -1631,7 +1634,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         heroName.setTextSize(TypedValue.COMPLEX_UNIT_SP, 68f);
         heroName.setLetterSpacing(-0.025f);
         heroMeta.setVisibility(View.INVISIBLE);   // keeps its height, so the name does not jump when it fills in
-        heroDots.setVisibility(View.VISIBLE);
+        heroDots.setVisibility(heroDotsShown ? View.VISIBLE : View.GONE);
         heroArt.setVisibility(View.VISIBLE);
         // One stretched bitmap: apply its alpha while drawing instead of through an offscreen buffer.
         heroArt.forceHasOverlappingRendering(false);
@@ -1712,6 +1715,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
 
     /** One dot per dock app, the focused one drawn long and white. Hebrew docks start on the right, so do the dots. */
     private void updateHeroDots(int position) {
+        if (!heroDotsShown) return;
         int count = Math.min(adapter.dockFilled(), COLUMNS);
         heroDots.setVisibility(count > 1 ? View.VISIBLE : View.INVISIBLE);
         if (heroDots.getChildCount() != count) {
