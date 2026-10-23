@@ -20,7 +20,8 @@ Everything merged into `themes/` and `addons/` shows up on [cleanyour.tv/addons]
 ## 1. Add your TV model
 
 Every brand ships different bloat. If you ran the prompt (or did it by hand) on a TV that isn't in
-`examples/`, add it:
+`examples/`, add it. The same steps for a coding agent are in
+[`docs/workflows/tv-list.md`](docs/workflows/tv-list.md).
 
 1. Create `examples/<brand>-<model>/debloat.txt`. Copy the format from
    `examples/xiaomi-mi-tv-4a/debloat.txt`: one package per line, grouped with a comment that says
@@ -54,7 +55,10 @@ override it, and a pull request that names them comes back for a rework.
 ## 2. Improve the launcher
 
 The launcher lives in `launcher/` and is deliberately small: plain Java, AndroidX RecyclerView and
-DynamicAnimation, no Kotlin, no Compose, no network. It targets TVs with 1 GB of RAM, so:
+DynamicAnimation, no Kotlin, no Compose, no network. It targets TVs with 1 GB of RAM. A new switch follows
+[`docs/workflows/launcher-switch.md`](docs/workflows/launcher-switch.md), a new language
+[`docs/workflows/translation.md`](docs/workflows/translation.md), and a speed-up or slow-down is measured with
+[`docs/workflows/perf-ab.md`](docs/workflows/perf-ab.md). In every change:
 
 - No blur, no video backgrounds, no polling, no background services.
 - Anything that depends on a specific TV goes in `app/src/main/res/values/config.xml`, not in code.
