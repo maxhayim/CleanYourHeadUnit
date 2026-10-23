@@ -67,6 +67,13 @@ Things that bit us or contributors, so they don't bite you. Commands use `tools/
 - **Chained `pm` commands** (`pm disable a; pm disable b`) may silently stop after the first. Run
   one per shell call; `--batch` does exactly that.
 - **Large pushes hang** through the Python client. Use `tools/b64push.py` for APKs.
+- **`tools/tv.py reboot` never comes back.** `reboot` is a shell command, and adbd stops before it
+  sends the shell's last `CLSE`, so the client waits for a reply that cannot arrive: two minutes,
+  then an error, on a TCL 65C935 (`G05_4K_GB`, Google TV 11, AR2101,
+  [#995](https://github.com/Gathin23/cleanyourtv/issues/995)). A chain that reboots and then checks
+  something stalls there. Use `tools/tv.py --reboot`: it sends the reboot through ADB's own service
+  and returns once the request is accepted. The TV is still restarting at that point, so let it
+  answer again (`tools/tv.py --probe`) before the next command.
 - **A `logcat` without the line you expected is not proof that nothing happened.** On a TCL 55C728
   (`G05_4K_GB`, Google TV 11) the main buffer is 1 MiB (`persist.logd.size.main`), and the TV's own
   HDMI, ARC and media logging fills it in well under a minute; around power-on it held about 30
@@ -101,7 +108,7 @@ Things that bit us or contributors, so they don't bite you. Commands use `tools/
   ```sh
   tools/tv.py 'am start -n com.cvte.tv.hkcfac/.MainActivity'
   tools/tv.py 'input keyevent 218; input keyevent 218'
-  tools/tv.py reboot
+  tools/tv.py --reboot             # returns once ADB accepts it; wait for the TV to come back
   tools/tv.py 'settings put global hdmi_control_enabled 1'
   ```
   Press the real Input button afterwards and check the packages are back:
