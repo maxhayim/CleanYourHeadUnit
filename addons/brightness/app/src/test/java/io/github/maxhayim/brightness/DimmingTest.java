@@ -80,7 +80,7 @@ public class DimmingTest {
         assertEquals(Dimming.MIN_BRIGHTNESS, s.nightBrightness);
         assertEquals(100, s.warmth);
         int black = alpha(Dimming.color(new Dimming.Level(Dimming.MIN_BRIGHTNESS, 0, false)));
-        assertEquals(Math.round(0.8 * 255), black);
+        assertEquals(Math.round(0.9 * 255), black);
     }
 
     @Test
