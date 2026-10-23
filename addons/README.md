@@ -18,6 +18,7 @@ the core bigger or change how it behaves. You install an add-on only if you want
 | [TV Hub](tv-hub/) | One live-TV guide for M3U/XMLTV playlists, Dispatcharr and HDHomeRun tuners, with a Media3 player and shortcuts to installed live-TV apps | [@maxhayim](https://github.com/maxhayim) | MOKA R8G (Android TV 14) | `INTERNET` |
 | [Headphones](headphones/) | Bluetooth headphones made easy: where the sound goes, paired pairs with battery, a pairing shortcut, and a quiet guard that pauses and mutes the speakers when headphones drop | [@maxhayim](https://github.com/maxhayim) | MOKA R8G (Android 14) | Bluetooth (paired devices only) |
 | [TV Static](tv-static/) | An off-the-air moment each time the screen turns on: the picture opens from a bright line, snow and hiss, colour bars or an old "no signal" screen for 3 to 10 s, then fades into what was on screen; the card sets style, sound and length | [@luyzfernando08](https://github.com/luyzfernando08) | Xiaomi Mi Box S (Android TV 9), Philco by Skyworth (Android TV 14) | foreground service (screen-on watcher), start at boot, display over other apps |
+| [Brightness](brightness/) | Dims the picture below the TV's own minimum over every app (and the picture settings on Realtek TVs), with a warm night mode on a schedule and a one-press normal screen | [@maxhayim](https://github.com/maxhayim) | MOKA R8G (Android 14) | overlay, foreground service, start at boot |
 
 A widget, an info tile, a storage or smart-home card: if it can live as its own small app, it can live
 here. See the rules below.
