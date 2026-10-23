@@ -1,4 +1,4 @@
-# Xiaomi Mi TV 4S 75" (MiTV4-ANSM0): Android 6
+# Xiaomi Mi TV 4S 75" (L75M5-4S, MiTV4-ANSM0), Android 6.0.1
 
 Tested on a 小米电视4S 75寸, retail L75M5-4S, `MiTV4-ANSM0` / `xmen`, board `gxbaby`,
 Android 6.0.1 (API 23), `armeabi-v7a`, firmware `20.3.6.2057`, 1920×1080 at 320 dpi.
@@ -10,7 +10,7 @@ not run a full `tools/restore.sh`. Nothing in this note uninstalls a package.
 
 ## Launcher
 
-The launcher used on this set is [我的电视信号+安卓版本](https://github.com/qqwersde/my-tv-signal-android6)
+The launcher used on this set is [小米电视4S 75寸 L75M5-4S（MiTV4-ANSM0），Android 6.0.1](https://github.com/qqwersde/my-tv-signal-android6)
 (`qqwersde/my-tv-signal-android6`). It is upstream commit `bc4e1094` plus an API 23 build.
 Pass `-PlauncherMinSdk=23`; without that flag the default stays API 26. No internet
 permission. Outfit is used from API 26 only; Android 6 uses the system sans-serif styles.
