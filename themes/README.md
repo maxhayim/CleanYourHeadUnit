@@ -70,7 +70,7 @@ A new key needs one there in the same pull request.
 | `app_library_selection` | bool | OK toggles Home checkmarks in the library; checked apps first, both groups alphabetized. Hiding keeps focus on the adjacent next app (previous at the end). Requires `app_library`; `false` preserves the standard open/long-press behavior |
 | `library_apps` | list of package names | Packages pre-seeded into the App library's "added" set at startup (config.xml `library_apps`, or a theme's `config.json`). They show on Home as if the owner had added them in the App library UI, and stay removable there (a removed one stays hidden); empty (off) by default |
 | `shamsi_date` | bool | Show the Solar Hijri date above the Gregorian one |
-| `hebrew_date` | bool | Off by default; show the Hebrew calendar date above the Gregorian one. Requires the manual location described below for offline sunset rollover |
+| `hebrew_date` | bool | Off by default; show the Hebrew calendar date below the Gregorian one. Requires the manual location described below for offline sunset rollover |
 | `jewish_holiday_greetings` | bool | Off by default; replace the normal greeting during major Jewish holidays, Hanukkah and Purim (including Shushan Purim). An explicit festival-theme greeting has priority |
 | `jewish_holiday_region` | string | `auto` (default): country `IL` uses Israel, other countries use Diaspora; Hebrew without a country uses Israel. Override with `israel` or `diaspora` |
 | `greeting_name` | string | A name after the greeting, e.g. `"Mr. Trịnh"` for GOOD MORNING, MR. TRỊNH; empty for the greeting alone |
@@ -222,3 +222,7 @@ other languages use ICU's localized Hebrew-calendar month names. Existing explic
 
 Calendar validation uses [Hebcal's converter and holiday API](https://www.hebcal.com/home/developer-apis)
 on the development computer only; the launcher never calls them.
+
+The Gregorian date stays on top of the optional Hebrew date. Hebrew years omit the thousands prefix
+(for example תשפ״ז); day-number and Adar I/II marks remain intact. Shemini Atzeret and Simchat Torah use
+the same general holiday greeting in Israel and the Diaspora, while their observed dates still differ.

@@ -454,6 +454,9 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
             }
             if (jewishDate != null && jewishDate.showDate) {
                 shamsiDate.getLayoutParams().width = ViewGroup.LayoutParams.WRAP_CONTENT;
+                ViewGroup dates = (ViewGroup) shamsiDate.getParent();
+                dates.removeView(shamsiDate);
+                dates.addView(shamsiDate);
             }
             shamsiDate.setVisibility(View.VISIBLE);
             TextView date = findViewById(R.id.date);

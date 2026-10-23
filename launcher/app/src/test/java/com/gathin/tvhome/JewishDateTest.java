@@ -38,9 +38,9 @@ public class JewishDateTest {
         assertEquals(0, JewishDate.holiday(0, 3, 30, true));
         assertEquals(R.string.jewish_yom_kippur, JewishDate.holiday(0, 10, 30, true));
         assertEquals(R.string.jewish_happy_holiday, JewishDate.holiday(0, 21, 30, true));
-        assertEquals(R.string.jewish_simchat_torah, JewishDate.holiday(0, 22, 30, true));
+        assertEquals(R.string.jewish_happy_holiday, JewishDate.holiday(0, 22, 30, true));
         assertEquals(R.string.jewish_happy_holiday, JewishDate.holiday(0, 22, 30, false));
-        assertEquals(R.string.jewish_simchat_torah, JewishDate.holiday(0, 23, 30, false));
+        assertEquals(R.string.jewish_happy_holiday, JewishDate.holiday(0, 23, 30, false));
         assertEquals(0, JewishDate.holiday(0, 23, 30, true));
         assertEquals(R.string.jewish_happy_holiday, JewishDate.holiday(7, 22, 30, false));
         assertEquals(0, JewishDate.holiday(7, 22, 30, true));
@@ -50,6 +50,15 @@ public class JewishDateTest {
         assertEquals(R.string.jewish_purim, JewishDate.holiday(6, 14, 30, true));
         assertEquals(R.string.jewish_purim, JewishDate.holiday(6, 15, 30, true));
     }
+    @Test public void omitYearThousandsWithoutChangingDaysOrLeapMonths() {
+        assertEquals("ה׳ בחשוון תשפ״ז", JewishDate.withoutMillennium("ה׳ בחשוון ה׳תשפ״ז"));
+        assertEquals("ט״ו באדר א׳ תשפ״ד", JewishDate.withoutMillennium("ט״ו באדר א׳ ה׳תשפ״ד"));
+        assertEquals("ט״ז באדר ב׳ תשפ״ד", JewishDate.withoutMillennium("ט״ז באדר ב׳ ה׳תשפ״ד"));
+        assertEquals("י״ג בחשוון תשפ״ז", JewishDate.withoutMillennium("י״ג בחשוון ה׳תשפ״ז"));
+        assertEquals("א׳ בתשרי ה׳", JewishDate.withoutMillennium("א׳ בתשרי ה׳"));
+        assertEquals("13 Heshvan 5787", JewishDate.withoutMillennium("13 Heshvan 5787"));
+    }
+
     @Test public void hanukkahHasEightDaysWithShortOrLongKislev() {
         for (int length : new int[]{29, 30}) {
             int count = 0;

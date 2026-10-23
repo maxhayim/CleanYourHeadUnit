@@ -144,7 +144,6 @@
     <!-- Optional Jewish holiday greetings; enabled explicitly in config.xml or a theme. -->
     <string name="jewish_rosh_hashanah">שנה טובה</string>
     <string name="jewish_yom_kippur">גמר חתימה טובה</string>
-    <string name="jewish_simchat_torah">חג שמחת תורה שמח</string>
     <string name="jewish_hanukkah">חנוכה שמח</string>
     <string name="jewish_purim">פורים שמח</string>
     <string name="jewish_happy_holiday">חג שמח</string>

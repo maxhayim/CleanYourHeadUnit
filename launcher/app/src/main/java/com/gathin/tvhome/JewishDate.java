@@ -84,7 +84,13 @@ final class JewishDate {
                         : new ULocale(locale.toString() + "@calendar=hebrew"));
         HebrewCalendar calendar = calendar(day);
         format.setCalendar(calendar);
-        return format.format(calendar.getTime());
+        String text = format.format(calendar.getTime());
+        return he ? withoutMillennium(text) : text;
+    }
+
+    /** Omit only a year's thousands prefix; preserve day 5 and Adar I/II markers. */
+    static String withoutMillennium(String text) {
+        return text.replaceFirst(" [א-ט]׳(?=[א-ת׳״]+$)", " ");
     }
 
     int greeting(LocalDate day, Locale locale) {
@@ -102,8 +108,8 @@ final class JewishDate {
             if (day == 1 || day == 2) return R.string.jewish_rosh_hashanah;
             if (day == 10) return R.string.jewish_yom_kippur;
             if (day >= 15 && day <= 21) return R.string.jewish_happy_holiday;
-            if (day == 22) return israel ? R.string.jewish_simchat_torah : R.string.jewish_happy_holiday;
-            if (day == 23 && !israel) return R.string.jewish_simchat_torah;
+            if (day == 22) return R.string.jewish_happy_holiday;
+            if (day == 23 && !israel) return R.string.jewish_happy_holiday;
         }
         if ((month == 2 && day >= 25 && day <= kislevDays)
                 || (month == 3 && day >= 1 && day <= 32 - kislevDays)) return R.string.jewish_hanukkah;
