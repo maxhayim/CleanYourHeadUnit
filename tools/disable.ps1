@@ -134,7 +134,7 @@ if (-not $env:TVINPUT_ALLOW -and $pkgs.Count -gt 0) {
 if (-not $env:HANDLERS_ALLOW -and $pkgs.Count -gt 0) {
     $q = 'cmd package query-activities --brief'
     $ErrorActionPreference = 'Continue'
-    $handlers = @(& $py -I (Join-Path $repo 'tools\tv.py') "$q -a android.intent.action.VIEW -t vnd.android.cursor.item/channel 2>/dev/null; echo ==; $q -a android.settings.SETTINGS 2>/dev/null; $q -a android.intent.action.MAIN -c android.intent.category.PREFERENCE 2>/dev/null; true" 2>$null)
+    $handlers = @(& $py -I (Join-Path $repo 'tools\tv.py') "$q -a android.intent.action.VIEW -t vnd.android.cursor.item/channel 2>/dev/null; echo ==; $q -a android.settings.SETTINGS 2>/dev/null; true" 2>$null)
     $checked = $LASTEXITCODE -eq 0
     $ErrorActionPreference = 'Stop'
     if (-not $checked) {

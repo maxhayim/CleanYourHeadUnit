@@ -160,8 +160,7 @@ def handler_apps(dev):
     Settings with, as two sets of package names, the same query disable.sh makes."""
     q = "cmd package query-activities --brief"
     inputs = recovery.shell(dev, f"{q} -a android.intent.action.VIEW -t vnd.android.cursor.item/channel")
-    settings = (recovery.shell(dev, f"{q} -a android.settings.SETTINGS") + "\n"
-                + recovery.shell(dev, f"{q} -a android.intent.action.MAIN -c android.intent.category.PREFERENCE"))
+    settings = recovery.shell(dev, f"{q} -a android.settings.SETTINGS")
     names = lambda out: set(re.findall(r"^\s*([A-Za-z_][A-Za-z0-9_]*(?:\.[A-Za-z0-9_]+)+)/", out, re.M))
     return names(inputs), names(settings)
 

@@ -200,7 +200,7 @@ if [ -n "$PKGS" ] && [ -z "${HANDLERS_ALLOW:-}" ]; then
   Q='cmd package query-activities --brief'
   # The two lists are split at the "==" line; `; true` so a firmware without a match still answers.
   if HANDLERS="$("$PY" -I tools/tv.py \
-      "$Q -a android.intent.action.VIEW -t vnd.android.cursor.item/channel 2>/dev/null; echo ==; $Q -a android.settings.SETTINGS 2>/dev/null; $Q -a android.intent.action.MAIN -c android.intent.category.PREFERENCE 2>/dev/null; true" \
+      "$Q -a android.intent.action.VIEW -t vnd.android.cursor.item/channel 2>/dev/null; echo ==; $Q -a android.settings.SETTINGS 2>/dev/null; true" \
       </dev/null 2>/dev/null | tr -d '\r')"; then
     NAME_RE='s#^[[:space:]]*([A-Za-z_][A-Za-z0-9_]*(\.[A-Za-z0-9_]+)+)/.*#\1#p'
     INPUT_APPS="$(printf '%s\n' "$HANDLERS" | sed '/^==$/,$d' | sed -n -E "$NAME_RE" | sort -u)"
