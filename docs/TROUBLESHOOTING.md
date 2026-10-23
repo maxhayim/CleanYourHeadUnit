@@ -48,6 +48,10 @@ Things that bit us or contributors, so they don't bite you. Commands use `tools/
   no way back from the shell on a set with no Wireless debugging, and switching USB debugging off
   stops `adbd` too, so plan one sitting rather than two: switch debugging off at the end, replug the
   adapter, and confirm Ethernet before handing the TV back. The launcher never needs debugging.
+  A Chromecast with Google TV 4K (`sabrina`, `UTTC.250917.004`) kept its USB Ethernet adapter with
+  USB debugging on: `eth0` stayed listed, and Ethernet connected with debugging still on. It printed
+  `host_connected=false` while the adapter was present as `eth0`, so there `host_connected=false` was
+  no proof the adapter was gone ([its list](../examples/google-chromecast-gtv-4k/debloat.txt)).
 - **Close port 5555 when you're done**: plaintext, and a shell for anyone on the LAN when `ro.adb.secure=0`. Steps in the README FAQ.
 - **The TV sits on a separate VLAN or IoT network** and `tools/tv.py` times out although debugging
   is on: the router keeps the computer from reaching it. Add a temporary firewall rule from your
