@@ -1,0 +1,59 @@
+# TCL 43P69K (product G10_4K_GB_NF_32BIT, device G10, model "Smart TV", Realtek G10 platform)
+# Android 12 (Google TV), SDK 31, firmware STT2.230203.001, ro.adb.secure=1
+# Same G10 platform and build as tcl-g10-google-tv/ and tcl-55p7k/. Nothing was disabled at the factory
+# (logkit, Samba TV ACR and ttvs all ship enabled). Reboot-checked 2026-10-22: all 22 stayed disabled,
+# the firmware re-enables nothing at boot. dreamx was disabled too and later re-enabled (see Preloaded apps).
+#
+# Apply:   tools\disable.ps1 -TvHost <tv ip> examples\tcl-43p69k\debloat.txt
+# Undo:    tools\restore.ps1 -TvHost <tv ip> examples\tcl-43p69k\debloat.txt -Stock com.google.android.apps.tv.launcherx
+# Everything is DISABLED, not uninstalled. Comment out any line you want to keep.
+#
+# Stock launcher: com.google.android.apps.tv.launcherx. Live TV / HDMI app: com.tcl.tv.
+# Kept on purpose: com.tcl.tv, com.tcl.tvinput, com.tcl.suspension (Inputs), com.tcl.dashboard,
+# com.tcl.autopair, com.tcl.systemserver (also TCL OTA), com.tcl.initsetup (channel scan),
+# com.tcl.useragreement, com.tcl.hearaid, com.tcl.factory.view (never touched or launched),
+# Netflix, Prime Video, YouTube, AirPlay, Miracast, Chromecast (Play Services), TalkBack.
+#
+# Known quirks on this firmware:
+# - The saved Wi-Fi network from first setup belongs to setupwraith (dumpsys wifi: cname=...setupwraith).
+#   Forget and re-join it in Settings before setupwraith is disabled, or the TV drops off Wi-Fi and ADB.
+# - TclAppBoot blocks the launcher until it has APP_AUTO_START (appops set + appops write-settings).
+# - Any bound key-filtering helper costs held-volume repeat here, as on the G09 (docs/devices/
+#   tcl-55p71b-g09-key-repeat.md); the launcher's key_filter false keeps the repeat, but its app_keys then
+#   do nothing.
+# - The remote's Settings (gear) key is KEYCODE_NOTIFICATION (83); app keys are Netflix 4062, Prime Video
+#   4099, YouTube 4065, Disney+ 4141, TCL Channel 4020.
+
+# TCL tracking and analytics
+tv.samba.ssm.ui                        # Samba TV ACR viewing tracking
+com.tcl.ttvs                           # TCL analytics; re-enable if firmware updates stop arriving
+com.tcl.logkit                         # log capture and upload
+com.google.android.feedback
+
+# TCL content, ads and promos
+com.tcl.waterfall.overseas             # TCL Channel / content feed
+com.tcl.channelplus                    # TCL Live FAST channels
+com.tcl.tv.tclhome_passive             # pushes TCL content to the home screen at boot
+com.tcl.partnercustomizer              # TCL tweaks to Google TV home rows
+com.tcl.interactive                    # TCL TIAS background service
+android.autoinstalls.config.google.gtvpai   # silently installs partner apps
+
+# Retail demo
+com.tcl.exhibit
+com.tcl.esticker
+
+# Background services and duplicates
+com.tcl.guard                          # TGuard memory "cleaner"
+com.tcl.magiconnectfree                # MagiConnect phone-to-TV app
+com.google.android.tv.remote.service   # Google TV phone-app remote
+
+# Preloaded apps
+com.tcl.ocean.instructions             # e-manual
+com.tcl.repairguide
+com.tcl.gamebar                        # re-enable for the game-mode overlay
+com.tcl.UpdatePeripheral               # re-enable to update a TCL soundbar
+# com.google.android.apps.tv.dreamx    # re-enabled: with it off, Settings has no screensaver menu at all
+
+# Needed for a custom launcher. Disabled only AFTER the new launcher is Home.
+com.google.android.apps.tv.launcherx
+com.google.android.tungsten.setupwraith
