@@ -1,9 +1,12 @@
-# Hisense 65D62QH (China, JuUI 9): debloat and launcher handover
+# Hisense 65D62QH (China, JuUI 9): debloat, and what a launcher swap costs
 
-Owner report for a China-market Hisense 65D62QH running 聚好看 JuUI 9. A tested package list for this
-unit lives in [`examples/hisense-65d62qh/debloat.txt`](../../examples/hisense-65d62qh/debloat.txt),
+Owner report for a China-market Hisense 65D62QH running 聚好看 JuUI 9. The tested package list for
+this unit lives in [`examples/hisense-65d62qh/debloat.txt`](../../examples/hisense-65d62qh/debloat.txt)
 and its launcher config in
-[`examples/hisense-65d62qh/config.json`](../../examples/hisense-65d62qh/config.json).
+[`examples/hisense-65d62qh/config.json`](../../examples/hisense-65d62qh/config.json). **That list is
+debloat only: it keeps the stock Home `com.jamdeo.tv.vod` enabled.** The launcher handover further
+down was tried on this same set as a separate experiment and is *not* part of the list — it is here
+because the two failures it runs into are firmware behaviour no package list can work around.
 
 ## Observed firmware
 
@@ -54,7 +57,10 @@ It is not caused by the launcher or by the accessibility service — reproduced 
 rather than the USB port alone. Use the remote, or a phone remote app (which goes over the network),
 and keep the USB port empty.
 
-## Stock Home and the handover
+## Stock Home, and the swap that was tried
+
+**Not part of the list.** Everything below is what happened on this same set when Home was replaced
+by hand, recorded so the next owner knows what they are taking on before they disable it.
 
 ```text
 com.jamdeo.tv.vod/com.ju.main.launcher.LauncherActivity
@@ -62,7 +68,7 @@ com.jamdeo.tv.vod/com.ju.main.launcher.LauncherActivity
 
 `com.jamdeo.tv.vod` (聚好看) is the stock launcher and it also renders the sponsored rows and the VIP
 banner on Home — those are fetched by the launcher itself, not by the ad sidecars a debloat list
-disables, so only replacing the launcher removes them.
+disables, so only replacing the launcher removes them. That is the whole reason anyone would try.
 
 The install scripts do not recognize `com.jamdeo.tv.vod` automatically, but accept an explicit stock
 launcher (`-StockLauncher` on Windows or `STOCK_LAUNCHER` on Unix). The commands below were run

@@ -156,30 +156,12 @@ com.android.wallpaperbackup
 # com.ju.secondscreen.HomeActivity, which this package starts at boot and which takes the foreground
 # on top of your launcher. So it is required for a clean launcher swap, and it costs voice.
 #
-# SWAPPING THE LAUNCHER (separate, second step — read this before trying):
-#   com.jamdeo.tv.vod is the stock JuUI home. It is not auto-detected; pass it explicitly:
-#       -TvHost <tv ip> -StockLauncher com.jamdeo.tv.vod
-#   The remote's Home button is Linux scancode 102, which this keylayout maps to KEYCODE_F12 (142)
-#   and the vendor SysUIMerge app used to switch to the previous app — the stock launcher, until it
-#   was disabled. So with com.jamdeo.tv.vod disabled the Home button does nothing. The fix tested by
-#   the vidda-mt9653 author (home_key_scancodes=[102] for HomeKeyService) is not in the launcher on
-#   main. Injected KEYCODE_HOME cannot test it: the vendor framework swallows injected keycode 3.
-#   Re-enabling com.jamdeo.tv.vod (pm enable) makes the TV reclaim Home even after an explicit
-#   set-home-activity; disable it first, then set Home.
-#
-# SWAPPED ON THIS SET on 2026-10-22. Two extra packages go with it:
-#   com.jamdeo.tv.vod               the stock home itself
-#   com.keylab.speech.view.vidaa    its boot-time com.ju.secondscreen.HomeActivity takes the
-#                                   foreground over the new launcher; costs the voice UI and the
-#                                   remote's mic key. Component-level disable is refused here
-#                                   (SecurityException: Shell cannot change component state), so it
-#                                   has to be the whole package.
-# With com.jamdeo.tv.vod disabled NOTHING starts Home at boot on this firmware: display on, awake,
-# mCurrentFocus and mFocusedApp both null, no launcher process, until the remote wakes the TV.
-# A BOOT_COMPLETED receiver was also tested, but the firmware drops its startActivity call. The
-# local boot_start_home launcher experiment is not included in the upstream launcher; until a
-# tested upstream fix is available, leave com.jamdeo.tv.vod enabled unless you accept a blank
-# screen at boot. Full notes: docs/devices/hisense-65d62qh.md
-# The stock launcher stays enabled while applying this list; it is disabled by
-# build-and-install only after the new launcher is installed and set as Home.
-# com.jamdeo.tv.vod
+# com.jamdeo.tv.vod — KEEP ENABLED. This list is debloat only; the stock Home stays.
+#   Disabled, this firmware starts no Home at all at boot: display on and awake, mCurrentFocus and
+#   mFocusedApp both null, no launcher process, until the remote wakes the TV and HOME resolves again.
+#   The remote's Home button goes the same way: the physical key is Linux scancode 102, which this
+#   keylayout maps to KEYCODE_F12 for the vendor SysUIMerge app to switch to the previous app — the
+#   stock launcher, until it is disabled.
+#   Replacing Home on this set is possible but needs more than this list; what it looked like and
+#   what it took is recorded in docs/devices/hisense-65d62qh.md. Do not disable this package unless
+#   you have read that first.
