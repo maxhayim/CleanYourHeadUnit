@@ -731,9 +731,12 @@ tools/tv.py 'settings put global private_dns_specifier dns.adguard-dns.com'
 tools/tv.py 'settings put global private_dns_mode hostname'
 ```
 
-It does not remove YouTube ads, which come from the same servers as the videos. If an app stops
-playing or the TV reports "No internet" (the resolver is down or unreachable), switch back with
-`tools/tv.py 'settings put global private_dns_mode opportunistic'`.
+It does not remove YouTube ads, which come from the same servers as the videos. When the TV reports
+"No internet", the resolver is down or unreachable and switching back restores everything:
+`tools/tv.py 'settings put global private_dns_mode opportunistic'`. A resolver that answers can still
+break one app on its own, so if a single app fails while the rest play, see
+[one app refuses to play](docs/TROUBLESHOOTING.md#one-app-refuses-to-play-while-the-rest-of-the-tv-is-online)
+before you debug the app.
 
 </details>
 

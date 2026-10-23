@@ -624,3 +624,23 @@ home, so on a set whose list disabled launcherx only a helper can answer them. E
 install without `INPUT_KEY_SERVICE=1`/`HOME_KEY_SERVICE=1`, or keep the buttons and accept one step per
 press, or leave launcherx enabled and bind nothing. Write back the exact string the first read printed;
 the empty list also unbinds TalkBack. Bisect, keycodes and limits: [the G09 note](devices/tcl-55p71b-g09-key-repeat.md).
+
+## One app refuses to play while the rest of the TV is online
+
+An ad-blocking Private DNS is a common addition and the resolver answering is not proof that playback
+is unaffected. A player also calls measurement and analytics domains, and a block there comes back as
+the app's own error while the TV stays online. On a Master-G MGA3200 (`ATV R1`, `R1`, SCBC, Realtek,
+Android TV 9, `PTT1.201001.001`) with `dns.adguard-dns.com` in hostname mode, Max (`com.wbd.stream`)
+logged `ERR_CONNECTION_REFUSED` for its Braze and Conviva endpoints and stalled, while every other app
+played and Android's own connectivity check passed (#1060). Blocking `pixel.spotify.com` takes Spotify
+off the Freebox Player POP (`examples/freebox-player-pop`) the same way. So when one app fails and the
+rest play, set the mode back before debugging the app, then try the same title once more - on the
+MGA3200 that cleared the errors:
+
+```sh
+tools/tv.py 'settings put global private_dns_mode opportunistic'
+```
+
+The other failure mode reads differently: when the TV itself says "No internet", the resolver is down
+or unreachable, and the same command restores it. What the optional resolver does, and what it costs,
+is in the README's "Can it block ads inside apps too?".
