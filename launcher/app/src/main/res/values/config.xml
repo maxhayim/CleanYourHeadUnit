@@ -316,6 +316,12 @@
          for wallpapers and banners that clash with it; app_glow still colours every tile. Can also be set with
          "cinematic_white_focus": true in a theme's config.json. -->
     <bool name="cinematic_white_focus">false</bool>
+    <!-- With cinematic_home, how much of a wallpaper the shelf covers: cinematic_scrim is the strength of the dark
+         scrim that keeps the name readable (0 to 100 percent, 100 as before) and cinematic_art the opacity of the
+         app's softened artwork (0 to 100, 50 as before; 0 leaves the wallpaper uncovered). Lower values let a
+         theme's wallpaper show through. A theme can set "cinematic_scrim" and "cinematic_art". -->
+    <integer name="cinematic_scrim">100</integer>
+    <integer name="cinematic_art">50</integer>
 
     <!-- The glow behind the dock in the focused app's colour (red for YouTube, blue for Prime Video). false keeps
          only background_color or the wallpaper behind everything. Can also be set with "ambient_glow": false in a
