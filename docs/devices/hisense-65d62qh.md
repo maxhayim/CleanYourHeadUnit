@@ -47,15 +47,29 @@ is done and confirm the port refuses connections (`tools/adb-closed.py <tv ip>`)
   `adb mdns services` to read the live port instead of copying it off the screen.
 - `adb tcpip 5555` after a pairing-code session is the quickest way back to the plain 5555 port.
 
-### Do not plug a USB mouse or keyboard into this TV
+### A USB mouse froze input once, with a second accessibility service running
 
-With the set up and running, plugging in a USB HID device freezes **all** input: video keeps playing,
-but the mouse, the keyboard and the remote stop responding, and the screen goes dark on the screen
-timeout a while later. Only a mains power cycle (unplug for ~30 s, not standby) brings input back.
-It is not caused by the launcher or by the accessibility service — reproduced with
-`accessibility_enabled 0`. Bluetooth goes the same way, so the fault is in the vendor's input stack
-rather than the USB port alone. Use the remote, or a phone remote app (which goes over the network),
-and keep the USB port empty.
+On one setup of this set, plugging in a USB HID device froze **all** input: video kept playing, but
+the mouse, the keyboard and the remote stopped responding, and the screen went dark on the screen
+timeout a while later. Only a mains power cycle (unplug for ~30 s, not standby) brought input back.
+Bluetooth HID did the same, so it ran deeper than the USB port.
+
+It is not a property of this TV: on the factory system a mouse works, USB debugging on included. After
+a factory reset the same setup was rebuilt and **three cold boots, a mouse plugged in each time,
+froze nothing** — launcher focused, 28 packages disabled, Home up at ~37 s every round.
+
+The one thing that differed on the failing setup is visible in `logcat`: the vendor's accessibility
+service was also enabled then —
+
+```text
+I HisXiaoJu: initAccessibilityService(), services = com.hisense.vidaaassistant/…AppAccessibilityService : com.gathin.tvhome/.HomeKeyService
+```
+
+Two services filtering key events at once is the failure mode this repo records for other firmware.
+So on this set, keep `enabled_accessibility_services` to the one service that is needed, and keep
+`key_filter` off in the theme. If a freeze appears, check that list first. Until it is understood,
+a phone remote app (it goes over the network, not through the input stack) is the safer way to type or
+click on this TV, and the USB port is best left empty.
 
 ## Stock Home, and the swap that was tried
 
