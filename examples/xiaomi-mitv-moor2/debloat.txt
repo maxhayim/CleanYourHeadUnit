@@ -121,3 +121,18 @@ com.google.android.play.games          # Play Games
 # Trade-off: setupwraith is the first-run setup wizard. Everyday use is unaffected, but re-enable it
 # before a factory reset - tools/restore.sh does that for you while this line is in the list.
 com.google.android.tungsten.setupwraith   # setup wizard; blocks a third-party launcher from Home
+
+# ---------------------------------------------------------------------------------------------
+# Optional: unused system leftovers (added 22 Oct 2026, firmware RTM5.220609.003.2674). Disabled on a
+# MiTV-MOOR2 with the launcher owning Home; after a reboot all five stayed disabled and Home, the
+# remote's keys, the Inputs menu (HDMI 1-3, AV, Live TV) and Settings still worked. One day so far.
+# None of them runs a process at idle. Three report TV_INPUT_HARDWARE only because they share
+# android.uid.system; `pm query-services -a android.media.tv.TvInputService` lists only
+# com.mediatek.tvinput and com.mediatek.tv.service, so the inputs are not involved.
+# Keep com.android.settings.intelligence: it is the search box inside Settings.
+# Opt-in: uncomment the lines below to disable them (none runs at idle, so there is little to gain).
+# com.android.dynsystem                  # DSU: boots a temporary GSI image (developer feature)
+# com.android.soundpicker                # ringtone picker
+# com.android.wallpaperbackup            # wallpaper backup agent
+# com.google.android.onetimeinitializer  # one-off task after first setup, runs at boot
+# com.mstar.android.tv.disclaimercustomization   # legal screen of the first-run setup wizard only
