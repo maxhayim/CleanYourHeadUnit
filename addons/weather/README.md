@@ -16,7 +16,11 @@ sky-blue glow; on any other Android TV home it is an ordinary app.
   "light rain" at 1 °C (ICON and GFS did, in a Ulaanbaatar blizzard). The app decides by the wet-bulb
   temperature instead, which counts how dry the air is: at 1 °C or below, rain and drizzle are shown as snow.
 - It reads Open-Meteo only while the page is on screen, every 30 minutes, or 5 minutes after a failure.
-- Degrees Celsius, English words; day names follow the TV's language.
+- Degrees Celsius by default, English words; day names follow the TV's language. For Fahrenheit set
+  `temperature_unit` to `f` in `app/src/main/res/values/options.xml` before building: the temperature now,
+  feels-like and the days' highs and lows turn to °F, converted from the reading before rounding, and the wind to
+  mph. `show_both_units` adds the temperature now in the other unit at the start of the "Feels like" line
+  ("22°C · Feels like 70°").
 
 ## Options
 
