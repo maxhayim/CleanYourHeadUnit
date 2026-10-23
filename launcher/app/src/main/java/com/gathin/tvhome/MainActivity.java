@@ -612,6 +612,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         btnReorder.setVisibility(cfg.reorderButton ? View.VISIBLE : View.GONE);
         if (!cfg.showNetworkPill) btnWifi.setVisibility(View.GONE);
         showInputsPill = cfg.showInputsPill;
+        showInputsMenuRow = cfg.showInputsPill;
         btnLibraryTop = findViewById(R.id.btnLibraryTop);
         btnLibraryTop.setOnClickListener(v -> {
             onLibraryRequested();
@@ -2457,6 +2458,8 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
     private boolean iconOnlyButtons;
     /** config.xml top_menu: Inputs, Wi-Fi and Settings folded into one gear. */
     private boolean topMenu;
+    /** show_inputs_pill as configured: top_menu clears showInputsPill, so its Inputs row reads this. */
+    private boolean showInputsMenuRow = true;
     private boolean launcherSettingsButton;
     /** icon_only_buttons without wifi_label_width: the Wi-Fi pill shows no network name. */
     private boolean wifiIconOnly;
@@ -2913,7 +2916,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         LinearLayout rows = panel.findViewById(R.id.rows);
         PopupWindow popup = glassPopup(panel, (int) (220 * density));
         // Inputs opens its own list once this one has closed.
-        addInputRow(rows, popup, R.drawable.ic_input, getString(R.string.inputs), -1, () -> root.post(this::showInputs));
+        if (showInputsMenuRow) addInputRow(rows, popup, R.drawable.ic_input, getString(R.string.inputs), -1, () -> root.post(this::showInputs));
         addInputRow(rows, popup, R.drawable.ic_wifi, getString(R.string.quick_network), -1, this::openNetworkPill);
         CharSequence network = wifiIconOnly ? btnWifi.getContentDescription() : btnWifi.getText();
         if (!TextUtils.isEmpty(network)) {
@@ -2921,6 +2924,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
             status.setText(network);
             status.setVisibility(View.VISIBLE);
         }
+        addInputRow(rows, popup, R.drawable.ic_swap_vert, getString(R.string.reorder), -1, this::toggleReorder);
         if (launcherSettingsButton) {
             addInputRow(rows, popup, R.drawable.ic_home_settings_pill, getString(R.string.launcher_settings), -1,
                     () -> startActivityForResult(new Intent(this, LauncherSettingsActivity.class), LAUNCHER_SETTINGS_REQUEST));
