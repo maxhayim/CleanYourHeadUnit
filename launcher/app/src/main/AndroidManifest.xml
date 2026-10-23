@@ -116,7 +116,9 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <!-- Remote Settings button panel (settings_key_panel); own task so the app behind stays put. -->
+        <!-- Remote Settings button panel (settings_key_panel); own task so the app behind stays put.
+             No screenOrientation: a translucent activity may not request one on Android 8.0 (API 26),
+             which throws IllegalStateException in onCreate (#1122); a TV is landscape anyway. -->
         <activity
             android:name=".QuickSettingsActivity"
             android:exported="false"
@@ -124,7 +126,6 @@
             android:launchMode="singleTop"
             android:excludeFromRecents="true"
             android:noHistory="true"
-            android:screenOrientation="landscape"
             android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen" />
         <activity
             android:name=".HomeSettingsActivity"
