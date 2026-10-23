@@ -3,8 +3,9 @@
 **When to use this:** you changed the launcher to make it faster or lighter, and the pull request has to
 show by how much, and where the time went. This is the method #666 used.
 
-Tools: [`tools/trace.py` and `tools/trace_report.py`](../../tools/trace.md), then
-[`tools/flamechart.py`](../../tools/flamechart.md). Install them once:
+Tools: [`tools/trace.py` and `tools/trace_report.py`](../../tools/trace.md),
+[`tools/flamechart.py`](../../tools/flamechart.md) and [`tools/screendiff.py`](../../tools/screendiff.md).
+Install them once:
 
 ```bash
 tools/venv/bin/pip install -r tools/requirements-perf.txt
@@ -18,8 +19,9 @@ Copy this checklist into your notes and tick it off:
 - [ ] 3. Trace your build, 5 runs
 - [ ] 4. Report; if the change isn't there, go back to your code
 - [ ] 5. Draw the flame charts
-- [ ] 6. Check the behaviour your change could break
-- [ ] 7. Write it up
+- [ ] 6. Screenshots identical, or the visual change described
+- [ ] 7. Check the behaviour your change could break
+- [ ] 8. Write it up
 ```
 
 ## 1. Decide before you measure
@@ -65,7 +67,19 @@ tools/venv/bin/python tools/flamechart.py traces/before traces/after \
     --window start:1500 --threads RenderThread --highlight '^DrawFrame' --out frames.png
 ```
 
-## 6. Behaviour
+## 6. Screenshots
+
+Take the same screenshot on both builds, then compare:
+
+```bash
+tools/venv/bin/python -I tools/tv.py --screenshot shots/before.png HOME DPAD_RIGHT   # each build
+tools/venv/bin/python tools/screendiff.py shots/before.png shots/after.png \
+    --mask <clock box> --blur <network name box> --out shots/before-after.png
+```
+
+`identical` backs "no visible change". If it says `different`, find out why before posting.
+
+## 7. Behaviour
 
 On the TV, check what your change could break, and note what you saw. For the return to Home, for
 example:
@@ -73,10 +87,11 @@ example:
 - focus comes back to the tile you left from;
 - Home on Home goes to the first tile.
 
-## 7. The pull request
+## 8. The pull request
 
 - **Tested on:** the TV, Android version and firmware.
 - **The tables:** `trace_report.py --markdown` before, after and the change, with outliers named.
 - **The charts:** each with its `--highlight` stated.
+- **The screenshots:** the pair from `screendiff.py` and its result.
 - **The behaviour checks:** what you checked and what you saw.
-- **Leave out** `traces/`: the files are large and hold your TV's process list.
+- **Leave out** `traces/` and raw screenshots: they're large and hold your TV's details.
