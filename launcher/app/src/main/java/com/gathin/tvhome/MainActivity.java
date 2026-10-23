@@ -2343,9 +2343,12 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
                     - span.getSize(paint, badge, 0, badge.length(), null) - paint.measureText(" ") - 2 * density;
             String name = TextUtils.ellipsize(text, paint, Math.max(0, room), TextUtils.TruncateAt.END).toString();
             // A long badge ("VPN отключён") can leave room for a stub like "MT…", which says nothing and, after
-            // rounding, can push the badge itself out of the pill. Show the badge alone then.
+            // rounding, can push the badge itself out of the pill. Show the badge alone then. On Ethernet the
+            // icon already names the link, and "Ethernet" cut to "Ethe…" or not depended on the font size (#961),
+            // so Ethernet always shows the icon and the badge alone.
             // The space stays even then: a line holding only the span gets no font metrics and collapses.
-            text = name.length() < text.length() && name.length() < 5 ? "" : name;
+            boolean stub = name.length() < text.length() && name.length() < 5;
+            text = stub || icon == R.drawable.ic_ethernet ? "" : name;
             SpannableString label = new SpannableString(text + " " + badge);
             label.setSpan(span, text.length() + 1, label.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             if (!TextUtils.equals(btnWifi.getText(), label)) btnWifi.setText(label);
