@@ -186,7 +186,6 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
     /** config.xml show_stats, overridable by a theme. Off: the line is gone and nothing is read. */
     private boolean showStats;
     private boolean shamsi;
-    private JewishDate jewishDate;
     /** greeting_name: said after the greeting, which is shown in capitals. */
     private String greetingName = "";
     /** Optional time-of-day backdrop (config.xml, sky_intensity); 0 keeps it hidden. */
@@ -445,29 +444,11 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         raceSessions = findViewById(R.id.raceSessions);
         showStats = cfg.showStats;
         shamsi = cfg.shamsiDate;
-        jewishDate = cfg.jewishDate;
         greetingName = cfg.greetingName;
-        boolean hebrewDate = jewishDate != null && jewishDate.showDate;
-        if (shamsi || hebrewDate) {
-            if (shamsi && hebrewDate) {
-                shamsiDate.setSingleLine(false);
-                shamsiDate.setMaxLines(2);
-            }
-            if (hebrewDate) {
-                shamsiDate.getLayoutParams().width = ViewGroup.LayoutParams.WRAP_CONTENT;
-                ViewGroup dates = (ViewGroup) shamsiDate.getParent();
-                dates.removeView(shamsiDate);
-                dates.addView(shamsiDate);
-                dates.setTranslationY(6 * density);
-            }
+        if (shamsi) {
             shamsiDate.setVisibility(View.VISIBLE);
             TextView date = findViewById(R.id.date);
-            if (hebrewDate) {
-                date.getLayoutParams().width = ViewGroup.LayoutParams.WRAP_CONTENT;
-                shamsiDate.setTextSize(14f);
-                date.setLetterSpacing(0.02f);
-            }
-            date.setTextSize(hebrewDate ? 14f : 11f);
+            date.setTextSize(11f);
             date.setPadding(0, (int) (4 * density), 0, 0);
         }
         vpnApp = cfg.vpnApp;
@@ -2294,27 +2275,16 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
             else if (hour < 22) res = R.string.good_evening;
             else res = R.string.good_night;
         }
-        java.time.LocalDate jewishDay = jewishDate == null ? null
-                : jewishDate.day(java.time.ZonedDateTime.now());
-        int holiday = jewishDay != null && jewishDate.greetings ? jewishDate.greeting(jewishDay, locale) : 0;
         String festiveGreeting = festive ? festival.greetingText(getResources()) : "";
-        if (festiveGreeting.isEmpty() && holiday != 0) festiveGreeting = getResources().getStringArray(R.array.jewish_greetings)[holiday - 1];
         if (!festiveGreeting.isEmpty()) {
             greeting.setText(festiveGreeting);
-            greeting.setTextColor(festive ? liftTowardsWhite(festival.accentColor(), 0.25f) : greetingColor);
+            greeting.setTextColor(liftTowardsWhite(festival.accentColor(), 0.25f));
         } else {
             greeting.setText(greetingName.isEmpty() ? getString(res)
                     : getString(R.string.greeting_with_name, getString(res), greetingName));
             greeting.setTextColor(greetingColor);
         }
-        if (shamsi || (jewishDate != null && jewishDate.showDate)) {
-            String text = shamsi ? Shamsi.today(getResources()) : "";
-            if (jewishDay != null && jewishDate.showDate) {
-                text += (text.isEmpty() ? "" : "\n") + JewishDate.text(jewishDay, locale);
-            }
-            shamsiDate.setText(text);
-            shamsiDate.setVisibility(text.isEmpty() ? View.GONE : View.VISIBLE);
-        }
+        if (shamsi) shamsiDate.setText(Shamsi.today(getResources()));
     }
 
     // ---- race-weekend panel (a theme's race_calendar) -----------------------------------------------
