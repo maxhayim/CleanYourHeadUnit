@@ -46,6 +46,8 @@ public final class ToggleActivity extends Activity {
     private long closeMs;
     /** Switch once the window is up: on first open, and again when the tile is pressed while the panel shows. */
     private boolean switchPending;
+    /** Android's permission prompt is up: the panel must not close itself under it, which would cancel it. */
+    private boolean asking;
 
     @Override
     protected void onCreate(Bundle saved) {
@@ -99,7 +101,7 @@ public final class ToggleActivity extends Activity {
     protected void onStop() {
         super.onStop();
         // A panel, not a page: once something else is on screen it has done its job.
-        if (!isChangingConfigurations()) finish();
+        if (!isChangingConfigurations() && !asking) finish();
     }
 
     @Override
@@ -110,7 +112,7 @@ public final class ToggleActivity extends Activity {
 
     private void armClose() {
         main.removeCallbacks(close);
-        if (closeMs > 0) main.postDelayed(close, closeMs);
+        if (closeMs > 0 && !asking) main.postDelayed(close, closeMs);
     }
 
     private boolean needsPermission() {
@@ -136,6 +138,8 @@ public final class ToggleActivity extends Activity {
             return;
         }
         if (needsPermission()) {
+            asking = true;
+            main.removeCallbacks(close);
             requestPermissions(new String[]{Manifest.permission.BLUETOOTH_CONNECT}, ASK);
             return;
         }
@@ -161,8 +165,10 @@ public final class ToggleActivity extends Activity {
     public void onRequestPermissionsResult(int request, String[] permissions, int[] results) {
         super.onRequestPermissionsResult(request, permissions, results);
         if (request != ASK) return;
+        asking = false;
         if (results.length > 0 && results[0] == PackageManager.PERMISSION_GRANTED) flip();
         else showNote(R.string.need_permission);
+        armClose();
     }
 
     private void openPairing() {
