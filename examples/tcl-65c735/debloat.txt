@@ -43,7 +43,8 @@
 #
 # Apply:   TV_HOST=<tv ip> tools/disable.sh examples/tcl-65c735/debloat.txt
 # Undo:    TV_HOST=<tv ip> tools/restore.sh examples/tcl-65c735/debloat.txt com.google.android.apps.tv.launcherx
-# Windows: tools\disable.ps1 / tools\restore.ps1 -TvHost <tv ip> <list> -Stock com.google.android.apps.tv.launcherx
+# Windows: $env:TV_HOST="<tv ip>"; tools\disable.ps1 examples\tcl-65c735\debloat.txt
+#          $env:TV_HOST="<tv ip>"; tools\restore.ps1 examples\tcl-65c735\debloat.txt -Stock com.google.android.apps.tv.launcherx
 # Everything is DISABLED, not uninstalled. Comment out any line you want to keep.
 #
 # Stock launcher: com.google.android.apps.tv.launcherx. Live TV / HDMI: com.tcl.tv + com.tcl.tvinput.
