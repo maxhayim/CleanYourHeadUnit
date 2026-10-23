@@ -34,7 +34,7 @@ dark to find the way, any of these gives the normal screen back:
 ## The TV's own picture
 
 The dimming layer darkens the picture, but the panel's backlight keeps glowing behind it, and that glow is most
-of the light in a dark room. On TVs built on Realtek chips (many Google TVs from TCL, Hisense, MOKA and others)
+of the light in a dark room. On TVs built on Realtek chips, like the test TV,
 the TV's picture menu is made of settings slices, and Brightness drives the same controls the menu does. When
 night begins it notes the TV's current picture, sets the night one, and puts the noted one back when night ends
 or dimming is switched off. If the TV already shows the night picture when night begins (set by hand earlier),
