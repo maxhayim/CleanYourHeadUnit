@@ -140,9 +140,11 @@ if (-not $env:HANDLERS_ALLOW -and $pkgs.Count -gt 0) {
     if (-not $checked) {
         Write-Warning 'Could not check which listed packages open the TV''s inputs and Settings (tv.py failed). After this run, open an HDMI input and Settings from the launcher before you put the remote down.'
     } else {
-        $split = [array]::IndexOf(($handlers | ForEach-Object { $_.Trim() }), '==')
-        for ($i = 0; $i -lt $handlers.Count; $i++) {
-            if ($handlers[$i] -notmatch '^\s*([A-Za-z_][A-Za-z0-9_]*(\.[A-Za-z0-9_]+)+)/') { continue }
+        # `@()` so an empty or one-line answer is still an array: IndexOf throws on $null.
+        $lines = @($handlers | ForEach-Object { $_.Trim() })
+        $split = [array]::IndexOf($lines, '==')
+        for ($i = 0; $i -lt $lines.Count; $i++) {
+            if ($lines[$i] -notmatch '^([A-Za-z_][A-Za-z0-9_]*(\.[A-Za-z0-9_]+)+)/') { continue }
             $p = $Matches[1]
             if ($pkgs -notcontains $p) { continue }
             if ($split -lt 0 -or $i -lt $split) {
