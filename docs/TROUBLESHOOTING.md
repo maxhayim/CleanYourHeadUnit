@@ -318,6 +318,20 @@ Things that bit us or contributors, so they don't bite you. Commands use `tools/
   launcherx is enabled it takes Home back (`set-home-activity` prints `Success` and changes nothing, and
   its home activity can't be disabled from the shell). To switch profile: `pm enable --user 0
   com.google.android.apps.tv.launcherx`, switch in Settings, then disable it again and set Home last.
+- **Voice search for a song or video says "Google Assistant is having trouble processing your request"**
+  once launcherx is disabled, while app commands ("open YouTube") still work. Seen on an onn 4K Streaming
+  Box (`YOC`, Google TV 14, `URO4.260304.011.B1.15051976`). Google TV shows those results in its own home
+  screen: the Assistant sends `VIEW https://tv.google.com/...` to launcherx
+  (`.gateway.LauncherDeepLink`, then `.home.HomeActivity` lists the results, and picking one opens YouTube
+  by package). With launcherx disabled there is nothing to open, and logcat shows `Failed to execute
+  provider.OPEN with status: UNKNOWN_ERROR` within 100 ms. Two things make it look like something else:
+  right after launcherx has run, the Assistant keeps serving results for a while even when it is disabled
+  again, and the failure returns only after a reboot; and nothing in the debloat list matters - with every
+  other package re-enabled it fails the same way. Apps only mode (Settings > Accounts & sign-in) is no way
+  out: it switches the Assistant off. What works: leave launcherx enabled (it is then Home, see the entry
+  above) and open this launcher from its app row, where voice search works normally because the results
+  screen comes up over it; or search inside YouTube with its on-screen mic. The Projectivy community found
+  the same (voice results "need the launcher X search results page").
 - **The remote's mic button does nothing, or opens the Assistant and it never hears you**, seen on a
   Xiaomi TV Box S 3rd gen (`MiTV-AFMU0`, `twilight`, Google TV 14, `V816.0.7.0.UZFAABX`). Two
   packages have to stay enabled, and re-enabling only one of them is what makes this hard to
@@ -658,7 +672,10 @@ path that drops the repeats, before an app sees them; the launcher's own helpers
 they do not map, so they are not consuming the volume key. The same was reported on a Xiaomi MiTV-MOSR4
 (`irobot`, Android 11, `RTM5.220609.003.1265`) with the launcher's own helpers, both and `InputKeyService`
 alone (#944), where the empty list was not tried because it also unhooks the buttons the helpers were
-installed for. Check the state first, do not rewrite it blind:
+installed for. An onn 4K Streaming Box (`YOC`, Google TV 14, `URO4.260304.011.B1.15051976`) does the same with
+`HomeKeyService` alone; there `key_filter` false (config.xml or a theme) brought the repeat back with the helper
+still bound, so a helper kept for something other than keys need not cost it. Check the state first, do not
+rewrite it blind:
 
 ```sh
 tools/tv.py 'settings get secure enabled_accessibility_services'
