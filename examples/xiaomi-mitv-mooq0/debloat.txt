@@ -8,6 +8,12 @@
 # remote's Input/Source button sends KEYCODE_MEDIA_RECORD (kernel KEY_RECORD), not KEYCODE_TV, so the
 # launcher's InputKeyService must handle KEYCODE_MEDIA_RECORD for the Input button to open the menu.
 #
+# Notes-only second firmware variant: Xiaomi Mi TV P1 43" (MiTV-MOOQ0, croods, EU), Android TV 11,
+# build RTM4.220307.164.8835 (2026-10). This does not validate the full Android TV 10 list on Android
+# 11; see ../../docs/devices/xiaomi-mitv-mooq0-android11.md. Netflix came back after a reboot when
+# disabled, while removing it for user 0 kept it absent through one reboot. NetflixObserver is part
+# of the core com.mediatek.tv.service APK on this build; keep that service enabled.
+#
 # Apply:   TV_HOST=<tv ip> tools/disable.sh examples/xiaomi-mitv-mooq0/debloat.txt
 # Undo:    TV_HOST=<tv ip> tools/restore.sh examples/xiaomi-mitv-mooq0/debloat.txt
 # Everything is DISABLED for user 0, not uninstalled. Comment out any line you want to keep.
