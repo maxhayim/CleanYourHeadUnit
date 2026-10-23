@@ -7,6 +7,8 @@ asleep. For the [Clean Your TV](../../README.md) launcher it declares a [module 
 once you answer **Show card** its tile reads "Headphones" with a blue glow. On any other Android TV home it is an
 ordinary app.
 
+![Headphones on a TV with none paired yet](screenshot.jpg)
+
 Opening it shows:
 
 | Row | What it does |
@@ -73,9 +75,15 @@ with your own key if you hand them out; the launcher pins its Show answer to the
 
 ## Tested on
 
-Not yet on a TV. The JVM tests cover the guard's decisions (audio devices only, pause only on fixed volume,
-unmute only its own mute), the battery and sharing wording, and name cleaning. These checks need a TV and a
-pair of Bluetooth headphones:
+MOKA R8G (Android 14), over ADB, with its own home app and no headphones paired: Bluetooth access granted by
+ADB, the screen naming the TV speakers as the output, the guard row, the empty paired list, and the sharing line
+for an Android 14 TV without LE Audio broadcast.
+
+The JVM tests cover the guard's decisions (audio devices only, pause only on fixed volume, unmute only its own
+mute), the battery and sharing wording, and name cleaning.
+
+Still to check, with a pair of Bluetooth headphones and on a TV running this repo's launcher (the test TV's home
+app has no module cards):
 
 1. The card prompt and **Show card**; the card opens the app.
 2. Pairing through the shortcut, then the pair listed as Connected, with its battery where reported.
@@ -84,7 +92,6 @@ pair of Bluetooth headphones:
    mute is lifted. With the guard off, neither happens.
 5. A remote or keyboard disconnecting never pauses anything.
 6. On a TV with ARC or fixed volume, the screen says so and the guard only pauses.
-7. The sharing line on an Android 13+ TV, with and without LE Audio broadcast.
 
 ## Maintainer
 
