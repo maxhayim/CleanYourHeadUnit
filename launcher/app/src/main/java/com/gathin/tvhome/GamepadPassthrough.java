@@ -11,7 +11,8 @@ import android.view.InputDevice;
  * Android routes every key through the accessibility layer and re-injects the ones the service passes on, and games
  * (Steam Link with an Xbox controller, on a TCL G07) stop seeing the controller's buttons as the controller's. The
  * remote buttons the services handle do nothing until the controller disconnects; filtering then comes back.
- * Started only with key_filter on: with it off the services never filter, and this must not turn filtering back on.
+ * Off by default (gamepad_passthrough). Started only with key_filter on too: with it off the services never filter,
+ * and this must not turn filtering back on.
  */
 final class GamepadPassthrough implements InputManager.InputDeviceListener {
     private final AccessibilityService service;
