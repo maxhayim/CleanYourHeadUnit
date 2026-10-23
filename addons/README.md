@@ -15,6 +15,7 @@ the core bigger or change how it behaves. You install an add-on only if you want
 | [Photo Prints](photo-prints/) | Your own photos as a screensaver: dated prints dealt in on a time-of-day sky, and a card that starts the slideshow | [@shivamsingh262](https://github.com/shivamsingh262) | Sony BRAVIA KD-65X82L (Google TV 12) | None |
 | [Photo screensaver](photo-screensaver/) | Your own pictures and MP4 clips as the TV's screensaver and as a card, slowly zooming and crossfading (20 s each by default); optional time, photo dates, prints on a sky and weather | [JorickGU](https://github.com/JorickGU) | TCL 43P69K (Google TV 12) | `INTERNET` and coarse location, only with the weather option on |
 | [Prayer Times](prayer-times/) | Today's prayer times for one city from Aladhan (no key), the next prayer with a countdown, Gregorian and Hijri dates | [@majnioui](https://github.com/majnioui) | Xiaomi TV (MiTV-MOOR2), Google TV 11 | `INTERNET` |
+| [Sleep Timer](sleep-timer/) | A sleep timer: 15 to 120 minutes, a one-minute countdown over what is playing with "15 more minutes", then standby; over HDMI-CEC the TV turns off with the box | [@luyzfernando08](https://github.com/luyzfernando08) | Xiaomi Mi Box S (Android TV 9) | accessibility (lock-screen action only), display over other apps, exact alarms |
 
 A widget, an info tile, a storage or smart-home card: if it can live as its own small app, it can live
 here. See the rules below.
