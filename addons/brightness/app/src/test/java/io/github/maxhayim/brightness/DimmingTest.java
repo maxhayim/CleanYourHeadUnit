@@ -111,6 +111,49 @@ public class DimmingTest {
     }
 
     @Test
+    public void tvSlidersReachZero() {
+        assertEquals(0, Dimming.stepPercent(1, -1));
+        assertEquals(0, Dimming.stepPercent(0, -1));
+        assertEquals(9, Dimming.stepPercent(10, -1));
+        assertEquals(20, Dimming.stepPercent(15, 1));
+        assertEquals(100, Dimming.stepPercent(100, 1));
+    }
+
+    @Test
+    public void dayPictureIsWhatTheTvShowedBeforeNight() {
+        Dimming.Picture before = new Dimming.Picture(80, 45, 50, false);
+        assertEquals(before, Dimming.dayPicture(before, Dimming.Picture.NIGHT, null));
+    }
+
+    @Test
+    public void nightPictureSetByHandKeepsTheRememberedDay() {
+        Dimming.Picture remembered = new Dimming.Picture(70, 50, 50, false);
+        assertEquals(remembered, Dimming.dayPicture(Dimming.Picture.NIGHT, Dimming.Picture.NIGHT, remembered));
+        assertEquals(Dimming.Picture.DAY, Dimming.dayPicture(Dimming.Picture.NIGHT, Dimming.Picture.NIGHT, null));
+        assertEquals("unreadable: the remembered day", remembered, Dimming.dayPicture(null, Dimming.Picture.NIGHT, remembered));
+    }
+
+    @Test
+    public void tvPictureFollowsNightModeAndTheMasterSwitch() {
+        Dimming.Settings s = on();
+        s.tvPicture = true;
+        assertTrue(Dimming.tvNightNow(s, 23 * 60));
+        assertFalse(Dimming.tvNightNow(s, 12 * 60));
+        s.on = false;
+        assertFalse("off puts the day picture back", Dimming.tvNightNow(s, 23 * 60));
+        s.on = true;
+        s.tvPicture = false;
+        assertFalse(Dimming.tvNightNow(s, 23 * 60));
+    }
+
+    @Test
+    public void picturesClampAndCompare() {
+        Dimming.Picture p = new Dimming.Picture(-5, 150, 35, true).clamped();
+        assertEquals(new Dimming.Picture(0, 100, 35, true), p);
+        assertFalse(p.equals(p.withDynamicBacklight(false)));
+    }
+
+    @Test
     public void windowPastMidnight() {
         int start = 21 * 60, end = 7 * 60;
         assertFalse(Dimming.inWindow(start, end, 20 * 60 + 59));

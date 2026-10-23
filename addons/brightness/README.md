@@ -17,6 +17,9 @@ Opening it shows one list, worked with the remote alone:
 | **Night brightness** | Its own slider, 1 % to 100 %. |
 | **Warmth** | Night mode only: an amber tint that takes blue out of the picture, 0 to 100 %. |
 | **Night starts**, **Night ends** | The schedule, in 15 minute steps; a night may run past midnight (21:00 to 07:00 is the default). |
+| **TV picture at night** | Realtek-based TVs only: also turns the TV's own backlight, contrast and brightness down for the night, with dynamic backlight on, and puts the day's picture back in the morning. See below. |
+| **Night backlight**, **Night contrast**, **Night TV brightness**, **Night dynamic backlight** | The TV's own picture for the night: backlight 0, contrast 15, brightness 35 and dynamic backlight on by default. Changes reach the TV at once while it is night. |
+| **Use the TV's picture now** | Takes what is set in the TV's own picture menu as the night values. |
 
 Every change shows at once, over the settings screen too, so you see the result as you move the slider. The
 settings are kept, and the layer and the schedule come back after a reboot.
@@ -27,6 +30,19 @@ dark to find the way, any of these gives the normal screen back:
 - open Brightness and press OK on **Dimming**;
 - from a computer, `adb shell am broadcast -a io.github.maxhayim.brightness.OFF -n io.github.maxhayim.brightness/.OffReceiver`;
 - `adb shell am force-stop io.github.maxhayim.brightness`, or uninstalling it.
+
+## The TV's own picture
+
+The dimming layer darkens the picture, but the panel's backlight keeps glowing behind it, and that glow is most
+of the light in a dark room. On TVs built on Realtek chips (many Google TVs from TCL, Hisense, MOKA and others)
+the TV's picture menu is made of settings slices, and Brightness drives the same controls the menu does. When
+night begins it notes the TV's current picture, sets the night one, and puts the noted one back when night ends
+or dimming is switched off. If the TV already shows the night picture when night begins (set by hand earlier),
+the day picture is the one noted the night before, or the TVs' Standard default (backlight 100, contrast 50,
+brightness 50, dynamic backlight off).
+
+The TV asks once, "Allow Brightness to show RtkSliceProvider slices?"; the app shows a row that opens the prompt.
+On other TVs these rows don't appear.
 
 ## How it works
 
@@ -42,6 +58,9 @@ mode at the scheduled times, and it stops itself when there is nothing to draw a
 | Display over other apps (`SYSTEM_ALERT_WINDOW`) | To draw the dimming layer over other apps. Granted by `install.sh`, since many TVs hide this setting. Without it the app says so and draws nothing. |
 | Foreground service (`FOREGROUND_SERVICE`, `FOREGROUND_SERVICE_SPECIAL_USE`) | One service holds the layer and follows the schedule. It runs only while dimming is on and there is a layer to draw or a schedule to follow. |
 | Start at boot (`RECEIVE_BOOT_COMPLETED`) | To put the layer and the schedule back after a reboot or an update, if dimming was on. |
+
+On Realtek TVs, the system's slice permission for the TV's picture settings, asked once on the TV (see "The TV's
+own picture"). It lets the app read and change the picture menu's settings and nothing else.
 
 No internet permission: nothing leaves the TV. No accounts, telemetry, ads or libraries. Settings stay in the
 app's own storage (backups are off). The `OffReceiver` is open to any sender on purpose: it can only switch
@@ -65,9 +84,11 @@ with your own key if you hand them out; the launcher pins its Show answer to the
 
 ## Limits
 
-- **It darkens the picture, not the backlight.** Whites get dimmer but blacks don't get blacker, and the TV
-  uses as much power as before. For a darker panel, lower the backlight in the TV's own picture settings first,
-  then use this for the rest.
+- **The layer darkens the picture, not the backlight.** Whites get dimmer but blacks don't get blacker. On
+  Realtek TVs the TV picture option lowers the backlight itself; elsewhere, lower the backlight in the TV's own
+  picture settings and use the layer for the rest.
+- **The TV picture option uses the TV's settings slices, which aren't public API.** A firmware update could rename
+  them; then the rows still show but the TV no longer follows, and the TV's own menu works as always.
 - **Some things are drawn above it.** Android keeps the on-screen keyboard, the volume bar, toasts and the
   system's own panels above app overlays, so they show at full brightness.
 - **Some screens hide it.** Since Android 12, permission prompts and the app installer can hide overlays while
@@ -88,7 +109,8 @@ with your own key if you hand them out; the launcher pins its Show answer to the
 MOKA R8G (Android 14), over ADB, with its own home app: the overlay permission granted by ADB, the layer drawn
 over the settings screen and over Home, the scheduled night mode taking over at 21:13 inside a 21:00 to 07:00
 window (40 %, then down to 1 %, warm), each slider changing the layer at once, **Dimming** Off and the ADB
-broadcast removing the layer at once and On bringing it back, and the layer back by itself after the app was updated. Memory: about 22 MB with the layer up.
+broadcast removing the layer at once and On bringing it back, the TV picture option asking for and getting
+the slice permission and moving the TV's own backlight to 1 and back to 0 as the slider moved, and the layer back by itself after the app was updated. Memory: about 22 MB with the layer up.
 
 The JVM tests cover the levels, the colour arithmetic, the schedule (past midnight, edges, empty windows), the
 1 % floor, the fine steps and the clamping of stored values.
@@ -96,7 +118,8 @@ The JVM tests cover the levels, the colour arithmetic, the schedule (past midnig
 Still to check on a TV running this repo's launcher (the test TV's home app has no module cards):
 
 1. The card prompt and **Show card**; the card opens the app.
-2. The switch at the end and start of the night without opening the app.
+2. The switch at the end and start of the night without opening the app, the TV's day picture coming back in
+   the morning, and when dimming is switched off.
 3. The layer over a streaming app playing video, Live TV and an HDMI input, with every remote key still
    reaching the app below.
 4. A reboot with dimming on brings the layer and the schedule back.

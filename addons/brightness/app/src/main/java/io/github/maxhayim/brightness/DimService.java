@@ -21,11 +21,14 @@ import android.view.View;
 import android.view.WindowManager;
 
 import java.util.Calendar;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * Holds the dimming layer: one full-screen window over every app that never takes focus, keys or touches, so the
  * remote keeps controlling what is on screen. Runs only while there is a layer to hold or a schedule to follow,
  * and stops itself otherwise. It redraws whenever the settings change and at each start and end of the night.
+ * With the TV picture option on, it also sets the TV's own picture for the night and puts the day's back after.
  */
 public class DimService extends Service {
     private static final String CHANNEL = "dimming";
@@ -34,6 +37,11 @@ public class DimService extends Service {
     private static final long MAX_WAIT_MS = 5 * 60_000L;
 
     private final Handler main = new Handler(Looper.getMainLooper());
+    /** The TV picture's binder calls, one at a time and off the main thread. */
+    private final ExecutorService tvWork = Executors.newSingleThreadExecutor();
+    private TvPicture tv;
+    /** The night picture last sent to the TV, so a slider change sends only what moved. Used on tvWork only. */
+    private Dimming.Picture tvSent;
     private WindowManager wm;
     private View layer;
     /** Kept in a field: SharedPreferences holds its listeners weakly. */
@@ -48,7 +56,10 @@ public class DimService extends Service {
 
     /** Starts the service when the settings need it; harmless when they don't, as it stops itself at once. */
     static void start(Context c) {
-        if (!Dimming.needsService(Prefs.load(c), minuteNow())) return;
+        Dimming.Settings s = Prefs.load(c);
+        int minute = minuteNow();
+        boolean restoreTv = Prefs.tvAtNight(c) && !Dimming.tvNightNow(s, minute);
+        if (!Dimming.needsService(s, minute) && !restoreTv) return;
         try {
             c.startForegroundService(new Intent(c, DimService.class));
         } catch (RuntimeException e) {
@@ -65,6 +76,7 @@ public class DimService extends Service {
     public void onCreate() {
         super.onCreate();
         wm = getSystemService(WindowManager.class);
+        tv = new TvPicture(this);
         NotificationManager nm = getSystemService(NotificationManager.class);
         nm.createNotificationChannel(new NotificationChannel(CHANNEL, getString(R.string.channel_name),
                 NotificationManager.IMPORTANCE_MIN));
@@ -99,6 +111,7 @@ public class DimService extends Service {
         Prefs.of(this).unregisterOnSharedPreferenceChangeListener(prefsListener);
         unregisterReceiver(clockReceiver);
         removeLayer();
+        tvWork.shutdown();
         super.onDestroy();
     }
 
@@ -115,15 +128,46 @@ public class DimService extends Service {
         Dimming.Level level = Dimming.level(s, minute);
         if (level.visible() && canDraw(this)) showLayer(Dimming.color(level));
         else removeLayer();
-        if (!Dimming.needsService(s, minute)) {
+        boolean stop = !Dimming.needsService(s, minute);
+        boolean tvNight = Dimming.tvNightNow(s, minute);
+        if (tvNight || Prefs.tvAtNight(this)) {
+            // The TV picture first, so a stop waits for the day's picture to be back.
+            tvWork.execute(() -> {
+                syncTv(s, tvNight);
+                if (stop) main.post(this::stopSelf);
+            });
+        } else if (stop) {
             stopSelf();
-            return;
         }
+        if (stop) return;
         int next = Dimming.minutesToNextChange(s, minute);
         if (next > 0) {
             Calendar now = Calendar.getInstance();
             long toBoundary = next * 60_000L - now.get(Calendar.SECOND) * 1000L - now.get(Calendar.MILLISECOND);
             main.postDelayed(tick, Math.max(1000, Math.min(MAX_WAIT_MS, toBoundary)));
+        }
+    }
+
+    /** Runs on tvWork. Night: remember the day's picture, then set the night one. Day: put the day's back. */
+    private void syncTv(Dimming.Settings s, boolean night) {
+        if (!tv.available()) return;
+        boolean atNight = Prefs.tvAtNight(this);
+        if (night && !atNight) {
+            Dimming.Picture now = tv.read();
+            if (now == null) return; // Not allowed yet: the app shows the prompt.
+            Prefs.saveTvDay(this, Dimming.dayPicture(now, s.tvNight, Prefs.tvDay(this)));
+            if (tv.write(s.tvNight, now)) {
+                tvSent = s.tvNight;
+                Prefs.setTvAtNight(this, true);
+            }
+        } else if (night && !s.tvNight.equals(tvSent)) {
+            if (tv.write(s.tvNight, tvSent != null ? tvSent : tv.read())) tvSent = s.tvNight;
+        } else if (!night && atNight) {
+            Dimming.Picture day = Prefs.tvDay(this);
+            if (tv.write(day != null ? day : Dimming.Picture.DAY, tv.read())) {
+                tvSent = null;
+                Prefs.setTvAtNight(this, false);
+            }
         }
     }
 

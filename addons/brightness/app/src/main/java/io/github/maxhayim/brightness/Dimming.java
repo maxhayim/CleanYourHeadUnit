@@ -30,6 +30,9 @@ final class Dimming {
         /** Minutes after midnight, local time. */
         int nightStart = 21 * 60;
         int nightEnd = 7 * 60;
+        /** The TV's own picture at night too (Realtek TVs): the values below, and the day's back in the morning. */
+        boolean tvPicture;
+        Picture tvNight = Picture.NIGHT;
 
         /** Every value back in range, whatever the stored copy held. */
         Settings clamped() {
@@ -39,8 +42,78 @@ final class Dimming {
             nightStart = wrap(snap(nightStart, TIME_STEP));
             nightEnd = wrap(snap(nightEnd, TIME_STEP));
             if (night == null) night = Night.SCHEDULED;
+            tvNight = tvNight == null ? Picture.NIGHT : tvNight.clamped();
             return this;
         }
+    }
+
+    /** The TV's own picture settings: backlight, contrast and brightness 0 to 100, and dynamic backlight. */
+    static final class Picture {
+        /** The night default: the darkest the panel goes, with contrast and black level down and dynamic backlight on. */
+        static final Picture NIGHT = new Picture(0, 15, 35, true);
+        /** The day default when the day's own values were never seen: the TVs' Standard picture. */
+        static final Picture DAY = new Picture(100, 50, 50, false);
+
+        final int backlight;
+        final int contrast;
+        final int brightness;
+        final boolean dynamicBacklight;
+
+        Picture(int backlight, int contrast, int brightness, boolean dynamicBacklight) {
+            this.backlight = backlight;
+            this.contrast = contrast;
+            this.brightness = brightness;
+            this.dynamicBacklight = dynamicBacklight;
+        }
+
+        Picture clamped() {
+            return new Picture(clamp(backlight, 0, 100), clamp(contrast, 0, 100), clamp(brightness, 0, 100), dynamicBacklight);
+        }
+
+        int[] values() {
+            return new int[]{backlight, contrast, brightness, dynamicBacklight ? 1 : 0};
+        }
+
+        Picture withBacklight(int v) {
+            return new Picture(v, contrast, brightness, dynamicBacklight).clamped();
+        }
+
+        Picture withContrast(int v) {
+            return new Picture(backlight, v, brightness, dynamicBacklight).clamped();
+        }
+
+        Picture withBrightness(int v) {
+            return new Picture(backlight, contrast, v, dynamicBacklight).clamped();
+        }
+
+        Picture withDynamicBacklight(boolean v) {
+            return new Picture(backlight, contrast, brightness, v);
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            return o instanceof Picture && java.util.Arrays.equals(values(), ((Picture) o).values());
+        }
+
+        @Override
+        public int hashCode() {
+            return java.util.Arrays.hashCode(values());
+        }
+    }
+
+    /**
+     * The picture to put back in the morning, chosen when night begins from what the TV shows then. If it already
+     * shows the night picture (set by hand before), the day's values are unknown and the remembered or default
+     * day picture stands.
+     */
+    static Picture dayPicture(Picture now, Picture night, Picture remembered) {
+        if (now != null && !now.equals(night)) return now;
+        return remembered != null ? remembered : Picture.DAY;
+    }
+
+    /** True when the TV's picture should be the night one now. */
+    static boolean tvNightNow(Settings s, int minute) {
+        return s.on && s.tvPicture && level(s, minute).night;
     }
 
     /** What the layer shows right now. brightness 100 and warmth 0 means no layer at all. */
@@ -131,6 +204,13 @@ final class Dimming {
     static int stepBrightness(int v, int direction) {
         boolean fine = v < FINE_BELOW || (v == FINE_BELOW && direction < 0);
         return clampBrightness(v + direction * (fine ? 1 : BRIGHTNESS_STEP));
+    }
+
+    /** One press on a TV picture slider, 0 to 100: 5 steps, 1 steps below FINE_BELOW. */
+    static int stepPercent(int v, int direction) {
+        boolean fine = v < FINE_BELOW || (v == FINE_BELOW && direction < 0);
+        int next = v + direction * (fine ? 1 : BRIGHTNESS_STEP);
+        return clamp(next < FINE_BELOW ? next : snap(next, BRIGHTNESS_STEP), 0, 100);
     }
 
     static int clampBrightness(int v) {
