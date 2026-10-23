@@ -1,5 +1,8 @@
 """Keeps AGENTS.md honest: every path it names exists, and its numbers match the files they come from.
 
+The workflows in docs/workflows/ hold the recipes AGENTS.md used to carry, so their paths are checked
+the same way: words in backticks from the repository root, links from the workflow's own folder.
+
 Coding agents follow AGENTS.md to the letter, so a renamed file or a moved gate turns into a confident
 wrong instruction. A path is anything in a link or in backticks that has a slash or a file extension;
 templates such as `examples/<brand>-<model>/` and globs are skipped, and so are the local folders
@@ -15,6 +18,7 @@ import unittest
 
 ROOT = Path(__file__).resolve().parents[1]
 AGENTS = ROOT / "AGENTS.md"
+WORKFLOWS = ROOT / "docs" / "workflows"
 CI = ROOT / ".github" / "workflows" / "ci.yml"
 GRADLE = ROOT / "launcher" / "app" / "build.gradle"
 
@@ -23,6 +27,7 @@ TEMPLATE = re.compile(r"[<>*{}$=%]")
 LINK = re.compile(r"\]\(([^)\s]+)\)")
 CODE = re.compile(r"(`+)(.+?)\1")
 SKIP_DIRS = {".git", "venv", "build", ".gradle", "__pycache__"}
+WRITTEN = {"result.json"}  # files a tool writes on a contributor's machine (tools/bench.py), not in a clone
 
 
 def text():
@@ -43,9 +48,9 @@ def file_names():
     return names
 
 
-def named_paths():
+def named_paths(body=None):
     """(source, path) for every link target outside code and every path-like word in backticks."""
-    body = text()
+    body = text() if body is None else body
     found = []
     for target in LINK.findall(CODE.sub("", body)):
         if not re.match(r"(https?:|mailto:|#)", target):
@@ -75,6 +80,29 @@ class AgentsPathsTest(unittest.TestCase):
                                     f"AGENTS.md names {path}, and no file in the repo has that name")
                 else:
                     self.assertTrue((ROOT / path).exists(), f"AGENTS.md names {path}, which does not exist")
+
+    def test_every_path_a_workflow_names_exists(self):
+        ignored = ignored_prefixes()
+        names = file_names()
+        for workflow in sorted(WORKFLOWS.glob("*.md")):
+            for source, path in named_paths(workflow.read_text(encoding="utf-8")):
+                with self.subTest(workflow=workflow.name, path=path, source=source):
+                    if source == "link":
+                        target = (workflow.parent / path).resolve()
+                        self.assertTrue(target.exists(), f"{workflow.name} links {path}, which does not exist")
+                    elif path in WRITTEN or any(path == p or path.startswith(p + "/") for p in ignored):
+                        continue
+                    elif "/" not in path.rstrip("/"):
+                        self.assertTrue((ROOT / path).exists() or path.rstrip("/") in names,
+                                        f"{workflow.name} names {path}, and no file in the repo has that name")
+                    else:
+                        self.assertTrue((ROOT / path).exists(), f"{workflow.name} names {path}, which does not exist")
+
+    def test_every_workflow_is_listed(self):
+        for workflow in sorted(WORKFLOWS.glob("*.md")):
+            with self.subTest(workflow=workflow.name):
+                self.assertIn(f"](docs/workflows/{workflow.name})", text(),
+                              f"AGENTS.md's Workflows section has no line for {workflow.name}")
 
     def test_it_names_paths_at_all(self):
         # A parser that silently finds nothing would make the test above pass for any text.
