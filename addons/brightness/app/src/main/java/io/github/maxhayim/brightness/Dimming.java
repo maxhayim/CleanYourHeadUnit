@@ -5,8 +5,8 @@ package io.github.maxhayim.brightness;
  * at a given minute, the one colour the layer is drawn in, and when the schedule next changes.
  */
 final class Dimming {
-    /** The darkest the screen goes: 10 % of normal, so menus and this app stay readable whatever is set. */
-    static final int MIN_BRIGHTNESS = 10;
+    /** The darkest the screen goes: 5 % of normal, so menus and this app stay faintly visible whatever is set. */
+    static final int MIN_BRIGHTNESS = 5;
     static final int MAX_BRIGHTNESS = 100;
     static final int BRIGHTNESS_STEP = 5;
     static final int WARMTH_STEP = 10;
