@@ -12,16 +12,16 @@ Opening it shows one list, worked with the remote alone:
 | Row | What it does |
 |---|---|
 | **Dimming** | The master switch, focused first. **Off puts the screen back to normal at once**; the other settings stay for next time. |
-| **Brightness** | A slider from 100 % down to 5 % in 5 % steps (◀ ▶), used outside night mode. |
+| **Brightness** | A slider from 100 % down to 1 % (◀ ▶): 5 % steps, then 1 % steps below 10 %. Used outside night mode. |
 | **Night mode** | Off, On (now, until switched off) or Scheduled (every day between two times). |
-| **Night brightness** | Its own slider, 5 % to 100 %. |
+| **Night brightness** | Its own slider, 1 % to 100 %. |
 | **Warmth** | Night mode only: an amber tint that takes blue out of the picture, 0 to 100 %. |
 | **Night starts**, **Night ends** | The schedule, in 15 minute steps; a night may run past midnight (21:00 to 07:00 is the default). |
 
 Every change shows at once, over the settings screen too, so you see the result as you move the slider. The
 settings are kept, and the layer and the schedule come back after a reboot.
 
-The screen never goes below 5 %, so the picture and this app stay faintly visible whatever is set. If it is ever too
+The layer never goes below 1 %. Below about 5 % the picture is hard to see, so the switch back is always the first row. If it is ever too
 dark to find the way, any of these gives the normal screen back:
 
 - open Brightness and press OK on **Dimming**;
@@ -87,11 +87,11 @@ with your own key if you hand them out; the launcher pins its Show answer to the
 
 MOKA R8G (Android 14), over ADB, with its own home app: the overlay permission granted by ADB, the layer drawn
 over the settings screen and over Home, the scheduled night mode taking over at 21:13 inside a 21:00 to 07:00
-window (40 %, then down to 5 %, warm), each slider changing the layer at once, **Dimming** Off and the ADB
+window (40 %, then down to 1 %, warm), each slider changing the layer at once, **Dimming** Off and the ADB
 broadcast removing the layer at once and On bringing it back, and the layer back by itself after the app was updated. Memory: about 22 MB with the layer up.
 
 The JVM tests cover the levels, the colour arithmetic, the schedule (past midnight, edges, empty windows), the
-5 % floor and the clamping of stored values.
+1 % floor, the fine steps and the clamping of stored values.
 
 Still to check on a TV running this repo's launcher (the test TV's home app has no module cards):
 

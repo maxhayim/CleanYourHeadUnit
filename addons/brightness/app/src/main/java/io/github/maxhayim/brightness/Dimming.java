@@ -5,10 +5,12 @@ package io.github.maxhayim.brightness;
  * at a given minute, the one colour the layer is drawn in, and when the schedule next changes.
  */
 final class Dimming {
-    /** The darkest the screen goes: 5 % of normal, so menus and this app stay faintly visible whatever is set. */
-    static final int MIN_BRIGHTNESS = 5;
+    /** The darkest the layer goes: 1 % of normal, for a TV whose own backlight is already at its lowest. */
+    static final int MIN_BRIGHTNESS = 1;
     static final int MAX_BRIGHTNESS = 100;
     static final int BRIGHTNESS_STEP = 5;
+    /** Below this the slider moves in 1 % steps, where each step is a large share of what is left. */
+    static final int FINE_BELOW = 10;
     static final int WARMTH_STEP = 10;
     static final int TIME_STEP = 15;
     static final int DAY_MINUTES = 24 * 60;
@@ -31,8 +33,8 @@ final class Dimming {
 
         /** Every value back in range, whatever the stored copy held. */
         Settings clamped() {
-            brightness = clamp(snap(brightness, BRIGHTNESS_STEP), MIN_BRIGHTNESS, MAX_BRIGHTNESS);
-            nightBrightness = clamp(snap(nightBrightness, BRIGHTNESS_STEP), MIN_BRIGHTNESS, MAX_BRIGHTNESS);
+            brightness = clampBrightness(brightness);
+            nightBrightness = clampBrightness(nightBrightness);
             warmth = clamp(snap(warmth, WARMTH_STEP), 0, 100);
             nightStart = wrap(snap(nightStart, TIME_STEP));
             nightEnd = wrap(snap(nightEnd, TIME_STEP));
@@ -123,6 +125,16 @@ final class Dimming {
         int h = minute / 60, m = minute % 60;
         if (h24) return String.format(java.util.Locale.ROOT, "%02d:%02d", h, m);
         return String.format(java.util.Locale.ROOT, "%d:%02d %s", h % 12 == 0 ? 12 : h % 12, m, h < 12 ? "AM" : "PM");
+    }
+
+    /** One press of ◀ or ▶ on a brightness slider: 5 % steps, 1 % steps below FINE_BELOW. */
+    static int stepBrightness(int v, int direction) {
+        boolean fine = v < FINE_BELOW || (v == FINE_BELOW && direction < 0);
+        return clampBrightness(v + direction * (fine ? 1 : BRIGHTNESS_STEP));
+    }
+
+    static int clampBrightness(int v) {
+        return clamp(v < FINE_BELOW ? v : snap(v, BRIGHTNESS_STEP), MIN_BRIGHTNESS, MAX_BRIGHTNESS);
     }
 
     static int clamp(int v, int lo, int hi) {

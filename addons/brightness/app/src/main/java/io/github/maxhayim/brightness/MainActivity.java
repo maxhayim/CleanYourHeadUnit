@@ -87,7 +87,7 @@ public class MainActivity extends Activity {
                 }));
         brightnessRow = add(new Row(this, "Brightness", "How bright the picture is outside night mode.", true, null,
                 d -> {
-                    s.brightness += d * Dimming.BRIGHTNESS_STEP;
+                    s.brightness = Dimming.stepBrightness(s.brightness, d);
                     changed();
                 }));
         nightRow = add(new Row(this, "Night mode", null, false, () -> {
@@ -99,7 +99,7 @@ public class MainActivity extends Activity {
         }));
         nightBrightnessRow = add(new Row(this, "Night brightness", "How bright the picture is in night mode.", true,
                 null, d -> {
-                    s.nightBrightness += d * Dimming.BRIGHTNESS_STEP;
+                    s.nightBrightness = Dimming.stepBrightness(s.nightBrightness, d);
                     changed();
                 }));
         warmthRow = add(new Row(this, "Warmth", "Night mode only: less blue, a warmer picture.", true, null, d -> {

@@ -80,7 +80,7 @@ public class DimmingTest {
         assertEquals(Dimming.MIN_BRIGHTNESS, s.nightBrightness);
         assertEquals(100, s.warmth);
         int black = alpha(Dimming.color(new Dimming.Level(Dimming.MIN_BRIGHTNESS, 0, false)));
-        assertEquals(Math.round(0.95 * 255), black);
+        assertEquals(Math.round(0.99 * 255), black);
     }
 
     @Test
@@ -95,6 +95,19 @@ public class DimmingTest {
         assertEquals(23 * 60 + 45, s.nightStart);
         assertEquals(30, s.nightEnd);
         assertEquals(Dimming.Night.SCHEDULED, s.night);
+    }
+
+    @Test
+    public void slidersStepFiveThenOneBelowTen() {
+        assertEquals(15, Dimming.stepBrightness(20, -1));
+        assertEquals(9, Dimming.stepBrightness(10, -1));
+        assertEquals(10, Dimming.stepBrightness(9, 1));
+        assertEquals(15, Dimming.stepBrightness(10, 1));
+        assertEquals(1, Dimming.stepBrightness(1, -1));
+        assertEquals(100, Dimming.stepBrightness(100, 1));
+        Dimming.Settings s = on();
+        s.nightBrightness = 3;
+        assertEquals("fine values survive a reload", 3, s.clamped().nightBrightness);
     }
 
     @Test
