@@ -721,8 +721,10 @@ re-enable packages even without the tools.
 <details>
 <summary><b>What about firmware updates?</b></summary>
 
-Most lists disable the update service, so updates arrive only when
-you re-enable it. If one lands, the worst case is a package coming back and you re-run the script.
+The updater is left on in most lists, so firmware updates arrive as usual. Some lists disable the
+TV's own updater, and on those a firmware update arrives only when you re-enable it. When one does
+land it installs over the cleaned-up system, so a package comes back and you re-run the script: see
+[After a firmware update](#after-a-firmware-update).
 
 </details>
 
