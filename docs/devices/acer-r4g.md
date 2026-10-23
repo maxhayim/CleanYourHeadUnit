@@ -1,6 +1,6 @@
 # Acer R4G 50" (MOKA `R4_GTV`, Google TV 14): the firmware turns packages back on at every boot
 
-Owner report from #1106, India. Four days of use without a reboot, then a power cut. This is a note,
+Owner report from #1106 by [@madhusoodhans](https://github.com/madhusoodhans) (diagnosis also in #1135), India. Four days of use without a reboot, then a power cut. This is a note,
 not a list: on this firmware a disable-only list can't keep the stock Home away, so there is no
 `examples/` folder for it.
 
