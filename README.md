@@ -89,9 +89,9 @@ Tested lists from contributors, one folder per model in [`examples/`](examples/)
 
 **TCL** 32 · **Sony** 18 · **Xiaomi** 17 · **Philips** 8 · **Hisense** 6 · **Amazon Fire TV** 5 ·
 **Panasonic** 3 · **BenQ** 2 · **CHiQ** 2 · **Google** 2 · **Haier** 2 · **Hitachi** 2 · **Kalley** 2 ·
-**NVIDIA Shield** 2 · **OnePlus** 2 · **onn** 2 · **Skyworth** 2 · **Thomson** 2 · **Toshiba** 2 · **Vu** 2 ·
+**NVIDIA Shield** 2 · **OnePlus** 2 · **onn** 2 · **SHARP** 2 · **Skyworth** 2 · **Thomson** 2 · **Toshiba** 2 · **Vu** 2 ·
 AiPro2K · AIWA · Cecotec · Challenger · Compac · EKO · FFalcon · Freebox · Insignia Fire TV · JVC ·
-Kogan · Motorola · MTC · Polytron · PRISM+ · RCA · Redmi · SANYO · SHARP · Tele System · Verizon ·
+Kogan · Motorola · MTC · Polytron · PRISM+ · RCA · Redmi · SANYO · Tele System · Verizon ·
 Vidda · Vision ·
 BYINTEK, JMGO, Portronics, Stellamore, Wanbo and XGIMI projectors
 
@@ -162,6 +162,7 @@ BYINTEK, JMGO, Portronics, Stellamore, Wanbo and XGIMI projectors
 | RCA AI PONT SA (Changhong, redwood, ISDB92RC; also sold as realme 40-inch) | Android 14 |
 | Redmi TV (MiTV-ANTL0, starwars) | Android 5.1.1 (not Android TV) |
 | SANYO ATV R2 (SCBC, Realtek RTD285O) | Android TV 9 |
+| SHARP 2T-C32GH3000I (SHARP 2K Smart TV-A; Skyworth-built, beomil, MediaTek mt5867), Indonesia | Google TV 14 |
 | SHARP AQUOS TVE21F (AQUOS-TVE21F, banqiao, CVTE/MediaTek), UK | Android TV 14 |
 | Skyworth SWTV-21AE (sunnyvale, MediaTek) | Android TV 14 |
 | Skyworth SWTV-24NA-4K NF (eleonas, MediaTek mt5896), US | Google TV 14 |
