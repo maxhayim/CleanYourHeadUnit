@@ -142,7 +142,7 @@ By the TV each project was built and tested on. Most of them run on other Androi
 - **Motorola:** [TV Motorola Launcher](https://github.com/kartikcool15/tv-motorola-launcher)
 - **MYO:** [MYO Launcher](https://github.com/faustinoaq/myo-launcher)
 - **NVIDIA Shield:** [Vibe Launcher](https://github.com/maydings/vibe-launcher)
-- **Philips:** [Cosy Home](https://github.com/oliverjwroberts/cosy-home-tv)
+- **Philips:** [Cosy Home](https://github.com/oliverjwroberts/cosy-home-tv), [Moving aurora behind Home](https://github.com/mrk1987/cleanyourtv/tree/aurora)
 - **Polytron:** [Glass and day/night on a Polytron](https://github.com/andikatuluspangestu/cleanyourtv/tree/polytron-glass-launcher)
 - **Sharp:** [Akhter & Ruby TV](https://github.com/arakaneserohingya/ahkter-tv-remake), [KIDŌ](https://github.com/glidiandev/kido)
 - **Skyworth / Coocaa:** [coocaa-home-shim](https://github.com/VincentYe123/coocaa-home-shim), [TV Motorola Launcher](https://github.com/kartikcool15/tv-motorola-launcher)
