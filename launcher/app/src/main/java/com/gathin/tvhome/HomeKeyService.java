@@ -7,6 +7,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Handler;
+import android.os.Looper;
 import android.os.UserManager;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
@@ -26,7 +28,8 @@ import java.util.Set;
  * the stock launcher is disabled the button does nothing. Every other key passes through untouched.
  *
  * With stock_home_redirect set, it also sends the stock launcher's home screen back here, for firmware that turns
- * that launcher on again after it was disabled (XGIMI's xrmservice does, on its own remote keys).
+ * that launcher on again after it was disabled (XGIMI's xrmservice does, on its own remote keys), or that cannot be
+ * disabled at all, and a short press of Home opens this launcher even when the stock home is already on screen.
  *
  * Enable over adb:
  *   settings put secure enabled_accessibility_services com.gathin.tvhome/.HomeKeyService
@@ -146,6 +149,10 @@ public class HomeKeyService extends AccessibilityService {
         }
         if (RemoteKeys.handle(this, event, appKeys.get(event.getKeyCode()),
                 holdAppKeys.get(event.getKeyCode()))) return true;
+        if (event.getKeyCode() == KeyEvent.KEYCODE_HOME && !stockHome.isEmpty()) {
+            redirectHomeKey(event);
+            return false;
+        }
         if (event.getKeyCode() != KeyEvent.KEYCODE_ALL_APPS) return false;
         if (event.getAction() == KeyEvent.ACTION_UP && !event.isCanceled()) {
             Intent home = new Intent(Intent.ACTION_MAIN)
@@ -169,10 +176,29 @@ public class HomeKeyService extends AccessibilityService {
         // stock_home_redirect: the firmware turned the stock launcher back on and its home screen came up.
         if (stockHome.isEmpty() || event.getEventType() != AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) return;
         CharSequence cls = event.getClassName();
-        if (cls != null && stockHome.contains(cls.toString())) {
-            startActivity(new Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_HOME).setPackage(getPackageName())
-                    .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED));
+        if (cls != null && stockHome.contains(cls.toString())) openHome();
+    }
+
+    /** Lets the system see the key, so a long press still does what the firmware gives it. */
+    private static final long HOME_KEY_DELAY_MS = 250;
+    private final Handler handler = new Handler(Looper.getMainLooper());
+    private boolean homeLongPress;
+
+    /** stock_home_redirect on the Home key: when the stock home is already on screen (it came up at boot, before
+     *  Android bound this service), Home brings it up again with no window change, so the redirect above never
+     *  fires and the TV stays on the stock home until another app opens (#1116). A short press opens this
+     *  launcher shortly after the system has handled the key; a long press is left alone. */
+    private void redirectHomeKey(KeyEvent event) {
+        if (event.getAction() == KeyEvent.ACTION_DOWN) {
+            homeLongPress = event.getRepeatCount() > 0;
+        } else if (event.getAction() == KeyEvent.ACTION_UP && !event.isCanceled() && !homeLongPress) {
+            handler.postDelayed(this::openHome, HOME_KEY_DELAY_MS);
         }
+    }
+
+    private void openHome() {
+        startActivity(new Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_HOME).setPackage(getPackageName())
+                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED));
     }
 
     @Override
