@@ -1,8 +1,10 @@
 # Xiaomi MiTV-MOOQ0 (croods): P1 43-inch EU firmware
 
 Android TV 11, build `RTM4.220307.164.8835`, board `m7632`, 1.7 GiB RAM. The existing
-[MOOQ0 list](../../examples/xiaomi-mitv-mooq0/debloat.txt) targets Android TV 10; this is a
-notes-only report and does not validate that full list on this Android 11 build.
+[MOOQ0 list](../../examples/xiaomi-mitv-mooq0/debloat.txt) targets Android TV 10. We applied a
+selected subset on this Android 11 build and the TV remained usable, including after a reboot. This
+is not a claim that every list entry was tested: optional apps were kept by choice and some package
+names in the list are not installed on this firmware.
 
 ## Launcher and TV functions
 
