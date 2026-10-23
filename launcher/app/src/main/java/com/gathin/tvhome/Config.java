@@ -179,6 +179,8 @@ final class Config {
     final boolean cinematicDots;
     /** The cinematic shelf keeps the white focus highlight instead of the app's colour (config.xml, cinematic_white_focus). */
     final boolean cinematicWhiteFocus;
+    /** The Wi-Fi pill's icon green while the TV is online (config.xml, wifi_status_color); false keeps it white. */
+    final boolean wifiStatusColor;
     /** Shape of the glow behind the focused app (config.xml, glow_style): {@link #GLOW_RADIAL} or {@link #GLOW_HORIZON}. */
     final String glowStyle;
 
@@ -202,7 +204,7 @@ final class Config {
                    Festival festival, int[] inputKeycodes, List<String> appKeys, String stockHomeRedirect,
                    List<RaceWeekend.Race> raceCalendar, boolean cinematicHome, boolean ambientGlow, boolean appGlow, int homeIdleClockMinutes,
                    boolean keyFilter, boolean dockGlass, String glowStyle, boolean wallpaperCaptions,
-                   boolean handleViewInputs, boolean tileMenu, boolean dockEvenPadding, boolean cinematicDots, boolean cinematicWhiteFocus) {
+                   boolean handleViewInputs, boolean tileMenu, boolean dockEvenPadding, boolean cinematicDots, boolean cinematicWhiteFocus, boolean wifiStatusColor) {
         this.handleViewInputs = handleViewInputs;
         this.tileMenu = tileMenu;
         this.inputKeycodes = inputKeycodes;
@@ -275,6 +277,7 @@ final class Config {
         this.dockEvenPadding = dockEvenPadding;
         this.cinematicDots = cinematicDots;
         this.cinematicWhiteFocus = cinematicWhiteFocus;
+        this.wifiStatusColor = wifiStatusColor;
         this.glowStyle = glowStyle(glowStyle);
         this.wallpaperCaptions = wallpaperCaptions;
     }
@@ -354,6 +357,7 @@ final class Config {
         boolean dockEvenPadding = res.getBoolean(R.bool.dock_even_padding);
         boolean cinematicDots = res.getBoolean(R.bool.cinematic_dots);
         boolean cinematicWhiteFocus = res.getBoolean(R.bool.cinematic_white_focus);
+        boolean wifiStatusColor = res.getBoolean(R.bool.wifi_status_color);
         String glowStyle = res.getString(R.string.glow_style);
         boolean applied = false;
 
@@ -426,6 +430,7 @@ final class Config {
             dockEvenPadding = bool(json, "dock_even_padding", dockEvenPadding);
             cinematicDots = bool(json, "cinematic_dots", cinematicDots);
             cinematicWhiteFocus = bool(json, "cinematic_white_focus", cinematicWhiteFocus);
+            wifiStatusColor = bool(json, "wifi_status_color", wifiStatusColor);
             glowStyle = string(json, "glow_style", glowStyle);
         }
         // A theme push or reset invalidates choices made on the TV. On first use, remember the
@@ -480,7 +485,7 @@ final class Config {
                 Math.max(0, Math.min(100, skyIntensity)), settingsKeycodes, settingsKeyPanel, restoreKeyServices, wallpaperEnabled, wallpaper,
                 wallpapers, rotationMinutes, wallpaperDim, dockOpacity, wallpaperOrder, applied,
                 festival, inputKeycodes, appKeys, stockHomeRedirect, json == null ? Collections.emptyList() : raceCalendar(json), cinematic, ambientGlow, appGlow,
-                Math.max(0, idleClockMinutes), keyFilter, dockGlass, glowStyle, wallpaperCaptions, handleViewInputs, tileMenu, dockEvenPadding, cinematicDots, cinematicWhiteFocus);
+                Math.max(0, idleClockMinutes), keyFilter, dockGlass, glowStyle, wallpaperCaptions, handleViewInputs, tileMenu, dockEvenPadding, cinematicDots, cinematicWhiteFocus, wifiStatusColor);
     }
 
     /**
