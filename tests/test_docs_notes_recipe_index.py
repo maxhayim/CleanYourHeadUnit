@@ -28,6 +28,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from test_device_notes_index import (  # noqa: E402
     NOTE_INDEX_HEADING,
     index_notes,
+    index_notes_with_their_own_list,
     unlinked_notes,
 )
 
@@ -129,6 +130,21 @@ class TheCheckerStillBitesTest(unittest.TestCase):
         )
         self.assertEqual(unlinked_notes(root), [])
         self.assertEqual(index_notes(root), [], "a link outside the section is not an index entry")
+
+    def test_an_index_entry_that_holds_its_own_list_is_reported(self):
+        # The page's second half: the section says its model has no list, so an entry that links
+        # examples/<its own folder>/debloat.txt from there belongs in that folder's row instead - which
+        # index_notes_with_their_own_list is the check for, and it is why the bullet names the move.
+        root = self.note_tree("- [A note](../docs/devices/lonely.md), Android 9: a one-day list.")
+        (root / "docs" / "devices" / "lonely.md").write_text(
+            "# A device note\n\nA tested package list for this unit lives in "
+            "[`examples/lonely/debloat.txt`](../../examples/lonely/debloat.txt).\n", encoding="utf-8")
+        (root / "examples" / "lonely").mkdir()
+        (root / "examples" / "lonely" / "debloat.txt").write_text("# a list\n", encoding="utf-8")
+        self.assertEqual(unlinked_notes(root), [], "the index entry keeps it reachable")
+        offenders = index_notes_with_their_own_list(root)
+        self.assertEqual(1, len(offenders))
+        self.assertIn("examples/lonely/debloat.txt", offenders[0])
 
 
 class TheBulletReaderTest(unittest.TestCase):
