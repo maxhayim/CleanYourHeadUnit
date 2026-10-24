@@ -785,7 +785,7 @@ A [Sony KD-55X9000H PA-firmware follow-up](devices/sony-kd-55x9000h.md#later-rem
 
 ## Moonlight: two controllers both drive player 1, or a DualSense button opens the exit prompt
 
-With `HomeKeyService` bound (`HOME_KEY_SERVICE=1`) and `key_filter` on, Moonlight streaming from Sunshine on a
+With `HomeKeyService` bound (`HOME_KEY_SERVICE=1`) and filtering keys, Moonlight streaming from Sunshine on a
 TCL G07 (`G07_4K_GB_NF`, Android 11, `AR17`) with a DualSense (`054c:0ce6`) and an Xbox Wireless Controller
 (`045e:0b20`), both over Bluetooth, put both controllers on player 1, and Cross on the DualSense brought up
 Moonlight's exit prompt instead of pressing A. Both controllers were listed in `dumpsys input` as separate
