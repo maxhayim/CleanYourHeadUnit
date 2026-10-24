@@ -19,7 +19,7 @@
 </p>
 
 <p align="center">
-  <a href="docs/PRESS.md"><img src="docs/card.jpg" alt="279 TV models · 80 brands · 25 languages · 497 KB launcher. Featured in TechCrunch, TechRadar, Tom's Guide, Mashable, Android Authority, XDA, FlatpanelsHD, It's FOSS, Phandroid, GIGAZINE, Xataka, WinFuture, Frandroid, Macitynet, Techaeris, TechPP and 180 more: 196 articles from 32 countries. Before: stock Google TV home with a sponsored ad. After: the Clean Your TV launcher." width="800"></a>
+  <a href="docs/PRESS.md"><img src="docs/card.jpg" alt="280 TV models · 81 brands · 25 languages · 497 KB launcher. Featured in TechCrunch, TechRadar, Tom's Guide, Mashable, Android Authority, XDA, FlatpanelsHD, It's FOSS, Phandroid, GIGAZINE, Xataka, WinFuture, Frandroid, Macitynet, Techaeris, TechPP and 180 more: 196 articles from 32 countries. Before: stock Google TV home with a sponsored ad. After: the Clean Your TV launcher." width="800"></a>
 </p>
 
 **The viral tweet:** [x.com/gathint/status/2111379569030939102](https://x.com/gathint/status/2111379569030939102)
@@ -120,8 +120,8 @@ Tested lists from contributors, one folder per model in [`examples/`](examples/)
 **NVIDIA Shield** 2 · **onn** 2 · **RCA** 2 · **Redmi** 2 · **Sankey** 2 · **Toshiba** 2 ·
 Acer · AiPro2K · AIWA · AQUA · Artel · Beko · Caxium · Cecotec · Challenger · Compac · Dcolor · Dialog · EKO · Freebox ·
 Grundig · INCLO · Insignia Fire TV · Karbonn · Kogan · KTC · Liberton · Lumio · Master-G · MTC · Noblex · OK. · PEAQ ·
-Polytron · PRISM+ · RockTek · SANYO · Sber · Super General · Tele System · TiVo · Tornado · Turkcell · Verizon · Vidda ·
-Vision ·
+Polytron · PRISM+ · RockTek · SANYO · Sber · Super General · Tele System · TiVo · Tornado · Turkcell · Tuvio · Verizon ·
+Vidda · Vision ·
 Anker Nebula, BYINTEK, Epson, Formovie, Gadnic, HOTACK, JMGO, Magcubic, Portronics, Stellamore, Wanbo and XGIMI projectors
 
 <!-- tv-brands:end -->
@@ -371,6 +371,7 @@ Anker Nebula, BYINTEK, Epson, Formovie, Gadnic, HOTACK, JMGO, Magcubic, Portroni
 | Toshiba (Vestel Cosmos170, yeoksam, MediaTek), Spain | Android TV 11 |
 | Toshiba Fire TV (AFTHA004, hazel) | Fire OS 7 / Android 9 |
 | Turkcell TV+ 4K Box (SDMC DV6069Y, Amlogic), Turkey, operator streaming box | Android TV 10 |
+| Tuvio TD43UFBCV5 (Changhong AI PONT, DVB96, MediaTek m7632), Russia | Google TV 14 |
 | Verizon Stream TV, 1st gen (WNC JS8V, Amlogic), US | Android 12 |
 | Vidda VIDAA_TV (Hisense sub-brand; device MT9653, board mt5879), China JuUI | Android TV 11 |
 | Vision 2024VISION43STV (CVTE TP.T950D4T.PB751, Amlogic T950D4, 1 GB), Europe | Android 13 |
