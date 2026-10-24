@@ -20,7 +20,16 @@ final class SystemSettings {
         // Fire OS resolves the standard actions to a CTS compliance stub that opens nothing;
         // treat it as missing so the vendor fallback runs.
         if (resolved != null && !resolved.activityInfo.name.contains("CTSDummy")) return standard;
+        Intent vendor = vendorIntent(context);
+        return vendor != null ? vendor : standard;
+    }
 
+    /** The first vendor settings entry from settings_fallback_components that is installed, or null
+     *  when none is. China-market firmware keeps pages the AOSP TV settings has no row for -
+     *  Xiaomi's Account & Security, where the ADB switch lives - in the vendor's own settings app;
+     *  MainActivity's Settings menu offers it as "Native settings" while one is installed. */
+    static Intent vendorIntent(Context context) {
+        PackageManager pm = context.getPackageManager();
         for (String value : context.getResources().getStringArray(R.array.settings_fallback_components)) {
             ComponentName component = ComponentName.unflattenFromString(value);
             if (component == null) continue;
@@ -32,7 +41,7 @@ final class SystemSettings {
             }
             return new Intent().setComponent(component);
         }
-        return standard;
+        return null;
     }
 
     /** The TV's App info page for pkg, or null where the firmware has none (CVTE's settings app, #1202). */

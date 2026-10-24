@@ -3047,6 +3047,15 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         PopupWindow popup = glassPopup(panel, (int) (200 * density));
         if (!launcherSettingsButton) addSettingsMenuRow(rows, popup, R.string.launcher_settings, () -> startActivityForResult(
                 new Intent(this, LauncherSettingsActivity.class), LAUNCHER_SETTINGS_REQUEST));
+        // Firmware that ships its own settings app next to the AOSP one (Xiaomi China is one): the
+        // vendor app holds pages the AOSP settings has no row for, such as Account & Security with
+        // the ADB switch. Offered here only while one of them is installed.
+        if (SystemSettings.vendorIntent(this) != null) {
+            addSettingsMenuRow(rows, popup, R.string.native_settings, () -> {
+                Intent vendor = SystemSettings.vendorIntent(this);
+                if (vendor != null) open(vendor);
+            });
+        }
         if (moduleCards) addSettingsMenuRow(rows, popup, R.string.module_cards, this::showModuleCards);
         if (dockRow) addSettingsMenuRow(rows, popup, R.string.dock_edit, this::startDockEdit);
         addSettingsMenuRow(rows, popup, R.string.reorder, this::toggleReorder);
