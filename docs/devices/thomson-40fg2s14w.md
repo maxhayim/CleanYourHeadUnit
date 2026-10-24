@@ -69,6 +69,12 @@ say whether Home can start before the first unlock.
 What that session leaves open is the boot the CVTE rule is about: with the stock launcher disabled, does this
 set finish booting, and does Home survive the next reboot. Neither was tried, so the set stays debloat-only.
 
+Debloat-only is not the same as unusable. The owner reports afterwards ([#1350](https://github.com/Gathin23/cleanyourtv/issues/1350),
+24 Oct 2026) that normal use of the launcher on this set, with the stock launcher left enabled, works: it opens
+and runs, and Home still goes to Google TV. Neither `FallbackHome` activity was launched for it and a boot with
+the stock launcher disabled has still not been tried, so that report says the debloat-only setup is day-to-day
+usable, not that the handover is safe here.
+
 ## Disabled, and read back after a reboot
 
 `pm disable-user --user 0`, read back after a reboot, nothing uninstalled:

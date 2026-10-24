@@ -333,9 +333,10 @@ Things that bit us or contributors, so they don't bite you. Commands use `tools/
   role already naming the new launcher while Home still opens the stock one, so read the resolver instead
   (`tools/tv.py 'cmd package resolve-activity --brief -a android.intent.action.MAIN -c android.intent.category.HOME'`).
   When it keeps naming the stock launcher, the set is debloat-only until a boot with the stock launcher
-  disabled has been tried on that exact board. The two checks have been run on the Thomson 40FG2S14W
-  (Expressluck `nagata`, Android TV 14 `UKNV.260317.001`) and both fallbacks are there, but that boot has
-  not been tried ([notes](devices/thomson-40fg2s14w.md),
+  disabled has been tried on that exact board - which does not mean the launcher is unusable there: it
+  still opens from the app list and runs, with Home left where it is. The two checks have been run on the
+  Thomson 40FG2S14W (Expressluck `nagata`, Android TV 14 `UKNV.260317.001`) and both fallbacks are there,
+  but that boot has not been tried ([notes](devices/thomson-40fg2s14w.md),
   [#1350](https://github.com/Gathin23/cleanyourtv/issues/1350)).
 - **Stuck on the boot animation after the launcher change, ADB gone** (JVC LT-43N7115, CVTE
   `TP.SK706S.PC822`, Android 11, [#741](https://github.com/Gathin23/cleanyourtv/discussions/741)): the stock
