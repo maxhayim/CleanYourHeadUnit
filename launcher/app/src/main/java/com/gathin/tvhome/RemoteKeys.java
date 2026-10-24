@@ -3,6 +3,7 @@ package com.gathin.tvhome;
 import android.accessibilityservice.AccessibilityService;
 import android.accessibilityservice.AccessibilityServiceInfo;
 import android.content.ActivityNotFoundException;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.media.tv.TvContract;
@@ -25,7 +26,8 @@ import java.util.function.ToIntFunction;
  * that button is held for HOLD_MS, while the unprefixed entry still opens on a tap; "hold:scan:490:..." does
  * the same for a scancode. One set of maps for both services; Android hands a key to every service that filters,
  * so both may call handle() for one event, and it answers each press once.
- * A target of "input:<input id>" switches to that TV input (an HDMI port) instead of opening an app.
+ * A target of "input:<input id>" switches to that TV input (an HDMI port) instead of opening an app, and one of
+ * "package/.Activity" opens that activity rather than the app's launcher entry (an add-on's quick bar, say).
  */
 final class RemoteKeys {
 
@@ -185,9 +187,17 @@ final class RemoteKeys {
     }
 
     /** Opens an app from a remote button: its TV entry if it has one, else its phone entry. An "input:<id>" target
-     *  switches to that TV input (an HDMI port) instead. */
+     *  switches to that TV input (an HDMI port) instead; a "package/.Activity" target opens that activity. */
     static void launch(Context ctx, String pkg) {
         if (pkg == null) return;
+        ComponentName activity = pkg.indexOf('/') > 0 ? ComponentName.unflattenFromString(pkg) : null;
+        if (activity != null) {
+            try {
+                ctx.startActivity(new Intent().setComponent(activity).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+            } catch (ActivityNotFoundException | SecurityException ignored) {
+            }
+            return;
+        }
         String inputId = inputId(pkg);
         if (inputId != null) {
             // The same passthrough URI the Inputs menu opens, which the Live TV app handles.
