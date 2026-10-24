@@ -9,7 +9,6 @@ Tested setup for this Skyworth Google TV model.
 - **SoC/Platform:** MediaTek
 - **OS:** Google TV / Android TV 11 (SDK 30)
 - **Firmware:** RTM7.230903.136
-- **IP tested:** 192.168.1.5
 - **Network ADB:** Port 5555
 
 ## Stock launcher
@@ -30,26 +29,26 @@ Tested setup for this Skyworth Google TV model.
   - `com.google.android.apps.mediashell` – Chromecast built-in (kept per user choice)
   - `com.google.android.inputmethod.latin` – Gboard on-screen keyboard
 - **Setup wizard:** `com.google.android.tungsten.setupwraith` is disabled in the provided list. Disabling it frees Home on Google TV but may break Chromecast built-in/casting in some cases. If you need casting, re-enable it. Also, if your Wi-Fi was owned by setupwraith, you may need to forget/rejoin the network first.
-- **Factory/demo/test:** `com.coocaa.demonow.lightining`, `fusion.android.tv.demo`, `com.smartdevice.factory`, `mediatek.factorymenu.ui` removed/disabled.
+- **Factory/demo/test:** `com.coocaa.demonow.lightining`, `fusion.android.tv.demo`, `com.smartdevice.factory`, `mediatek.factorymenu.ui` disabled.
 
 ## Apply / Restore
 From repo root (on same Wi-Fi as TV):
 
 ```bash
 # Probe/verify
-TV_HOST=192.168.1.5 tools/venv/bin/python -I tools/tv.py --probe
+TV_HOST=<tv ip> tools/venv/bin/python -I tools/tv.py --probe
 
 # Apply debloat (backs up to ~/.cleanyourtv/)
-TV_HOST=192.168.1.5 tools/disable.sh examples/skyworth-swtv-22ae-fhd/debloat.txt
+TV_HOST=<tv ip> tools/disable.sh examples/skyworth-swtv-22ae-fhd/debloat.txt
 
 # Restore to original (uses backup + stock launcher)
-TV_HOST=192.168.1.5 tools/restore.sh examples/skyworth-swtv-22ae-fhd/debloat.txt com.google.android.apps.tv.launcherx
+TV_HOST=<tv ip> tools/restore.sh examples/skyworth-swtv-22ae-fhd/debloat.txt com.google.android.apps.tv.launcherx
 
 # Build/install CleanYourTV launcher and set as Home
-STOCK_LAUNCHER=com.google.android.apps.tv.launcherx TV_HOST=192.168.1.5 launcher/build-and-install.sh
+STOCK_LAUNCHER=com.google.android.apps.tv.launcherx TV_HOST=<tv ip> launcher/build-and-install.sh
 ```
 
 ## Verified
-- Debloat applied cleanly; backup created at `~/.cleanyourtv/recovery-192.168.1.5-115110c7.json`
+- Debloat applied cleanly
 - CleanYourTV launcher (`com.gathin.tvhome`) installed and set as default HOME
 - Stock `com.google.android.apps.tv.launcherx` disabled
