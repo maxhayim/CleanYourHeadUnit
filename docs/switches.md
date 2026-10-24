@@ -30,3 +30,4 @@ the rules. Keys from before this rule are on its wanted list; a screenshot for o
 | `home_idle_clock_minutes` | <img src="clock-screensaver.png" width="320" alt="home_idle_clock_minutes on a TV"> |
 | `gamepad_passthrough` | <img src="switches/gamepad_passthrough.jpg" width="320" alt="gamepad_passthrough on a TV"> |
 | `consume_volume_keys` | <img src="switches/consume_volume_keys.jpg" width="320" alt="consume_volume_keys on a TV"> |
+| `wifi_status_warnings` | <img src="switches/wifi_status_warnings.jpg" width="320" alt="wifi_status_warnings on a TV"> |
