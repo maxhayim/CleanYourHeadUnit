@@ -38,10 +38,9 @@ PY=tools/venv/bin/python
   `com.tianci.system` to go Home (Coocaa blocks activity starts from background apps). With the
   stock home disabled, which is the last step, this no longer happens at all.
 - **The framework can overwrite the homepage properties at boot** with the literal strings
-  `home[0]` / `home[1]`. The Home key then does nothing. While `com.ccos.tv.homepage` is installed,
-  the launcher's boot receiver writes the shim back into those properties and opens Home
-  (`CoocaaBoot`). It does nothing on a TV where that package is not installed. Coocaa also disables
-  third-party boot receivers; opening the launcher re-enables its own.
+  `home[0]` / `home[1]`. The Home key then does nothing. Shim 2.1 writes this package back into the
+  properties at boot, before it asks the system to go Home. Coocaa also disables third-party boot
+  receivers; opening the shim re-enables its own.
 
 ## Install
 
@@ -101,10 +100,8 @@ cannot be read, the Inputs pill opens Coocaa's control center on its source row 
 
 ## Known issues
 
-- The framework writes `home[0]` / `home[1]` into the homepage properties on some boots. A launcher
-  with `CoocaaBoot` puts the shim back and opens Home; the lines it writes are in
-  `/sdcard/Android/data/com.coocaa.tvhome/files/boot.log`. On an older launcher, run the `setprop`
-  line from step 3 again.
+- The framework writes `home[0]` / `home[1]` into the homepage properties on some boots. Shim 2.1
+  puts itself back. With an older shim, run the `setprop` line from step 3 again.
 - The TV has no clock battery and starts at 1970-01-01 08:00 until network time arrives a few seconds
   after boot, so the launcher's clock can read 08:00 briefly.
 - `com.coocaa.sky.ccapi` and `com.tianci.user` are Coocaa's payment and account apps: Coocaa
