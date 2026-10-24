@@ -761,7 +761,12 @@ had one, while a 55U7N on the same board and build steps once per press with `Ho
 in its report (#1326), so the CEC step is one unit's account of a key the policy takes, not the cause. The 55U7N
 also shows where that board's app buttons go: with launcherx disabled Hisense's own `GlobalKeyReceiver` receives
 295, 607 and 606 and nothing opens, so only a helper answers them
-([the hengshan notes](../examples/hisense-u75-hengshan/README.md)); its held-key capture was not taken. Check the
+([the hengshan notes](../examples/hisense-u75-hengshan/README.md)); its held-key capture was not taken. A TCL 55Q77K
+(`G08_4K_US`, Google TV 14, `UTT2.250416.001 AU16`, TV speakers, no soundbar) steps once per press with
+`InputKeyService` alone as well. On that set Settings (83), Netflix (4062), Prime Video (4099) and Apple TV (4160)
+still reach the focused window with launcherx disabled, so Home could answer them without a helper, while YouTube is
+`BUTTON_3`, a global key Android hands to launcherx before any window
+([the G08 US notes](../examples/tcl-g08-us-google-tv/README.md#the-remotes-buttons-with-launcherx-disabled)). Check the
 state first, do not rewrite it blind:
 
 ```sh
