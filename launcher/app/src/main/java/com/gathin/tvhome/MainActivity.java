@@ -1479,8 +1479,11 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         GridLayoutManager lm = (GridLayoutManager) grid.getLayoutManager();
         int first = lm.findFirstVisibleItemPosition();
         View firstView = first != RecyclerView.NO_POSITION ? lm.findViewByPosition(first) : null;
-        // single_row scrolls sideways, so its first visible tile is pinned by its left edge instead.
-        int offset = firstView == null ? 0 : singleRow ? lm.getDecoratedLeft(firstView) - grid.getPaddingLeft()
+        // single_row scrolls sideways, so its first visible tile is pinned by its left edge instead; mirrored by
+        // rtl_app_grid, the row is laid out from the right, and the offset counts from the right edge.
+        int offset = firstView == null ? 0
+                : singleRow && rtlAppGrid ? grid.getWidth() - grid.getPaddingRight() - lm.getDecoratedRight(firstView)
+                : singleRow ? lm.getDecoratedLeft(firstView) - grid.getPaddingLeft()
                 : lm.getDecoratedTop(firstView) - grid.getPaddingTop();
         change.run();
         if (firstView != null) lm.scrollToPositionWithOffset(first, offset);
