@@ -783,6 +783,33 @@ printed; the empty list also unbinds TalkBack. Bisect, keycodes and limits:
 
 A [Sony KD-55X9000H PA-firmware follow-up](devices/sony-kd-55x9000h.md#later-remote-key-follow-up-24-october-2026) on Android 12 reproduced the same filter/repeat conflict with a personal fork. Its simultaneous kernel/callback capture saw held Volume in hardware but neither Volume direction in the helper. A separate saved-layout experiment retained Apps and native Volume without key filtering; it requires that fork's companion and Library entry, reserves an application-launch category, and has not been tested across restart/sleep/reconnect. It is not a stock upstream option.
 
+## Moonlight: two controllers both drive player 1, or a DualSense button opens the exit prompt
+
+With `HomeKeyService` bound (`HOME_KEY_SERVICE=1`) and `key_filter` on, Moonlight streaming from Sunshine on a
+TCL G07 (`G07_4K_GB_NF`, Android 11, `AR17`) with a DualSense (`054c:0ce6`) and an Xbox Wireless Controller
+(`045e:0b20`), both over Bluetooth, put both controllers on player 1, and Cross on the DualSense brought up
+Moonlight's exit prompt instead of pressing A. Both controllers were listed in `dumpsys input` as separate
+devices with sources `0x01000511`, so pairing was not the problem.
+
+The DualSense half has a known shape: Android 11 ships no key layout for it, so `dumpsys input` shows
+`KeyLayoutFile: /system/usr/keylayout/Generic.kl`, and `getevent -lp` shows the generic HID order
+(`BTN_GAMEPAD`, `BTN_EAST`, `BTN_C`, `BTN_NORTH`, ...). Cross is `BTN_EAST`, which `Generic.kl` maps to
+`BUTTON_B`, and an unhandled `BUTTON_B` falls back to Back. Moonlight has a scan-code remap for this layout
+(`isNonStandardDualShock4` in its `ControllerHandler`), but it did not take effect while the helper filtered keys,
+consistent with what `GamepadPassthrough` (#1118) describes: re-injected keys no longer read as the
+controller's own, so Moonlight could neither remap them nor tell the two controllers apart.
+
+`gamepad_passthrough` fixed both: Cross acts as A and the second controller joins as player 2. Set it in
+`config.xml` and rebuild, or `"gamepad_passthrough": true` in a theme's `config.json`. The trade is the
+one in [the key-repeat section above](#a-key-helper-is-bound-and-a-held-remote-button-stopped-repeating): the
+remote buttons the helper answers (gear, app buttons) do nothing while a controller is connected, and come back
+when it disconnects. To check what a controller reports:
+
+```sh
+tools/tv.py 'dumpsys input' | grep -E 'Controller|KeyLayoutFile|Sources'
+tools/tv.py 'getevent -lp'
+```
+
 ## One app refuses to play while the rest of the TV is online
 
 An ad-blocking Private DNS is a common addition and the resolver answering is not proof that playback

@@ -110,7 +110,8 @@
 
     <!-- With key_filter on, true makes HomeKeyService and InputKeyService stop filtering keys while a game
          controller is connected, so games see its buttons (Steam Link with an Xbox controller on a TCL G07
-         did not). The price: the remote buttons below do nothing until the controller disconnects. A voice
+         did not; Moonlight with two controllers put both on player 1, docs/TROUBLESHOOTING.md). The price: the
+         remote buttons below do nothing until the controller disconnects. A voice
          remote that reports a joystick does not count. A theme can set it ("gamepad_passthrough"). -->
     <bool name="gamepad_passthrough">false</bool>
 
