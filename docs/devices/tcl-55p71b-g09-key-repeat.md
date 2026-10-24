@@ -146,6 +146,15 @@ Keeping launcherx enabled while another launcher holds Home did not work here: r
 the shell may not disable its home activity alone (`SecurityException` from `pm disable-user` on the
 component). The owner kept the ramp and dropped the five buttons.
 
+## A second Hisense set, without a soundbar
+
+A Hisense SmartTV 4K FFM (`songshan`, MediaTek, Android 11, `RTT2.220118.001`, the second unit in
+[`examples/hisense-smarttv-4k-ffm-android11`](../../examples/hisense-smarttv-4k-ffm-android11/debloat.txt))
+does the same with `InputKeyService` alone bound: held volume up arrives as one press, and the firmware's
+own key log (`WindowManager: interceptKeyTi keyCode=24 down=true repeatCount=0`) shows no repeat after
+it. The empty-list control was not run there either. The owner kept the helper for the YouTube, Prime
+Video, Disney+, Peacock and gear buttons and lives with one step per press.
+
 ## Choices
 
 - **Keep the repeat and skip the helpers.** Do not pass `INPUT_KEY_SERVICE=1` or `HOME_KEY_SERVICE=1`
