@@ -3,10 +3,18 @@
 # about 1 GB RAM (954 MB, low_ram=true), 32-bit only (armeabi-v7a).
 # Unlike the G08 TCL Google TVs, Live TV and HDMI are MediaTek's com.mediatek.wwtv.tvcenter, not com.tcl.tv.
 #
-# Same device/product on a newer firmware sub-build (UKN2.241110.001 AU13): the launcher half that
-# works here failed on that unit even with the exact sequence below, landing on setupwraith instead -
-# see examples/tcl-g13-google-tv/README.md before assuming this list's launcher steps are solid on
-# every AU-revision of this build.
+# Same device/product on a newer firmware sub-build (UKN2.241110.001 AU13, security patch
+# 2026-06-01): the debloat packages below all applied cleanly and reboot-checked (storage 66%->53%
+# after also running `cmd package trim-caches`). com.mediatek.MtkDemo (MediaTek's demo app, not in
+# this unit's build) was also disabled there with no issue.
+#
+# The launcher half was NOT confirmed working on that AU13 unit - but setupwraith was never disabled
+# in either attempt, so this is not yet a fair test of the same procedure as this list's. Both times,
+# `launcher/build-and-install.sh`'s exact sequence (new launcher started and screenshot-verified first,
+# launcherx disabled, home preference set after) still landed on setupwraith's RecoveryActivity instead
+# of the new launcher, same as what Batch 3 below says happens whenever launcherx goes while setupwraith
+# stays. Retrying with setupwraith disabled too (Wi-Fi forgotten/re-joined first, as below) is the next
+# thing to try on that unit before concluding AU13 is any different from AU10 here.
 #
 # Apply:   TV_HOST=<tv ip> tools/disable.sh examples/tcl-43s5k/debloat.txt
 # Undo:    TV_HOST=<tv ip> tools/restore.sh examples/tcl-43s5k/debloat.txt com.google.android.apps.tv.launcherx
@@ -51,6 +59,7 @@ com.google.android.play.games
 com.google.android.feedback
 com.android.tv.feedbackconsent
 com.google.android.katniss             # Google Assistant voice (mic button), about 63 MB in two processes; off by choice
+com.mediatek.MtkDemo                   # MediaTek demo app; not present on the AU10 unit above, seen on AU13
 
 # Batch 3: setup wizard. It claims HOME (RecoveryActivity, priority 1) once launcherx is gone.
 # Disabled while launcherx still owned Home, and only after the Wi-Fi network was forgotten and re-joined
