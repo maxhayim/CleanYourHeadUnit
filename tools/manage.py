@@ -147,6 +147,9 @@ def tv(command):
     if not os.environ.get("TV_HOST"):
         sys.exit("set TV_HOST to the TV IP address")
     r = subprocess.run([tv_python(), "-I", str(TOOLS / "tv.py"), command], capture_output=True, text=True)
+    # A failed read is unknown, not empty: never report "not installed" for a TV that didn't answer.
+    if r.returncode:
+        sys.exit(r.stderr.strip() or r.stdout.strip() or f"tv.py exited with status {r.returncode}")
     return r.stdout
 
 
