@@ -24,7 +24,6 @@ com.graymatrix.did                     # device analytics (data app; on the AS23
 com.mirakulo.astrotv.service           # Ginga (ISDB-Tb broadcast apps), not analytics
 
 # TCL content, ads and promos
-com.tcl.channelplus                    # TCL Live FAST channels, also removes them from Live TV
 com.tcl.waterfall.overseas             # TCL content "waterfall" recommendations
 com.tcl.tv.tclhome_passive             # pushes TCL content to the home screen at boot
 com.tcl.partnercustomizer              # TCL tweaks to Google TV home rows
@@ -34,10 +33,8 @@ com.tcl.smartlink.core                 # bundles a silent app installer
 
 # Background services
 com.tcl.guard                          # TGuard: device-use tracking, memory cleaner
-com.tcl.smartalexa                     # Alexa client (AS23 unit; keep it if you use Alexa)
 com.tcl.useragreement                  # EULA/privacy screens (AS23 unit)
 com.tcl.initsetup                      # TCL first-run setup incl. SambaTV ACR hooks; re-enable before rescanning channels
-com.tcl.usercenter                     # TCL account sign-in
 com.tcl.exhibit                        # store demo
 com.tcl.esticker                       # store demo stickers
 com.tcl.hotelmenu                      # hotel mode
@@ -52,15 +49,19 @@ com.tcl.repairguide
 com.tcl.gamebar                        # re-enable for the console game-mode overlay
 com.tcl.UpdatePeripheral               # re-enable to update a TCL soundbar
 com.tcl.hearaid                        # hearing test / volume adaptation
-com.google.android.marvin.talkback
 com.google.android.play.games
-com.google.android.videos              # Google TV / Play Movies storefront
-com.google.android.youtube.tvmusic
 com.google.android.apps.tv.dreamx      # ambient screensaver; use the launcher's Clock screensaver
 
-# Off by choice
-com.google.android.apps.mediashell     # Chromecast built-in
-com.tcl.ui_mediaCenter                 # USB media player
+# Off by choice (uncomment to disable if you do not use them)
+# com.tcl.smartalexa                   # Alexa client (keep enabled if you use Alexa with the TV)
+# com.tcl.channelplus                  # TCL Live FAST promo channels (keep if you watch TCL Live channels)
+# com.tcl.usercenter                   # TCL account sign-in / cloud sync
+# com.google.android.videos            # Google Play Movies storefront
+# com.google.android.youtube.tvmusic   # YouTube Music app
+# com.google.android.marvin.talkback   # TalkBack accessibility screen reader
+# com.google.android.youtube.tv        # Stock YouTube app (uncomment if replacing with SmartTube for +500MB free RAM)
+# com.google.android.apps.mediashell   # Chromecast built-in
+# com.tcl.ui_mediaCenter               # USB media player
 
 # Second Home claimant: disable it once the new launcher is Home (disable.sh checks the Wi-Fi owner first)
 com.google.android.tungsten.setupwraith  # setup wizard, claims HOME after launcherx is disabled
