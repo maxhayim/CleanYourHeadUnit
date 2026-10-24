@@ -100,6 +100,13 @@ good when launcherx was disabled — re-enabling every debloated package did not
 - Firmware updates come through Play Services and are untouched.
 - Screenshots come out black while HDMI or Live TV is on screen; press Home first.
 - Switch USB debugging off when you're done; the launcher keeps working without it.
+- With `com.tcl.ttvs` disabled, TvSettings falls back to TCL's own app tracker: a foreground service
+  (`com.tcl.awareness.component.services.LoopTaskService`) that reads the open app every 2 s and keeps
+  TvSettings (77-90 MB) pinned in memory for good. Enabling ttvs again is no cure, since it runs the same
+  polling and turns its BI reporting back on. Instead, take the foreground away from TvSettings:
+  `adb shell appops set com.android.tv.settings START_FOREGROUND ignore`. The service then runs as a plain
+  one, TvSettings drops to cached and Android can reclaim it; TCL's quick menu (the remote's Menu key)
+  still opens. Undo with `allow` instead of `ignore`. Details in #887.
 
 ### UI animation scaling (0.5x)
 
@@ -126,12 +133,3 @@ If you replace the stock YouTube app with an alternative client like SmartTube (
 ```bash
 TV_HOST=<tv-ip> tools/venv/bin/python -I tools/tv.py 'pm disable-user --user 0 com.google.android.youtube.tv'
 ```
-
-- With `com.tcl.ttvs` disabled, TvSettings falls back to TCL's own app tracker: a foreground service
-  (`com.tcl.awareness.component.services.LoopTaskService`) that reads the open app every 2 s and keeps
-  TvSettings (77-90 MB) pinned in memory for good. Enabling ttvs again is no cure, since it runs the same
-  polling and turns its BI reporting back on. Instead, take the foreground away from TvSettings:
-  `adb shell appops set com.android.tv.settings START_FOREGROUND ignore`. The service then runs as a plain
-  one, TvSettings drops to cached and Android can reclaim it; TCL's quick menu (the remote's Menu key)
-  still opens. Undo with `allow` instead of `ignore`. Details in #887.
-

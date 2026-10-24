@@ -44,5 +44,5 @@ com.android.gallery3d                     # legacy gallery app
 com.google.android.apps.tv.dreamx         # Ambient photos/art screensaver
 
 # Google TV Home handover: setup wizard first, then stock launcher after custom Home was confirmed
-com.google.android.tungsten.setupwraith   # setup wizard; re-enable before a factory reset
+com.google.android.tungsten.setupwraith   # setup wizard; re-enable before a factory reset; costs phone casting after a reboot (the Cast receiver reads its credentials from setupwraith)
 com.google.android.apps.tv.launcherx      # stock Google TV launcher

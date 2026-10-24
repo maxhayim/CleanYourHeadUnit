@@ -5,9 +5,10 @@
 # Stock launcher:  com.google.android.apps.tv.launcherx (build-and-install.sh disables it when the launcher takes Home)
 # Live TV / inputs: com.mediatek.wwtv.tvcenter and com.mediatek.wwtv.mediaplayer (keep; never disable com.mediatek.*)
 # Setup wizard:    com.google.android.tungsten.setupwraith OWNS the saved Wi-Fi network (dumpsys wifi, cname=).
-#                  Disabling it deletes that network and the TV drops off Wi-Fi and ADB. It is commented out
-#                  below. If you need it off so the launcher can take Home, forget the Wi-Fi network in
-#                  Settings > Network & Internet and join it again first, then uncomment the line.
+#                  Disabling it deletes that network and the TV drops off Wi-Fi and ADB. It is not in this
+#                  list. If you need it off so the launcher can take Home, forget the Wi-Fi network in
+#                  Settings > Network & Internet and join it again first, then add
+#                  com.google.android.tungsten.setupwraith to your copy.
 #
 # Apply:   TV_HOST=<tv ip> tools/disable.sh examples/panasonic-kowloon/debloat.txt
 # Undo:    TV_HOST=<tv ip> tools/restore.sh examples/panasonic-kowloon/debloat.txt

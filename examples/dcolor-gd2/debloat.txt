@@ -10,6 +10,7 @@
 # disable.sh skips it until another app answers HOME, so run this list again once the launcher is installed.
 # setupwraith: the first-run wizard also claims HOME on Google TV. disable.sh skips it while it owns the
 # saved Wi-Fi network (FORCE_SETUPWRAITH=1 overrides). Re-enable it before a factory reset; restore.sh does.
+# Disabling setupwraith gives Home back but costs casting (Chromecast built-in); re-enable it to cast.
 #
 # Left on on purpose: com.android.vending (Play Store), com.google.android.gms, com.google.android.youtube.tv,
 # com.netflix.ninja, com.google.android.tv.dfuservice (system updates), com.google.android.tv.remote.service

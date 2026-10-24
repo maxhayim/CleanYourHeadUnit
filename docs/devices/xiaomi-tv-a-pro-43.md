@@ -1,7 +1,7 @@
 # Xiaomi TV A Pro 43-inch (`MiTV-MZTU0` / `river`): one-session report
 
 Owner-reported 43-inch Xiaomi TV A Pro. Android reports the same `MiTV-MZTU0` model and `river`
-codename as the existing 75-inch 2026 profile, but this unit has a different firmware build. This is
+codename as the existing 75-inch 2026 profile ([examples/xiaomi-tv-a-pro-2026](../../examples/xiaomi-tv-a-pro-2026/debloat.txt)), but this unit has a different firmware build. This is
 an initial compatibility report, not a multi-day debloat list.
 
 | Field | Observed value |
@@ -24,7 +24,7 @@ build-and-install script installed and started CleanYourTV, made it Home, and on
 stock launcher. After one reboot, Home still resolved to `com.gathin.tvhome/.MainActivity`.
 
 Do not disable the setup wizard while the TV is still relying on its saved Wi-Fi network. Confirm
-that Ethernet (or another network not owned by the wizard) is active first.
+that Ethernet (or another network not owned by the wizard) is active first. Disabling it can also stop phone casting after a reboot, since the Cast receiver reads its credentials from setupwraith.
 
 ## Package state observed
 

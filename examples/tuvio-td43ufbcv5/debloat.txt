@@ -89,7 +89,7 @@ com.google.android.apps.tv.dreamx           # ambient mode, mixes recommendation
 # Batch 5: stock home, LAST, only after launcher/ is installed.
 # Before setupwraith: `dumpsys wifi | grep -o 'cname=[^ ]*'`; if the Wi-Fi network belongs to it,
 # forget and re-join the network in Settings first, or the TV drops off Wi-Fi.
-com.google.android.tungsten.setupwraith      # disable before launcherx
+com.google.android.tungsten.setupwraith      # disable before launcherx; costs phone casting after a reboot (the Cast receiver reads its credentials from setupwraith)
 com.google.android.apps.tv.launcherx         # then: cmd package set-home-activity --user 0 com.gathin.tvhome/.MainActivity
 # Launcher partner customization (MediaTek variant, tvlauncher.config only). The firmware re-enables it at
 # every boot (see above), so there is no point listing it. The Google-named twin

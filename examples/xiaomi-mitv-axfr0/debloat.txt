@@ -38,8 +38,8 @@ com.xiaomi.mitv.smartshare
 com.xiaomi.wfdsinkhelperservice
 com.mitv.milinkservice
 
-# Firmware updates (re-enable to check for one)
-com.xiaomi.mitv.updateservice
+# Firmware updates: kept, so updates still arrive (uncomment to stop them)
+# com.xiaomi.mitv.updateservice
 
 # Preloaded / unused apps
 com.xiaomi.mimusic2

@@ -54,7 +54,7 @@ com.android.backupconfirm
 
 # Needed for a custom launcher. Disable only AFTER the new launcher is installed, and setupwraith only
 # after forgetting and re-joining Wi-Fi in Settings (see quirks).
-com.google.android.tungsten.setupwraith
+com.google.android.tungsten.setupwraith        # costs phone casting after a reboot (the Cast receiver reads its credentials from setupwraith)
 com.google.android.apps.tv.launcherx
 
 # Disabled by choice on this TV (unused regional streaming preloads and games): comment out what you use
