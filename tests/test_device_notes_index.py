@@ -14,8 +14,13 @@ not: `http(s)`, `mailto:`, `data:`, a bare `#anchor`, and the insides of fenced 
 path is an example rather than a link. Anchors are ignored: `note.md#section` still points at the
 file, and a heading's slug is GitHub's, not ours.
 
+The examples table is generated from each folder's tv.json (tools/gen_tables.py), so the links in a
+tv.json's "tv" and "notes" count as links on examples/README.md: a list PR is checked before its row is
+generated.
+
 Run from the repository root: python3 -m unittest discover -s tests -v
 """
+import json
 import os
 import re
 import tempfile
@@ -54,14 +59,31 @@ def destinations(text):
     return MARKDOWN_LINK.findall(text) + REFERENCE_DEF.findall(text) + HTML_ATTR.findall(text)
 
 
+def tv_json_cells(root):
+    """{folder: the text of its tv.json's "tv" and "notes"}, the cells tools/gen_tables.py puts in its row."""
+    out = {}
+    for path in sorted(Path(root).glob("examples/*/tv.json")):
+        data = json.loads(path.read_text(encoding="utf-8"))
+        out[path.parent.name] = f"{data.get('tv', '')} {data.get('notes', '')}"
+    return out
+
+
+def pages(root):
+    """(page, its text) for every markdown page, plus each tv.json's cells as text on examples/README.md."""
+    for page in markdown_files(root):
+        yield page, page.read_text(encoding="utf-8", errors="replace")
+    for text in tv_json_cells(root).values():
+        yield Path(root) / "examples" / "README.md", text
+
+
 def referenced(root):
     """Repository-relative paths of every file the markdown links to, as posix strings."""
     # Resolved like the link targets below: on macOS the temporary directory /var/folders/... is a symlink to
     # /private/var/folders/..., and an unresolved root put every target outside it.
     root = Path(root).resolve()
     out = set()
-    for page in markdown_files(root):
-        for target in destinations(page.read_text(encoding="utf-8", errors="replace")):
+    for page, text in pages(root):
+        for target in destinations(text):
             if target.startswith(EXTERNAL):
                 continue
             # A link may carry an anchor of its own ("note.md#section"): the file is still the target.
@@ -160,15 +182,16 @@ def index_notes_with_their_own_list(root):
 
 
 def table_rows(root):
-    """examples/README.md's folder rows, as {folder: the row's text}."""
+    """examples/README.md's folder rows, as {folder: the row's text}; a folder's tv.json, where it has one,
+    stands in for its row, since the row is generated from it."""
     page = Path(root) / "examples" / "README.md"
-    if not page.is_file():
-        return {}
     rows = {}
-    for line in page.read_text(encoding="utf-8", errors="replace").splitlines():
-        match = FOLDER_ROW.match(line)
-        if match:
-            rows[match.group(1)] = line
+    if page.is_file():
+        for line in page.read_text(encoding="utf-8", errors="replace").splitlines():
+            match = FOLDER_ROW.match(line)
+            if match:
+                rows[match.group(1)] = line
+    rows.update(tv_json_cells(root))
     return rows
 
 

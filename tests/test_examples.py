@@ -1,14 +1,21 @@
 """Checks every TV list in examples/ and the two tables that index them.
 
+The tables are generated from each folder's tv.json by tools/gen_tables.py. On a pull request only the
+tv.json files are checked; on main (CLEANYOURTV_STRICT) the committed tables must be what the script writes.
+
 Run from the repository root: python3 -m unittest discover -s tests -v
 """
 import os
 import re
+import sys
 from pathlib import Path
 import unittest
 
 
 ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / "tools"))
+import gen_tables  # noqa: E402  (needs tools/ on the path first)
+
 EXAMPLES = ROOT / "examples"
 PACKAGE = re.compile(r"^[A-Za-z_][A-Za-z0-9_]*(\.[A-Za-z0-9_]+)+$")
 
@@ -55,17 +62,17 @@ class ExampleListsTest(unittest.TestCase):
                 dupes = sorted({p for p in packages if packages.count(p) > 1})
                 self.assertFalse(dupes, f"listed twice: {dupes}")
 
-    def test_examples_table_matches_folders(self):
-        rows = table_rows(EXAMPLES / "README.md", "| Folder |")
-        listed = []
-        for row in rows:
-            m = re.match(r"\|\s*`([^`/]+)/`\s*\|", row)
-            self.assertIsNotNone(m, f"row does not start with a `folder/` cell: {row[:60]}")
-            listed.append(m.group(1))
-        names = [f.name for f in folders()]
-        self.assertEqual(sorted(listed), sorted(names),
-                         "examples/README.md rows and examples/ folders differ")
-        self.assertEqual(len(listed), len(set(listed)), "a folder is listed twice")
+    def test_every_folder_has_a_valid_tv_json(self):
+        try:
+            gen_tables.load(ROOT)
+        except gen_tables.Problem as e:
+            self.fail(str(e))
+
+    @unittest.skipUnless(os.environ.get("CLEANYOURTV_STRICT"), "tables are generated on merge; strict on main only")
+    def test_tables_are_generated(self):
+        self.assertEqual(gen_tables.stale(ROOT), [],
+                         "README tables are out of date: a maintainer runs python3 tools/gen_tables.py "
+                         "after merging and commits the result")
 
     def test_readme_table_has_one_row_per_list(self):
         readme_rows = table_rows(ROOT / "README.md", "| TV | OS |")
