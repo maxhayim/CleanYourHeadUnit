@@ -19,7 +19,7 @@
 </p>
 
 <p align="center">
-  <a href="docs/PRESS.md"><img src="docs/card.jpg" alt="272 TV models · 79 brands · 25 languages · 497 KB launcher. Featured in TechCrunch, TechRadar, Tom's Guide, Mashable, Android Authority, XDA, FlatpanelsHD, It's FOSS, Phandroid, GIGAZINE, Xataka, WinFuture, Frandroid, Macitynet, Techaeris, TechPP and 180 more: 196 articles from 32 countries. Before: stock Google TV home with a sponsored ad. After: the Clean Your TV launcher." width="800"></a>
+  <a href="docs/PRESS.md"><img src="docs/card.jpg" alt="273 TV models · 79 brands · 25 languages · 497 KB launcher. Featured in TechCrunch, TechRadar, Tom's Guide, Mashable, Android Authority, XDA, FlatpanelsHD, It's FOSS, Phandroid, GIGAZINE, Xataka, WinFuture, Frandroid, Macitynet, Techaeris, TechPP and 180 more: 196 articles from 32 countries. Before: stock Google TV home with a sponsored ad. After: the Clean Your TV launcher." width="800"></a>
 </p>
 
 **The viral tweet:** [x.com/gathint/status/2111379569030939102](https://x.com/gathint/status/2111379569030939102)
@@ -116,12 +116,12 @@ Tested lists from contributors, one folder per model in [`examples/`](examples/)
 
 **TCL** 61 · **Sony** 33 · **Xiaomi** 29 · **Philips** 15 · **Hisense** 10 · **Skyworth** 9 · **Amazon Fire TV** 7 ·
 **OnePlus** 4 · **Thomson** 4 · **BenQ** 3 · **Google** 3 · **Haier** 3 · **Panasonic** 3 · **SHARP** 3 · **Vu** 3 ·
-**CHiQ** 2 · **FFalcon** 2 · **Hitachi** 2 · **Kalley** 2 · **Motorola** 2 · **Nokia** 2 · **NVIDIA Shield** 2 ·
-**onn** 2 · **RCA** 2 · **Redmi** 2 · **Sankey** 2 · **Toshiba** 2 ·
+**CHiQ** 2 · **FFalcon** 2 · **Hitachi** 2 · **JVC** 2 · **Kalley** 2 · **Motorola** 2 · **Nokia** 2 ·
+**NVIDIA Shield** 2 · **onn** 2 · **RCA** 2 · **Redmi** 2 · **Sankey** 2 · **Toshiba** 2 ·
 Acer · AiPro2K · AIWA · AQUA · Artel · Beko · Caxium · Cecotec · Challenger · Compac · Dialog · EKO · Freebox ·
-Grundig · INCLO · Insignia Fire TV · JVC · Karbonn · Kogan · KTC · Liberton · Lumio · Master-G · MTC · Noblex · OK. ·
-PEAQ · Polytron · PRISM+ · RockTek · SANYO · Sber · Super General · Tele System · TiVo · Tornado · Turkcell · Verizon ·
-Vidda · Vision ·
+Grundig · INCLO · Insignia Fire TV · Karbonn · Kogan · KTC · Liberton · Lumio · Master-G · MTC · Noblex · OK. · PEAQ ·
+Polytron · PRISM+ · RockTek · SANYO · Sber · Super General · Tele System · TiVo · Tornado · Turkcell · Verizon · Vidda ·
+Vision ·
 Anker Nebula, BYINTEK, Epson, Formovie, Gadnic, HOTACK, JMGO, Magcubic, Portronics, Stellamore, Wanbo and XGIMI projectors
 
 <!-- tv-brands:end -->
@@ -192,6 +192,7 @@ Anker Nebula, BYINTEK, Epson, Formovie, Gadnic, HOTACK, JMGO, Magcubic, Portroni
 | Insignia 55" F30 4K Fire TV (NS-55F301NA25, AFTDCT31, duckie) | Fire OS 7 / Android 9 |
 | JMGO N1S projector (K80A, holan, MediaTek m7332), Australia | Google TV 14 |
 | JVC Android TV (Vestel-built, BARTU_Jvc, menlo, MediaTek mt5867), Spain | Android TV 11 |
+| JVC UK 4K Android TV (MTC, MTCMSD6886UK, sadang, MediaTek m7322), UK | Android TV 11 |
 | Kalley 43G200 (device R3_GTV, MOKA, Realtek RTD2841A), Latin America | Google TV 14 |
 | Kalley R10G (device R10G, product ACER_FFM, MOKA, Realtek RTD2875P), Latin America | Google TV 14 |
 | Karbonn SWTV-20AE (Skyworth OEM, SW4H, MediaTek), India | Android TV 10 |
