@@ -34,7 +34,7 @@
 
 # Stock launcher, setup wizard and recommendation rows, replaced by launcher/
 com.google.android.tvlauncher
-com.google.android.tungsten.setupwraith    # setup wizard; disabling it costs phone Cast pairing (YouTube "Link with TV code" works)
+# com.google.android.tungsten.setupwraith    # setup wizard; disable to save RAM if phone casting is unused (L49C2US V570)
 com.google.android.tvrecommendations
 com.google.android.leanbacklauncher.recommendations
 com.google.android.leanbacklauncher        # legacy Leanback launcher stub (L49C2US V570)
@@ -69,8 +69,8 @@ android.autoinstalls.config.tcl.device
 com.example.copydatatotv                   # factory test app, persistent
 com.example.tvcapture                      # factory test app
 tv.wuaki.apptv                             # Rakuten TV
-com.google.android.inputmethod.pinyin      # Google Pinyin Chinese IME (L49C2US V570; com.tcl.inputmethod.international kept)
-com.iqt.iqqijni.tv.gp.pro                  # iQQi Chinese IME (L49C2US V570; com.tcl.inputmethod.international kept)
+# com.google.android.inputmethod.pinyin      # Google Pinyin Chinese IME (optional; L49C2US V570; com.tcl.inputmethod.international kept)
+# com.iqt.iqqijni.tv.gp.pro                  # iQQi Chinese IME (optional; L49C2US V570; com.tcl.inputmethod.international kept)
 com.google.android.music                   # Google Play Music (defunct, L49C2US V570)
 com.google.android.tvtutorials             # TV tutorials (L49C2US V570)
 com.google.android.tv.bugreportsender      # Bug report sender (L49C2US V570)
