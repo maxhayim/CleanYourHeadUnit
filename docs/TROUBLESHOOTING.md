@@ -34,6 +34,19 @@ Things that bit us or contributors, so they don't bite you. Commands use `tools/
   close up, switch Wireless debugging off on its own: on a Chromecast with Google TV 4K (`sabrina`)
   turning USB debugging off left the Wireless debugging port accepting connections, and
   `tools/adb-closed.py` only checks 5555. `adb mdns services` lists that port while it is open.
+- **Port 5555 stays closed and there is no Wireless debugging entry either**, so the pair-once recipe
+  above has nothing to pair with: a [Philips 58PUS8505/62 The One, Android TV 12,
+  `STT2.230526.001`](https://github.com/Gathin23/cleanyourtv/issues/1489) reported USB debugging on, no
+  Wireless debugging screen, `adb connect <tv ip>:5555` refused, and a USB cable to the computer that got
+  no connection either. Two routes are left, and the firmware has to offer one of them. The first is the
+  port-scan bullet further down this section: some firmware runs `adbd` on a port of its own, so scan and
+  try each open one with `TV_PORT=<port> tools/tv.py --probe`. The second is the cable, when `adb devices` lists the set
+  while USB debugging is on: `adb tcpip 5555` with the stock `adb` then opens the port, the cable comes
+  out, and `tools/tv.py` reaches the TV over the network. The cable is only a way to open the port, never
+  a way to run these tools: `tools/tv.py` connects with `AdbDeviceTcp(HOST, PORT)` - `<tv ip>:5555`, or
+  `TV_PORT` for another port - and carries no USB transport, so no script here talks to a TV over USB. A
+  set that neither enumerates over USB nor runs `adbd` on any TCP port has no way in, and this repo does
+  not try to get around that.
 - **USB devices go dead while USB debugging is on**, seen on the Xiaomi Mi Box S and the Xiaomi TV
   Box S 3rd gen ([MiTV-AFMU0, Google TV 14](https://github.com/Gathin23/cleanyourtv/issues/737)):
   their firmware switches the USB port to ADB device mode, which cuts the power to a USB speaker or
