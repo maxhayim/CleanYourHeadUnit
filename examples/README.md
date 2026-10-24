@@ -330,5 +330,7 @@ Notes for models that have no tested list yet live in [`docs/devices/`](../docs/
 - [Wanbo T2 Max (Android 6)](../docs/devices/wanbo-t2-max-android6.md) (projector, MStar `bennet`/`mainz`, `T2 M+`, Android 6.0 `W073_DC.1080T2.Zeasn.21041417`, France): `pm disable-user` and `pm hide` are refused, so no list; network ADB on 5555 closes at every reboot; the projector's apps are plain `LAUNCHER` apps, and `TvInputManager` throws; what a `minSdk 23` launcher build needed (desugaring, API 24 guards, static Outfit), the Home chooser that held after a reboot, and a time zone set to São Paulo out of the box.
 - [Xiaomi TV A Pro 43-inch](../docs/devices/xiaomi-tv-a-pro-43.md) (`MiTV-MZTU0` / `river`), Google TV 14, firmware `UKN1.240806.017.V816.0.26.6.2.6.URTMIXM`: setupwraith owned the saved Wi-Fi, so Ethernet had to be active before disabling it; the replacement launcher remained Home after reboot; one-session report, no several-day list yet.
 
+- [Acer AR55AR2851UDFL 55\"](../docs/devices/acer-ar55ar2851udfl.md), India, SCBC `R4` / Realtek `rtd2851m`, Android TV 14 `UKR1.260308` / `3272`: second unit near the AR55AR2851UDPRO example; 11 owner-approved packages disabled, Home and key functions checked after two warm reboots and one owner-reported full power-off; two days of testing, with package-state verification and longer follow-up pending, so no example list yet.
+
 To add your TV, see [CONTRIBUTING.md](../CONTRIBUTING.md). The quickest way to get a list is to
 run the prompt in [PROMPT.md](../PROMPT.md) and copy the packages your assistant disabled.
