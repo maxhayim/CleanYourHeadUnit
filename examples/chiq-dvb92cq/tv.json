@@ -1,0 +1,6 @@
+{
+  "tv": "CHiQ AI PONT (DVB92CQ, Changhong, redwood)",
+  "os": "Android TV 14",
+  "brand": "CHiQ",
+  "notes": "Homwee/Anoki telemetry and FAST channels, Google ad rows, silent installer and TV Manager; partnercustomizer, tvcenter, factory/synckey, OTA, Chromecast, YouTube, Play Store, TTS, mirroring and USB media kept; cltv.fast returns on boot; cold boot Live TV fixed with power_on_home (#1445); 1 GB, 32-bit"
+}

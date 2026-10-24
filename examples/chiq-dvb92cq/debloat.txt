@@ -1,0 +1,63 @@
+# CHiQ AI PONT (DVB92CQ, Changhong, device redwood), Android TV 14 (API 34),
+# firmware UKNV.260514.001, security patch 2026-06-01, 1 GB RAM (MemTotal ~935 MB),
+# MediaTek MT5867, 32-bit armeabi-v7a. Stock launcher: com.google.android.tvlauncher.
+# Live TV / inputs: com.mediatek.wwtv.tvcenter.
+# Same board and firmware as examples/rca-ai-pont (realme/AIWA/ERGO variants).
+#
+# Apply:   TV_HOST=<tv ip> tools/disable.sh examples/chiq-dvb92cq/debloat.txt
+# Undo:    TV_HOST=<tv ip> tools/restore.sh examples/chiq-dvb92cq/debloat.txt com.google.android.tvlauncher
+# Everything is DISABLED, not uninstalled. Comment out any line you want to keep.
+# Tested on one unit: safe list applied, two reboots, Home / YouTube / Inputs / Chromecast
+# checked by screenshot; not a multi-day soak.
+#
+# KEEP, even though the names look like bloat:
+# - com.google.android.leanbacklauncher.partnercustomizer: provides tvlauncher.widget. Without it
+#   com.mediatek.tv.service crash-loops after the next reboot and the Input key stops working.
+# - com.homwee.factory, com.homwee.synckey, com.homwee.dynamicbacklight (picture), all
+#   com.mediatek.* (Live TV, inputs, remote pairing), com.homwee.upgrade and com.homwee.dmt.upgrade
+#   (firmware updates).
+# - com.google.android.tungsten.setupwraith: on this unit the saved Wi-Fi belongs to
+#   android.uid.system (`dumpsys wifi | grep -o 'cname=[^ ]*'`), so it can stay; it also holds the
+#   Cast credentials. It does not claim HOME here.
+#
+# Quirks on this firmware (checked on the TV):
+# - com.cltv.fast is re-enabled by the vendor firmware on every boot; re-disable it after a reboot
+#   (tools/check.py --fix, or pm disable-user --user 0 com.cltv.fast).
+# - Cold boot opens Live TV (com.mediatek.wwtv.tvcenter/.util.BootBroadcastReceiver, BOOT_COMPLETED
+#   priority 1000) and a Homwee "hotel" ProtocolActivity, even with the new launcher as Home.
+#   Android 14 refuses `pm disable` of that one component. Fixed with `power_on_home` (#1445) and
+#   HOME_KEY_SERVICE=1: until the first remote key after boot or screen-on, the Live TV window is
+#   sent back Home. The opposite of boot_to_live_tv; never set both.
+# - com.homwee.chtvmanager ("TV Manager") is safe to disable; it was the foreground optimizer.
+# - com.google.android.marvin.talkback and com.google.android.youtube.tvmusic ship disabled.
+# - The launcher replaces the stock Home; com.google.android.tvlauncher is disabled by the launcher
+#   install script after the new Home starts, not by this list.
+
+# Telemetry, ads, content recognition and FAST channels
+tv.anoki.acr.anokiacroptin
+com.google.android.tvrecommendations
+com.google.android.feedback
+com.android.tv.feedbackconsent
+com.google.android.partnersetup
+android.autoinstalls.config.homwee
+com.cltv.fast
+
+# Changhong / Homwee store, help, silent installer and TV Manager
+com.homwee.aipont
+com.homwee.store
+com.homwee.help
+com.homwee.chinstallapk
+com.homwee.chtvmanager
+
+# Optional: owner's choices; comment out what you use
+# com.google.android.katniss              # Google Assistant; the remote mic dies
+# com.google.android.tv.remote.service    # phone-as-remote app
+# com.homwee.alexacontrol                 # Alexa integration
+# com.google.android.backdrop             # ambient screensaver (the launcher has a clock)
+# com.google.android.play.games
+# com.google.android.syncadapters.calendar
+
+# Kept on purpose: YouTube, Chromecast (mediashell), Play Store (vending), TTS, USB media
+# (homwee.mmp.fileexplorer / imageplayer), mirroring (homwee.mmp.screenshare / multiscreenshare),
+# OTA (homwee.upgrade / dmt.upgrade), com.mediatek.*, com.homwee.factory / synckey /
+# dynamicbacklight, partnercustomizer, setupwraith.

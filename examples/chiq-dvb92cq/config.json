@@ -1,0 +1,24 @@
+{
+  "dock_apps": [
+    "top.rootu.lampa",
+    "top.rootu.prisma",
+    "es.ottplayer.tv",
+    "com.aloj22.iptvprostreamplayer",
+    "org.smarttube.stable",
+    "com.google.android.youtube.tv"
+  ],
+  "fill_dock": false,
+  "hidden_apps": [
+    "com.android.tv.settings",
+    "com.mediatek.wwtv.tvcenter",
+    "com.cltv.fast",
+    "com.cybercat.adbappcontrol.tv",
+    "com.homwee.factory",
+    "com.homwee.chtvmanager",
+    "com.google.android.tvlauncher"
+  ],
+  "live_tv_package": "com.mediatek.wwtv.tvcenter",
+  "columns": 6,
+  "rows_below_dock": 0,
+  "reduced_motion": true
+}
