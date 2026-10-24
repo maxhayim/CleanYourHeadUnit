@@ -30,4 +30,4 @@ the rules. Keys from before this rule are on its wanted list; a screenshot for o
 | `home_idle_clock_minutes` | <img src="clock-screensaver.png" width="320" alt="home_idle_clock_minutes on a TV"> |
 | `gamepad_passthrough` | <img src="switches/gamepad_passthrough.jpg" width="320" alt="gamepad_passthrough on a TV"> |
 | `show_greeting` | <img src="switches/show_greeting.jpg" width="320" alt="show_greeting on a TV"> |
-| `header_white` | <img src="switches/show_greeting.jpg" width="320" alt="header_white on a TV"> |
+| `header_white` | <img src="switches/header_white.jpg" width="320" alt="header_white on a TV"> |
