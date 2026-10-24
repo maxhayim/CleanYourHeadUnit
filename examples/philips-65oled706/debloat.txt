@@ -51,7 +51,7 @@
 # - Already disabled at the factory, as on the French unit: the UK Freeview apps and org.droidtv.aurora (left as
 #   the factory set it). YouTube Music and Apple TV were enabled here. The saved Wi-Fi network belonged to
 #   android.uid.system, not to setupwraith (kept anyway).
-# - disable.sh/disable.ps1 skip two entries of this list on this firmware: org.droidtv.usagelogger and
+# - The disable scripts skip two entries of this list on this firmware: org.droidtv.usagelogger and
 #   org.droidtv.demome both ask for TV_INPUT_HARDWARE (#321). demome was kept. usagelogger holds INTERNET of its
 #   own, and with the rest of this list applied its ErrEvLogSvc process logged "bindToNetvLoggerService: null
 #   ResolveInfo" about every 10 s (not seen before the list), so it was disabled afterwards with TVINPUT_ALLOW=1:
