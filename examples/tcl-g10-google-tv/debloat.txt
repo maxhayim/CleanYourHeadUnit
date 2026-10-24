@@ -77,7 +77,8 @@ android.autoinstalls.config.google.gtvpai
 com.google.android.feedback
 com.google.android.marvin.talkback
 com.google.android.apps.tv.dreamx      # ambient mode screensaver, see quirks above
-com.google.android.tv.remote.service   # Google TV phone-app remote
+# com.google.android.tv.remote.service   # keep: besides the phone-app remote it hosts AtvSearchAssistantService,
+#   which the remote's mic button needs on this G10 build; disabling it leaves the mic button dead (#1441)
 
 # Optional: uncomment what you don't use
 # Tested on the Netherlands 43P69K; telemetry shipped enabled there, unlike the original US unit.
