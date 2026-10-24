@@ -8,13 +8,21 @@
 # after also running `cmd package trim-caches`). com.mediatek.MtkDemo (MediaTek's demo app, not in
 # this unit's build) was also disabled there with no issue.
 #
-# The launcher half was NOT confirmed working on that AU13 unit - but setupwraith was never disabled
-# in either attempt, so this is not yet a fair test of the same procedure as this list's. Both times,
-# `launcher/build-and-install.sh`'s exact sequence (new launcher started and screenshot-verified first,
-# launcherx disabled, home preference set after) still landed on setupwraith's RecoveryActivity instead
-# of the new launcher, same as what Batch 3 below says happens whenever launcherx goes while setupwraith
-# stays. Retrying with setupwraith disabled too (Wi-Fi forgotten/re-joined first, as below) is the next
-# thing to try on that unit before concluding AU13 is any different from AU10 here.
+# The launcher half now works on the AU13 unit too, confirming it was never an AU13-specific
+# regression: the first two attempts skipped Batch 3 (setupwraith stayed enabled) and both landed on
+# its RecoveryActivity, exactly as this list's own Batch 3 note predicts. Redone with setupwraith
+# disabled first (Wi-Fi forgotten/re-joined, as below), then the same build-and-install.sh sequence -
+# reboot-checked, Home came back on launcher/ cleanly (home splash to usable Home in ~10s, vs. hanging
+# indefinitely on the attempts that skipped setupwraith).
+#
+# On the AU13 unit, settings_key_keycodes=[83] (the known quirk below) restored the gear/Settings
+# button as expected. But fixing it costs the same thing noted for the G09 unit elsewhere in this repo:
+# once HomeKeyService is bound at all (HOME_KEY_SERVICE=1), long-pressing volume steps once instead of
+# ramping - confirmed here too, and confirmed by logcat to be unfixable from app code on this firmware:
+# `interceptKeyBeforeQueueing`/`interceptKeyBeforeDispatching` (WindowManager) handle volume directly,
+# with zero trace of AccessibilityInputFilter or this app anywhere near the event. Volume keys never
+# reach any accessibility service's onKeyEvent on this unit, so no app-side remap or synthesized repeat
+# can restore ramping without root. All-or-nothing, same as the G09 case; this one chose the gear button.
 #
 # Apply:   TV_HOST=<tv ip> tools/disable.sh examples/tcl-43s5k/debloat.txt
 # Undo:    TV_HOST=<tv ip> tools/restore.sh examples/tcl-43s5k/debloat.txt com.google.android.apps.tv.launcherx
