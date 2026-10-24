@@ -11,10 +11,6 @@
 #   Settings > About > Build (OK x7) > Developer options > USB debugging > ON
 #   Reboot the TV once if the RSA prompt does not appear on screen (so UsbDebuggingManager
 #   binds to the newly started adbd socket), then adb connect <ip>:5555 and accept the prompt.
-#   If sideloading targetSdk 36 APKs after a factory reset without Google sign-in fails with
-#   INSTALL_FAILED_VERIFICATION_FAILURE, disable the ADB package verifier first:
-#     settings put global verifier_verify_adb_installs 0
-#     settings put global package_verifier_enable 0
 # The two switches do different things: the factory one starts adbd (persist.sys.usb.config=adb),
 # the developer one makes the "Allow USB debugging?" dialog appear. Without the second one every
 # attempt ends as "unauthorized" with nothing on screen, which reads like a network fault.
