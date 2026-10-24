@@ -292,6 +292,8 @@ on that firmware, grouped and commented. These are starting points: comment out 
 
 Notes for models that have no tested list yet live in [`docs/devices/`](../docs/devices/):
 
+- [Amazon Fire TV Stick AFTMA08C15](../docs/devices/amazon-fire-tv-aftma08c15.md), Fire OS 8.1.8.5 / Android 11: external dumbtv Home 1.3 observations, physical Home failure despite passing injected-key checks, recovery limits, updater preservation, and media-folder wallpaper configuration; single-session notes, no tested list.
+
 - [TCL 55P635](../docs/devices/tcl-55p635.md), G07, Android TV 11, `V8-R51AT01-LF1V138`: keeping stock TV/CH, LIST, INFO, Google TV profiles and the top-right settings popup alongside CleanYourTV, with an explicit terrestrial tuner input; single-session configuration notes, no retained debloat list.
 
 - [Xiaomi Mi TV 3S 48](../docs/devices/xiaomi-mitv3s-48-hancock-follow-up.md), `hancock`, Android 4.4.4 / API 19, firmware `7.7.21.1653`: native source popup with PatchWall hidden, HDMI 1's integer `input` extra, reversible `pm block`/`pm unblock` state and casting packages to keep; device note, not an upstream API 19 launcher build.
