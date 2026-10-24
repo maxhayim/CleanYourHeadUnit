@@ -227,6 +227,10 @@ final class Config {
     final int clockWallpaperDim;
     /** The clock screensaver's coloured glow; false leaves the clock on plain black, e.g. for an OLED (config.xml, clock_glow). */
     final boolean clockGlow;
+    /** Every app in the dock's row, which scrolls sideways, and no grid below it (config.xml, single_row); needs dock_row. */
+    final boolean singleRow;
+    /** With single_row, the band runs behind every app in the row, not only the dock apps (config.xml, dock_band_all). */
+    final boolean dockBandAll;
 
     private Config(List<String> dockApps, boolean fillDock, List<String> hiddenApps, List<String> libraryApps, String liveTvPackage,
                    String liveTvAction, String liveTvInputId, Map<String, String> launchActions, Map<String, String> appLabels,
@@ -241,7 +245,7 @@ final class Config {
                    List<RaceWeekend.Race> raceCalendar, boolean cinematicHome, boolean ambientGlow, boolean appGlow, boolean fadeRows, int homeIdleClockMinutes,
                    boolean keyFilter, boolean dockGlass, String glowStyle, boolean wallpaperCaptions,
                    boolean handleViewInputs, boolean tileMenu, boolean dockEvenPadding, boolean cinematicDots, boolean cinematicWhiteFocus, boolean wifiStatusColor, int cinematicScrim, int cinematicArt,
-                   Map<String, Set<String>> wallpaperMoods, boolean gamepadPassthrough, boolean consumeVolumeKeys, boolean wifiStatusWarnings, List<String> topBarApps, boolean showGreeting, boolean headerWhite, boolean clockWallpaper, int clockWallpaperDim, boolean clockGlow, String glassStyle) {
+                   Map<String, Set<String>> wallpaperMoods, boolean gamepadPassthrough, boolean consumeVolumeKeys, boolean wifiStatusWarnings, List<String> topBarApps, boolean showGreeting, boolean headerWhite, boolean clockWallpaper, int clockWallpaperDim, boolean clockGlow, String glassStyle, boolean singleRow, boolean dockBandAll) {
         this.handleViewInputs = handleViewInputs;
         this.tileMenu = tileMenu;
         this.inputKeycodes = inputKeycodes;
@@ -330,6 +334,8 @@ final class Config {
         this.clockWallpaper = clockWallpaper;
         this.clockWallpaperDim = clockWallpaperDim;
         this.clockGlow = clockGlow;
+        this.singleRow = singleRow;
+        this.dockBandAll = dockBandAll;
         this.glowStyle = glowStyle(glowStyle);
         this.wallpaperCaptions = wallpaperCaptions;
         this.glassStyle = glassStyle(glassStyle);
@@ -436,6 +442,8 @@ final class Config {
         int clockWallpaperDim = res.getInteger(R.integer.clock_wallpaper_dim);
         boolean clockGlow = res.getBoolean(R.bool.clock_glow);
         String glassStyle = res.getString(R.string.glass_style);
+        boolean singleRow = res.getBoolean(R.bool.single_row);
+        boolean dockBandAll = res.getBoolean(R.bool.dock_band_all);
         boolean applied = false;
 
         File dir = dir(ctx);
@@ -524,6 +532,8 @@ final class Config {
             clockWallpaper = bool(json, "clock_wallpaper", clockWallpaper);
             clockWallpaperDim = integer(json, "clock_wallpaper_dim", clockWallpaperDim, 0, 90);
             clockGlow = bool(json, "clock_glow", clockGlow);
+            singleRow = bool(json, "single_row", singleRow);
+            dockBandAll = bool(json, "dock_band_all", dockBandAll);
             glowStyle = string(json, "glow_style", glowStyle);
             glassStyle = string(json, "glass_style", glassStyle);
         }
@@ -581,7 +591,7 @@ final class Config {
                 Math.max(0, Math.min(100, skyIntensity)), settingsKeycodes, settingsKeyPanel, restoreKeyServices, wallpaperEnabled, wallpaper,
                 wallpapers, rotationMinutes, wallpaperDim, dockOpacity, wallpaperOrder, applied,
                 festival, inputKeycodes, appKeys, stockHomeRedirect, json == null ? Collections.emptyList() : raceCalendar(json), cinematic, ambientGlow, appGlow, fadeRows,
-                Math.max(0, idleClockMinutes), keyFilter, dockGlass, glowStyle, wallpaperCaptions, handleViewInputs, tileMenu, dockEvenPadding, cinematicDots, cinematicWhiteFocus, wifiStatusColor, cinematicScrim, cinematicArt, wallpaperMoods, gamepadPassthrough, consumeVolumeKeys, wifiStatusWarnings, topBarApps, showGreeting, headerWhite, clockWallpaper, Math.max(0, Math.min(90, clockWallpaperDim)), clockGlow, glassStyle);
+                Math.max(0, idleClockMinutes), keyFilter, dockGlass, glowStyle, wallpaperCaptions, handleViewInputs, tileMenu, dockEvenPadding, cinematicDots, cinematicWhiteFocus, wifiStatusColor, cinematicScrim, cinematicArt, wallpaperMoods, gamepadPassthrough, consumeVolumeKeys, wifiStatusWarnings, topBarApps, showGreeting, headerWhite, clockWallpaper, Math.max(0, Math.min(90, clockWallpaperDim)), clockGlow, glassStyle, singleRow && dockRow, dockBandAll);
     }
 
     /**
