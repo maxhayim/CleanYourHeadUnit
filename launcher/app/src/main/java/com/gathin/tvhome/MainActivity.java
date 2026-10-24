@@ -2170,6 +2170,8 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
                 continue;
             }
             TextView button = (TextView) getLayoutInflater().inflate(R.layout.top_app_button, bar, false);
+            // pillKeys finds the bar's ends by id: without one of its own, every app button would be an end.
+            button.setId(View.generateViewId());
             logo.setBounds(0, 0, size, size);
             button.setCompoundDrawablesRelative(logo, null, null, null);
             button.setCompoundDrawableTintList(null);
