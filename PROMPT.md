@@ -104,6 +104,9 @@ Debloat
   ad-blocking resolver (`settings put global private_dns_specifier dns.adguard-dns.com`, then
   `settings put global private_dns_mode hostname`). Tell me it doesn't block YouTube ads, check an app
   still plays afterwards, and note the undo (`private_dns_mode opportunistic`) in the README.
+  Ask me first whether my router already filters or routes traffic by domain through its own DNS
+  (Pi-hole, AdGuard Home, a VPN with domain lists, a fake-IP proxy): Private DNS goes around it, so those
+  rules stop applying to the TV, and blocking on the router is the better choice there.
 
 Launcher
 - Check that the TV accepts APKs before building anything. Some China-market sets answer every
@@ -156,6 +159,9 @@ Launcher
 - On Android 11 and newer the launcher must declare `<queries>` for `android.intent.category.LEANBACK_LAUNCHER`,
   or package visibility silently hides every app and the grid comes up empty; target a recent SDK, some
   Google TV 14 sets refuse older targets at install.
+- If you write the launcher yourself, make its theme explicitly opaque (`windowIsTranslucent`,
+  `windowIsFloating` and `windowSwipeToDismiss` false): on some firmware `Theme.DeviceDefault` comes out
+  translucent, the TV app keeps running under Home, and after an HDMI input the picture stays on screen.
 - Ask how many dock slots I want (4, 5, 6 or 7), which apps, and their order; keep four if I have no
   preference. The reference launcher already supports this: use `columns` and `dock_apps` in
   `launcher/app/src/main/res/values/config.xml` or a theme's `config.json`, without adding a new layout.
@@ -180,6 +186,8 @@ Verify
 - Live TV, HDMI and some streaming apps (Netflix) give empty screenshots (0 bytes); that is the TV, not a
   broken debloat, and `--screenshot` exits 1 with that message. Check
   `dumpsys activity activities | grep topResumedActivity` instead (see `docs/TROUBLESHOOTING.md`).
+- If screenshots keep showing an app you already left, byte for byte, `screencap` is returning its last
+  frame: confirm `mCurrentFocus` in `dumpsys window`, force-stop that app and capture again.
 - If the screen looks enlarged and clipped after an install or a reboot, check the display overrides
   before editing the launcher grid: `wm size` and `wm density` show a physical value next to an
   override, and an override left over from an old resolution experiment, or a density that comes back
