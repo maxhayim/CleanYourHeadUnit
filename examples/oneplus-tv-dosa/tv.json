@@ -1,0 +1,25 @@
+{
+  "brand": "OnePlus",
+  "model": "Oneplus_Dosa_IN",
+  "device": "Oneplus_Dosa_IN",
+  "codename": "dosa",
+  "region": "IN",
+  "android_version": "11",
+  "api_level": 30,
+  "build_id": "RTM5.220609.299",
+  "fingerprint": "Oneplus/Oneplus_Dosa_IN/Oneplus_Dosa_IN:11/RTM5.220609.299/2312290405:user/release-keys",
+  "cpu_abi": "armeabi-v7a",
+  "stock_launcher": "com.google.android.tvlauncher",
+  "live_tv_package": "com.oneplus.tv.android.livetv",
+  "remote_service": "com.oneplus.tv.remote",
+  "setupwraith_claims_home": false,
+  "dock_columns": 6,
+  "dock_apps": [
+    "app.wuplay.androidtv",
+    "com.netflix.ninja",
+    "io.gh.reisxd.tizentube.cobalt",
+    "in.startv.hotstar",
+    "com.google.android.youtube.tv",
+    "com.amazon.amazonvideo.livingroom"
+  ]
+}
