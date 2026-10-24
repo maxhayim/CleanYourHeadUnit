@@ -125,7 +125,6 @@
     <string name="race_countdown_minutes">%1$d 分钟</string>
     <string name="race_countdown_hours">%1$d小时%2$d分</string>
     <string name="race_countdown_days">%1$d天%2$d小时</string>
-    <string name="last_opened">上次打开：%1$s</string>
 
     <string name="shamsi_month_farvardin">法尔瓦丁</string>
     <string name="shamsi_month_ordibehesht">奥尔迪贝赫什特</string>
