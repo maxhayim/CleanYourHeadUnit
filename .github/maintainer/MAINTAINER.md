@@ -65,7 +65,8 @@ it, and every one of them gets a home. Pick the smallest home that fits (CONTRIB
   examples/README, the brand line and the counts are generated from those files: a list PR never needs README rows,
   and rows an older PR added are dropped on merge (`tools/gen_tables.py --adopt` turns them into its `tv.json`).
 - After merging lists, the maintainer runs `python3 tools/gen_tables.py` on main and commits what it rewrites
-  (with `--font Fredoka.ttf` it also redraws the card when a count changed); CI on main fails until then.
+  (with `--font Fredoka.ttf` it also redraws the card when a count changed); CI's "README tables" job on main
+  stays red until then, and only that job.
 - `pm hide`/`pm block` needs the matching unhide/unblock undo in the header.
 
 ## Scope and taste

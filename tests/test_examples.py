@@ -1,11 +1,11 @@
 """Checks every TV list in examples/ and the two tables that index them.
 
-The tables are generated from each folder's tv.json by tools/gen_tables.py. On a pull request only the
-tv.json files are checked; on main (CLEANYOURTV_STRICT) the committed tables must be what the script writes.
+The tables are generated from each folder's tv.json by tools/gen_tables.py. Here only the tv.json files
+are checked; that the committed tables and counts are what the script writes is CI's "README tables" job,
+on main only, kept apart so a list merge waiting for its regenerated tables doesn't turn these tests red.
 
 Run from the repository root: python3 -m unittest discover -s tests -v
 """
-import os
 import re
 import sys
 from pathlib import Path
@@ -68,12 +68,6 @@ class ExampleListsTest(unittest.TestCase):
         except gen_tables.Problem as e:
             self.fail(str(e))
 
-    @unittest.skipUnless(os.environ.get("CLEANYOURTV_STRICT"), "tables are generated on merge; strict on main only")
-    def test_tables_are_generated(self):
-        self.assertEqual(gen_tables.stale(ROOT), [],
-                         "README tables are out of date: a maintainer runs python3 tools/gen_tables.py "
-                         "after merging and commits the result")
-
     def test_readme_table_has_one_row_per_list(self):
         readme_rows = table_rows(ROOT / "README.md", "| TV | OS |")
         example_rows = table_rows(EXAMPLES / "README.md", "| Folder |")
@@ -82,12 +76,6 @@ class ExampleListsTest(unittest.TestCase):
         readme_tvs = sorted(r.split("|")[1].strip() for r in readme_rows)
         example_tvs = sorted(r.split("|")[2].strip() for r in example_rows)
         self.assertEqual(readme_tvs, example_tvs, "the TV column differs between the two tables")
-
-    @unittest.skipUnless(os.environ.get("CLEANYOURTV_STRICT"), "counts are fixed up on merge; strict on main only")
-    def test_readme_counts(self):
-        text = (ROOT / "README.md").read_text(encoding="utf-8")
-        n = len(folders())
-        self.assertIn(f"{n} TV models", text, "stat strip alt text is stale (regenerate docs/stats.png too)")
 
 
 if __name__ == "__main__":
