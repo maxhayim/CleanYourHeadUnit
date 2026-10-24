@@ -2,6 +2,7 @@ package com.gathin.tvhome;
 
 import android.animation.ArgbEvaluator;
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
@@ -40,6 +41,12 @@ final class ClockScene {
     private int glowColor;
     /** clock_wallpaper or clock_glow false: something else (a picture, or plain black) replaced the coloured glow. */
     private boolean wallpaperShown;
+    /** clock_wallpaper: the picture start() decodes, its darkening, and the resources to draw it with. */
+    private File wallpaperFile;
+    private int wallpaperShade;
+    private Resources wallpaperRes;
+    /** Bumped by stop(): a decode started before it finds a different number and drops its result. Main thread only. */
+    private int wallpaperGeneration;
 
     private final Runnable tick = new Runnable() {
         @Override
@@ -71,17 +78,20 @@ final class ClockScene {
         });
         handler.removeCallbacks(tick);
         handler.postDelayed(tick, MOVE_MS);
+        if (wallpaperFile != null && !wallpaperShown) loadWallpaper();
     }
 
     void stop() {
         handler.removeCallbacksAndMessages(null);   // the tick and any glow steps still queued
         content.animate().cancel();
+        wallpaperGeneration++;   // a decode still running must not attach its picture to a stopped scene
     }
 
     /**
      * clock_wallpaper: put Home's wallpaper (the theme's single picture, or the first of its collection) behind
      * the clock, darkened by clock_wallpaper_dim, in place of the glow. Decoded off the main thread at screen size
      * in RGB_565 (4 MB at 1080p), like Home's own; until then, or if it cannot be read, the glow stays.
+     * Call before start(), which starts the decode (again after a stop() that dropped an unfinished one).
      */
     void useHomeWallpaper(Context ctx) {
         Config cfg;
@@ -98,18 +108,29 @@ final class ClockScene {
             }
             return;
         }
-        File file = cfg.wallpaper != null ? cfg.wallpaper : cfg.wallpapers.isEmpty() ? null : cfg.wallpapers.get(0);
-        if (file == null) return;
-        int shade = (cfg.clockWallpaperDim * 255 / 100) << 24;
-        DisplayMetrics dm = ctx.getResources().getDisplayMetrics();
+        wallpaperFile = cfg.wallpaper != null ? cfg.wallpaper : cfg.wallpapers.isEmpty() ? null : cfg.wallpapers.get(0);
+        wallpaperShade = (cfg.clockWallpaperDim * 255 / 100) << 24;
+        wallpaperRes = ctx.getResources();
+    }
+
+    private void loadWallpaper() {
+        File file = wallpaperFile;
+        int shade = wallpaperShade;
+        Resources res = wallpaperRes;
+        DisplayMetrics dm = res.getDisplayMetrics();
         int w = dm.widthPixels, h = dm.heightPixels;
+        int generation = wallpaperGeneration;
         new Thread(() -> {
             Bitmap bmp = decode(file, w, h);
             if (bmp == null) return;
             handler.post(() -> {
+                if (generation != wallpaperGeneration || wallpaperShown) {
+                    bmp.recycle();   // stopped meanwhile (or already shown): this picture was never attached
+                    return;
+                }
                 wallpaperShown = true;
                 ambient.setBackground(new LayerDrawable(new Drawable[]{
-                        new BitmapDrawable(ctx.getResources(), bmp), new ColorDrawable(shade)}));
+                        new BitmapDrawable(res, bmp), new ColorDrawable(shade)}));
             });
         }, "clock-wallpaper").start();
     }
