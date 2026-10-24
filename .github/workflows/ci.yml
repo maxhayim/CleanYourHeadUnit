@@ -25,6 +25,14 @@ jobs:
         env:
           CLEANYOURTV_STRICT: ${{ github.event_name == 'push' && '1' || '' }}
         run: python3 -m unittest discover -s tests -v
+      # On a pull request the tables are expected to lag: a list PR adds only its folder and tv.json.
+      - name: README TV tables match examples/*/tv.json
+        if: github.event_name == 'push'
+        run: |
+          python3 tools/gen_tables.py --check || {
+            echo "::error::README.md and examples/README.md are generated from examples/*/tv.json. A maintainer runs python3 tools/gen_tables.py on main and commits the result; contributors never need to."
+            exit 1
+          }
 
   launcher:
     name: Launcher build and unit tests
