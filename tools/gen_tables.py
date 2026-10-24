@@ -19,9 +19,8 @@ conflict. Now a list PR adds only its own folder, with a tv.json beside debloat.
 
 and a maintainer runs this after merging. "tv" and "os" fill both tables, "notes" the examples/README.md
 one, "brand" the brand line under the README table (a brand whose every TV says "projector" goes on the
-projector line). Optional keys, only where a row of the tables before this script differed:
-"readme_os" (the README's OS cell, when it is not "os"), and "readme_after" / "examples_after" (the folder
-whose row this one follows; without them a row sits in alphabetical order of "tv").
+projector line). One optional key: "readme_os", the README's OS cell when it is not "os". Both tables list
+the folders in the same order, alphabetical by "tv" (case ignored), so a brand's models sit together.
 
 The tables live between <!-- tv-table:start ... --> and <!-- tv-table:end --> lines, the brand line
 between <!-- tv-brands:start ... --> and <!-- tv-brands:end -->; everything outside them is hand-written.
@@ -37,7 +36,7 @@ import sys
 from pathlib import Path
 
 KEYS = ("tv", "os", "brand", "notes")
-OPTIONAL = ("readme_os", "readme_after", "examples_after")
+OPTIONAL = ("readme_os",)
 WIDTH = 120  # the brand line wraps before this many characters
 README_HEADER = ["| TV | OS |", "|---|---|"]
 EXAMPLES_HEADER = ["| Folder | TV | OS | Notes |", "|---|---|---|---|"]
@@ -68,7 +67,6 @@ def check_cell(where, key, value):
 def load(root):
     """[(folder name, tv.json dict)] for every folder in examples/; raises Problem listing every bad file."""
     problems, entries = [], []
-    names = {f.name for f in folders(root)}
     for folder in folders(root):
         where = f"examples/{folder.name}/tv.json"
         path = folder / "tv.json"
@@ -91,9 +89,6 @@ def load(root):
             problems += check_cell(where, key, data.get(key))
         if "readme_os" in data:
             problems += check_cell(where, "readme_os", data["readme_os"])
-        for key in ("readme_after", "examples_after"):
-            if key in data and data[key] not in names:
-                problems.append(f"{where}: \"{key}\" names {data[key]!r}, which is not a folder in examples/")
         for key in ("tv", "notes"):
             for target in LINK.findall(data.get(key) or ""):
                 if re.match(r"^(https?:|mailto:|#)", target):
@@ -107,39 +102,24 @@ def load(root):
     return entries
 
 
-def ordered(entries, after_key):
-    """The entries in table order: alphabetical by TV, each pinned row right after the row it names."""
-    by_name = dict(entries)
-    children = {}
-    roots = []
-    for name, data in entries:
-        anchor = data.get(after_key)
-        (children.setdefault(anchor, []) if anchor else roots).append(name)
-    key = lambda n: (by_name[n]["tv"].casefold(), n)
-    out, seen = [], set()
+def sort_key(entry):
+    """Table order: alphabetical by TV, case ignored; the folder name breaks a tie."""
+    name, data = entry
+    return data["tv"].casefold(), name
 
-    def emit(name):
-        out.append(name)
-        seen.add(name)
-        for child in sorted(children.get(name, []), key=key):
-            emit(child)
 
-    for name in sorted(roots, key=key):
-        emit(name)
-    stuck = sorted(set(by_name) - seen)
-    if stuck:
-        raise Problem(f"\"{after_key}\" goes round in a circle for: {', '.join(stuck)}")
-    return [(n, by_name[n]) for n in out]
+def ordered(entries):
+    return sorted(entries, key=sort_key)
 
 
 def readme_rows(entries):
     return README_HEADER + [f"| {d['tv']} | {d.get('readme_os', d['os'])} |"
-                            for _, d in ordered(entries, "readme_after")]
+                            for _, d in ordered(entries)]
 
 
 def examples_rows(entries):
     return EXAMPLES_HEADER + [f"| `{n}/` | {d['tv']} | {d['os']} | {d['notes']} |"
-                              for n, d in ordered(entries, "examples_after")]
+                              for n, d in ordered(entries)]
 
 
 def wrap(items):

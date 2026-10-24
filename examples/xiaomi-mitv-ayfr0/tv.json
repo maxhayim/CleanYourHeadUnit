@@ -2,6 +2,5 @@
   "tv": "Xiaomi TV Stick 4K (MiTV-AYFR0, soul, Amlogic), streaming stick",
   "os": "Android TV 14",
   "brand": "Xiaomi",
-  "notes": "Mi analytics, PatchWall, auto-installs (`mibox3` + `soc.amlogic`), update service; `setupwraith` does not claim HOME (kept enabled, Wi-Fi stays intact); remote Home key and CEC One Touch Play verified",
-  "readme_after": "xiaomi-mitv-afmu1"
+  "notes": "Mi analytics, PatchWall, auto-installs (`mibox3` + `soc.amlogic`), update service; `setupwraith` does not claim HOME (kept enabled, Wi-Fi stays intact); remote Home key and CEC One Touch Play verified"
 }

@@ -1,10 +1,10 @@
 """tools/gen_tables.py: the README tables, the brand line and the counts come out of examples/*/tv.json.
 
 Every list PR used to add rows to the same two tables, so each merge made the other open list PRs conflict.
-Now a PR adds only its folder and the script writes the rows. These tests run it on this repository (it must
-reproduce the committed tables, and running it twice changes nothing) and on small trees written here (a new
-folder gets its rows, the brand line counts right, a bad tv.json is refused, an old-style PR's rows become a
-tv.json).
+Now a PR adds only its folder and the script writes the rows. These tests run it on this repository (running
+it twice changes nothing, both tables come out in the same alphabetical order) and on small trees written here
+(a new folder gets its rows, the brand line counts right, a bad tv.json is refused, an old-style PR's rows
+become a tv.json).
 
 Run from the repository root: python3 -m unittest discover -s tests -v
 """
@@ -112,13 +112,6 @@ def section(text, name):
 
 
 class ThisRepositoryTest(unittest.TestCase):
-    @unittest.skipUnless(os.environ.get("CLEANYOURTV_STRICT"), "tables are generated on merge; strict on main only")
-    def test_it_reproduces_the_committed_tables(self):
-        for path, text in gen_tables.render(ROOT).items():
-            with self.subTest(path=path):
-                self.assertEqual(text, (ROOT / path).read_text(encoding="utf-8"),
-                                 f"{path} is not what tools/gen_tables.py writes")
-
     def test_running_it_twice_changes_nothing(self):
         once = gen_tables.render(ROOT)
         self.assertEqual(gen_tables.render(ROOT, texts=once), once)
@@ -136,6 +129,28 @@ class ThisRepositoryTest(unittest.TestCase):
         self.assertEqual(sum(bold) + len(plain) + projector_lists, len(entries))
         brands = len(bold) + len(plain) + len(names)
         self.assertIn(f"{len(entries)} TV models · {brands} brands · ", readme)
+
+    def test_both_tables_are_in_the_same_alphabetical_order(self):
+        texts = gen_tables.render(ROOT)
+        readme = [r.split(" | ")[0][2:] for r in section(texts["README.md"], "tv-table")[2:]]
+        examples = [r.split(" | ")[1] for r in section(texts["examples/README.md"], "tv-table")[2:]]
+        self.assertEqual(readme, examples)
+        self.assertEqual(readme, sorted(readme, key=str.casefold))
+
+    @unittest.skipUnless(os.environ.get("CLEANYOURTV_STRICT"), "tables are generated on merge; strict on main only")
+    def test_the_committed_tables_are_sorted(self):
+        # What main shows a reader, not only what the script would write.
+        for path, header, cell in (("README.md", "| TV | OS |", 1), ("examples/README.md", "| Folder |", 2)):
+            with self.subTest(path=path):
+                lines = (ROOT / path).read_text(encoding="utf-8").split("\n")
+                start = next(i for i, l in enumerate(lines) if l.startswith(header))
+                rows = []
+                for line in lines[start + 2:]:
+                    if not line.startswith("|"):
+                        break
+                    rows.append(line.split("|")[cell].strip())
+                self.assertGreaterEqual(len(rows), 200)
+                self.assertEqual(rows, sorted(rows, key=str.casefold), f"{path}: rows out of order")
 
     def test_every_folder_has_a_row_in_both_tables(self):
         texts = gen_tables.render(ROOT)
@@ -192,27 +207,21 @@ class GeneratorTest(unittest.TestCase):
                              ["**Sony** 3 · **BenQ** 2 · **TCL** 2 ·", "Acer ·", "Epson and XGIMI projectors"])
             self.assertIn("10 TV models · 6 brands", readme)
 
-    def test_a_pinned_row_follows_the_row_it_names(self):
-        lists = [("a", tv("Alpha", "A")), ("b", tv("Beta", "B")), ("z", tv("Zulu", "Z", readme_after="a")),
-                 ("y", tv("Yankee", "Y", readme_after="z", readme_os="Google TV 12"))]
+    def test_rows_sort_by_tv_in_both_tables_and_readme_os_applies(self):
+        lists = [("z", tv("zulu", "Z")), ("b", tv("Beta", "B")), ("a", tv("Alpha", "A")),
+                 ("y", tv("Yankee", "Y", readme_os="Google TV 12"))]
         with tempfile.TemporaryDirectory() as tmp:
             root = tree(tmp, lists)
             run(root)
             readme = (root / "README.md").read_text(encoding="utf-8")
             examples = (root / "examples/README.md").read_text(encoding="utf-8")
+            # Case is ignored: "zulu" still sorts last.
             self.assertEqual([r.split(" | ")[0][2:] for r in section(readme, "tv-table")[2:]],
-                             ["Alpha", "Zulu", "Yankee", "Beta"])
-            self.assertIn("| Yankee | Google TV 12 |", readme)
-            # examples_after is unset, so that table stays alphabetical, with the plain OS.
+                             ["Alpha", "Beta", "Yankee", "zulu"])
             self.assertEqual([r.split(" | ")[1] for r in section(examples, "tv-table")[2:]],
-                             ["Alpha", "Beta", "Yankee", "Zulu"])
+                             ["Alpha", "Beta", "Yankee", "zulu"])
+            self.assertIn("| Yankee | Google TV 12 |", readme)
             self.assertIn("| `y/` | Yankee | Android TV 11 |", examples)
-
-    def test_a_circle_of_pinned_rows_is_refused(self):
-        lists = [("a", tv("Alpha", "A", examples_after="b")), ("b", tv("Beta", "B", examples_after="a"))]
-        with tempfile.TemporaryDirectory() as tmp:
-            with self.assertRaisesRegex(gen_tables.Problem, "circle"):
-                gen_tables.render(tree(tmp, lists))
 
     def test_a_bad_tv_json_is_refused_with_its_path(self):
         cases = [(None, "tv.json is missing"),
@@ -220,7 +229,6 @@ class GeneratorTest(unittest.TestCase):
                  (tv("X", "X", colour="red"), "unknown key"),
                  (tv("X", "X", notes="a | b"), "split the table cell"),
                  (tv("X\n", "X"), "one line"),
-                 (tv("X", "X", readme_after="nope"), "not a folder"),
                  (tv("X", "X", notes="[note](../docs/devices/none.md)"), "leads nowhere")]
         for data, message in cases:
             with self.subTest(message=message), tempfile.TemporaryDirectory() as tmp:

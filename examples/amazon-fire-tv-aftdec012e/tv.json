@@ -3,7 +3,5 @@
   "os": "Android 11 / Fire OS",
   "brand": "Amazon Fire TV",
   "notes": "Telemetry, ACR, shopping, tutorial and content preloads disabled; debloat only, Fire OS keeps Home (see TROUBLESHOOTING, Fire TV)",
-  "readme_os": "Fire OS / Android 11",
-  "readme_after": "aiwa-ai-pont-sa",
-  "examples_after": "amazon-fire-tv-afteu014"
+  "readme_os": "Fire OS / Android 11"
 }
