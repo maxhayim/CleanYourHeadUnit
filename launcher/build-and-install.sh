@@ -6,6 +6,8 @@ cd "$(dirname "$0")"
 TOOLS="$(cd ../tools && pwd)"   # absolute, so the venv's Python doesn't warn about "../" in its prefix
 PY=$TOOLS/venv/bin/python
 [ -x "$PY" ] || PY=$TOOLS/venv/Scripts/python.exe
+# No venv yet: say how to make one (as tools/disable.sh does) instead of failing on the Windows path (#1142).
+[ -x "$PY" ] || { echo "run: python3 -m venv tools/venv && tools/venv/bin/pip install -r tools/requirements.txt" >&2; exit 1; }
 export MSYS_NO_PATHCONV=1
 # Below minSdk, `pm install` refuses the APK with INSTALL_FAILED_OLDER_SDK - and only after gradle has
 # spent a minute building and b64push has pushed the APK to the TV (#576). Ask the TV first. The
