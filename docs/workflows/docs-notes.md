@@ -10,6 +10,7 @@
   themselves go to the maintainer.
 - Several tests pin facts in `docs/devices/` notes, `PROMPT.md` and `docs/TROUBLESHOOTING.md` (the
   `tests/test_*_note.py` files). If you reword one of those passages, run the suite and keep the fact.
-- Docs and the README stay in step: a new list, theme, add-on or tool gets its row where the others are.
+- Docs and the README stay in step: a new list gets its `tv.json` (the TV tables are generated from it), and a
+  theme, add-on or tool its row where the others are.
 
 Then run the tests: `python3 -m unittest discover -s tests -v`.
