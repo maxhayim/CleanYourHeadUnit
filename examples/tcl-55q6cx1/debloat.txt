@@ -1,6 +1,6 @@
 # TCL 55Q6CX1 (55" 4K QLED, Q6C series), Europe / Germany unit: device G08, product G08_4K_GB, model "Smart TV Pro".
 # Google TV 12 (SDK 31), build STT2.221228.001, fingerprint TCL/G08_4K_GB/G08:12/STT2.221228.001/AS35:user/release-keys.
-# MediaTek MT9618 (ro.board.platform merak), 2 GB RAM, ro.adb.secure=1.
+# MediaTek MT9618 (ro.board.platform merak), 3 GB RAM, ro.adb.secure=1.
 #
 # Same G08 board family as examples/tcl-g08-eu-android12. This list is that list, tailored and verified
 # package by package on this live 55Q6CX1 unit: all 20 entries below are disabled, reboot-checked and verified.
