@@ -5,6 +5,9 @@
     <string name="feels_like">Hissedilen %1$d°</string>
     <string name="humidity">Nem %1$d%%</string>
     <string name="wind">Rüzgar %1$d km/h</string>
+    <string name="wind_mph">Rüzgar %1$d mph</string>
+    <string name="other_unit_c">%1$d°C</string>
+    <string name="other_unit_f">%1$d°F</string>
     <string name="high_low">%1$d° / %2$d°</string>
     <string name="aqi_line">Hava kalitesi %1$d · %2$s</string>
     <string name="updated">Güncelleme %1$s · Open-Meteo</string>
