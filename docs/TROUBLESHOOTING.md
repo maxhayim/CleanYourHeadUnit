@@ -176,18 +176,23 @@ Things that bit us or contributors, so they don't bite you. Commands use `tools/
   "not installed any more". Bring it back with
   `tools/tv.py 'cmd package install-existing --user 0 <package>'` (AOSP's `cmd package` has it from
   Android 8.0; the Android 6 set in [#1185](https://github.com/Gathin23/cleanyourtv/issues/1185) had no
-  such command; no TV here has run it yet). It comes back enabled, and without its data unless the
-  uninstall used `-k`. To keep it, comment its line out of your list first: otherwise `check.py` reports
-  it as back on, and `--fix` or the next `disable.sh` run disables it again. If you don't want it, let
-  the list disable it afterwards, which the TV's own settings can undo. `--fix` or that `disable.sh` run
-  first changes it from absent to enabled in the record, so `restore.sh` turns it back on too. A record
-  an older version updated, or a package that was already disabled when that run saw it, still says
-  absent, and `restore.sh` leaves it alone: `pm enable --user 0 <package>` is its undo. Two cases
-  this does not cover. An app with no copy on the system partition that only user 0 had is deleted with
-  its APK: the command answers `Package <package> doesn't exist`, and only reinstalling the APK brings
-  it back (the Toshiba's `com.hisense.business.ad`). And a `User 0:` line with
-  `installed=true hidden=true` was hidden, not uninstalled. install-existing changes nothing there even
-  though it prints `Package <package> installed for user: 0`, and the shell cannot unhide it:
+  such command; no TV here has run it yet). It comes back without its data unless the uninstall used
+  `-k`, and disabled if a list that names it has gone through `disable.sh` since it was removed: that
+  run sent it `pm disable-user --user 0`, which AOSP applies to a package removed for user 0 too (the
+  [Shield list](../examples/nvidia-shield-tv-pro-2019/debloat.txt) notes `disable.sh` reporting
+  "disabled-user" for such packages), and install-existing marks it installed without changing that
+  state. `pm list packages -d --user 0 <package>` names it if it came back disabled. To keep it, comment
+  its line out of your list, then run `tools/tv.py 'pm enable --user 0 <package>'`: with the line still
+  in, `check.py` reports it as back on, and `--fix` or the next `disable.sh` run disables it again. If
+  you don't want it, keep the line: the list disables it, or keeps it disabled, which the TV's own
+  settings can undo. `--fix` or a `disable.sh` run that finds it enabled first changes it from absent to
+  enabled in the record, so `restore.sh` turns it back on too. Until then, or in a record an older
+  version updated, it stays absent, and `restore.sh` leaves it alone: `pm enable --user 0 <package>` is
+  its undo. Two cases this does not cover. An app with no copy on the system partition that only user 0
+  had is deleted with its APK: the command answers `Package <package> doesn't exist`, and only
+  reinstalling the APK brings it back (the Toshiba's `com.hisense.business.ad`). And a `User 0:` line
+  with `installed=true hidden=true` was hidden, not uninstalled. install-existing changes nothing there
+  even though it prints `Package <package> installed for user: 0`, and the shell cannot unhide it:
   `pm unhide` needs `MANAGE_USERS`, which the shell does not hold from Android 7.0. Unhide it from the
   device-owner app that hid it, or leave it, as the
   [Chromecast with Google TV 4K list](../examples/google-chromecast-gtv-4k/debloat.txt) does with

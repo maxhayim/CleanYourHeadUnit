@@ -105,7 +105,7 @@ class CheckFixRecordTest(unittest.TestCase):
         self.tv(installed=drift.BASE, disabled=[STOCK])
         self.apply_list()
         self.assertEqual(self.record()["com.example.later"], "absent")
-        # A TV refuses pm disable-user for a package it does not have, which this fake does not; then
+        # A TV refuses pm disable-user for a package it has no copy of, which this fake does not; then
         # an update installs it, enabled.
         state = self.state()
         self.set_state(installed=state["installed"] + ["com.example.later"],
