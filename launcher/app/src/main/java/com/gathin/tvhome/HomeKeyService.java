@@ -11,6 +11,7 @@ import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
+import android.os.PowerManager;
 import android.os.SystemClock;
 import android.os.UserManager;
 import android.content.pm.PackageManager;
@@ -71,10 +72,17 @@ public class HomeKeyService extends AccessibilityService {
     private BroadcastReceiver screenOnReceiver;
     /** Stops key filtering while a game controller is connected; null unless gamepad_passthrough and key_filter, or before the unlock. */
     private GamepadPassthrough gamepads;
+    /** Screen-off receiver while guard_off_in_standby is set; null otherwise. */
+    private BroadcastReceiver standbyExit;
+    /** disableSelf is how this service leaves for standby, not the user turning it off. */
+    private boolean steppingOut;
+    /** The bound helper, so the opt-in broadcast can arm it without waiting for a new connection. */
+    private static HomeKeyService running;
 
     @Override
     protected void onServiceConnected() {
         super.onServiceConnected();
+        running = this;
         settingsScancodes = getResources().getIntArray(R.array.settings_key_scancodes);
         // The service is directBootAware: Android 11 skips a service that is not while the user is still
         // locked at boot, writes accessibility_enabled=0 and, on TCL G03 firmware, never binds it after the
@@ -105,13 +113,58 @@ public class HomeKeyService extends AccessibilityService {
         unlockReceiver = null;
     }
 
+    /** The opt-in broadcast: arm this binding now, or drop the receiver if the opt-in was turned off. */
+    static void applyStandbyOptIn() {
+        HomeKeyService service = running;
+        if (service == null) return;
+        if (GuardKeep.offInStandby(service)) service.armStandbyExit();
+        else service.disarmStandbyExit();
+    }
+
     @Override
     public void onDestroy() {
+        if (running == this) running = null;
         stopWaitingForUnlock();
         if (screenOnReceiver != null) unregisterReceiver(screenOnReceiver);
+        if (standbyExit != null) {
+            try {
+                unregisterReceiver(standbyExit);
+            } catch (RuntimeException ignored) {
+            }
+            standbyExit = null;
+        }
         if (gamepads != null) gamepads.stop();
         if (consumeVolumeKeys) VolumeKeys.stop();
         super.onDestroy();
+    }
+
+    /** Some TCL boards never wake from the remote while this helper stays bound with the screen off. */
+    private void armStandbyExit() {
+        if (standbyExit != null || !GuardKeep.offInStandby(this)) return;
+        standbyExit = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                if (!Intent.ACTION_SCREEN_OFF.equals(intent.getAction())) return;
+                leaveForStandby();
+            }
+        };
+        registerReceiver(standbyExit, new IntentFilter(Intent.ACTION_SCREEN_OFF));
+        PowerManager power = getSystemService(PowerManager.class);
+        if (power != null && !power.isInteractive()) leaveForStandby();
+    }
+
+    private void disarmStandbyExit() {
+        if (standbyExit == null) return;
+        try {
+            unregisterReceiver(standbyExit);
+        } catch (RuntimeException ignored) {
+        }
+        standbyExit = null;
+    }
+
+    private void leaveForStandby() {
+        steppingOut = true;
+        GuardKeep.stepOut(this);
     }
 
     private void loadConfig() {
@@ -155,6 +208,7 @@ public class HomeKeyService extends AccessibilityService {
             setServiceInfo(info);
         }
         if (!stockHome.isEmpty() || !powerOnLiveTv.isEmpty()) probeAtBoot();
+        armStandbyExit();
         holdAppKeys = RemoteKeys.parseHoldAppKeys(config.appKeys);
         holdAppScancodes = RemoteKeys.parseHoldAppScancodes(config.appKeys);
         // gamepad_passthrough, off by default. Only with key_filter on: off, the service never filters keys.
@@ -209,7 +263,7 @@ public class HomeKeyService extends AccessibilityService {
     /** Unbound by Android: the user turned the helper off, so Home doesn't put it back (ServiceRepair). */
     @Override
     public boolean onUnbind(Intent intent) {
-        if (repairRecord) ServiceRepair.disconnected(this, getClass());
+        if (repairRecord && !steppingOut) ServiceRepair.disconnected(this, getClass());
         return super.onUnbind(intent);
     }
 
