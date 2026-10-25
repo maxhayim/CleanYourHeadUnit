@@ -13,10 +13,13 @@
 # settings apps and all com.mediatek.*: they drive HDMI, the tuner, Bravia Sync, updates and the remote.
 # Kept by owner's choice: voice assistant (katniss, voicesearch, assistantadapter), Chromecast built-in
 # (mediashell) and firmware updates.
-# Already disabled at the factory: com.sony.dtv.promos, com.sony.dtv.b2b.vendorprotocol,
-# com.sony.dtv.b2b.softap, com.apple.atve.sony.appletv, the my5/itv/ard/all4/iplayer/sounds launchers,
-# com.youview.poa, de.hdplus.tvapp.androidtv, com.sony.dtv.seeds.iot, com.sonypicturescore.
+# Already disabled at the factory: com.sony.dtv.b2b.softap, com.apple.atve.sony.appletv, the
+# my5/itv/ard/all4/iplayer/sounds launchers, com.youview.poa, de.hdplus.tvapp.androidtv.
 # Not in this list, so restore.sh leaves them as they are.
+# Also off at the factory here, but in the list below for the units that ship them enabled:
+# com.sony.dtv.promos, com.sony.dtv.b2b.vendorprotocol, com.sony.dtv.seeds.iot, com.sonypicturescore.
+# The recovery record disable.sh writes keeps them disabled on undo; with no record, restore.sh
+# enables every listed package, these four included.
 #
 # Live TV in the launcher: set live_tv_package to com.sony.dtv.tvx and hide it; Inputs lists HDMI 1-4 and
 # AV from the TV input framework. Launcher installed with the Input-button service (INPUT_KEY_SERVICE=1).
