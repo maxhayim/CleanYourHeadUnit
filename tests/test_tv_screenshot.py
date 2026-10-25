@@ -162,6 +162,10 @@ class ScreenshotTest(unittest.TestCase):
                                           capture=b"", screencap_says="  rc=127\n")
             self.assertEqual(code, 1)
             self.assertIn("exit status 127", err)
+            # The status line is matched after stripping, so it is dropped from the error text the
+            # same way: an indented "rc=127" should not come back as the screencap output.
+            self.assertNotIn("rc=127", err)
+            self.assertIn("no output", err)
 
     def test_a_damaged_pull_is_not_passed_off_as_a_png(self):
         with tempfile.TemporaryDirectory() as tmp:
