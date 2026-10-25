@@ -22,8 +22,9 @@ owns, and a fix that skipped the checks would take that TV off Wi-Fi with no way
 Exit codes: 0 in sync (or fixed), 1 drift, an incomplete fix, or packages a safety check left on,
 2 the TV or the list could not be read, which includes ADB timing out or failing partway (after which a
 --fix may be partial, and the next check says what is left), or the command line asked for something this
-script does not do. That last one matters: README.md tells an owner to run this from a weekly job and hear
-about it on exit 1, so a mistyped flag must not come back as drift.
+script does not do, which includes naming a launcher the TV does not have. That last one matters:
+README.md tells an owner to run this from a weekly job and hear about it on exit 1, so a mistyped flag
+must not come back as drift, nor a mistyped launcher as "nothing drifted".
 """
 import os
 import re
@@ -288,6 +289,17 @@ def main():
         return 2
     list_path = args[0]
     preferred = args[1] if len(args) == 2 else None
+    # The launcher package is judged here as well, not only in launcher_to_use, which runs under
+    # --fix and only once Home has drifted. A second argument that is no installed package turns the
+    # Home check off (expected_launcher has nothing to compare Home with), so a typo there, or the
+    # package/activity form the report prints Home in, came back as "nothing drifted", exit 0.
+    if preferred and not recovery.PACKAGE_RE.fullmatch(preferred):
+        if "/" in preferred and recovery.PACKAGE_RE.fullmatch(home_of(preferred)):
+            why = f"{preferred} is a Home activity, not a package: pass {home_of(preferred)}"
+        else:
+            why = f"not a package name: {preferred!r}"
+        sys.stderr.write(f"check.py: {why}\n{USAGE}")
+        return 2
     # read_list validates every name before anything is sent to the TV: its entries end up in the
     # TV's shell, and a list edited by hand since then is not to be trusted.
     try:
@@ -298,6 +310,11 @@ def main():
         sys.stderr.write(f"could not read {list_path} ({e.strerror or e}). Nothing was checked or changed: "
                          f"pass the debloat list this TV was cleaned with, e.g. "
                          f"examples/<your tv>/debloat.txt.\n")
+        return 2
+    except SystemExit as e:
+        # The same for a line that is not a package name and for a list with every line commented
+        # out: read_list stops with a message, which Python turns into exit 1.
+        sys.stderr.write(f"{e}. Nothing was checked or changed.\n")
         return 2
     core = recovery.core_packages(listed)
     if core:
@@ -313,7 +330,8 @@ def main():
     # partway, and AdbTimeoutError and DeviceAuthError. Left alone they end the run with a traceback
     # and exit 1, which a cron job reads as drift, so every Exception here is exit 2, the TV could
     # not be read. SystemExit and KeyboardInterrupt are not Exceptions: tv.py's own exits (TV_HOST
-    # unset), the refusals in recovery.py and in this file, and Ctrl-C still stop the run as before.
+    # unset), the refusals in recovery.py and in this file once --fix has started, and Ctrl-C still
+    # stop the run as before.
     probe = "tools/venv/bin/python -I tools/tv.py --probe"
     try:
         dev = recovery.connect()
@@ -329,11 +347,26 @@ def main():
         return 2
     fixing = False
     try:
-        _, _, home, back_on, gone, home_drifted, expected = inspect(dev, listed, preferred)
+        installed, _, home, back_on, gone, home_drifted, expected = inspect(dev, listed, preferred)
+        if preferred and preferred not in installed:
+            # The other half of the launcher check before the list was read: only the TV can say
+            # whether the package is there.
+            sys.stderr.write(f"{preferred} is not installed on this TV, so Home cannot be checked "
+                             f"against it; there is no report and nothing was changed. Check the "
+                             f"package name of the launcher Home should be on, and run this again.\n")
+            return 2
         code = report(list_path, listed, home, back_on, gone, home_drifted, expected)
         if code and wanted:
             fixing = True
             code = fix(dev, listed, back_on, home_drifted, preferred)
+    except SystemExit as e:
+        # recovery.query_packages stops with its own message when the TV answers no package at all:
+        # the TV could not be read, so exit 2, not the 1 Python gives that message. Under --fix the
+        # exits keep their code, as above.
+        if fixing:
+            raise
+        sys.stderr.write(f"{e}\n")
+        return 2
     except Exception as e:
         why = f"{type(e).__name__}: {e}"
         if fixing:
