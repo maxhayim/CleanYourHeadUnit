@@ -876,6 +876,28 @@ count on reaching Settings by hand. `examples/xiaomi-mitv-aesp0` is the one list
 package (its second set, in daily use since 21 Oct 2026); carrying that line to a set whose settings app
 is Xiaomi's takes Settings with it.
 
+## Settings freezes, then closes, in Accessibility
+
+The highlight passes over Accessibility > Text-to-speech output and Settings stops responding; a few seconds
+later Android closes it ("Input dispatching timed out"). TV Settings previews the focused row, and that row's page
+starts Google's speech engine (`com.google.android.tts`, "Speech Recognition & Synthesis" in the Play Store) to
+name the current voice. On a Hisense 75U75N (`hengshan`, Google TV 12, `STT2.230310.002`, 23 and 24 October 2026)
+the engine took more than ten seconds to start, and leaving the row before it answered left Settings waiting for
+it. The debloat does not touch the engine. The ANR report names the wait:
+
+```sh
+tools/tv.py 'dumpsys dropbox --print system_app_anr' | grep -m2 TextToSpeech
+#   at android.speech.tts.TextToSpeech.shutdown(TextToSpeech.java:914)
+#   at com.android.tv.settings.system.TextToSpeechFragment.onDestroy(TextToSpeechFragment.java:218)
+```
+
+Clearing the engine's data fixed it on that set; the engine downloads its voice again the first time it is used:
+
+```sh
+tools/tv.py 'pm clear com.google.android.tts'
+```
+
+The Play Store had no newer engine there. Without the reset, wait on the row until the voice shows before moving on.
 ## The router's domain rules stop applying to the TV after Private DNS
 
 Private DNS in hostname mode sends every lookup over DNS-over-TLS straight to the resolver, past the
