@@ -57,7 +57,7 @@ com.google.android.syncadapters.calendar
 com.google.android.tts
 
 # Google TV setup wizard: disable only after the Wi-Fi ownership check above and after the new Home works
-com.google.android.tungsten.setupwraith
+com.google.android.tungsten.setupwraith   # costs phone casting after a reboot (the Cast receiver reads its credentials from setupwraith)
 
 # Stock Google TV Home: build-and-install.sh handles this after it confirms the replacement launcher
 # com.google.android.apps.tv.launcherx
