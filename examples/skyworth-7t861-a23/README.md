@@ -4,35 +4,28 @@ Tested on Skyworth 7T861_A23 (MediaTek MT9638 / mt5872, Android 10, build `eng.n
 
 ## Safety Warning
 
-**Do not disable `com.skyworth.officehomepage`.**
-Disabling the stock home app on this firmware causes the TV to hang indefinitely on the SKYWORTH boot logo upon restart. The system will fail to start the network stack, disabling port 5555. Recovery requires entering Recovery Mode and performing a factory reset ("Wipe data / factory reset").
+> [!CAUTION]
+> **Do not disable `com.skyworth.officehomepage`.**
+> Disabling the stock home app on this firmware causes the TV to hang indefinitely on the SKYWORTH boot logo upon restart. The system will fail to start the network stack, disabling port 5555. Recovery requires entering Recovery Mode and performing a factory reset ("Wipe data / factory reset").
 
-## Installing CleanYourTV Launcher safely
+## Applying the debloat list
 
-On this Coocaa OS build, Home is managed by the system property `persist.service.homepage.pkg` and `persist.service.model.pkg`, rather than Android's standard Home intent chooser. In addition, Coocaa OS terminates background apps whose package name does not begin with manufacturer prefixes (`coocaa`, `skyworth`, `tianci`, `android`).
+Everything in [`debloat.txt`](debloat.txt) is disabled via `pm disable-user`, never uninstalled.
 
-1. **Build Launcher with Coocaa package ID**:
-   ```bash
-   cd launcher
-   ./gradlew assembleRelease -PlauncherApplicationId=com.coocaa.tvhome
-   ```
-2. **Install the launcher and coocaa-home-shim**:
-   ```bash
-   adb push app/build/outputs/apk/release/app-release.apk /data/local/tmp/tvhome.apk
-   adb shell pm install -r /data/local/tmp/tvhome.apk
+- **Apply debloat list**:
+  ```bash
+  TV_HOST=<tv-ip> tools/disable.sh examples/skyworth-7t861-a23/debloat.txt
+  ```
+- **Restore debloat list**:
+  ```bash
+  TV_HOST=<tv-ip> tools/restore.sh examples/skyworth-7t861-a23/debloat.txt
+  ```
 
-   # Install coocaa-home-shim (com.ccos.tv.homepage)
-   adb push coocaa-home-shim.apk /data/local/tmp/shim.apk
-   adb shell pm install -r /data/local/tmp/shim.apk
-   ```
-3. **Point Home properties to the shim**:
-   ```bash
-   adb shell setprop persist.service.homepage.pkg com.ccos.tv.homepage
-   adb shell setprop persist.service.homepage.cls com.ccos.tv.homepage.LaunchActivity
-   adb shell setprop persist.service.model.pkg com.ccos.tv.homepage
-   adb shell setprop persist.service.model.cls com.ccos.tv.homepage.LaunchActivity
-   ```
-4. **Apply debloat list**:
-   ```bash
-   TV_HOST=<tv-ip> tools/disable.sh examples/skyworth-7t861-a23/debloat.txt
-   ```
+All 16 packages in `debloat.txt` have been verified across a cold reboot. Specifically, `com.skyworth.device` and `com.coocaa.theme_package_ccos_nine` remain disabled with Bluetooth remote control, Wi-Fi, audio, and settings working normally.
+
+## Replacing the Home Launcher
+
+On Coocaa OS, the stock launcher cannot be replaced via standard Android Home chooser without bootlooping. Replacing the launcher safely requires building under the Coocaa package ID, using `coocaa-home-shim`, and pointing the `persist.service.homepage` properties.
+
+Detailed instructions, boot observations, and property undo commands are documented in:
+👉 [`docs/devices/skyworth-7t861-a23.md`](../../docs/devices/skyworth-7t861-a23.md)
