@@ -527,6 +527,44 @@ Things that bit us or contributors, so they don't bite you. Commands use `tools/
   workaround not working. An app started in the foreground is unaffected, and the side effect, that
   the home-screen channels only refresh while Stremio is open, costs nothing once the recommendation
   rows are disabled anyway.
+- **An app you keep runs in the background after every boot, or stays in memory with a foreground service**,
+  seen with streaming apps on a Noblex NoblexTV (`shinjuku`, Android TV 11, `RTO9.230812.001`) and a
+  Tornado 65UA1400E (Android TV 11, `RTM5.220609.106`), and with TvSettings on a
+  [TCL G09](../examples/tcl-g09-google-tv/README.md) (Google TV 12). On Android 9 and newer the package can
+  stay installed and still be kept from running in the background, the same fix as for Stremio above and
+  saved with `write-settings` for the same reason:
+  `tools/tv.py 'cmd appops set <package> RUN_ANY_IN_BACKGROUND ignore; cmd appops write-settings'`. The app
+  still opens and plays on screen. Once it leaves the screen, Android holds back its jobs and alarms, takes
+  away its foreground services and, if the app targets Android 8 or newer, refuses its background service
+  starts. Its home-screen channels and push features then only update while it is open, and a music app
+  loses the foreground service that keeps it playing once you leave it. The op does not stop its boot
+  receiver, so the app still starts at every boot and then drops to cached, and one that opens its own
+  screen at boot, like the waipu app on the [waipu.tv Stick](devices/waipu-tv-stick.md), still does.
+  Android accepts the op without an error but still runs the jobs and alarms of a package whose uid is
+  below 10000 (`tools/tv.py 'pm list packages -U <package>'`), a persistent one
+  (`tools/tv.py 'dumpsys package <package>' | grep PERSISTENT`) and one on the Doze allowlist
+  (`tools/tv.py 'dumpsys deviceidle whitelist'`, which only reads the list when nothing follows it), so
+  check those first. Undo:
+  `tools/tv.py 'cmd appops set <package> RUN_ANY_IN_BACKGROUND allow; cmd appops write-settings'`.
+  When the cost is a foreground service the app has no reason to hold, as on the G09
+  (`tools/tv.py 'dumpsys activity services <package>'` shows `isForeground=true` long after the app was
+  last opened), take away only the foreground:
+  `tools/tv.py 'cmd appops set <package> START_FOREGROUND ignore; cmd appops write-settings'`. Android only
+  reads this op when the app asks for the foreground, so a service that is already in the foreground stays
+  there until it next starts: reboot with `tools/tv.py --reboot`, then check
+  `tools/tv.py 'dumpsys activity services <package>'` again, which should no longer show `isForeground=true`.
+  From then on the service runs as an ordinary one that Android can reclaim. Use `ignore`, never `deny`:
+  with `deny`, the app's request for the foreground throws a `SecurityException`, which crashes an app that
+  does not expect it. Leave the remote, keyboard, cast and input services alone. Undo:
+  `tools/tv.py 'cmd appops set <package> START_FOREGROUND allow; cmd appops write-settings'`.
+  App standby buckets (`am set-standby-bucket`) do nothing useful on a TV: whatever you set, Android keeps
+  a system app with a uid below 10000 at `exempted` and one with no phone-style `LAUNCHER` activity no
+  lower than `active`, and it treats a TV on mains power as charging
+  (`tools/tv.py 'dumpsys alarm' | grep Parole` reads `App Standby Parole: true` on a Chromecast with Google
+  TV 4K, `sabrina`, `UTTC.250917.004`), which lifts the bucket limits on alarms and on every job outside
+  `restricted`, a bucket the app leaves the next time it is opened.
+  `tools/tv.py 'am get-standby-bucket <package>'` only reads the bucket (5 is exempted, 10 active), and
+  `tools/tv.py 'am set-standby-bucket <package> active'` puts back one that was set.
 - **Every package in a batch is enabled again after the reboot that follows it**, seen on a Hisense
   HiSmartTV A4 (xiaoyushan, Android TV 11, `RTT2.221108.001` / `00.00.01.18`). It looks like firmware
   that resets the list at every boot, but it is the timing of the reboot. Android writes package state
