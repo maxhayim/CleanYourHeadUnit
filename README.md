@@ -809,6 +809,13 @@ in the user profile. The risk is disabling something the TV leans on, which is w
 applied in small batches with a restore script ready. The TV's own Settings → Apps page can
 re-enable packages even without the tools.
 
+If the TV no longer starts far enough for that, or for ADB, a factory reset from its recovery menu is
+usually the way back ([#1578](https://github.com/Gathin23/cleanyourtv/issues/1578)): everything these
+tools change lives in the user data the reset wipes, so every disabled app comes back and the new
+launcher is gone, along with your own apps and accounts. A TV that still restarts in a loop after the
+reset points to the hardware rather than the debloat ([#1592](https://github.com/Gathin23/cleanyourtv/issues/1592));
+[Troubleshooting](docs/TROUBLESHOOTING.md#working-on-the-tv) has the cases seen so far.
+
 </details>
 
 <details>
