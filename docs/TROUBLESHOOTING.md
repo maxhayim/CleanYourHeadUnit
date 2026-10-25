@@ -556,6 +556,20 @@ Things that bit us or contributors, so they don't bite you. Commands use `tools/
   HDMI inputs. Set `power_on_home` (`config.xml` or a theme) with `HOME_KEY_SERVICE=1`: until the first
   key press after boot or screen-on, `HomeKeyService` sends that Live TV window back to Home. Ask the
   person first; someone who watches broadcast TV may want the opposite, `boot_to_live_tv`.
+- **A third-party screensaver never shows**, seen on a TCL 65C745 (`G05_4K_GB`, Google TV 11, `AR2101`):
+  the TV starts dreaming after the timeout and wakes up in the same millisecond, so nothing appears.
+  `logcat` shows `DreamController: Unable to bind dream service` right after
+  `[TclAppBoot] ... calleeComponent = 'com.neilturner.aerialviews/.ui.screensaver.DreamActivity', bootType =
+  'bind_service', isAutoStart = 'true', isAllow = 'false', reason = 'callee_does't_have_OP_AUTO_START_permission.'`:
+  the firmware will not start the screensaver app's process to bind it. Allowing the op for that app only
+  and saving it (`tools/tv.py 'appops set <package> APP_AUTO_START allow; appops write-settings'`) fixed it,
+  and it still bound after a reboot. Safety Guard (`com.tcl.guard`, disabled by the TCL lists here) is not
+  the cause: enabling it again changed nothing. The launcher's own Clock screensaver is not affected: Home
+  is already running, so binding `ClockDream` starts nothing (checked on the same TV, with the launcher's
+  `APP_AUTO_START` at `ignore`). To test without waiting for the timeout:
+  `tools/tv.py 'am start -n com.android.systemui/.Somnambulator'`, then
+  `tools/tv.py 'dumpsys dreams | grep mCurrentDreamName'`. The key helpers hit the same denial: see
+  [Accessibility helper enabled but the remote button does nothing](#accessibility-helper-enabled-but-the-remote-button-does-nothing).
 
 ## Accessibility helper enabled but the remote button does nothing
 
