@@ -152,12 +152,16 @@ def screenshot_args(rest):
     """`<local.png> [KEY ...] [--wait SECONDS]` into (local, keys, wait), or a usage error before connecting.
 
     KEY is an Android key name without the KEYCODE_ prefix (HOME, DPAD_RIGHT), a full name (KEYCODE_BACK)
-    or a numeric keycode (83). The screenshot is taken --wait seconds after the last key (default 1)."""
-    local, keys, wait = None, [], 1.0
+    or a numeric keycode (83). The screenshot is taken --wait seconds after the last key (default 1). With no
+    keys, --wait still pauses before the capture, so a screen that is still loading can settle; without it,
+    no keys means no pause."""
+    local, keys, wait = None, [], None
     i = 0
     while i < len(rest):
         arg = rest[i]
-        if arg == "--wait" and i + 1 < len(rest):
+        if arg == "--wait":
+            if i + 1 == len(rest):
+                usage_error("--wait needs a number of seconds")
             try:
                 wait = float(rest[i + 1])
             except ValueError:
@@ -176,6 +180,8 @@ def screenshot_args(rest):
         i += 1
     if local is None:
         usage_error("--screenshot needs the file to save to")
+    if wait is None:
+        wait = 1.0 if keys else 0.0
     return local, keys, wait
 
 
@@ -189,7 +195,7 @@ def keyevent(name):
     return name if name.isdigit() or name.startswith("KEYCODE_") else "KEYCODE_" + name
 
 
-def screenshot(dev, local, keys=(), wait=1.0):
+def screenshot(dev, local, keys=(), wait=0.0):
     """Press `keys`, then capture the TV screen into `local`. Returns 0, or 1 when the capture failed or
     came back empty."""
     # Agents pass paths like shots/01-home.png before that folder exists, and the pull then fails
@@ -199,7 +205,7 @@ def screenshot(dev, local, keys=(), wait=1.0):
         if i:
             time.sleep(KEY_GAP_S)
         dev.shell(f"input keyevent {keyevent(key)}")
-    if keys:
+    if wait:
         time.sleep(wait)
     # The exit status tells a capture that failed (no file to pull) from one that came back empty: with
     # Netflix in front a TCL C755 exits 1 and leaves a 0-byte file, which is the empty case below.
