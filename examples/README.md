@@ -367,6 +367,7 @@ Notes for models that have no tested list yet live in [`docs/devices/`](../docs/
 - [Xiaomi MiTV4I (`magnolia`)](../docs/devices/xiaomi-mitv4i-magnolia.md), Android TV 9, firmware `PI.3698`: launcher-only setup, verified dock and app-grid order, HDMI/AV inputs; no debloat list tested.
 
 - [Tuvio TQ55UFGSV1](../docs/devices/tuvio-tq55ufgsv1.md) (Yandex TV, CVTE `CV9632`, MediaTek MT9632, Android 11 `RP1A.200720.011`, 32-bit only): ADB only through the CVTE service menu; the Yandex Home was kept on purpose because Alice and the kids' feed live in it; a network block cannot separate its ad rows from content (IPv6, own DNS); adopted storage is impossible (no `default-key` target). Owner observations; one disabled package, no several-day list.
+- [Whaley WTV55K1](../docs/devices/whaley-wtv55k1.md) (China, MStar `helios`, Android 5.0.2): `pm disable-user` is refused with a SecurityException on this firmware, so the owner hid 17 packages with `pm hide` instead (reversible with `pm unhide`, survives reboot); the `*.aginomoto.com`, `scs.openspeech.cn` and `ic.tv.aliyun.com` telemetry (30+ DNS queries/hour from boot) stopped; owner report, no list the repo tools can apply.
 
 To add your TV, see [CONTRIBUTING.md](../CONTRIBUTING.md). The quickest way to get a list is to
 run the prompt in [PROMPT.md](../PROMPT.md) and copy the packages your assistant disabled.
