@@ -6,19 +6,20 @@ data partition, 32-bit ARM. One evening of use, one reboot after the cleanup.
 
 ## What was disabled
 
-Batches 1 and 2 of `debloat.txt` were applied (batches 3 and 4 were not), with these differences:
+Batches 1 and 2 of `debloat.txt` were applied (batches 3 and 4 were not; in batch 2 the owner's own call on `youtube.tvmusic` is below), with these differences:
 
-- Kept on purpose (the owner's family uses them): Prime Video, YouTube Music (`youtube.tvmusic`, in batch 2), the
-  Assistant, Chromecast and Miracast/AirPlay (batch 3, none of it applied) and Mediaset Infinity
-  (`it.mediaset.infinitytv`, in batch 4).
+- Kept on purpose (the owner's family uses them): Prime Video, the Assistant,
+  Chromecast and Miracast/AirPlay (batch 3, none of it applied) and Mediaset Infinity (`it.mediaset.infinitytv`,
+  in batch 4).
 - Batch 5 is new, from this unit.
 - Also disabled by the owner's choice, not in the list: `com.homwee.dmt.upgrade` (firmware updater; keeping it enabled
   is preferred), `com.google.android.tungsten.setupwraith` and `com.google.android.youtube.tv`.
   - setupwraith: `dumpsys wifi` showed no saved network owned by it; Home stayed on the launcher afterwards and
     after a reboot.
   - `com.google.android.youtube.tv` was disabled only after SmartTube was installed and played a video.
-    Afterwards `com.google.android.youtube.tvmusic` showed as disabled too, although it was kept; it was re-enabled
-    by hand and the cause is not confirmed.
+- YouTube Music (`com.google.android.youtube.tvmusic`, in batch 2) was disabled by the owner by hand at one point
+  during the session, and re-enabled afterwards. That was the owner's own choice, not a side effect of disabling
+  `com.google.android.youtube.tv`.
 - 27 packages are disabled in total, 2 of them already off before the cleanup. The list was identical after a reboot.
 
 ## Launcher
