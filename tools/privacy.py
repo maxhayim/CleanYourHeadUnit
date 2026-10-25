@@ -100,6 +100,18 @@ TITLES = (
 # `dumpsys package` is slow on old firmware; a TV with fifty name matches is not worth ten minutes.
 MAX_PROBES = 25
 SYSTEM_UID = 1000
+# The package's own UID line in `dumpsys package`: `userId=` up to Android 13, `appId=` from 14. It is
+# anchored to the start of a line, so an install permission that differs for a second user, which
+# ends with ", userId=10", is never read as the package's UID.
+UID_RE = re.compile(r"^\s*(?:userId|appId)=(\d+)", re.M)
+# Only the package's own "requested permissions" block counts, as in tools/check.py: the same dump
+# prints its shared user's permissions, and on a system-UID package those include RECORD_AUDIO.
+REQUESTED_RE = re.compile(r"requested permissions:(.*?)"
+                          r"(?:\n\s*(?:install|runtime) permissions:|\n\s*User \d+:|$)", re.S)
+# Android 5.x prints no "requested permissions" block, only the package's own "grantedPermissions:"
+# at the end of its section. A package in a shared UID has none there: on 5.x its grants are the
+# shared user's, printed under "Shared users:", so probe() reads no block past that header.
+GRANTED_RE = re.compile(r"\n {4}grantedPermissions:\n((?: {6}\S.*(?:\n|$))*)")
 
 
 def shell(dev, command):
@@ -167,9 +179,11 @@ def probe(dev, name):
     uid = None
     declared = None
     if dump:
-        found = re.search(r"\buserId=(\d+)", dump)
+        found = UID_RE.search(dump)
         uid = int(found.group(1)) if found else None
-        declared = "RECORD_AUDIO" in dump
+        own = dump.split("\nShared users:", 1)[0]
+        block = REQUESTED_RE.search(own) or GRANTED_RE.search(own)
+        declared = bool(block and "android.permission.RECORD_AUDIO" in block.group(1))
     ops = shell(dev, f"appops get {name} RECORD_AUDIO")
     return {"uid": uid, "declared": declared, "appops": ops}
 
