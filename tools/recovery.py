@@ -121,16 +121,37 @@ def shell(dev, command):
     return (dev.shell(command, read_timeout_s=120.0) or "").strip()
 
 
+def package_names(answer):
+    return {line.split(":", 1)[1].strip() for line in answer.splitlines()
+            if line.startswith("package:")}
+
+
 def query_packages(dev):
-    installed = {line.split(":", 1)[1].strip()
-                 for line in shell(dev, "pm list packages").splitlines()
-                 if line.startswith("package:")}
+    """The packages installed for user 0, and the ones disabled for user 0.
+
+    Every command these tools send acts on user 0: `pm disable-user --user 0`, and `pm enable`,
+    which means user 0 when no user is given. Without --user, Android 14's pm answers for every user
+    on the TV and merges the answers (AOSP's android11-release still answered for user 0 alone), so
+    on a TV with a second user a package that only the other user has disabled shows under -d, and
+    one installed only for the other user shows as installed. The Chromecast with Google TV 4K this
+    was tried on has such a user, a dormant profile with the id 10. Recorded from the merged answers,
+    a package the owner had on for user 0 would be "disabled", and restore would leave it off for
+    good. check.py reads the same two sets, so its drift report and its read-back after --fix are
+    about user 0 too.
+    """
+    scope = " --user 0"
+    installed = package_names(shell(dev, "pm list packages --user 0"))
+    if not installed:
+        # A pm that does not take --user prints an error or its usage instead of package lines, and
+        # only that falls back to the plain queries. An empty -d --user 0 is no reason to: a TV
+        # nothing was disabled on yet answers exactly that, and the merged -d would bring the other
+        # user's disabled packages into the record on the very first run.
+        scope = ""
+        installed = package_names(shell(dev, "pm list packages"))
     if not installed:
         raise SystemExit("the TV returned no packages, so nothing was recorded and nothing will be "
                          "disabled. Check the connection (tools/tv.py --probe) and try again.")
-    disabled = {line.split(":", 1)[1].strip()
-                for line in shell(dev, "pm list packages -d").splitlines()
-                if line.startswith("package:")}
+    disabled = package_names(shell(dev, f"pm list packages -d{scope}"))
     return installed, disabled
 
 

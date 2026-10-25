@@ -113,8 +113,18 @@ def connect():
 
 
 def query_packages(dev):
+    # User 0's packages, read the way tools/recovery.py reads them and for the same reason: without
+    # --user, Android 14's pm merges the answers of every user on the TV, so a package that only a
+    # second user has disabled would be reported as disabled here, and --write would leave it out of
+    # the list as already off. The plain queries are only the fallback for a pm that answers
+    # --user 0 with no package lines at all, never for an empty -d.
+    scope = " --user 0"
+    answer = shell(dev, "pm list packages --user 0")
+    if not any(line.startswith("package:") for line in answer.splitlines()):
+        scope = ""
+        answer = shell(dev, "pm list packages")
     installed = []
-    for line in shell(dev, "pm list packages").splitlines():
+    for line in answer.splitlines():
         if not line.startswith("package:"):
             continue
         name = line.split(":", 1)[1].strip()
@@ -124,7 +134,7 @@ def query_packages(dev):
         raise SystemExit("the TV returned no packages, so there is nothing to audit. Check the "
                          "connection (tools/tv.py --probe) and try again.")
     disabled = {line.split(":", 1)[1].strip()
-                for line in shell(dev, "pm list packages -d").splitlines()
+                for line in shell(dev, f"pm list packages -d{scope}").splitlines()
                 if line.startswith("package:")}
     return installed, disabled
 
