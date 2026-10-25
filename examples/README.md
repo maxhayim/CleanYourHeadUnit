@@ -331,6 +331,7 @@ Notes for models that have no tested list yet live in [`docs/devices/`](../docs/
 - [Xiaomi TV A Pro 43-inch](../docs/devices/xiaomi-tv-a-pro-43.md) (`MiTV-MZTU0` / `river`), Google TV 14, firmware `UKN1.240806.017.V816.0.26.6.2.6.URTMIXM`: setupwraith owned the saved Wi-Fi, so Ethernet had to be active before disabling it; the replacement launcher remained Home after reboot; one-session report, no several-day list yet.
 
 - [Acer AR55AR2851UDFL 55"](../docs/devices/acer-ar55ar2851udfl.md), India, SCBC `R4` / Realtek `rtd2851m`, Android TV 14 `UKR1.260308` / `3272`: second unit near the AR55AR2851UDPRO example; 11 owner-approved packages disabled, Home and key functions checked after two warm reboots and one owner-reported full power-off; two days of testing, with package-state verification and longer follow-up pending, so no example list yet.
+- [Whaley WTV55K1](../docs/devices/whaley-wtv55k1.md) (China, MStar `helios`, Android 5.0.2): `pm disable-user` is refused with a SecurityException on this firmware, so the owner hid 17 packages with `pm hide` instead (reversible with `pm unhide`, survives reboot); the `*.aginomoto.com`, `scs.openspeech.cn` and `ic.tv.aliyun.com` telemetry (30+ DNS queries/hour from boot) stopped; owner report, no list the repo tools can apply.
 
 To add your TV, see [CONTRIBUTING.md](../CONTRIBUTING.md). The quickest way to get a list is to
 run the prompt in [PROMPT.md](../PROMPT.md) and copy the packages your assistant disabled.
