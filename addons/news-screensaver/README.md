@@ -16,8 +16,8 @@ Package `com.gathin.newsdream`. You see it as **News** (Danish: **Nyheder**) in 
 cleanyourtv's Home it is also a module card, **News**: OK shows the headlines at once, Left and Right page through
 them, and any other key goes back to Home, as in the screensaver.
 
-
 ![The news screensaver on a Philips TV: a TV 2 headline with its QR code](screenshot.jpg)
+
 ## What you can set
 
 | Setting | Default | Where |
