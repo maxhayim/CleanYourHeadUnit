@@ -79,7 +79,7 @@ def main():
     p.add_argument("--port", type=int, default=15555, help="local port to listen on (default 15555; 0 picks one)")
     args = p.parse_args()
     if not args.tv_host:
-        p.error("give the TV's IP address, e.g.  tools/relay.py 192.168.1.50")
+        p.error("give the TV's IP address, e.g.  tools/venv/bin/python -I tools/relay.py 192.168.1.50")
     # The same order as tv.py and adb-closed.py (#997). With 5555 fixed, a TV whose adbd has a port of its
     # own (5877 on the Wanbo T6R Max) was relayed to 5555 whatever TV_HOST and TV_PORT said.
     args.tv_host, endpoint_port = split_host_port(args.tv_host)
@@ -99,7 +99,7 @@ def main():
     env_host = split_host_port(os.environ.get("TV_HOST", ""))[0]
     if port_from_env and (args.tv_port == args.port or (env_host in loopback and args.tv_host not in loopback)):
         p.error(f"TV_PORT={args.tv_port} is a relay's port, set for the tools: unset TV_HOST TV_PORT in this "
-                "terminal, or give the TV's port, e.g.  tools/relay.py 192.168.1.50:5555")
+                "terminal, or give the TV's port, e.g.  tools/venv/bin/python -I tools/relay.py 192.168.1.50:5555")
     if args.tv_host in loopback and args.tv_port == args.port:
         p.error("that is the relay itself: give the TV's IP address")
 
