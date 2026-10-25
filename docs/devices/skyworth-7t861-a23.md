@@ -37,10 +37,29 @@ Port 5555 opens over Wi-Fi without pairing prompts (`ro.adb.secure=0`). `persist
 
 The 16 packages in [`examples/skyworth-7t861-a23/debloat.txt`](../../examples/skyworth-7t861-a23/debloat.txt) remove telemetry, ad daemons, app store push services, and factory calibration background tools.
 
+### Verified safe to disable (16 packages)
+
+- **Telemetry & Diagnostics (4)**:
+  `com.skyworth.performance.monitors`, `com.skyworth.testtime`, `com.skyworthdigital.stb.dataprovider`, `com.skyworth.device`
+- **Ads & Manufacturer Push (5)**:
+  `com.coocaa.tvmanager`, `com.coocaa.guide`, `com.tianci.de`, `com.tianci.user`, `com.coocaa.theme_package_ccos_nine`
+- **Preloaded Stores & Streaming (5)**:
+  `com.coocaa.tvpitv`, `com.tianci.movieplatform`, `com.tianci.appstore`, `com.skyworth.skymarket`, `com.coocaa.app_browser`
+- **Factory & Tuning Background Daemons (2)**:
+  `com.loostone.tuning`, `com.coocaa.factory`
+
 In particular, `com.skyworth.device` (SmartDevice IoT and location reporting) and `com.coocaa.theme_package_ccos_nine` (default GoldenFaithTheme package) were tested for persistence:
 1. Disabled via `tools/tv.py 'pm disable-user --user 0 com.skyworth.device'` and `tools/tv.py 'pm disable-user --user 0 com.coocaa.theme_package_ccos_nine'`.
 2. Verified after a cold reboot (power cycled): both packages remained in state `disabled-user` (`enabled=3`). The system did not re-enable them.
 3. Bluetooth remote pairing, Wi-Fi connectivity, picture adjustments, and audio remain fully functional with nothing missing.
+
+### Must stay enabled
+
+| Package | Purpose / Why it must stay enabled |
+|---|---|
+| `com.skyworth.officehomepage` | Stock home application; disabling causes fatal hang on SKYWORTH boot logo |
+| `com.skyworth.tv` | HDMI, AV, and TV tuner input switching; picture and sound settings |
+| `com.tianci.localmedia` | Built-in USB media player and local storage access |
 
 ---
 

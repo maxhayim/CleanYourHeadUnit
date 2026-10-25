@@ -11,9 +11,7 @@
 # Do NOT disable com.skyworth.officehomepage directly. On this firmware, disabling the stock home
 # causes the system to hang at the SKYWORTH boot logo (network stack does not start, ADB drops).
 # Recovery requires a factory reset via Recovery Mode.
-# To replace the home screen safely, build the launcher with `-PlauncherApplicationId=com.coocaa.tvhome`
-# and install coocaa-home-shim (com.ccos.tv.homepage) to bridge the Home key and boot flow.
-# Full device notes: docs/devices/skyworth-7t861-a23.md
+# For replacing the home screen safely, see docs/devices/skyworth-7t861-a23.md.
 
 # Telemetry and diagnostics
 com.skyworth.performance.monitors   # Performance monitors and telemetry
