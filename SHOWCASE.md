@@ -104,6 +104,7 @@ This repo's launcher with new looks or features, often tuned for one TV. Good pl
 Small apps and scripts that run next to the launcher (or any launcher) and do one thing.
 
 | Project | What it is | Built on | By |
+| [Kids Mode](https://github.com/maxhayim/kids-mode) ([APK](https://github.com/maxhayim/kids-mode/releases/latest), [screenshot](https://github.com/maxhayim/kids-mode/blob/main/docs/kids-screen.jpg)) | A kids' screen locked with a PIN: big tiles for the apps you choose (YouTube Kids, Scholastic, PBS KIDS and similar start there) and nothing else. It is the home app and hands Home straight to your normal launcher while off; while on, a guard (an accessibility service that sees only which app is in front) sends Settings, other apps and other launchers back to the kids' screen. The PIN is kept only as a salted hash. A module card for the Clean Your TV launcher. Proposed here as an add-on first (#1215). No internet permission | MOKA R8G, Android 14 | [maxhayim](https://github.com/maxhayim) |
 |---|---|---|---|
 | [DVD Video screensaver for Android TV](https://github.com/TheWombRaider/dvd-tv) ([screenshot](https://github.com/TheWombRaider/dvd-tv/blob/main/docs/preview.jpg)) | The bouncing DVD VIDEO logo as an offline native screensaver and launcher preview, measured against reference video; no internet, audio or analytics | TCL Smart TV Pro (G08), Google TV 14; preview tested | [TheWombRaider](https://github.com/TheWombRaider) |
 | [AirPlay receiver installer](https://github.com/nguyenduchoai/tv-vibehack/tree/feat/airplay-receiver) | A script that builds and installs an open-source AirPlay receiver next to the launcher, for iPhone mirroring | Xiaomi MiTV-AESP0, Android TV 9 | [nguyenduchoai](https://github.com/nguyenduchoai) |
@@ -120,6 +121,7 @@ Small apps and scripts that run next to the launcher (or any launcher) and do on
 Ways to run the cleanup or control the TV from a phone or a computer, without an AI agent.
 
 | Project | What it is | Built on | By |
+| [Standby Light](https://github.com/maxhayim/standby-light) ([APK](https://github.com/maxhayim/standby-light/releases/latest), [screenshot](https://github.com/maxhayim/standby-light/blob/main/docs/app.jpg)) | Keeps the standby light of Realtek-based TVs off in every state (on, standby, low-power standby, blinking), and switches it off again after every restart and power cut. Realtek's LED service answers only the ADB shell, so the app signs in to the TV's own ADB at 127.0.0.1 with a key you allow once on the TV, and sends one fixed command. Needs `com.realtek.power.ILedManager/default` and network debugging left on. No network beyond the TV itself | MOKA R8G, Android 14 | [maxhayim](https://github.com/maxhayim) |
 |---|---|---|---|
 | [Clean Your TV app](https://github.com/udhaykumarbala/cleanyourtv-app) | The easiest way in: an Android phone app that cleans up an Android TV or Google TV over Wi-Fi in three steps (connect, analyse, clean), with a plan first, a restore point and undo. No laptop, no coding agent. Page: [cleanyour.tv/app](https://cleanyour.tv/app) | Android TV / Google TV; Android 9+ phone | [udhaykumarbala](https://github.com/udhaykumarbala) |
 | [Clean Your TV Companion](https://github.com/gethari/clean-your-tv-companion) | A Windows, macOS and Linux app that connects to an Android TV or Google TV over ADB, checks its setup and compares the installed apps with the community lists. Runs locally, no account; the preview only inspects, changes are on its roadmap | Android TV / Google TV; tested on TCL Q6K | [gethari](https://github.com/gethari) |
@@ -179,7 +181,7 @@ By the TV each project was built and tested on. Most of them run on other Androi
 - **Insignia:** [Insignia Clean Home](https://github.com/yjack-coder/insignia-clean-home)
 - **JVC:** [Spotlight](https://github.com/IyiolaJay/spotlight-tv)
 - **LG:** [Clean Your TV — LG webOS](https://github.com/Razdva122/clean-your-tv-lg-webos), [CleanYourTV for LG webOS](https://github.com/lasharor/cleanyourtv-WebOS), [webOS launcher](https://github.com/OmkarK97/webos-vibehack)
-- **MOKA:** [Corner Player](https://github.com/maxhayim/corner-player), [Webmote](https://github.com/maxhayim/webmote)
+- **MOKA:** [Corner Player](https://github.com/maxhayim/corner-player), [Webmote](https://github.com/maxhayim/webmote), [Kids Mode](https://github.com/maxhayim/kids-mode), [Standby Light](https://github.com/maxhayim/standby-light)
 - **Motorola:** [TV Motorola Launcher](https://github.com/kartikcool15/tv-motorola-launcher)
 - **MYO:** [MYO Launcher](https://github.com/faustinoaq/myo-launcher)
 - **NVIDIA Shield:** [Vibe Launcher](https://github.com/maydings/vibe-launcher)
