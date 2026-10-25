@@ -6,7 +6,7 @@
 # package by package on this live 55Q6CX1 unit: all 20 entries below are disabled, reboot-checked and verified.
 #
 # Apply:   TV_HOST=<tv ip> tools/disable.sh examples/tcl-55q6cx1/debloat.txt
-# Undo:    TV_HOST=<tv ip> tools/restore.sh examples/tcl-55q6cx1/debloat.txt
+# Undo:    TV_HOST=<tv ip> tools/restore.sh examples/tcl-55q6cx1/debloat.txt com.google.android.apps.tv.launcherx
 # Everything is DISABLED, not uninstalled. Comment out any line you want to keep.
 #
 # Stock launcher: com.google.android.apps.tv.launcherx (disabled here, replaced with reference launcher
