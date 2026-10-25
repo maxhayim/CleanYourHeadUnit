@@ -155,6 +155,17 @@ own key log (`WindowManager: interceptKeyTi keyCode=24 down=true repeatCount=0`)
 it. The empty-list control was not run there either. The owner kept the helper for the YouTube, Prime
 Video, Disney+, Peacock and gear buttons and lives with one step per press.
 
+## A TCL G08 on Android 12, and `consume_volume_keys`
+
+A TCL 75Q7C (G08, Google TV 12, `STT2.221228.001 AS36`, the second unit in
+[`examples/tcl-g08-eu-android12`](../../examples/tcl-g08-eu-android12/README.md)) does the same with both helpers
+bound: a two-second hold of volume up logs one `handleKeyBeforeQueueing ... ACTION_DOWN ... KEYCODE_VOLUME_UP
+... repeatCount=0`, the `ACTION_UP` two seconds later, and one volume change (`setStreamVolumeIndex`) in between.
+`consume_volume_keys` true did not bring the ramp back there: the launcher's own repeat (`VolumeKeys`) never
+stepped the volume, so the helpers do not seem to receive the volume key on this build, and the switch, made for
+the G03's double step, has nothing to repeat. The empty-list control was not run. The owner kept the helpers for
+the gear, YouTube and TCL buttons.
+
 ## Choices
 
 - **Keep the repeat and skip the helpers.** Do not pass `INPUT_KEY_SERVICE=1` or `HOME_KEY_SERVICE=1`
