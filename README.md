@@ -724,7 +724,9 @@ Before `tools/disable.sh` changes anything it writes down what the TV looked lik
 in the list whether it was enabled, already disabled or not installed, which component owned Home,
 and the three animation scales. That record lives in `~/.cleanyourtv/`, one file per TV and list, and
 a second run of the same list keeps the first record instead of saving the cleaned-up state over it.
-If you added packages to the list since, that run adds them to the record before disabling them.
+If you added packages to the list since, that run adds them to the record before disabling them, and
+a listed package that was not installed then but is installed and enabled now is recorded as enabled.
+`check.py --fix` does the same before it disables anything.
 
 Keep the list you applied. The restore script replays the record, so a package you had disabled
 yourself stays disabled and Home goes back to the component that owned it:
@@ -756,7 +758,9 @@ TV_HOST=192.168.1.50 tools/venv/bin/python -I tools/check.py examples/<your tv>/
 
 It exits with `0` when the TV still matches the list, `1` when something drifted, and `2` when it
 could not check at all: the TV did not answer, nobody accepted the "Allow USB debugging?" prompt in
-time, the list path is not there, or the list disables Android's core packages. Only 1 is drift, so
+time, the list path is not there, the list disables Android's core packages, or, under `--fix`, the
+recovery record for this TV and list cannot be read or updated (nothing is changed on the TV then).
+Only 1 is drift, so
 a job that mails on 1 alone stays quiet while the check never ran; mail on anything but 0, or on 2 as
 well, and a weekly job on a home server or a Pi is enough to hear about it:
 
@@ -770,9 +774,11 @@ your shell.
 
 `--fix` reapplies the list to what drifted: it switches Home to the launcher the list does not
 disable (pass a package as the second argument if you run a fork), then disables the listed packages
-that came back, and reads the TV back to confirm both. It writes no recovery record, because the
-record already holds the state from before the first run: `tools/restore.sh` still returns the TV to
-stock afterwards. Home is fixed first; if no launcher is left to take it, `--fix` changes nothing
+that came back, and reads the TV back to confirm both. It never writes a recovery record of its own,
+because only the first run's record holds the state from before cleanup. When there is one, `--fix`
+first adds to it what a second `tools/disable.sh` run would (names the list gained, and a package that
+was not installed then and is installed and enabled now), so `tools/restore.sh` still returns the TV
+to stock afterwards. Home is fixed first; if no launcher is left to take it, `--fix` changes nothing
 and says so.
 
 It runs the same safety checks as `tools/disable.sh` before it disables anything, since an update is

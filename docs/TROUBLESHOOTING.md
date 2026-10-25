@@ -179,8 +179,10 @@ Things that bit us or contributors, so they don't bite you. Commands use `tools/
   such command; no TV here has run it yet). It comes back enabled, and without its data unless the
   uninstall used `-k`. To keep it, comment its line out of your list first: otherwise `check.py` reports
   it as back on, and `--fix` or the next `disable.sh` run disables it again. If you don't want it, let
-  the list disable it afterwards, which the TV's own settings can undo. The record still calls it
-  absent, so `restore.sh` keeps leaving it alone: `pm enable --user 0 <package>` is its undo. Two cases
+  the list disable it afterwards, which the TV's own settings can undo. `--fix` or that `disable.sh` run
+  first changes it from absent to enabled in the record, so `restore.sh` turns it back on too. A record
+  an older version updated, or a package that was already disabled when that run saw it, still says
+  absent, and `restore.sh` leaves it alone: `pm enable --user 0 <package>` is its undo. Two cases
   this does not cover. An app with no copy on the system partition that only user 0 had is deleted with
   its APK: the command answers `Package <package> doesn't exist`, and only reinstalling the APK brings
   it back (the Toshiba's `com.hisense.business.ad`). And a `User 0:` line with
