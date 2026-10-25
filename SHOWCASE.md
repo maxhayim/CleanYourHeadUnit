@@ -10,7 +10,7 @@ project's own issue tracker.
 
 **Jump to:** [Home screens built as their own app](#home-screens-built-as-their-own-app) · [Forks of the launcher](#forks-of-the-launcher) · [Screensavers and add-ons](#screensavers-and-add-ons) · [Tools and companion apps](#tools-and-companion-apps) · [Other platforms: Fire TV and LG webOS](#other-platforms-fire-tv-and-lg-webos) · [Add-ons in this repo](addons/README.md) · [Guides and write-ups](#guides-and-write-ups) · [Find a project by TV brand](#find-a-project-by-tv-brand) · [Add yours](#add-yours)
 
-104 projects so far.
+105 projects so far.
 
 ## Home screens built as their own app
 
@@ -98,6 +98,7 @@ This repo's launcher with new looks or features, often tuned for one TV. Good pl
 | [Glance line and crimson glass on a Changhong](https://github.com/bayhaqy/cleanyourtv/blob/main/my-tv/README.md) ([screenshot](https://raw.githubusercontent.com/bayhaqy/cleanyourtv/main/my-tv/screenshots/02-home.jpg)) | A glance line under the clock: weather and AQI, next prayer countdown, RAM and storage; adds INTERNET; crimson glass-dock theme | Changhong 43" (Skyworth shibuya), Android TV 11 | [bayhaqy](https://github.com/bayhaqy) |
 | [stillOS](https://github.com/maximfakel/stillOS) ([issues](https://github.com/maximfakel/stillOS/issues)) | A minimal restyle: every app on a neutral tile with its logo in white, the weather with a city picker and a clock-and-weather screensaver. Network: MET Norway weather, Nominatim for city search | Xiaomi MiTV-MOSR1, Android TV 11 | [maximfakel](https://github.com/maximfakel) |
 | [Pure TV](https://github.com/Vardxn/pure-tv) ([APK](https://github.com/Vardxn/pure-tv/releases/latest), [screenshot](https://raw.githubusercontent.com/Vardxn/pure-tv/691b9db4fa4f644c4fdc07d3f57b7ccdc2b1a318/docs/puretv/home.jpg)) | An Apple TV-style restyle: symmetric home with weather, full-bleed tiles, a hold-to-edit dock and a glass screensaver | Xiaomi MiTV-MOOR2, Google TV 11 | [Vardxn](https://github.com/Vardxn) |
+| [Chromecast glass fork](https://github.com/NewPlayer0213/cleanyourtv/blob/showcase/FORK.md) ([screenshot](https://raw.githubusercontent.com/NewPlayer0213/cleanyourtv/ea2df03e7f109d0310dbe2a21dd0bb4d12abe545/docs/showcase/chromecast-library.jpg)) | The App library drawn with Home's own tiles (banners, zoom, glass, badges for apps on Home and new installs, hold OK for the app menu), a clearer focus glass for dark wallpapers, remote buttons whose hold fires while still held and that can open an add-on's activity, and quick bars for the Brightness and Sleep Timer add-ons on a remote button. The library and glass changes are off until a theme turns them on; no network permission | Chromecast with Google TV 4K, Google TV 14 | [NewPlayer0213](https://github.com/NewPlayer0213) |
 
 ## Screensavers and add-ons
 
@@ -170,7 +171,7 @@ By the TV each project was built and tested on. Most of them run on other Androi
 - **Baron (CloudWalker OS):** [Baron Home](https://github.com/sethihq/baron-tv)
 - **BenQ:** [Navigation sounds](https://github.com/rocavence/tv-vibehack/tree/nav-sounds)
 - **Changhong:** [Glance line and crimson glass on a Changhong](https://github.com/bayhaqy/cleanyourtv/blob/main/my-tv/README.md)
-- **Chromecast with Google TV:** [Cast Fix](https://github.com/thayford/castfix), [Weather Clock](https://github.com/matyivagyok/weatherclock-tv)
+- **Chromecast with Google TV:** [Cast Fix](https://github.com/thayford/castfix), [Chromecast glass fork](https://github.com/NewPlayer0213/cleanyourtv/blob/showcase/FORK.md), [Weather Clock](https://github.com/matyivagyok/weatherclock-tv)
 - **Formovie:** [CleanTV by VGS](https://github.com/vgscity/vgs-cleantv), [Homelab companion](https://github.com/epochcoder/cleanyourtv/tree/main/companion)
 - **FPT Play:** [TV Remote](https://github.com/HoangTran0410/tv-remote)
 - **Haier:** [cleanyourtv for Haier](https://github.com/abuhasanrumi/cleanyourtv-haier)
