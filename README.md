@@ -19,7 +19,7 @@
 </p>
 
 <p align="center">
-  <a href="docs/PRESS.md"><img src="docs/card.jpg" alt="292 TV models · 83 brands · 28 languages · 515 KB launcher. Featured in TechCrunch, TechRadar, Tom's Guide, Mashable, Android Authority, XDA, FlatpanelsHD, It's FOSS, Phandroid, GIGAZINE, Xataka, WinFuture, Frandroid, Macitynet, Techaeris, TechPP and 180 more: 196 articles from 32 countries. Before: stock Google TV home with a sponsored ad. After: the Clean Your TV launcher." width="800"></a>
+  <a href="docs/PRESS.md"><img src="docs/card.jpg" alt="293 TV models · 83 brands · 28 languages · 517 KB launcher. Featured in TechCrunch, TechRadar, Tom's Guide, Mashable, Android Authority, XDA, FlatpanelsHD, It's FOSS, Phandroid, GIGAZINE, Xataka, WinFuture, Frandroid, Macitynet, Techaeris, TechPP and 180 more: 196 articles from 32 countries. Before: stock Google TV home with a sponsored ad. After: the Clean Your TV launcher." width="800"></a>
 </p>
 
 **The viral tweet:** [x.com/gathint/status/2111379569030939102](https://x.com/gathint/status/2111379569030939102)
@@ -117,11 +117,11 @@ Tested lists from contributors, one folder per model in [`examples/`](examples/)
 **TCL** 64 · **Sony** 37 · **Xiaomi** 31 · **Philips** 15 · **Hisense** 10 · **Skyworth** 9 · **Amazon Fire TV** 7 ·
 **BenQ** 4 · **OnePlus** 4 · **Panasonic** 4 · **Thomson** 4 · **Google** 3 · **Haier** 3 · **JVC** 3 · **SHARP** 3 ·
 **Vu** 3 · **CHiQ** 2 · **FFalcon** 2 · **Hitachi** 2 · **Kalley** 2 · **Kogan** 2 · **Motorola** 2 · **Nokia** 2 ·
-**NVIDIA Shield** 2 · **onn** 2 · **RCA** 2 · **Redmi** 2 · **Sankey** 2 · **Toshiba** 2 · **Vidda** 2 ·
+**NVIDIA Shield** 2 · **onn** 2 · **RCA** 2 · **Redmi** 2 · **RockTek** 2 · **Sankey** 2 · **Toshiba** 2 · **Vidda** 2 ·
 Acer · AiPro2K · AIWA · AQUA · Artel · ASUS · Beko · Caxium · Cecotec · Challenger · Compac · Dcolor · Dialog · EKO ·
 Freebox · Grundig · INCLO · Insignia Fire TV · Karbonn · KTC · Liberton · Lumio · Master-G · MTC · Noblex · OK. ·
-Panavox · PEAQ · Polytron · PRISM+ · RockTek · SANYO · Sber · Super General · Tele System · TiVo · Tornado · Turkcell ·
-Tuvio · Verizon · Vision ·
+Panavox · PEAQ · Polytron · PRISM+ · SANYO · Sber · Super General · Tele System · TiVo · Tornado · Turkcell · Tuvio ·
+Verizon · Vision ·
 Anker Nebula, BYINTEK, Epson, Formovie, Gadnic, HOTACK, JMGO, Magcubic, Portronics, Stellamore, Wanbo and XGIMI projectors
 
 <!-- tv-brands:end -->
@@ -252,6 +252,7 @@ Anker Nebula, BYINTEK, Epson, Formovie, Gadnic, HOTACK, JMGO, Magcubic, Portroni
 | Redmi TV (MiTV-ANTL0, starwars) | Android 5.1.1 (not Android TV) |
 | Redmi TV (MiTV-MFTP0, alita), China firmware 23.2.10.6129 | Android TV 9 (CN build) |
 | RockTek GB1 | Google TV 14 |
+| RockTek GX1 (HPR3A1325_4K) | Google TV 14 |
 | Sankey SMART2KTVSE (Whale OS, SiliconPlayer am30bm) | Android TV 13 |
 | Sankey SMART_TV (CVTE, HiSilicon Hi3751V350, 1 GB) | Android 12 |
 | SANYO ATV R2 (SCBC, Realtek RTD285O) | Android TV 9 |
@@ -471,7 +472,7 @@ tools/theme.sh themes/aurora                                 # push a theme; --r
 | [`tools/flamechart.py`](tools/flamechart.py) | Draws a before/after flame chart from those traces, for a pull request: one lane per thread on a shared time scale, the work a change targets in magenta with its total. Optional, like the trace tools. [Guide](tools/flamechart.md). |
 | [`tools/screendiff.py`](tools/screendiff.py) | Compares a before and an after screenshot pixel by pixel, leaving out the clock or anything you mask, and writes the pair with your Wi-Fi name blurred. Optional, like the trace tools. [Guide](tools/screendiff.md). |
 | [`tools/race_calendar.py`](tools/race_calendar.py) | Writes this season's F1 calendar into a theme for race-weekend mode, from the free Jolpica API. |
-| [`launcher/build-and-install.sh`](launcher/build-and-install.sh) | Builds a shrunk release (about 515 KB), installs it, switches Home, and rolls back if Home does not land on it. |
+| [`launcher/build-and-install.sh`](launcher/build-and-install.sh) | Builds a shrunk release (about 517 KB), installs it, switches Home, and rolls back if Home does not land on it. |
 
 The scripts never leave the TV without a Home app: they only disable a stock launcher they recognise,
 and skip the Home app in a list until another launcher answers HOME. Details below.
@@ -543,7 +544,7 @@ apps), which is why the report names that loss per package instead of calling it
 
 ## The launcher
 
-A small native home screen for Android TV: **about 515 KB**, plain Java, built for TVs with 1 GB of RAM.
+A small native home screen for Android TV: **about 517 KB**, plain Java, built for TVs with 1 GB of RAM.
 No blur, no video, no network permission, no background services.
 
 The **TV** needs Android 8.0 (API 26) or newer: `minSdk` is a compile-time floor in
