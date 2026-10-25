@@ -337,7 +337,8 @@ Things that bit us or contributors, so they don't bite you. Commands use `tools/
   `FallbackHome` that stands in until the unlock; some, like this CVTE board, do not, and then boot
   never completes. This repo's launcher is only partly direct-boot-aware: `HomeKeyService` declares
   the flag, so Android binds it while the user is still locked, and `GuardRevival` declares it too
-  (nothing binds that listener unless the standby opt-in is turned on). `MainActivity`, the activity that
+  (neither that listener nor [the standby opt-in](#the-power-key-does-not-wake-the-tv-while-the-key-helper-is-bound)
+  is on in an ordinary install). `MainActivity`, the activity that
   answers HOME, does not declare it. The second command below therefore prints
   `PARTIALLY_DIRECT_BOOT_AWARE` for this launcher and cannot say whether Home exists before the
   unlock; on a set with no `FallbackHome`, the first command is the one that decides. Check both
@@ -828,6 +829,38 @@ printed; the empty list also unbinds TalkBack. Bisect, keycodes and limits:
 [the G09 note](devices/tcl-55p71b-g09-key-repeat.md).
 
 A [Sony KD-55X9000H PA-firmware follow-up](devices/sony-kd-55x9000h.md#later-remote-key-follow-up-24-october-2026) on Android 12 reproduced the same filter/repeat conflict with a personal fork. Its simultaneous kernel/callback capture saw held Volume in hardware but neither Volume direction in the helper. A separate saved-layout experiment retained Apps and native Volume without key filtering; it requires that fork's companion and Library entry, reserves an application-launch category, and has not been tested across restart/sleep/reconnect. It is not a stock upstream option.
+
+## The power key does not wake the TV while the key helper is bound
+
+A remote's power button does nothing while the TV is in standby, and only the set's own button wakes it.
+Seen on a TCL `tc8000_ay30a2` (Android 11, `RQ3A.210705.001.2024101221`, #1387), where a key-filtering
+accessibility service that stays bound with the screen off was reported to swallow the power key. The
+launcher can stand its own helper down for standby instead of losing the helper altogether: with
+`HOME_KEY_SERVICE=1` at install, at screen-off `HomeKeyService` takes itself off the accessibility list and
+the first screen-on puts it back, so the keys it answers still work whenever the screen is on. Off by
+default; three writes turn it on, and none of them is part of an ordinary install:
+
+```sh
+tools/tv.py 'pm grant com.gathin.tvhome android.permission.WRITE_SECURE_SETTINGS'
+tools/tv.py 'cmd notification allow_listener com.gathin.tvhome/.GuardRevival'
+tools/tv.py 'am broadcast -a com.gathin.tvhome.GUARD -n com.gathin.tvhome/.GuardConfig --ez guard_off_in_standby true'
+# off again:
+tools/tv.py 'am broadcast -a com.gathin.tvhome.GUARD -n com.gathin.tvhome/.GuardConfig --ez guard_off_in_standby false'
+```
+
+The broadcast prints `guard_off_in_standby=true` back, so the answer is readable without a reboot. The
+first two writes are what make the opt-in survive, so read why:
+
+- `WRITE_SECURE_SETTINGS` is what lets the launcher write the helper back onto the list at screen-on.
+  Without it `GuardKeep` gives up silently and the helper stays off after the first standby, which looks
+  like the helper having died. `RESTORE_KEY_SERVICES=1` at install already grants it
+  ([the force-stop section](#accessibility-helper-enabled-but-the-remote-button-does-nothing)).
+- `GuardRevival` is the listener the system re-binds once the process is gone, and firmware that kills
+  third-party apps in standby takes the screen-on watch with it. The rebind is what re-arms it.
+
+While the opt-in is on, `dumpsys accessibility` naming no `com.gathin.tvhome/.HomeKeyService` during
+standby is the opt-in working, not a fault: wake the TV and read it again. Only that helper stands down;
+`InputKeyService` keeps filtering, so the Input button still works.
 
 ## The soundbar on ARC/eARC falls asleep and the TV does not wake it
 
