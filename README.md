@@ -888,7 +888,7 @@ The people whose work is in this repo:
 | For | Where |
 |---|---|
 | **Questions about your TV** | [GitHub Discussions](https://github.com/Gathin23/cleanyourtv/discussions) |
-| **Press and partnerships** | [hello@itsgathin.com](mailto:hello@itsgathin.com) |
+| **Partnerships and queries** | [hello@itsgathin.com](mailto:hello@itsgathin.com) |
 | **Security issues** | Report them privately through the [Security tab](https://github.com/Gathin23/cleanyourtv/security), see [`SECURITY.md`](SECURITY.md) |
 
 ## Legal
