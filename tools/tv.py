@@ -74,11 +74,11 @@ if not os.path.exists(KEY) and os.path.exists(ADB_KEY) and os.path.exists(ADB_KE
     KEY = ADB_KEY
 
 
-def restrict(path):
-    """Keep a private key to this account. Reported, never fatal: the key still works either way.
-    Windows has no POSIX mode bits and ignores this."""
+def restrict(path, mode=0o600):
+    """Keep a private key, or its folder, to this account. Reported, never fatal: the key still works
+    either way. Windows has no POSIX mode bits and ignores this."""
     try:
-        os.chmod(path, 0o600)
+        os.chmod(path, mode)
     except OSError as e:
         print(f"warning: could not restrict permissions on {path}: {e}", file=sys.stderr)
 
@@ -89,9 +89,19 @@ def get_signer():
     # open(), so it lands at 0666 & ~umask, which is 0644 under the usual umask: readable by every
     # other account on the machine. Google's own adb keeps ~/.android/adbkey at 0600, so match that,
     # on every run, so a key written by an earlier version of this script is repaired too.
+    # makedirs leaves a folder that already exists at its old mode (0755 from a tv.py older than
+    # #491), so the folder is set to 0700 on every run as well.
     os.makedirs(KEYDIR, mode=0o700, exist_ok=True)
+    restrict(KEYDIR, 0o700)
     if not os.path.exists(KEY):
-        keygen(KEY)
+        # Google's adb opens a new key under umask(077), so it is 0600 from the moment it exists, not
+        # only after the chmod below. adb_shell writes the .pub in the same call, so that is 0600 as
+        # well; only this script reads it.
+        old_umask = os.umask(0o077)
+        try:
+            keygen(KEY)
+        finally:
+            os.umask(old_umask)
     if KEY != ADB_KEY:   # the stock key belongs to the user's own adb; don't touch its permissions
         restrict(KEY)
     with open(KEY) as f:
@@ -250,9 +260,9 @@ def screenshot(dev, local, keys=(), wait=0.0):
     # The exit status tells a capture that failed (no file to pull) from one that came back empty: with
     # Netflix in front a TCL C755 exits 1 and leaves a 0-byte file, which is the empty case below.
     said = dev.shell(f"rm -f {SHOT_REMOTE}; screencap -p {SHOT_REMOTE}; echo rc=$?", read_timeout_s=120.0)
-    rc = next((int(line[3:]) for line in said.splitlines() if re.fullmatch(r"rc=-?\d+", line.strip())), None)
+    rc = next((int(line.strip()[3:]) for line in said.splitlines() if re.fullmatch(r"rc=-?\d+", line.strip())), None)
     if rc not in (None, 0, 1):
-        other = " ".join(line.strip() for line in said.splitlines() if line.strip() and not line.startswith("rc="))
+        other = " ".join(line.strip() for line in said.splitlines() if line.strip() and not line.strip().startswith("rc="))
         dev.shell(f"rm -f {SHOT_REMOTE}", read_timeout_s=60.0)
         print(f"screencap failed on the TV (exit status {rc}): {other or 'no output'}", file=sys.stderr)
         return 1

@@ -33,7 +33,10 @@ Things that bit us or contributors, so they don't bite you. Commands use `tools/
   without a new code. Port 5555 from `adb tcpip` usually lasts only until the next reboot. When you
   close up, switch Wireless debugging off on its own: on a Chromecast with Google TV 4K (`sabrina`)
   turning USB debugging off left the Wireless debugging port accepting connections, and
-  `tools/adb-closed.py` only checks 5555. `adb mdns services` lists that port while it is open.
+  `tools/adb-closed.py` checks 5555 unless it is given that port. `adb mdns services` lists the port
+  as `_adb-tls-connect._tcp` while it is open: note it before switching Wireless debugging off, and
+  run `tools/adb-closed.py <tv ip> <port>` straight after, before the reboot. After the reboot the old
+  number reads closed either way, because Wireless debugging takes a new port each time it starts.
 - **Port 5555 stays closed and there is no Wireless debugging entry either**, so the pair-once recipe
   above has nothing to pair with: a [Philips 58PUS8505/62 The One, Android TV 12,
   `STT2.230526.001`](https://github.com/Gathin23/cleanyourtv/issues/1489) reported USB debugging on, no
@@ -130,6 +133,44 @@ Things that bit us or contributors, so they don't bite you. Commands use `tools/
   ten Amazon packages are protected, which
   [`examples/amazon-fire-tv-stick-4k-2018/debloat.txt`](../examples/amazon-fire-tv-stick-4k-2018/debloat.txt)
   lists, with the same DNS fallback for their endpoints.
+- **`pm disable <package>/<class>` is refused with `Shell cannot change component state`**, the
+  `SecurityException` you get when you try to keep a package and switch off only its Home activity or
+  boot receiver. The notes here have it for setupwraith's `.RecoveryActivity` (TCL G08, Chromecast with
+  Google TV HD, Google TV Streamer), launcherx's `.home.HomeActivity` (XGIMI MoGo 4), boot receivers on a
+  Fire TV Stick Lite (Fire OS 7) and a Motorola MT4310 (Android TV 11), and the ERGO DVB92YC's Live TV
+  boot receiver below. It is not that firmware: from Android 7.0, AOSP's `PackageManagerService` lets
+  the shell change only a whole package, and only between default, enabled and disabled-user (from 8.0
+  a test-only APK is the exception). The same check refuses `pm disable` and `pm disable-until-used` on
+  a whole package, which ask for other states, and any change, `pm enable` included, to a package that
+  is already `disabled` (`enabled=2` in `dumpsys package`, as `tvrecommendations` is on a Chromecast
+  with Google TV 4K). There is no shell route around it, so don't retry it with other flags: disable the
+  whole package with `pm disable-user --user 0`, or keep it.
+- **A package removed with `pm uninstall --user 0`, by hand or by another debloat tool, stays gone
+  after `tools/restore.sh`.** The [Toshiba 55Z500QF](devices/toshiba-55z500qf-cn.md) note (Hisense
+  firmware, Android 11, `RD2A.211001.002`) has 23 preinstalled packages its owner removed that way. The
+  command takes a package away from user 0 only, and a preinstalled one keeps its APK on the system
+  partition. `pm list packages -u --user 0 <package>` still names it (`-u` adds uninstalled packages)
+  and the same command without `-u` does not; the `User 0:` line of `dumpsys package <package>` says
+  `installed=false`. `tools/recovery.py` records a listed package that is already gone when
+  `tools/disable.sh` first runs as `absent`, so `restore.sh` prints
+  `leaving <package> alone (absent when the record was taken)`, and `tools/check.py` lists it under
+  "not installed any more". Bring it back with
+  `tools/tv.py 'cmd package install-existing --user 0 <package>'` (AOSP's `cmd package` has it from
+  Android 8.0; the Android 6 set in [#1185](https://github.com/Gathin23/cleanyourtv/issues/1185) had no
+  such command; no TV here has run it yet). It comes back enabled, and without its data unless the
+  uninstall used `-k`. To keep it, comment its line out of your list first: otherwise `check.py` reports
+  it as back on, and `--fix` or the next `disable.sh` run disables it again. If you don't want it, let
+  the list disable it afterwards, which the TV's own settings can undo. The record still calls it
+  absent, so `restore.sh` keeps leaving it alone: `pm enable --user 0 <package>` is its undo. Two cases
+  this does not cover. An app with no copy on the system partition that only user 0 had is deleted with
+  its APK: the command answers `Package <package> doesn't exist`, and only reinstalling the APK brings
+  it back (the Toshiba's `com.hisense.business.ad`). And a `User 0:` line with
+  `installed=true hidden=true` was hidden, not uninstalled. install-existing changes nothing there even
+  though it prints `Package <package> installed for user: 0`, and the shell cannot unhide it:
+  `pm unhide` needs `MANAGE_USERS`, which the shell does not hold from Android 7.0. Unhide it from the
+  device-owner app that hid it, or leave it, as the
+  [Chromecast with Google TV 4K list](../examples/google-chromecast-gtv-4k/debloat.txt) does with
+  `cast2class` (`hidden=true` and `enabled=2` there).
 - **The Input key and CEC die after the hidden factory menu is opened**, seen on a Haier/CVTE set
   (Durabrand `DURAT32ISDB`, `dupont`, Android TV 11 build `RTM6.230109.232`,
   [#470](https://github.com/Gathin23/cleanyourtv/issues/470)). `com.cvte.tv.hkcfac` is the
@@ -267,6 +308,21 @@ Things that bit us or contributors, so they don't bite you. Commands use `tools/
   `com.android.settings`, `com.android.tv.settings` or `android`), with no switch to override it.
   If a set is already stuck and still answers ADB, `pm enable` each of those packages and reboot;
   if ADB is gone too, a factory reset from the recovery menu is usually the only way back.
+- **The TV restarts in a loop after a debloat**, seen once, on a Haier H50H5F (Google TV 14,
+  MediaTek, [#1578](https://github.com/Gathin23/cleanyourtv/issues/1578)). What the agent disabled
+  is not known. The reply on the issue names eight packages from the disabled-package list attached
+  to the report: `com.cltv.mal` (TV middleware), `com.cltv.hybrid` (Live TV), the ISDB and ATSC
+  tuner inputs and four Haier apps. But the six files attached match the backup PROMPT.md has the
+  agent save before changing anything, and on the Haier-built [AQUA MatrixTV EE
+  50](../examples/aqua-matrixtv-ee-50/debloat.txt) five of those eight are disabled from the
+  factory. So the list may be the TV's state before the debloat: then it says nothing about the
+  cause, and turning those eight back on would switch on what the factory left off instead of
+  undoing the debloat. If the set stays up long enough between restarts, `pm enable` with the stock
+  `adb` each package from the list that was applied (or run the agent's restore script), and reboot.
+  Wireless debugging usually goes off at every restart and gets a new port each time it is switched
+  on, so read the port from its screen or `adb mdns services`. This set never stayed up long enough
+  to switch it back on, and then restarted into the recovery menu, where a factory reset turns every
+  disabled package back on (nothing was uninstalled).
 - **The TV stays on the boot logo after a list, and disabling the only Home app is enough to do
   it**, seen on a KitKat-era set ([COOP COTV-0001](https://github.com/Gathin23/cleanyourtv/issues/795):
   Realtek `rtd298x`, Android 4.4.2, SDK 19). 17 packages were disabled over Ethernet ADB, each
@@ -528,6 +584,44 @@ Things that bit us or contributors, so they don't bite you. Commands use `tools/
   workaround not working. An app started in the foreground is unaffected, and the side effect, that
   the home-screen channels only refresh while Stremio is open, costs nothing once the recommendation
   rows are disabled anyway.
+- **An app you keep runs in the background after every boot, or stays in memory with a foreground service**,
+  seen with streaming apps on a Noblex NoblexTV (`shinjuku`, Android TV 11, `RTO9.230812.001`) and a
+  Tornado 65UA1400E (Android TV 11, `RTM5.220609.106`), and with TvSettings on a
+  [TCL G09](../examples/tcl-g09-google-tv/README.md) (Google TV 12). On Android 9 and newer the package can
+  stay installed and still be kept from running in the background, the same fix as for Stremio above and
+  saved with `write-settings` for the same reason:
+  `tools/tv.py 'cmd appops set <package> RUN_ANY_IN_BACKGROUND ignore; cmd appops write-settings'`. The app
+  still opens and plays on screen. Once it leaves the screen, Android holds back its jobs and alarms, takes
+  away its foreground services and, if the app targets Android 8 or newer, refuses its background service
+  starts. Its home-screen channels and push features then only update while it is open, and a music app
+  loses the foreground service that keeps it playing once you leave it. The op does not stop its boot
+  receiver, so the app still starts at every boot and then drops to cached, and one that opens its own
+  screen at boot, like the waipu app on the [waipu.tv Stick](devices/waipu-tv-stick.md), still does.
+  Android accepts the op without an error but still runs the jobs and alarms of a package whose uid is
+  below 10000 (`tools/tv.py 'pm list packages -U <package>'`), a persistent one
+  (`tools/tv.py 'dumpsys package <package>' | grep PERSISTENT`) and one on the Doze allowlist
+  (`tools/tv.py 'dumpsys deviceidle whitelist'`, which only reads the list when nothing follows it), so
+  check those first. Undo:
+  `tools/tv.py 'cmd appops set <package> RUN_ANY_IN_BACKGROUND allow; cmd appops write-settings'`.
+  When the cost is a foreground service the app has no reason to hold, as on the G09
+  (`tools/tv.py 'dumpsys activity services <package>'` shows `isForeground=true` long after the app was
+  last opened), take away only the foreground:
+  `tools/tv.py 'cmd appops set <package> START_FOREGROUND ignore; cmd appops write-settings'`. Android only
+  reads this op when the app asks for the foreground, so a service that is already in the foreground stays
+  there until it next starts: reboot with `tools/tv.py --reboot`, then check
+  `tools/tv.py 'dumpsys activity services <package>'` again, which should no longer show `isForeground=true`.
+  From then on the service runs as an ordinary one that Android can reclaim. Use `ignore`, never `deny`:
+  with `deny`, the app's request for the foreground throws a `SecurityException`, which crashes an app that
+  does not expect it. Leave the remote, keyboard, cast and input services alone. Undo:
+  `tools/tv.py 'cmd appops set <package> START_FOREGROUND allow; cmd appops write-settings'`.
+  App standby buckets (`am set-standby-bucket`) do nothing useful on a TV: whatever you set, Android keeps
+  a system app with a uid below 10000 at `exempted` and one with no phone-style `LAUNCHER` activity no
+  lower than `active`, and it treats a TV on mains power as charging
+  (`tools/tv.py 'dumpsys alarm' | grep Parole` reads `App Standby Parole: true` on a Chromecast with Google
+  TV 4K, `sabrina`, `UTTC.250917.004`), which lifts the bucket limits on alarms and on every job outside
+  `restricted`, a bucket the app leaves the next time it is opened.
+  `tools/tv.py 'am get-standby-bucket <package>'` only reads the bucket (5 is exempted, 10 active), and
+  `tools/tv.py 'am set-standby-bucket <package> active'` puts back one that was set.
 - **Every package in a batch is enabled again after the reboot that follows it**, seen on a Hisense
   HiSmartTV A4 (xiaoyushan, Android TV 11, `RTT2.221108.001` / `00.00.01.18`). It looks like firmware
   that resets the list at every boot, but it is the timing of the reboot. Android writes package state

@@ -175,7 +175,11 @@ class FallbackTest(unittest.TestCase):
             (tools / "adbkey" / "adbkey.pub").write_text(OWN_PUB)
 
         out = tmp / "key-out.txt"
-        env = dict(os.environ, TV_HOST="127.0.0.1", HOME=str(home), KEY_OUT=str(out),
+        # Windows expands `~` from USERPROFILE, not HOME: without it tv.py reads the real
+        # ~/.android and generates its own key, so "the stock key wins" is never observed there.
+        home_var = {"USERPROFILE": str(home)} if os.name == "nt" else {}
+        env = dict(os.environ, TV_HOST="127.0.0.1", HOME=str(home), **home_var,
+                   KEY_OUT=str(out),
                    PYTHONPATH=os.pathsep.join([str(tmp / "stub"), str(tools)]))
         result = subprocess.run([sys.executable, str(tools / "tv.py"), "--probe"],
                                 cwd=str(tmp), env=env, capture_output=True, text=True, timeout=120)
