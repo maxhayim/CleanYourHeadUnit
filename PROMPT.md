@@ -17,6 +17,10 @@ adapter on that port can drop the same way, so plan to do the whole session in o
 I want to debloat my Android TV and replace its launcher with a clean Apple TV style home screen.
 My TV model is: <MODEL NAME HERE>. Work on the real device, step by step, and verify everything you
 do with screenshots pulled from the TV. Ask me before anything that depends on my preferences.
+Where these steps name a file under `tools/`, `docs/` or `examples/` that is not in your working
+folder, you are running without this repo: clone it first with
+`git clone https://github.com/Gathin23/cleanyourtv` and work from there, so `tools/disable.sh` and the
+rest keep their safety checks, rather than stopping or writing your own.
 
 Connect
 - Find the TV on my network (hostname, ARP table, or ask me for the IP) and connect over ADB on port 5555.
