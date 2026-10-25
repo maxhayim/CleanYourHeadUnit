@@ -60,5 +60,5 @@ com.google.android.katniss               # Assistant / voice search, ~110-125 MB
 
 # Launcher handover: install the replacement launcher first and confirm Home, then disable these
 com.google.android.tvrecommendations     # launcher recommendations rows; the SHIELD phone remote also stops without it
-com.google.android.tungsten.setupwraith  # setup wizard; its .MainActivity answers HOME (see the Wi-Fi owner check above)
+com.google.android.tungsten.setupwraith  # setup wizard; its .MainActivity answers HOME (see the Wi-Fi owner check above); also costs phone casting after a reboot (the Cast receiver reads its credentials from setupwraith)
 # com.google.android.tvlauncher          # stock launcher: untested as a disable here (removed with uninstall); do it last

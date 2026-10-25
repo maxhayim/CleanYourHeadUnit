@@ -57,5 +57,5 @@ com.google.android.katniss                     # voice assistant
 com.google.android.apps.tv.dreamx              # ambient mode; the screensaver was also turned off
 
 # Launcher swap: setupwraith first, then launcherx (see the Wi-Fi quirk above)
-com.google.android.tungsten.setupwraith
+com.google.android.tungsten.setupwraith        # costs phone casting after a reboot (the Cast receiver reads its credentials from setupwraith)
 com.google.android.apps.tv.launcherx

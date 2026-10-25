@@ -844,7 +844,7 @@ service. What does work is an app that keeps Network debugging on and connects t
 an app opens or media starts while no `TYPE_HDMI_ARC`/`TYPE_HDMI_EARC` output is listed. The
 [Sony BRAVIA Launcher](https://github.com/udeshvirk/sony-bravia-launcher) in [`SHOWCASE.md`](../SHOWCASE.md)
 does this (`SoundbarWaker.java`). It is a trade-off: Network debugging stays on and the port is open on
-the home network, which the PROMPT's last step closes on purpose. On Sony, an app can instead open the
+the home network, which the PROMPT's last step closes on purpose; on a set with `ro.adb.secure=0` an open port is a shell for anyone on the network, so only consider it where the TV asks to allow each new key. On Sony, an app can instead open the
 Home Theatre Control panel (`com.sony.dtv.HomeTheatreControl`) for about half a second, which also
 wakes the soundbar and needs no ADB, at the cost of the panel flashing on screen.
 

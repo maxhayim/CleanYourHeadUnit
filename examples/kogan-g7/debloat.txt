@@ -45,7 +45,7 @@ com.google.android.youtube.tvmusic               # off by choice
 
 # Needed for the custom launcher: with launcherx disabled, setupwraith's RecoveryActivity claims HOME.
 # Disable only AFTER the launcher is installed. launcher/build-and-install.sh disables launcherx itself.
-com.google.android.tungsten.setupwraith
+com.google.android.tungsten.setupwraith   # costs phone casting after a reboot (the Cast receiver reads its credentials from setupwraith)
 
 # Optional: uncomment what you don't use
 # com.amazon.amazonvideo.livingroom              # Prime Video

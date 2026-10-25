@@ -7,7 +7,7 @@ Clean Your TV launcher as Home.
 
 | File | What it is |
 |---|---|
-| `debloat.txt` | The 63 packages that were disabled, grouped and commented |
+| `debloat.txt` | The 37 packages that were disabled, grouped and commented |
 | `config.json` | Dock, hidden TCL tiles, Live TV app, the Settings and YouTube buttons; push it with `tools/theme.sh` |
 | `65q7d-pro-home.png` | Home on the second unit, a TCL 65Q7D Pro (see [Second unit](#second-unit-65q7d-pro-greece-wi-fi)) |
 

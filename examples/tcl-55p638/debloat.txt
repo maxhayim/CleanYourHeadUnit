@@ -49,6 +49,7 @@ com.google.android.syncadapters.calendar # Google calendar sync
 # Unused streaming apps — off by choice
 au.com.stan.and
 com.amazon.amazonvideo.livingroom
+com.netflix.ninja
 tv.wuaki.apptv
 
 # Optional apps — off by choice

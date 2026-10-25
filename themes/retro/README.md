@@ -6,7 +6,7 @@ ambient colour gradient, and a wallpaper that follows the time of day.
 
 ![Retro theme](screenshot.jpg)
 
-**Author:** REGT-URRED (GitHub) ? [@yulrred](https://instagram.com/yulrred) (Instagram)
+**Author:** REGT-URRED (GitHub) · [@yulrred](https://instagram.com/yulrred) (Instagram)
 
 ## What it changes
 

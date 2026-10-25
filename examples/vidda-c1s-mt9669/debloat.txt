@@ -69,7 +69,7 @@ com.hisense.autotest
 com.hisense.electronictutorial                  # e-manual
 com.hisense.ar.baike
 com.jamdeo.tv.fte                               # first-run wizard, long done
-com.hisense.usbupgrade
+# com.hisense.usbupgrade                        # kept: the USB firmware upgrade and recovery path
 
 # Duplicate / unused lifestyle apps (casting stacks deliberately kept)
 com.hisense.tv.foodmanage

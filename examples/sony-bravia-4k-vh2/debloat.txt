@@ -73,11 +73,11 @@
 # Chromecast and firmware updates were kept. The owner-selected apps below were disabled and lived with
 # since 19 October 2026; they are choices, not requirements of the VH2 platform.
 
-# Fourth unit: owner-selected streaming/social apps
-com.spotify.tv.android
-com.aspiro.tidal
-com.curiosity.curiositystream.androidtv
-com.facebook.katana
+# Fourth unit: owner-selected streaming/social apps (off by choice there; uncomment the ones you don't use)
+# com.spotify.tv.android
+# com.aspiro.tidal
+# com.curiosity.curiositystream.androidtv
+# com.facebook.katana
 
 # ACR viewing tracker
 tv.samba.ssm                                   # Samba TV fingerprints what's on screen
