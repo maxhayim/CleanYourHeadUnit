@@ -740,6 +740,25 @@ app.
 Each package it leaves on comes with the reason and exits 1, because the TV is not back to the list
 until you deal with that one by hand.
 
+With `stock_home_redirect` the stock launcher can stay Home on purpose: the list leaves it out, the
+install script ran with `STOCK_LAUNCHER=none`, Android keeps it as Home, and `HomeKeyService` sends
+its home screen on to this launcher. On the Chromecast with Google TV 4K that setup matches the
+folder's `debloat-keep-cast.txt`, not its `debloat.txt`, which disables setupwraith and the
+screensaver pair the redirect setup keeps. On the Acer AR55AR2851UDPRO it is the folder's
+`debloat.txt`. Check those lists with the stock launcher as the second argument. Without it the
+check expects `com.gathin.tvhome` on Home, so every run reports Home as drift, and `--fix` tries to
+move Home to it, which those TVs do not keep:
+
+```bash
+TV_HOST=192.168.1.50 tools/venv/bin/python -I tools/check.py examples/google-chromecast-gtv-4k/debloat-keep-cast.txt com.google.android.apps.tv.launcherx
+TV_HOST=192.168.1.50 tools/venv/bin/python -I tools/check.py examples/acer-ar55ar2851udpro/debloat.txt com.google.android.tvlauncher
+```
+
+Leave the argument out where the stock launcher is meant to be off, disabled by the list or by the
+install script: the Chromecast's `debloat.txt`, where the install script disables launcherx, and the
+XGIMI projectors, where the redirect only covers for firmware that turns it back on. There the
+stock launcher on Home is drift, and naming it as the second argument would hide that drift.
+
 Lists that also disable the updater get no updates at all. To install one, re-enable the updater on
 the TV, let it update, run `check.py --fix`, and disable the updater again.
 
