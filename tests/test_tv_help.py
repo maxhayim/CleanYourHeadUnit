@@ -100,6 +100,10 @@ class TvHelpTest(unittest.TestCase):
         mark, cmds = work / "mark", work / "cmds"
         env = {k: v for k, v in os.environ.items() if k not in ("TV_HOST", "TV_PORT", "PYTHONPATH")}
         env["HOME"] = str(self.home)
+        # Windows expands `~` from USERPROFILE, not HOME, so tv.py would read the real ~/.android
+        # and make a key of its own instead of the stock one this run put in the temporary home.
+        if os.name == "nt":
+            env["USERPROFILE"] = str(self.home)
         env["STUB_MARK"], env["STUB_CMDS"] = str(mark), str(cmds)
         if stub:
             env["PYTHONPATH"] = str(self.base)
