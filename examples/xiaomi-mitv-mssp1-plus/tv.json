@@ -1,0 +1,6 @@
+{
+  "tv": "Xiaomi MiTV-MSSP1 (nino), firmware PI.5925",
+  "os": "Android TV 9",
+  "brand": "Xiaomi",
+  "notes": "The tested xiaomi-mitv-mssp1 base plus verified extras: report senders, both heavy screensavers (reassign first), TV Manager, restorable Google preinstalls and Xiaomi media leftovers; updater, Assistant, Chromecast, USB media and TV input services kept enabled"
+}
