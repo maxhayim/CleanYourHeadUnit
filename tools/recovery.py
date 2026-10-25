@@ -32,6 +32,15 @@ SETTINGS = ("window_animation_scale", "transition_animation_scale", "animator_du
 # This project's own launcher. When it already owned Home before debloating, restoring Home to it
 # would leave the stock launcher off, so restore goes back to the stock one instead.
 CUSTOM_LAUNCHER = "com.gathin.tvhome"
+# What answers HOME without being a launcher, the cases disable.sh, disable.ps1 and check.py skip too:
+# the setup wizards and the settings apps (on Google TV, setupwraith's .RecoveryActivity takes Home and
+# system_server crash-loops on it), a vendor's FallbackHome, the placeholder a TCL or a Xiaomi shows
+# when no launcher is enabled, and a factory-test app. tests/test_recovery_home_not_a_launcher.py
+# keeps the copies in step.
+NOT_LAUNCHERS = {"com.google.android.tungsten.setupwraith", "com.android.tv.settings",
+                 "com.android.settings", "com.android.provision"}
+FALLBACK_HOME_RE = re.compile(r"/\S*FallbackHome$")
+FACTORY_HOME_RE = re.compile(r"factorytest|factory_test|factorymode", re.I)
 VERSION = 1
 # Core Android packages no list may disable: with one of these off, Android itself can stop booting
 # (#884: an original Mi TV Stick that lost its permission controller, package installer, ext services,
@@ -147,6 +156,20 @@ def is_chooser(home):
     return bool(home) and not PACKAGE_RE.fullmatch(home.split("/", 1)[0])
 
 
+def not_a_launcher(home):
+    """Whether a Home component answers HOME without being a launcher to put back.
+
+    Home on one of these is a TV that is already broken: setupwraith's recovery screen, a black
+    placeholder, the factory test screen. Replayed as set-home-activity, it would pin Home there even
+    with the stock launcher enabled again.
+    """
+    if not home:
+        return False
+    package = home.split("/", 1)[0]
+    return (package in NOT_LAUNCHERS or bool(FALLBACK_HOME_RE.search(home))
+            or bool(FACTORY_HOME_RE.search(package)))
+
+
 def load_record(path):
     try:
         with open(path) as f:
@@ -169,6 +192,12 @@ def load_record(path):
         record["home"] = None
         sys.stderr.write(f"{path}: the recorded Home is Android's chooser ({home}), not a launcher; "
                          "reading it as no Home, so undo resolves the stock launcher.\n")
+    # Older records can also hold a Home that is no launcher, which restore would pin Home to. Only the
+    # Home is dropped: the package's entry is its state before cleanup, and the list may name it.
+    elif isinstance(home, str) and HOME_RE.fullmatch(home) and not_a_launcher(home):
+        record["home"] = None
+        sys.stderr.write(f"{path}: the recorded Home is {home}, which is not a launcher; reading it "
+                         "as no Home, so undo resolves the stock launcher.\n")
     # The record is replayed on the TV's shell, so it gets the same checks as the list and the TV's
     # answers did when it was written: a hand-edited or damaged file stops here, before any command.
     for name, state in record["packages"].items():
@@ -315,6 +344,12 @@ def save(list_path, host):
     # The launcher that owns Home may not be in the list, but it is what undo has to put back.
     home_package = home.split("/", 1)[0] if home else None
     targets = packages + ([home_package] if home_package and home_package not in packages else [])
+    # A Home that is no launcher (setupwraith's recovery screen, a FallbackHome, a factory test) is not
+    # recorded as Home either: restore would pin Home to it with the stock launcher enabled again, so
+    # it resolves the stock launcher instead. Its package keeps the entry above: that state is real.
+    not_launcher = home if not_a_launcher(home) else None
+    if not_launcher:
+        home = None
     record = {
         "version": VERSION,
         "created": time.strftime("%Y-%m-%dT%H:%M:%S%z"),
@@ -332,6 +367,9 @@ def save(list_path, host):
     if chooser:
         print(f"HOME before: {chooser}, Android's chooser (Home has no default), so no Home was "
               "recorded")
+    elif not_launcher:
+        print(f"HOME before: {not_launcher}, which is not a launcher (a setup wizard, a settings "
+              "app, a FallbackHome or a factory test), so no Home was recorded")
     else:
         print(f"HOME before: {home or 'no component answered'}")
     print("undo with tools/restore.sh <same list>; keep this file, it is the only copy.")
@@ -382,9 +420,9 @@ def restore_commands(list_path, stock, host):
     if home and home.split("/", 1)[0] != CUSTOM_LAUNCHER:
         commands.append(f"cmd package set-home-activity --user 0 {home}")
     else:
-        # Nothing handled HOME before cleanup (fresh TV, chooser only), or this project's launcher
-        # did, so there is no stock component to replay; ask the TV to resolve the stock launcher the
-        # way restore.sh always did.
+        # Nothing handled HOME before cleanup (fresh TV, chooser only), only something that is no
+        # launcher did, or this project's launcher did, so there is no stock component to replay; ask
+        # the TV to resolve the stock launcher the way restore.sh always did.
         commands.append(f"cmd package set-home-activity --user 0 $(cmd package resolve-activity "
                         f"--brief -a android.intent.action.MAIN -c android.intent.category.HOME "
                         f"{fallback} | tail -n 1)")
