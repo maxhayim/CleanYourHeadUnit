@@ -211,6 +211,9 @@ launcher follows the real sun only when `latitude` and `longitude` are set in
 
 ## Adding a theme
 
+Want a step-by-step prompt to hand to a coding agent with shell access to the TV?
+[`CREATE_A_THEME.md`](CREATE_A_THEME.md) walks this from the TV side, in the keys below.
+
 Open a PR with a new folder here containing:
 
 - `config.json`, the theme itself.
