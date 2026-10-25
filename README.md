@@ -741,12 +741,19 @@ compare the TV with the list you applied:
 TV_HOST=192.168.1.50 tools/venv/bin/python -I tools/check.py examples/<your tv>/debloat.txt
 ```
 
-It prints what drifted and exits 1 when anything did, so a weekly job on a home server or a Pi is
-enough to hear about it:
+It exits with `0` when the TV still matches the list, `1` when something drifted, and `2` when it
+could not check at all: the TV did not answer, nobody accepted the "Allow USB debugging?" prompt in
+time, the list path is not there, or the list disables Android's core packages. Only 1 is drift, so
+a job that mails on 1 alone stays quiet while the check never ran; mail on anything but 0, or on 2 as
+well, and a weekly job on a home server or a Pi is enough to hear about it:
 
 ```bash
 0 9 * * 1 cd ~/cleanyourtv && TV_HOST=192.168.1.50 tools/venv/bin/python -I tools/check.py examples/<your tv>/debloat.txt
 ```
+
+`TV_HOST` is read before any of that: a run that leaves it unset stops in `tools/tv.py` with its own
+message and also exits 1, so set it in the job line, as above, where cron does not inherit it from
+your shell.
 
 `--fix` reapplies the list to what drifted: it switches Home to the launcher the list does not
 disable (pass a package as the second argument if you run a fork), then disables the listed packages
