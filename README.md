@@ -904,10 +904,40 @@ tools/tv.py 'settings put global private_dns_mode hostname'
 
 It does not remove YouTube ads, which come from the same servers as the videos. When the TV reports
 "No internet", the resolver is down or unreachable and switching back restores everything:
-`tools/tv.py 'settings put global private_dns_mode opportunistic'`. A resolver that answers can still
-break one app on its own, so if a single app fails while the rest play, see
+`tools/tv.py 'settings put global private_dns_mode opportunistic'`. That line needs debugging back on,
+because Android TV's Settings app has no Private DNS page (not in AOSP, and not in Google TV 14 on a
+Chromecast with Google TV 4K); ADB goes to the TV's address, so it connects while the resolver is down.
+A resolver that answers can still break one app on its own, so if a single app fails while the rest play, see
 [one app refuses to play](docs/TROUBLESHOOTING.md#one-app-refuses-to-play-while-the-rest-of-the-tv-is-online)
 before you debug the app.
+
+</details>
+
+<details>
+<summary><b>Are there switches in the TV's own Settings worth flipping too?</b></summary>
+
+A few. They need no ADB, the remote switches them back, and the debloat leaves them in place
+(Usage & diagnostics and Apps only mode aside): their pages belong to Settings and Play services, which
+every list keeps. The paths are Google TV's; other Android TV builds move some of them.
+
+- **Settings → Privacy → Ads**: delete the advertising ID, or turn on Opt out of Ads Personalization. On
+  Android TV it is under About → Legal information → Ads (in Device Preferences on some sets).
+- **Settings → Privacy → Location** off. The launcher's network pill may then say "Wi-Fi" instead of the
+  network's name.
+- **Settings → Privacy → Usage & diagnostics** off, before the debloat. On a Chromecast with Google TV 4K
+  the page comes from setupwraith, which most Google TV lists disable for the launcher swap, and on a
+  [Hisense 50A6H4](examples/hisense-smarttv-4k-ffm-android11/debloat.txt) it opened nothing after the
+  debloat.
+- **Settings → Network & Internet → Scanning always available** off. It lets Google's location service and
+  other apps scan for Wi-Fi networks even while Wi-Fi is off, so it matters most on a TV on Ethernet.
+- **Settings → Accounts & Sign In → your profile → Apps only mode**, where launcherx stays enabled
+  (`stock_home_redirect`, or the Chromecast's `debloat-keep-cast.txt`). Google TV's own home then drops its
+  personalised recommendations and casting still works, but Search and the Assistant switch off. The
+  switch lives in launcherx, so a list that disables launcherx takes it away.
+
+On Fire OS: Settings → Preferences → Privacy Settings, with Interest-based Ads, Device Usage Data and
+Collect App Usage Data off. They sync with the Amazon account, so change them in the menu, not with
+`settings put`.
 
 </details>
 
