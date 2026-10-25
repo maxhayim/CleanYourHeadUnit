@@ -115,10 +115,15 @@ com.tcl.ttvs                          # 3rd-party data/ACR. Also serves com.tcl.
 # com.tcl.miracast                      # Miracast / "无线投屏" in the source panel
 # com.tcl.weixin                        # WeChat on TV
 
-# The 20250610 unit also disabled these, but the TV's own dumpsys usagestats only covers a
-# one-hour window there, so it proves "not opened in that hour" and not "unused" — they stay
-# comments. com.tcl.ffeducation, com.tcl.ffkaraoke and com.tcl.tclmusic above are the 20230208
-# unit's own entries and are left as they are.
+# The 20250610 unit disabled these first, and that broke the stock desktop: the 影视 row on
+# com.tcl.cyberui is the 腾讯视频版权 channel, and pressing OK has to hand the playback over to
+# com.tcl.vod. With com.tcl.vod disabled the row still shows - the data lives in cyberui - and
+# OK fails silently, with no activity started at all. The same goes for the 儿童 / 音乐 / 购物 /
+# 微信 rows and for com.tcl.usercenter, whose UserCenterService cyberui asks for.
+# A content app the stock UI links to must not be disabled, so these stay comments here.
+# com.tcl.ffeducation, com.tcl.ffkaraoke and com.tcl.tclmusic above are the 20230208 unit's own
+# entries and are left as they are - but by the same mechanism they would make the 儿童 and 音乐
+# rows on that unit dead, which is worth checking before applying this list as it stands.
 # com.tcl.tshop                         # 电视购物商城 (shopping mall)
 # com.tcl.vod                           # 腾讯视频 (Tencent Video)
 
