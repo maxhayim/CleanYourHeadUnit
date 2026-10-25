@@ -11,7 +11,7 @@ tools you mention (tools/tv.py, tools/disable.sh, docs/, examples/) aren't in th
 it would write equivalent helper scripts itself, which is the one path the safety rules exist to
 close - a hand-written disable loop has no restore record and no Home guard.
 
-So all four READMEs clone first, in the same row that names the prompt, and say why on the line
+So every README clones first, in the same row that names the prompt, and say why on the line
 under the table: the assistant reuses this repo's `tools/disable.sh` and `launcher/build-and-install.sh`
 instead of writing its own. The paragraph names both scripts rather than describing them, so a reader
 can see what the clone buys before they run anything.
@@ -108,9 +108,9 @@ class TheCloneStep(unittest.TestCase):
         self.assertRegex(slug(), r"^[\w.-]+/[\w.-]+$",
                          "the issue template names no github.com/<owner>/<repo> URL")
 
-    def test_four_readmes_are_read(self):
+    def test_five_readmes_are_read(self):
         found = pages()
-        self.assertEqual(4, len(found), f"expected README.md and three translations, read {[p.name for p in found]}")
+        self.assertEqual(5, len(found), f"expected README.md and four translations, read {[p.name for p in found]}")
         for page in found:
             self.assertGreaterEqual(len(rows(page.read_text(encoding="utf-8"))), 3,
                                     f"{page.name} parses as fewer than three table rows")
