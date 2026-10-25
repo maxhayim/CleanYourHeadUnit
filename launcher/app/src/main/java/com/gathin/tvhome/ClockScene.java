@@ -48,12 +48,18 @@ final class ClockScene {
     private Resources wallpaperRes;
     /** Bumped by stop(): a decode started before it finds a different number and drops its result. Main thread only. */
     private int wallpaperGeneration;
+    /** clock_wallpaper with a collection: the pictures, the one in use, and how long each lasts. */
+    private java.util.List<File> rotation;
+    private int rotationIndex;
+    private long rotationMs;
+    private long shownMs;
 
     private final Runnable tick = new Runnable() {
         @Override
         public void run() {
             moveClock();
             shiftGlow();
+            advanceWallpaper();
             handler.postDelayed(this, MOVE_MS);
         }
     };
@@ -109,7 +115,30 @@ final class ClockScene {
             }
             return;
         }
-        wallpaperFile = cfg.wallpaper != null ? cfg.wallpaper : cfg.wallpapers.isEmpty() ? null : cfg.wallpapers.get(0);
+        if (cfg.wallpaper != null) {
+            wallpaperFile = cfg.wallpaper;
+        } else if (cfg.wallpapers.isEmpty()) {
+            wallpaperFile = null;
+        } else {
+            // Start on the picture Home is showing. WallpaperPlayer records it under the same
+            // preferences and the screensaver runs in the same process, so this is just a read.
+            // Taking wallpapers.get(0) instead meant a rotating theme showed the screensaver a
+            // different picture to the one behind Home.
+            rotation = new java.util.ArrayList<>(cfg.wallpapers);
+            String shown = ctx.getSharedPreferences("wallpaper_rotation", Context.MODE_PRIVATE)
+                    .getString("image", "");
+            for (int i = 0; i < rotation.size(); i++) {
+                if (rotation.get(i).getName().equals(shown)) {
+                    rotationIndex = i;
+                    break;
+                }
+            }
+            wallpaperFile = rotation.get(rotationIndex);
+            // Home only rotates while it is visible, so the screensaver carries the rotation on
+            // itself; without this it holds one picture for as long as it is up.
+            rotationMs = cfg.wallpaperRotationMinutes > 0
+                    ? cfg.wallpaperRotationMinutes * 60_000L : 0L;
+        }
         wallpaperShade = (cfg.clockWallpaperDim * 255 / 100) << 24;
         wallpaperRes = ctx.getResources();
     }
@@ -162,6 +191,18 @@ final class ClockScene {
         } catch (Exception | OutOfMemoryError failure) {
             return null;
         }
+    }
+
+    /** Step to the next picture once its turn is up; the tick already runs every minute. */
+    private void advanceWallpaper() {
+        if (rotation == null || rotationMs <= 0 || rotation.size() < 2) return;
+        shownMs += MOVE_MS;
+        if (shownMs < rotationMs) return;
+        shownMs = 0;
+        rotationIndex = (rotationIndex + 1) % rotation.size();
+        wallpaperFile = rotation.get(rotationIndex);
+        wallpaperShown = false;
+        loadWallpaper();
     }
 
     private void moveClock() {
