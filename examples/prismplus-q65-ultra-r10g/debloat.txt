@@ -48,7 +48,7 @@ com.wbd.stream                              # Max, off by choice
 
 # Stock home. Disable only after the new launcher is installed and running, or Home lands on a factory test app.
 com.google.android.apps.tv.launcherx
-com.google.android.tungsten.setupwraith     # setup wizard; not needed for Google Assistant "Hey Google"
+com.google.android.tungsten.setupwraith     # setup wizard; on this set YouTube casting from a phone still works after a reboot (tested 2026-10-25)
 #   Careful: on most Google TV sets setupwraith's RecoveryActivity takes Home once launcherx is off and
 #   crash-loops system_server (docs/TROUBLESHOOTING.md). Forget and re-join Wi-Fi first, it owns the network.
 
