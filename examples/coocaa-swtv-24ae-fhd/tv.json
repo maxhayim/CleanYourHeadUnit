@@ -1,0 +1,6 @@
+{
+  "tv": "Coocaa SWTV-24AE-FHD (beomil, MediaTek mt5867), Vietnam/Global",
+  "os": "Google TV 14",
+  "brand": "Skyworth",
+  "notes": "Coocaa telemetry (recordactivation, aftersale), Android 14 ad services, recommendation rows, demos; Wi-Fi ownership & setupwraith quirk documented; keeps Bluetooth remote & MediaTek inputs; frees ~120MB RAM on 1GB RAM budget; reboot-checked"
+}
