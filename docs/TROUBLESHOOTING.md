@@ -421,7 +421,8 @@ Things that bit us or contributors, so they don't bite you. Commands use `tools/
   `SetupWraith|CastInfoProvider: querying cast infos` and `Created singleton instance of
   ClientAuthSigner`, and casting works. You cannot keep the provider and give up only Home:
   `pm disable-user` on `setupwraith/.RecoveryActivity` is refused with `SecurityException: Shell
-  cannot change component state`. So either debloat without setupwraith and launcherx, or re-enable
+  cannot change component state`. So either debloat without setupwraith and launcherx (for the 4K:
+  [`debloat-keep-cast.txt`](../examples/google-chromecast-gtv-4k/debloat-keep-cast.txt)), or re-enable
   setupwraith after each boot, wait for `ClientAuthSigner`, then disable it again: the receiver keeps
   the credentials in memory, so casting survives until the next reboot - and only in that process.
   `am force-stop com.google.android.apps.mediashell` followed by the receiver coming back prints
