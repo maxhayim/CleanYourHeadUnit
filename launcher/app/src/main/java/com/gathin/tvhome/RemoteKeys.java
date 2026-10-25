@@ -16,6 +16,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 import java.util.function.ToIntFunction;
 
 /**
@@ -134,14 +135,8 @@ final class RemoteKeys {
         return holds;
     }
 
-    /** Created on first use: building it while the class loads breaks the JVM tests. */
-    private static Handler handler;
-    private static Runnable pendingHold;
-    /**
-     * Presses are told apart by KeyEvent.getDownTime(): the press whose hold is pending, the one whose hold fired
-     * and the one that already launched. Both services get every event, so each press is answered once.
-     */
-    private static long armedDownTime = -1, firedDownTime = -1, launchedDownTime = -1;
+    /** Created on first use: building a Handler while the class loads breaks the JVM tests. */
+    private static Presses presses;
 
     /**
      * Consumes a key mapped by either list: the hold app opens once the button has been down for HOLD_MS, the
@@ -149,29 +144,79 @@ final class RemoteKeys {
      */
     static boolean handle(Context ctx, KeyEvent event, String app, String holdApp) {
         if (app == null && holdApp == null) return false;
-        long downTime = event.getDownTime();
+        if (presses == null) {
+            Handler handler = new Handler(Looper.getMainLooper());
+            presses = new Presses(new Presses.Timer() {
+                @Override public void post(Runnable hold, long delayMs) { handler.postDelayed(hold, delayMs); }
+                @Override public void cancel(Runnable hold) { handler.removeCallbacks(hold); }
+            });
+        }
+        String button = event.getDeviceId() + ":" + event.getKeyCode() + ":" + event.getScanCode();
         if (event.getAction() == KeyEvent.ACTION_DOWN) {
-            if (holdApp == null || event.getRepeatCount() != 0 || (pendingHold != null && armedDownTime == downTime)) return true;
-            if (handler == null) handler = new Handler(Looper.getMainLooper());
-            if (pendingHold != null) handler.removeCallbacks(pendingHold);
-            armedDownTime = downTime;
-            pendingHold = () -> {
-                pendingHold = null;
-                firedDownTime = downTime;
-                launch(ctx, holdApp);
-            };
-            handler.postDelayed(pendingHold, HOLD_MS);
+            presses.down(button, event.getEventTime(), event.getRepeatCount(), holdApp, target -> launch(ctx, target));
         } else if (event.getAction() == KeyEvent.ACTION_UP) {
-            if (pendingHold != null && armedDownTime == downTime) {
-                handler.removeCallbacks(pendingHold);
-                pendingHold = null;
-            }
-            if (downTime != firedDownTime && downTime != launchedDownTime && !event.isCanceled()) {
-                launchedDownTime = downTime;
-                launch(ctx, target(app, holdApp, event.getEventTime() - downTime));
-            }
+            presses.up(button, event.getEventTime(), event.getDownTime(), event.isCanceled(), app, holdApp,
+                    target -> launch(ctx, target));
         }
         return true;
+    }
+
+    /**
+     * Each button's presses, kept per device, keycode and scancode: KeyEvent.getDownTime() can't tell presses apart,
+     * since a key pressed together with another can report the other's. Both services get every event, so a DOWN
+     * or UP whose event time was already seen for that button is the other service's copy and is skipped. One small
+     * record per mapped button that has been pressed, not a history.
+     */
+    static final class Presses {
+        interface Timer {
+            void post(Runnable hold, long delayMs);
+            void cancel(Runnable hold);
+        }
+
+        private static final class Press {
+            long downAt = -1, upAt = -1;
+            boolean fired;
+            Runnable hold;
+        }
+
+        private final Map<String, Press> buttons = new HashMap<>();
+        private final Timer timer;
+
+        Presses(Timer timer) {
+            this.timer = timer;
+        }
+
+        void down(String button, long eventTime, int repeatCount, String holdApp, Consumer<String> open) {
+            if (repeatCount != 0) return;
+            Press press = buttons.computeIfAbsent(button, b -> new Press());
+            if (press.downAt == eventTime) return;
+            if (press.hold != null) timer.cancel(press.hold);   // its UP never came
+            press.downAt = eventTime;
+            press.fired = false;
+            press.hold = null;
+            if (holdApp == null) return;
+            press.hold = () -> {
+                press.hold = null;
+                press.fired = true;
+                open.accept(holdApp);
+            };
+            timer.post(press.hold, HOLD_MS);
+        }
+
+        void up(String button, long eventTime, long downTime, boolean canceled, String app, String holdApp,
+                Consumer<String> open) {
+            Press press = buttons.computeIfAbsent(button, b -> new Press());
+            if (press.upAt == eventTime) return;
+            boolean sawDown = press.downAt > press.upAt;
+            press.upAt = eventTime;
+            if (press.hold != null) {
+                timer.cancel(press.hold);
+                press.hold = null;
+            }
+            if (canceled || (sawDown && press.fired)) return;
+            // Without its DOWN (the service started while the button was held), the event's own down time will do.
+            open.accept(target(app, holdApp, eventTime - (sawDown ? press.downAt : downTime)));
+        }
     }
 
     /** The app a mapped key opens: its hold entry after HOLD_MS, otherwise its normal one. */
@@ -186,18 +231,18 @@ final class RemoteKeys {
         return id.isEmpty() ? null : id;
     }
 
+    /**
+     * True for a "package/.Activity" target. An input id has slashes too, and ComponentName.unflattenFromString()
+     * would read "input:com.tcl.tvinput" as its package, so an "input:" target never counts.
+     */
+    static boolean isActivity(String target) {
+        return target != null && inputId(target) == null && target.indexOf('/') > 0;
+    }
+
     /** Opens an app from a remote button: its TV entry if it has one, else its phone entry. An "input:<id>" target
      *  switches to that TV input (an HDMI port) instead; a "package/.Activity" target opens that activity. */
     static void launch(Context ctx, String pkg) {
         if (pkg == null) return;
-        ComponentName activity = pkg.indexOf('/') > 0 ? ComponentName.unflattenFromString(pkg) : null;
-        if (activity != null) {
-            try {
-                ctx.startActivity(new Intent().setComponent(activity).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
-            } catch (ActivityNotFoundException | SecurityException ignored) {
-            }
-            return;
-        }
         String inputId = inputId(pkg);
         if (inputId != null) {
             // The same passthrough URI the Inputs menu opens, which the Live TV app handles.
@@ -208,6 +253,14 @@ final class RemoteKeys {
             try {
                 ctx.startActivity(view);
             } catch (ActivityNotFoundException ignored) {
+            }
+            return;
+        }
+        ComponentName activity = isActivity(pkg) ? ComponentName.unflattenFromString(pkg) : null;
+        if (activity != null) {
+            try {
+                ctx.startActivity(new Intent().setComponent(activity).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+            } catch (ActivityNotFoundException | SecurityException ignored) {
             }
             return;
         }
