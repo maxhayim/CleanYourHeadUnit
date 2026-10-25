@@ -382,3 +382,53 @@ was added to `debloat.txt` beyond a header line naming this unit; the deltas are
   advertised `_adb._tcp`. Switching USB debugging off and rebooting closed it (`tools/adb-closed.py`).
 - **Checked with the real remote:** Home, the app buttons, Input, Settings and holding volume all worked with the
   new launcher and no key helpers enabled.
+
+## Additional G08 AU02 unit: native shortcuts and held-volume repeat
+
+One `Smart TV Pro`, device `G08`, product `G08_4K_GB`, Android TV 14 (SDK 34), build
+`tcl9618-user 14 UTT2.250416.001 AU02 release-keys`. The retail model was not confirmed. The owner tested
+launcher 2.7 from macOS on 2026-10-23; [issue #1292](https://github.com/Gathin23/cleanyourtv/issues/1292)
+records the result.
+
+With `com.google.android.apps.tv.launcherx` disabled, the real remote's Netflix (`4062`), Prime Video (`4099`)
+and YouTube (`190`) buttons stopped opening their apps. Disney+ and Globoplay buttons still worked.
+Enabling `HomeKeyService` with key filtering restored the failed shortcuts, but holding volume then moved
+it one step per press, as in [the G09 key-repeat note](../../docs/devices/tcl-55p71b-g09-key-repeat.md).
+
+### Working alternative: Google TV handles the app buttons
+
+Keeping launcherx enabled and redirecting its Home windows let the owner keep those shortcuts and held-volume
+repeat together. The two settings for this mode were:
+
+```json
+{
+  "key_filter": false,
+  "stock_home_redirect": "com.google.android.apps.tv.launcherx"
+}
+```
+
+- Leave `com.google.android.apps.tv.launcherx` enabled, unlike the standard install above. Google TV's native
+  receiver handles the app buttons; `app_keys` in a key-filtering helper is not what restores them here.
+- Enable only `com.gathin.tvhome/.HomeKeyService`, with `InputKeyService` off. The Home helper observes window
+  changes without filtering keys. Android still resolves Google TV as Home; the helper opens Clean Your TV.
+- Allow `AUTO_START` for `com.gathin.tvhome` and persist it with `appops write-settings`, as in
+  [TclAppBoot after a reboot](#tclappboot-after-a-reboot).
+- On this unit setupwraith stayed disabled after the owner forgot and rejoined Wi-Fi in Settings. The saved
+  network then belonged to `com.android.tv.settings`; this differs from the third unit, which kept the wizard.
+
+### Verification and limits
+
+The owner pressed Home, Netflix, Prime Video and YouTube on the physical remote: Home returned to Clean Your TV,
+the three apps opened, and held volume changed continuously.
+
+After a reboot, before injecting navigation keys, the focused app was `com.gathin.tvhome/.MainActivity`.
+`dumpsys accessibility` showed only `HomeKeyService` bound, with `TYPE_WINDOW_STATE_CHANGED`, and no
+`KeyboardInterceptor`. The helper also remained bound after a later `tools/theme.sh` push.
+
+Keeping Google TV enabled retains its process and can briefly show the stock Home during startup before the
+redirect. This is a compatibility alternative to disabling launcherx. The owner later chose direct Home with
+launcherx disabled, accepting the lost shortcuts.
+
+One unit, one firmware and one setup session, including a checked reboot of the redirect configuration.
+This does not establish long-term stability or validate the folder's full debloat list. No packages were added
+to `debloat.txt` for this report.
