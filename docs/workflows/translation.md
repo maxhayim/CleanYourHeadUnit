@@ -15,9 +15,9 @@
    - `fonts.xml`: point `font_body`, `font_regular` and the other `font_*` at the system families when the
      bundled Outfit has no glyphs for the language's letters (`values-vi`, #833).
    - `lunar.xml`: the lunar date format, the leap-month wording and the stem and branch names, for a
-     language that names them itself (`values-zh-rCN`, `values-vi`). Keep `lunar_stems` at ten items and
-     `lunar_branches` at twelve: `Lunar.java` indexes both by position, so a short list crashes the
-     launcher on a TV running that language and nothing anywhere else.
+     language that names them itself (`values-zh-rCN`, `values-vi`, `values-ko`). Keep `lunar_stems` at ten
+     items and `lunar_branches` at twelve: `Lunar.java` indexes both by position, so a short list crashes
+     the launcher on a TV running that language and nothing anywhere else.
 3. Add the locale to `launcher/app/src/main/res/xml/locales_config.xml`, in the tag form: a language
    folder that is not registered there cannot be chosen for the launcher alone on Android 13+.
 4. Add the language to the Languages list in `README.md`.
