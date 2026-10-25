@@ -20,7 +20,8 @@ moment those come back into play: the update can turn setupwraith back on for a 
 owns, and a fix that skipped the checks would take that TV off Wi-Fi with no way back in.
 
 Exit codes: 0 in sync (or fixed), 1 drift, an incomplete fix, or packages a safety check left on,
-2 the TV could not be read.
+2 the TV could not be read, which includes ADB timing out or failing partway (after which a --fix
+may be partial, and the next check says what is left).
 """
 import os
 import re
@@ -277,17 +278,47 @@ def main():
                          f"of the list and run it again. Nothing was checked or changed.\n")
         return 2
 
+    # adb_shell raises its own errors as plain Exception subclasses, not OSError:
+    # TcpTimeoutException when nobody accepts the "Allow USB debugging?" prompt in time (after the
+    # authorisations were revoked, or for a key the TV has not seen) or when the TV goes to standby
+    # partway, and AdbTimeoutError and DeviceAuthError. Left alone they end the run with a traceback
+    # and exit 1, which a cron job reads as drift, so every Exception here is exit 2, the TV could
+    # not be read. SystemExit and KeyboardInterrupt are not Exceptions: tv.py's own exits (TV_HOST
+    # unset), the refusals in recovery.py and in this file, and Ctrl-C still stop the run as before.
+    probe = "tools/venv/bin/python -I tools/tv.py --probe"
     try:
         dev = recovery.connect()
     except (OSError, ConnectionError) as e:
         sys.stderr.write(f"could not reach the TV ({e}). Check it is on and TV_HOST is right "
-                         f"(tools/venv/bin/python -I tools/tv.py --probe).\n")
+                         f"({probe}).\n")
         return 2
+    except Exception as e:
+        # Usually the handshake: the port answered, but nobody accepted the TV's prompt in time.
+        sys.stderr.write(f"could not read the TV ({type(e).__name__}: {e}). If it shows "
+                         f"\"Allow USB debugging?\", accept it and run this again; otherwise check "
+                         f"it is on and TV_HOST is right ({probe}).\n")
+        return 2
+    fixing = False
     try:
         _, _, home, back_on, gone, home_drifted, expected = inspect(dev, listed, preferred)
         code = report(list_path, listed, home, back_on, gone, home_drifted, expected)
         if code and wanted:
+            fixing = True
             code = fix(dev, listed, back_on, home_drifted, preferred)
+    except Exception as e:
+        why = f"{type(e).__name__}: {e}"
+        if fixing:
+            # The commands before the one that failed have run on the TV, that one may or may not
+            # have, and the rest have not. Nothing was read back, so only a fresh check can say
+            # where the fix stopped.
+            sys.stderr.write(f"lost the TV during --fix ({why}), so the fix may be partial. Once "
+                             f"the TV answers ({probe}), run check.py again to see what is left.\n")
+        else:
+            # No report from half the queries: what was read so far could pass for a TV in sync.
+            sys.stderr.write(f"could not read the TV ({why}), so there is no report and nothing "
+                             f"was changed. Check it is on and still on the network ({probe}), "
+                             f"then run this again.\n")
+        return 2
     finally:
         dev.close()
     return code
