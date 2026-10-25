@@ -50,7 +50,8 @@ class TempDirTest(unittest.TestCase):
         self.addCleanup(shutil.rmtree, self.base, ignore_errors=True)
 
 
-@unittest.skipUnless(shutil.which("md5sum") and shutil.which("base64"), "needs md5sum and base64")
+@unittest.skipUnless(os.name == "posix" and shutil.which("md5sum") and shutil.which("base64"),
+                     "the fake TV's shell is /bin/sh, and md5sum and base64 are needed")
 class B64PushTest(TempDirTest):
     """M4 (safe replace of the remote file) and L3 (usage) in tools/b64push.py."""
 

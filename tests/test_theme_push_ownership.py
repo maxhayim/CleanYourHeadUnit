@@ -130,6 +130,8 @@ class ThemePushTest(unittest.TestCase):
         (self.theme / "config.json").write_bytes(self.config)
 
     def run_theme(self, *args, **env):
+        if os.name != "posix" or not shutil.which("bash"):
+            raise unittest.SkipTest("theme.sh is a POSIX script; it needs bash")
         full = {k: v for k, v in os.environ.items() if k != "TV_HOST"}
         full.update({"TV_HOST": "192.0.2.10", "FAKE_LOG": str(self.log), "FAKE_DIR": str(self.device),
                      "FAKE_STAGE": str(self.stage), "FAKE_CONTENT_LOG": str(self.content_log),
