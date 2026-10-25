@@ -33,7 +33,10 @@ Things that bit us or contributors, so they don't bite you. Commands use `tools/
   without a new code. Port 5555 from `adb tcpip` usually lasts only until the next reboot. When you
   close up, switch Wireless debugging off on its own: on a Chromecast with Google TV 4K (`sabrina`)
   turning USB debugging off left the Wireless debugging port accepting connections, and
-  `tools/adb-closed.py` only checks 5555. `adb mdns services` lists that port while it is open.
+  `tools/adb-closed.py` checks 5555 unless it is given that port. `adb mdns services` lists the port
+  as `_adb-tls-connect._tcp` while it is open: note it before switching Wireless debugging off, and
+  run `tools/adb-closed.py <tv ip> <port>` straight after, before the reboot. After the reboot the old
+  number reads closed either way, because Wireless debugging takes a new port each time it starts.
 - **Port 5555 stays closed and there is no Wireless debugging entry either**, so the pair-once recipe
   above has nothing to pair with: a [Philips 58PUS8505/62 The One, Android TV 12,
   `STT2.230526.001`](https://github.com/Gathin23/cleanyourtv/issues/1489) reported USB debugging on, no
