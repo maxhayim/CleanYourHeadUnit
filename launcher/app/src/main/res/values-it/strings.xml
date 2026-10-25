@@ -92,6 +92,7 @@
     <string name="card_state_new_key">Nuova chiave</string>
     <string name="card_state_new_label">Nuovo nome</string>
     <string name="dock_edit">Modifica dock</string>
+    <string name="power_menu">Riavvia…</string>
     <string name="dock_edit_hint">Scegli il posto del dock da cambiare e premi OK. Indietro per finire.</string>
     <string name="dock_edit_pick_app">Ora scegli l\'app da mettere lì e premi OK. Indietro per scegliere un altro posto.</string>
     <string name="tile_add_to_dock">Aggiungi al dock</string>

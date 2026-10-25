@@ -611,7 +611,8 @@ and a wallpaper.
   where the TV ships a settings app of its own beside Android's - Xiaomi China, TCL/FFALCON and Fire OS are
   in `settings_fallback_components` - because that app holds pages Android's has no row for, such as
   Xiaomi's Account & Security with the ADB switch; **Module cards** with `module_cards`; **Edit dock** with
-  `dock_row`; and **Reorder apps**. The launcher's own page has these rows, top to bottom:
+  `dock_row`; **Reorder apps**; and **Restart…** while `HomeKeyService` runs, which opens the system power menu
+  (a launcher may not restart the TV itself). The launcher's own page has these rows, top to bottom:
   - **Reorder apps**, only with `launcher_settings_button`: OK picks an app up, the arrows move it, Back
     places it, and Back again finishes.
   - **Apps per row** 4, 5, 6 or 7; **Rows below dock** 0 to 3, how many rows of tiles stay visible under the

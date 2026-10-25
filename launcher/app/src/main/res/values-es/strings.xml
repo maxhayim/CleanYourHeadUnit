@@ -41,6 +41,7 @@
     <string name="off">No</string>
     <string name="enable">Activar</string>
     <string name="dock_edit">Editar el dock</string>
+    <string name="power_menu">Reiniciar…</string>
     <string name="dock_edit_hint">Elige el hueco del dock que quieres cambiar y pulsa OK. Atrás para terminar.</string>
     <string name="dock_edit_pick_app">Ahora elige la app que quieres poner ahí y pulsa OK. Atrás para elegir otro hueco.</string>
     <string name="tile_add_to_dock">Añadir al dock</string>
