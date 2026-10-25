@@ -65,10 +65,13 @@ public class HomeKeyService extends AccessibilityService {
     private BroadcastReceiver standbyExit;
     /** disableSelf is how this service leaves for standby, not the user turning it off. */
     private boolean steppingOut;
+    /** The bound helper, so the opt-in broadcast can arm it without waiting for a new connection. */
+    private static HomeKeyService running;
 
     @Override
     protected void onServiceConnected() {
         super.onServiceConnected();
+        running = this;
         settingsScancodes = getResources().getIntArray(R.array.settings_key_scancodes);
         // The service is directBootAware: Android 11 skips a service that is not while the user is still
         // locked at boot, writes accessibility_enabled=0 and, on TCL G03 firmware, never binds it after the
@@ -99,8 +102,17 @@ public class HomeKeyService extends AccessibilityService {
         unlockReceiver = null;
     }
 
+    /** The opt-in broadcast: arm this binding now, or drop the receiver if the opt-in was turned off. */
+    static void applyStandbyOptIn() {
+        HomeKeyService service = running;
+        if (service == null) return;
+        if (GuardKeep.offInStandby(service)) service.armStandbyExit();
+        else service.disarmStandbyExit();
+    }
+
     @Override
     public void onDestroy() {
+        if (running == this) running = null;
         stopWaitingForUnlock();
         if (standbyExit != null) {
             try {
@@ -127,6 +139,15 @@ public class HomeKeyService extends AccessibilityService {
         registerReceiver(standbyExit, new IntentFilter(Intent.ACTION_SCREEN_OFF));
         PowerManager power = getSystemService(PowerManager.class);
         if (power != null && !power.isInteractive()) leaveForStandby();
+    }
+
+    private void disarmStandbyExit() {
+        if (standbyExit == null) return;
+        try {
+            unregisterReceiver(standbyExit);
+        } catch (RuntimeException ignored) {
+        }
+        standbyExit = null;
     }
 
     private void leaveForStandby() {

@@ -46,6 +46,9 @@ final class GuardKeep {
 
     /** Puts HomeKeyService back on the enabled list when standby exit is opted in. Other services stay. */
     static void ensureHomeKey(Context context) {
+        // The helper may already be bound. Arming only inside onServiceConnected misses an opt-in
+        // that arrives after that, so the first screen-off does nothing (Philips 65PUS8102).
+        HomeKeyService.applyStandbyOptIn();
         if (!offInStandby(context)) return;
         if (context.checkSelfPermission(Manifest.permission.WRITE_SECURE_SETTINGS)
                 != PackageManager.PERMISSION_GRANTED) return;
