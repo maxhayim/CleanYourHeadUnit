@@ -15,6 +15,7 @@ half-applied list must not record the broken state as the original. A later run 
 the list gained since then, with their state before this list disabled them.
 """
 import hashlib
+import ipaddress
 import json
 import os
 from pathlib import Path
@@ -67,12 +68,73 @@ def read_list(path):
     return names
 
 
+def split_host_port(endpoint):
+    """host:port or [ipv6]:port as (host, port or None), the way tools/tv.py reads TV_HOST."""
+    if endpoint.startswith("["):
+        end = endpoint.find("]")
+        if end != -1:
+            rest = endpoint[end + 1:]
+            return endpoint[1:end], (rest[1:] if rest.startswith(":") else None)
+    elif endpoint.count(":") == 1:
+        host, port = endpoint.split(":", 1)
+        return host, port
+    return endpoint, None
+
+
+def lan_address(host):
+    """The TV's IP address when TV_HOST names a TV on the network, else None.
+
+    A loopback address (a relay, tools/relay.md) and a host name keep TV_HOST exactly as typed as the
+    record's name, as they always have; TV_PORT is not part of that name.
+    """
+    name, _ = split_host_port(host or "")
+    try:
+        return None if ipaddress.ip_address(name).is_loopback else name
+    except ValueError:
+        return None
+
+
+def record_name(list_path, tag):
+    digest = hashlib.sha1(str(Path(list_path).resolve()).encode()).hexdigest()[:8]
+    tag = re.sub(r"[^A-Za-z0-9.-]", "_", tag or "no-host")
+    return Path.home() / ".cleanyourtv" / f"recovery-{tag}-{digest}.json"
+
+
 def record_path(list_path, host):
     """One record per TV and list. The list is identified by its absolute path, so a copy of the
-    same file somewhere else gets its own record."""
-    tag = re.sub(r"[^A-Za-z0-9.-]", "_", host or "no-host")
-    digest = hashlib.sha1(str(Path(list_path).resolve()).encode()).hexdigest()[:8]
-    return Path.home() / ".cleanyourtv" / f"recovery-{tag}-{digest}.json"
+    same file somewhere else gets its own record. On the network a TV is its IP address:
+    TV_HOST=192.168.1.50, TV_HOST=192.168.1.50:5555 and TV_PORT=5555 reach the same TV, so they
+    share one record, named without the port."""
+    return record_name(list_path, lan_address(host) or host)
+
+
+def find_record(list_path, host):
+    """The record file for this TV and list: record_path's name, or the name older versions gave a
+    record on the network, TV_HOST exactly as typed with its port (recovery-192.168.1.50_5555-...).
+
+    Records under both names cannot be told apart from here: they may be this TV before and after
+    cleanup, or two TVs that had this address in turn. So nothing is chosen for the owner, and the
+    run stops before anything reaches the TV.
+    """
+    path = record_path(list_path, host)
+    address = lan_address(host)
+    if not address:
+        return path
+    port = split_host_port(host)[1] or os.environ.get("TV_PORT") or "5555"
+    typed = f"[{address}]:{port}" if ":" in address else f"{address}:{port}"
+    names = dict.fromkeys((path, record_name(list_path, typed), record_name(list_path, host)))
+    found = [name for name in names if name.exists()]
+    if not found:
+        return path
+    if len(found) > 1:
+        raise SystemExit("this TV and list have two recovery records, under the name older versions "
+                         "gave it and the one\nit gets now:\n" + "".join(f"  {name}\n" for name in found)
+                         + "They may be this TV before and after cleanup, or two TVs that had this address "
+                         "in turn.\nMove the one that is not this TV's state from before cleanup aside "
+                         "deliberately, then run this again.\nNothing was changed on the TV.")
+    if found[0] != path:
+        sys.stderr.write(f"using {found[0]}, the name an older version gave this TV's record.\n")
+    return found[0]
 
 
 def is_chooser(home):
@@ -208,7 +270,7 @@ def package_state(name, installed, disabled):
 
 
 def save(list_path, host):
-    path = record_path(list_path, host)
+    path = find_record(list_path, host)
     if path.exists():
         record = load_record(path)
         packages = read_list(list_path)
@@ -281,7 +343,7 @@ def restore_commands(list_path, stock, host):
     packages = read_list(list_path)
     if stock and not PACKAGE_RE.fullmatch(stock):
         raise SystemExit(f"not a package name: {stock!r}")
-    path = record_path(list_path, host)
+    path = find_record(list_path, host)
     commands = []
 
     if not path.exists():
