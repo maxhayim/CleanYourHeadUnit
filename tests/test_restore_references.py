@@ -15,6 +15,11 @@ list as its first argument and the stock launcher as its second, so the CVTE T97
 `tools/restore.sh ... com.cvte.tv.launcher.highend` was refused before a single package came back,
 which the reference pattern above never read because there was no `.txt` in the line.
 
+`STOCK_LAUNCHER=<package>` is how `launcher/build-and-install.sh` takes the stock launcher, from the
+environment; restore.sh never reads it. The Skyworth SWTV-22AE-FHD page said to pass
+`STOCK_LAUNCHER=` "when restoring", which leaves restore.sh on its default launcher, so a line that
+pairs a restore with that setting has to name the installer it belongs to.
+
 Run from the repository root: python3 -m unittest discover -s tests -v
 """
 import os
@@ -42,6 +47,10 @@ PAIR = re.compile(r"tools[/\\]restore\.sh\s+(\S+)\s+(\S+)")
 PACKAGE = re.compile(r"[A-Za-z_][A-Za-z0-9_]*(\.[A-Za-z0-9_]+)+")
 # A token as a page wraps it: `code`, "quoted", and the punctuation that ends the sentence.
 WRAPPER = "`'\",;."
+# "restore.sh", "Restore", "when restoring"; not RESTORE_KEY_SERVICES, an installer setting.
+RESTORING = re.compile(r"(?i)\brestor(?:e|ing)\b")
+STOCK_SETTING = re.compile(r"STOCK_LAUNCHER\b")
+INSTALLER = re.compile(r"build-and-install")
 
 
 def unwrapped(token):
@@ -113,6 +122,23 @@ def commands_without_a_list(root):
             if not unwrapped(first).endswith(".txt") and "<" not in first]
 
 
+def restore_with_stock_setting(root):
+    """(file, line number, names the installer, sets it) for every line about a restore that names
+    STOCK_LAUNCHER; "sets it" is the `STOCK_LAUNCHER=` form an owner would type."""
+    found = []
+    for path, text in walk(root):
+        for number, line in enumerate(text.splitlines(), 1):
+            if RESTORING.search(line) and STOCK_SETTING.search(line):
+                found.append((path, number, bool(INSTALLER.search(line)), "STOCK_LAUNCHER=" in line))
+    return found
+
+
+def stock_setting_for_restore(root):
+    """(file, line number) for the lines that set STOCK_LAUNCHER= for a restore and name no installer."""
+    return [(path, number) for path, number, installer, sets in restore_with_stock_setting(root)
+            if sets and not installer]
+
+
 class RestoreReferencesTest(unittest.TestCase):
     def test_every_reference_names_a_list_that_is_there(self):
         missing = [(str(path), name) for path, name in read_references(ROOT)
@@ -170,6 +196,23 @@ class RestoreReferencesTest(unittest.TestCase):
                       "(and the undo lines it checks) no longer match the script")
         self.assertIn('STOCK="${2:', text,
                       "restore.sh no longer takes the stock launcher as its second argument")
+
+    def test_a_restore_is_not_told_to_take_stock_launcher_from_the_environment(self):
+        # The Skyworth SWTV-22AE-FHD page said "When restoring or building/installing, pass
+        # `STOCK_LAUNCHER=...`". restore.sh reads only its second argument, so an owner who did that
+        # got com.google.android.tvlauncher back instead of launcherx.
+        self.assertGreaterEqual(len(restore_with_stock_setting(ROOT)), 4,
+                                "the sweep should read the lines that mention restore.sh and "
+                                "STOCK_LAUNCHER together; it found fewer, so it cannot fail on one")
+        wrong = [(str(path), number) for path, number in stock_setting_for_restore(ROOT)]
+        self.assertEqual([], wrong,
+                         "these lines set STOCK_LAUNCHER= for a restore without naming "
+                         "launcher/build-and-install.sh; restore.sh takes the launcher as its second "
+                         "argument and never reads that setting")
+        for script in ("restore.sh", "restore.ps1"):
+            text = (ROOT / "tools" / script).read_text(encoding="utf-8")
+            self.assertNotIn("STOCK_LAUNCHER", text,
+                             f"{script} reads STOCK_LAUNCHER now, so the rule above is out of date")
 
     # ---- the reader itself, so the two tests above cannot pass by reading nothing ---------------
 
@@ -289,6 +332,28 @@ class RestoreReferencesTest(unittest.TestCase):
             self.write(root, "docs/page.md",
                        "restore.sh would turn them ON, and `tools/restore.sh` takes the list first.\n")
             self.assertEqual([], restore_commands(root))
+
+    def test_stock_launcher_set_for_a_restore_is_reported(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            self.write(root, "examples/x/README.md",
+                       "- When restoring or building/installing, pass "
+                       "`STOCK_LAUNCHER=com.google.android.apps.tv.launcherx`.\n")
+            self.assertEqual([(Path("examples/x/README.md"), 1)], stock_setting_for_restore(root))
+
+    def test_stock_launcher_set_for_the_installer_is_quiet(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            self.write(root, "examples/x/debloat.txt",
+                       "# Stock launcher: com.example.home (pass it to restore.sh, and to the installer as\n"
+                       "#   STOCK_LAUNCHER=com.example.home launcher/build-and-install.sh)\n"
+                       "# Stock launcher: com.example.home (pass it as STOCK_LAUNCHER / to restore.sh).\n"
+                       "TV_HOST=<tv ip> RESTORE_KEY_SERVICES=1 STOCK_LAUNCHER=com.example.home make\n"
+                       "- When restoring, pass it to `tools/restore.sh` as the second argument; when "
+                       "building/installing, pass `STOCK_LAUNCHER=com.example.home` to "
+                       "`launcher/build-and-install.sh`.\n")
+            self.assertEqual([], stock_setting_for_restore(root))
+            self.assertEqual([3, 5], [number for _, number, _, _ in restore_with_stock_setting(root)])
 
     def test_the_powershell_twin_is_a_named_parameter_command(self):
         # restore.ps1 takes -List and -Stock and has no package-shaped bare argument, so none of this
