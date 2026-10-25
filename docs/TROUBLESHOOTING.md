@@ -932,6 +932,29 @@ it, and a supervisor must not start a second copy. Do not solve the reboot by le
 something local can restart it — port 5555 reachable from the LAN is a shell on the TV for anything on the
 network, which is why the closing step in [README](../README.md#questions-people-ask) turns it off.
 
+## The Netflix button still opens Netflix, and a key helper never sees it (TCL UnionTV)
+
+**Seen on:** a TCL UnionTV (`ro.product.model` UnionTV, Android 9, `PPR2.180905.006.A1`, remote `TCL_RC802VEM`)
+with the launcher as Home and `InputKeyService` and `HomeKeyService` both enabled.
+
+The Netflix button sends keycode 4062 (scancode 0, `deviceId=-1`). With `4062:<package>` in `app_keys` the
+button still opened Netflix and the mapped app never started. `logcat` shows why:
+
+- `interceptKeyTq keycode=4062` is logged, then an `ActivityManager START ... com.netflix.ninja/.MainActivity`
+  about 60 ms later **from Netflix's own uid**. The firmware sends the key to Netflix's `NetflixKeyReceiver`
+  (action `com.netflix.ninja.intent.action.NETFLIX_KEY`, a `signature|privileged` permission), and Netflix
+  starts itself before any window gets the key.
+- `pm disable com.netflix.ninja/.NetflixKeyReceiver` is refused for the shell user (`Shell cannot change
+  component state`). Disabling the whole app works: `pm disable-user --user 0 com.netflix.ninja` (undo with
+  `pm enable com.netflix.ninja`). Do that only if the person does not use Netflix.
+- With Netflix disabled the button does nothing, and `logcat` shows `Unhandled key: win=Window{... com.gathin.tvhome/...MainActivity}, keyCode=4062`:
+  the key reaches the focused window, but the two accessibility helpers still never get it, so `app_keys`
+  has no effect. The firmware appears to inject this key after the input filter the helpers sit on.
+
+So on this set only the focused window can answer the button, and only while Home is in front. Find the
+keycode first (`tools/tv.py 'logcat -d -v time | grep interceptKeyTq'` right after pressing the button),
+because `getevent -lt` did not show it in the captures taken here.
+
 ## A key helper is bound and a held remote button stopped repeating
 
 Hold volume up or down and the volume moves one step per press instead of ramping. The remote may be
