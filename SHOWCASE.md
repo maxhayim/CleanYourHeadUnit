@@ -8,6 +8,19 @@ Nothing here is reviewed or maintained by this repo. Read the project's own READ
 it was built on, and treat it the way you'd treat any app you sideload. Each row links to the
 project's own issue tracker.
 
+**Before you install anything from this page.** A home screen is the app your TV opens most, and some
+of these projects ask for far more than the reference launcher does:
+
+- Build it from source, from a tag or commit you have looked at, rather than installing a prebuilt APK.
+- Read its `AndroidManifest.xml` for `android.permission.INTERNET`, `BIND_ACCESSIBILITY_SERVICE` (it can
+  read the screen and filter remote keys), `RECEIVE_BOOT_COMPLETED`, `REQUEST_INSTALL_PACKAGES`, and any
+  code that talks to ADB or Wireless debugging. If the manifest asks for something the row and the
+  project's README don't mention, don't install it, and open an issue here.
+- Before you install an update, check that its signing certificate matches the one you have:
+  `apksigner verify --print-certs app.apk`. A changed certificate on an "update" is a red flag.
+- Turn network ADB off when you're done, whatever you installed, and check it with
+  `tools/adb-closed.py <tv ip>`.
+
 **Jump to:** [Home screens built as their own app](#home-screens-built-as-their-own-app) · [Forks of the launcher](#forks-of-the-launcher) · [Screensavers and add-ons](#screensavers-and-add-ons) · [Tools and companion apps](#tools-and-companion-apps) · [Other platforms: Fire TV and LG webOS](#other-platforms-fire-tv-and-lg-webos) · [Add-ons in this repo](addons/README.md) · [Guides and write-ups](#guides-and-write-ups) · [Find a project by TV brand](#find-a-project-by-tv-brand) · [Add yours](#add-yours)
 
 116 projects so far.
