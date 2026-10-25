@@ -78,6 +78,27 @@ CATALOGUE = {
         "telemetry",
         "feedback reports to Google",
     ),
+    "com.android.tv.feedbackconsent": (
+        "telemetry",
+        "Android TV's consent screen for feedback reports: once the owner agrees, it collects the bug "
+        "report and system logs for the app that asked; disabled with com.google.android.feedback in "
+        "about one in five lists in examples/",
+    ),
+    "com.google.android.tv.remotecontrol.logging": (
+        "telemetry",
+        "remote usage logging, as the Chromecast HD and 4K and Google TV Streamer lists call it; "
+        "a boot receiver with Bluetooth permissions and no INTERNET permission of its own",
+    ),
+    "com.google.android.apps.tv.netoscope": (
+        "telemetry",
+        "Google TV network diagnostics: it can read dumpsys (DUMP) and holds INTERNET and Wi-Fi "
+        "permissions; the Chromecast with Google TV 4K lists disable it",
+    ),
+    "com.google.android.partnersetup": (
+        "telemetry",
+        "Google Partner Setup: RLZ partner-attribution pings, with a ping receiver that also runs "
+        "at boot; disabled in about a third of the lists in examples/",
+    ),
 }
 
 # A package found only by its name is reported apart and never written into the list by default:
