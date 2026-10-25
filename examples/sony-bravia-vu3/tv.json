@@ -2,5 +2,5 @@
   "tv": "Sony BRAVIA KD-55X75K (BRAVIA_VU3_4K, Realtek rtd2885m)",
   "os": "Google TV 14",
   "brand": "Sony",
-  "notes": "Disables Google setup, feedback, games, calendar sync, print, personalization and Sony demo/help/promotions apps; keeps Live TV, core Google services, streaming apps and inputs. Second unit (India), same build: reboot-checked; the remote's Netflix, YouTube, YouTube Music and Prime Video buttons are mapped by scancode in config.json, and that key helper trades the volume ramp."
+  "notes": "Disables Google setup, feedback, games, calendar sync, print, personalization and Sony demo/help/promotions apps; keeps Live TV, core Google services, streaming apps and inputs."
 }
