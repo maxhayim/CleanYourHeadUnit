@@ -260,9 +260,9 @@ def screenshot(dev, local, keys=(), wait=0.0):
     # The exit status tells a capture that failed (no file to pull) from one that came back empty: with
     # Netflix in front a TCL C755 exits 1 and leaves a 0-byte file, which is the empty case below.
     said = dev.shell(f"rm -f {SHOT_REMOTE}; screencap -p {SHOT_REMOTE}; echo rc=$?", read_timeout_s=120.0)
-    rc = next((int(line[3:]) for line in said.splitlines() if re.fullmatch(r"rc=-?\d+", line.strip())), None)
+    rc = next((int(line.strip()[3:]) for line in said.splitlines() if re.fullmatch(r"rc=-?\d+", line.strip())), None)
     if rc not in (None, 0, 1):
-        other = " ".join(line.strip() for line in said.splitlines() if line.strip() and not line.startswith("rc="))
+        other = " ".join(line.strip() for line in said.splitlines() if line.strip() and not line.strip().startswith("rc="))
         dev.shell(f"rm -f {SHOT_REMOTE}", read_timeout_s=60.0)
         print(f"screencap failed on the TV (exit status {rc}): {other or 'no output'}", file=sys.stderr)
         return 1
