@@ -1,0 +1,6 @@
+{
+  "tv": "Philips 50PUF7099/T3 (TPV EBONY_V560, Hisilicon), China",
+  "os": "Android TV 9",
+  "brand": "Philips",
+  "notes": "China-market set: BestV/百视通 stock home (`com.bestv.ott`, not in `KNOWN_STOCK_LAUNCHERS`, so pass `STOCK_LAUNCHER=com.bestv.ott`), three package families side by side (`tv.fun.*`, `com.newtv.*`, `com.tpv.*`), no GMS; TPV telemetry and ad services, BestV/ktcp voice and camera, the preinstalled content apps and the three upgraders (all with `INSTALL_PACKAGES`, `tv.fun.tvupgrade` is the installer's own installer) off; the screensaver shipped pointing at a package that is not installed, so there was no DreamService at all; launcher handover verified after a reboot"
+}
