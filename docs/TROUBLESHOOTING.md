@@ -267,6 +267,21 @@ Things that bit us or contributors, so they don't bite you. Commands use `tools/
   `com.android.settings`, `com.android.tv.settings` or `android`), with no switch to override it.
   If a set is already stuck and still answers ADB, `pm enable` each of those packages and reboot;
   if ADB is gone too, a factory reset from the recovery menu is usually the only way back.
+- **The TV restarts in a loop after a debloat**, seen once, on a Haier H50H5F (Google TV 14,
+  MediaTek, [#1578](https://github.com/Gathin23/cleanyourtv/issues/1578)). What the agent disabled
+  is not known. The reply on the issue names eight packages from the disabled-package list attached
+  to the report: `com.cltv.mal` (TV middleware), `com.cltv.hybrid` (Live TV), the ISDB and ATSC
+  tuner inputs and four Haier apps. But the six files attached match the backup PROMPT.md has the
+  agent save before changing anything, and on the Haier-built [AQUA MatrixTV EE
+  50](../examples/aqua-matrixtv-ee-50/debloat.txt) five of those eight are disabled from the
+  factory. So the list may be the TV's state before the debloat: then it says nothing about the
+  cause, and turning those eight back on would switch on what the factory left off instead of
+  undoing the debloat. If the set stays up long enough between restarts, `pm enable` with the stock
+  `adb` each package from the list that was applied (or run the agent's restore script), and reboot.
+  Wireless debugging usually goes off at every restart and gets a new port each time it is switched
+  on, so read the port from its screen or `adb mdns services`. This set never stayed up long enough
+  to switch it back on, and then restarted into the recovery menu, where a factory reset turns every
+  disabled package back on (nothing was uninstalled).
 - **The TV stays on the boot logo after a list, and disabling the only Home app is enough to do
   it**, seen on a KitKat-era set ([COOP COTV-0001](https://github.com/Gathin23/cleanyourtv/issues/795):
   Realtek `rtd298x`, Android 4.4.2, SDK 19). 17 packages were disabled over Ethernet ADB, each
