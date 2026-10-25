@@ -293,6 +293,7 @@ on that firmware, grouped and commented. These are starting points: comment out 
 Notes for models that have no tested list yet live in [`docs/devices/`](../docs/devices/):
 
 - [Pixpaq Gold Ray-Mastered Edition](../docs/devices/pixpaq-gold-ray-mastered.md), Android 13 (reports `ADT-3`): Activity Launcher paths into Android Settings and Developer options, a separate Settings shortcut, Projectivy Home and reboot observations, and screensaver selection; no packages disabled.
+- [Amazon Fire TV Stick AFTMA08C15](../docs/devices/amazon-fire-tv-aftma08c15.md), Fire OS 8.1.8.5 / Android 11: external dumbtv Home 1.3 observations, physical Home failure despite passing injected-key checks, recovery limits, updater preservation, and media-folder wallpaper configuration; single-session notes, no tested list.
 
 - [TCL 55P635](../docs/devices/tcl-55p635.md), G07, Android TV 11, `V8-R51AT01-LF1V138`: keeping stock TV/CH, LIST, INFO, Google TV profiles and the top-right settings popup alongside CleanYourTV, with an explicit terrestrial tuner input; single-session configuration notes, no retained debloat list.
 
