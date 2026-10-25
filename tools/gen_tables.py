@@ -288,12 +288,12 @@ def read_inputs(root, patch):
     says the generated files are stale when in fact nothing was read at all.
     """
     if not root.is_dir():
-        return None, f"--root {root}: not a folder. Nothing was read or written."
+        return None, f"--root '{root}': not a folder. Nothing was read or written."
     # examples/ is what it reads; the three OWNED files are the parts of the checkout it writes.
     needs = ["examples"] + list(OWNED)
     missing = [f"{n}/" if n == "examples" else n for n in needs if not (root / n).exists()]
     if missing:
-        return None, (f"--root {root}: no {', no '.join(missing)} in it. Point --root at a checkout of this "
+        return None, (f"--root '{root}': no {', no '.join(missing)} in it. Point --root at a checkout of this "
                       f"repository: nothing was read or written.")
     if patch is None:
         return None, None
@@ -301,7 +301,8 @@ def read_inputs(root, patch):
         return Path(patch).read_text(encoding="utf-8"), None
     except OSError as e:
         # A path that is a directory is OSError too (IsADirectoryError), so this covers a patch folder.
-        return None, f"--adopt: cannot read {patch}: {e.strerror}. Nothing was written."
+        # The path is quoted so an empty --adopt ('' or a stray pair of quotes) is visible in the line.
+        return None, f"--adopt: cannot read '{patch}': {e.strerror}. Nothing was written."
 
 
 def main(argv=None):

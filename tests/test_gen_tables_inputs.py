@@ -56,6 +56,14 @@ class RootTest(unittest.TestCase):
             self.assertIn("not a folder", err)
             self.assertEqual(out, "")
 
+    def test_the_root_it_could_not_read_is_quoted(self):
+        # Quoted, so the line shows the path it was handed even when that token is empty or has spaces in it.
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp) / "no such checkout"
+            code, _, err = run("--root", str(root), "--check")
+            self.assertEqual(code, 2, err)
+            self.assertIn(f"--root '{root}'", err)
+
     def test_a_folder_that_is_not_a_checkout_names_what_is_missing(self):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp) / "empty"
@@ -74,7 +82,9 @@ class RootTest(unittest.TestCase):
             code, out, err = run("--root", str(root), "--check")
             self.assertEqual(code, 2, err)
             self.assertIn("no tools/readme_stats.py in it", err)
-            self.assertNotIn("examples/", err)
+            # The other four paths must not be named as missing: pin the phrase, not a bare "examples/",
+            # since the line also carries the root, whose path a runner could one day spell with it.
+            self.assertNotIn("no examples/", err)
 
     def test_a_refused_root_is_never_the_out_of_date_exit(self):
         # The one thing a weekly job and the README-tables job both read as a real finding.
@@ -115,6 +125,17 @@ class AdoptTest(unittest.TestCase):
             code, out, err = run("--root", str(root), "--adopt", tmp)
             self.assertEqual(code, 2, err)
             self.assertIn("Is a directory", err)
+            self.assertIn("Nothing was written", err)
+            self.assertEqual(out, "")
+
+    def test_an_empty_patch_path_is_still_named_in_the_line(self):
+        # `--adopt ''` (or a stray pair of quotes) leaves the token empty: quoted, the line still shows what
+        # it tried to read instead of "cannot read : No such file or directory".
+        with tempfile.TemporaryDirectory() as tmp:
+            root = valid(tmp)
+            code, out, err = run("--root", str(root), "--adopt", "")
+            self.assertEqual(code, 2, err)
+            self.assertIn("cannot read ''", err)
             self.assertIn("Nothing was written", err)
             self.assertEqual(out, "")
 
