@@ -9,7 +9,7 @@
 # rebooted cold afterwards and came back to Home with ADB, Wi-Fi and the launcher in place. HDMI and Live TV
 # were not exercised on this unit.
 # Kept on purpose: org.droidtv core, com.mediatek TV services, Play Store and Play Services, Assistant,
-# Chromecast, firmware updates, keyboards.
+# Chromecast (casting may stop after a reboot with setupwraith off), firmware updates, keyboards.
 #
 # Batch 1: vendor analytics, retail demo, auto-installs and apps the owner does not use.
 org.droidtv.candeebug
@@ -45,5 +45,5 @@ org.droidtv.customautologservice      # TP Vision log collector
 #
 # Stock home last, after the new launcher is installed. The Wi-Fi network was forgotten and added again first,
 # so setupwraith no longer owns it (disabling it while it did would have taken the TV off Wi-Fi and ADB).
-com.google.android.tungsten.setupwraith
+com.google.android.tungsten.setupwraith   # phone casting may stop after a reboot (the Cast receiver reads its credentials from setupwraith)
 com.google.android.apps.tv.launcherx

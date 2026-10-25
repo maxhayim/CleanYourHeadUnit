@@ -39,13 +39,13 @@ com.htc.expandsdk                      # starts at boot, draws over apps (SYSTEM
 com.htc.eventuploadservice             # usage/event uploader
 com.htc.storeos                        # HTC app store
 
-# Firmware updaters, disabled on purpose: this unbranded Allwinner/HTC firmware takes OTA images from
+# Firmware updaters, disabled on the tested set (uncomment all three to do the same): this unbranded Allwinner/HTC firmware takes OTA images from
 # an unknown vendor server, and projectors in this H713 family have shipped firmware with preinstalled
 # droppers and adware, so this owner chose no silent firmware changes. Re-enable all three to check
 # for firmware updates.
-com.htc.htcotaupdate
-com.softwinner.update                  # Allwinner OTA
-android.rockchip.update.service        # Rockchip updater left in this Allwinner image
+# com.htc.htcotaupdate
+# com.softwinner.update                # Allwinner OTA
+# android.rockchip.update.service      # Rockchip updater left in this Allwinner image
 
 # Factory and burn-in test apps
 com.htc.hyk_test

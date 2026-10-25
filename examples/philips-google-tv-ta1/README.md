@@ -19,7 +19,7 @@ USB debugging on, and accept the "Allow USB debugging?" prompt the first time a 
   calendar sync, Netflix, Prime Video, the Google TV films app, YouTube Music, ivi, the built-in browser,
   the Philips PlayFi and NFT gallery apps, the setup wizard and the stock Google TV launcher.
 - **Kept**: everything that plays HDMI and the tuner, the input menu, remote pairing, keyboards, Play Store
-  and Play Services, Assistant, Chromecast, firmware updates.
+  and Play Services, Assistant, Chromecast (phone casting may stop after a reboot with setupwraith off), firmware updates.
 - **Wi-Fi first**: the saved network was owned by `setupwraith`, and disabling it while it did would take the
   TV off Wi-Fi and ADB. The network was forgotten and added again before the list ran; check
   `dumpsys wifi | grep -o 'cname=[^ ]*'` on yours before applying the last two lines.
