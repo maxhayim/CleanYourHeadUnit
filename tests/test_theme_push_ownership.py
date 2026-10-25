@@ -329,7 +329,7 @@ class ThemePushTest(unittest.TestCase):
         self.assertIn("$(Drop 'wallpapers/captions.txt')", reset)
         self.assertIn("$clearWallpapers", reset, "one shared clear, as in theme.sh")
         clear = next(line for line in script.splitlines() if line.startswith("$clearWallpapers = "))
-        self.assertIn("rm -f $dir/wallpapers/*.jpg", clear)
+        self.assertIn("rm -f $dir/wallpapers/*.[jJ][pP][gG]", clear)
         self.assertIn("content delete --uri $uri/wallpapers", clear)
         self.assertNotIn("captions", clear, "the captions file is dropped on its own line, as in theme.sh")
 

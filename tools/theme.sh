@@ -74,6 +74,21 @@ THEME="${THEME_ARG:?usage: theme.sh <theme folder> | --reset}"
 [ -f "$THEME/config.json" ] || { echo "no config.json in $THEME" >&2; exit 1; }
 "$PY" -I -c 'import json,sys; json.load(open(sys.argv[1], encoding="utf-8-sig"))' "$THEME/config.json" 2>/dev/null \
   || { echo "$THEME/config.json is not valid JSON" >&2; exit 1; }
+# Every collection name is checked before anything changes on the TV: a name refused halfway through the push
+# left the new config.json and part of the collection behind. b64push.py refuses a path with '..' in it, so
+# such a name (sunset..jpg) is refused here too. The names that pass have no spaces, so NAMES splits on them.
+NAMES=""
+if [ -d "$THEME/wallpapers" ]; then
+  for IMAGE in "$THEME"/wallpapers/*; do
+    [ -f "$IMAGE" ] || continue
+    case "$IMAGE" in
+      *.[jJ][pP][gG]|*.[jJ][pP][eE][gG]|*.[pP][nN][gG]|*.[wW][eE][bB][pP])
+        NAME=$(basename "$IMAGE")
+        [[ "$NAME" =~ ^[A-Za-z0-9_.-]+$ && "$NAME" != *..* ]] || { echo "unsupported wallpaper filename: $NAME" >&2; exit 1; }
+        NAMES="$NAMES $NAME" ;;
+    esac
+  done
+fi
 
 tv "mkdir -p $DIR" >/dev/null 2>&1 || true
 tv --push "$THEME/config.json" "$TMP-config.json" >/dev/null
@@ -85,18 +100,10 @@ else
   tv "$(del wallpaper.jpg)" >/dev/null
 fi
 tv "$CLEAR_WALLPAPERS" >/dev/null
-if [ -d "$THEME/wallpapers" ]; then
-  for IMAGE in "$THEME"/wallpapers/*; do
-    [ -f "$IMAGE" ] || continue
-    case "$IMAGE" in
-      *.[jJ][pP][gG]|*.[jJ][pP][eE][gG]|*.[pP][nN][gG]|*.[wW][eE][bB][pP])
-        NAME=$(basename "$IMAGE")
-        [[ "$NAME" =~ ^[A-Za-z0-9_.-]+$ ]] || { echo "unsupported wallpaper filename: $NAME" >&2; exit 1; }
-        "$PY" -I b64push.py "$IMAGE" "$(stage "wallpapers/$NAME")"
-        tv "$(put "wallpapers/$NAME")" >/dev/null ;;
-    esac
-  done
-fi
+for NAME in $NAMES; do
+  "$PY" -I b64push.py "$THEME/wallpapers/$NAME" "$(stage "wallpapers/$NAME")"
+  tv "$(put "wallpapers/$NAME")" >/dev/null
+done
 # The collection's names (wallpaper_captions); a theme without them leaves no stale names behind.
 if [ -f "$THEME/wallpapers/captions.txt" ]; then
   "$PY" -I b64push.py "$THEME/wallpapers/captions.txt" "$(stage wallpapers/captions.txt)"
