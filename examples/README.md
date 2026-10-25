@@ -346,6 +346,7 @@ Notes for models that have no tested list yet live in [`docs/devices/`](../docs/
 - [Xiaomi TV A Pro 43-inch](../docs/devices/xiaomi-tv-a-pro-43.md) (`MiTV-MZTU0` / `river`), Google TV 14, firmware `UKN1.240806.017.V816.0.26.6.2.6.URTMIXM`: setupwraith owned the saved Wi-Fi, so Ethernet had to be active before disabling it; the replacement launcher remained Home after reboot; one-session report, no several-day list yet.
 
 - [Acer AR55AR2851UDFL 55"](../docs/devices/acer-ar55ar2851udfl.md), India, SCBC `R4` / Realtek `rtd2851m`, Android TV 14 `UKR1.260308` / `3272`: second unit near the AR55AR2851UDPRO example; 11 owner-approved packages disabled, Home and key functions checked after two warm reboots and one owner-reported full power-off; two days of testing, with package-state verification and longer follow-up pending, so no example list yet.
+- [TCL Smart TV Pro, UK Freeview Play](../docs/devices/tcl-beyondtv4-uk-ar05.md) (`BeyondTV4` / `BeyondTV6`, `rtd288o`, Android TV 11 `RP1A.200622.001` / `AR05`): one-session report next to the AR10 `tcl-50c725k` list; on AR05 the TCL media apps request `TV_INPUT_HARDWARE`, `com.tcl.system.server` re-enables seven packages at every boot (background-restricted instead), and revoking `RECORD_AUDIO` from katniss stopped a hotword capture costing 28% of a core.
 
 To add your TV, see [CONTRIBUTING.md](../CONTRIBUTING.md). The quickest way to get a list is to
 run the prompt in [PROMPT.md](../PROMPT.md) and copy the packages your assistant disabled.
