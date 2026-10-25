@@ -38,7 +38,6 @@ com.android.health.connect.backuprestore
 com.smartdevice.dailymanage                  # TV Guard / cleaner
 com.smartdevice.myapp                        # Daily Key / app manager
 com.google.android.play.games                # Google Play Games
-com.google.android.youtube.tvmusic           # YouTube Music (optional, Coocaa)
 fusion.android.tv.demo                       # store demo mode (Coocaa)
 
 # Stock Google TV home and setup wizard

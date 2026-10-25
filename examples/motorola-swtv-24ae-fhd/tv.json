@@ -1,5 +1,5 @@
 {
-  "tv": "Motorola / Coocaa SWTV-24AE-FHD (Skyworth OEM, beomil, MediaTek)",
+  "tv": "Motorola / Coocaa SWTV-24AE-FHD (Skyworth OEM, beomil, MediaTek), India/Vietnam/Global",
   "os": "Google TV 14",
   "brand": "Motorola",
   "notes": "Skyworth OEM board sold as Motorola in India and Coocaa in Vietnam/Global (build UKN6.260116.048); after-sale/activation trackers, ad services, recommendation rows, demos; Wi-Fi ownership setupwraith gotcha documented; Live TV is `com.cltv.hybrid` (Motorola) or `com.mediatek.wwtv.tvcenter` (Coocaa); reboot-checked"
