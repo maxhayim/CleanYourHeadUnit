@@ -101,6 +101,7 @@ This repo's launcher with new looks or features, often tuned for one TV. Good pl
 | [stillOS](https://github.com/maximfakel/stillOS) ([issues](https://github.com/maximfakel/stillOS/issues)) | A minimal restyle: every app on a neutral tile with its logo in white, the weather with a city picker and a clock-and-weather screensaver. Network: MET Norway weather, Nominatim for city search | Xiaomi MiTV-MOSR1, Android TV 11 | [maximfakel](https://github.com/maximfakel) |
 | [Pure TV](https://github.com/Vardxn/pure-tv) ([APK](https://github.com/Vardxn/pure-tv/releases/latest), [screenshot](https://raw.githubusercontent.com/Vardxn/pure-tv/691b9db4fa4f644c4fdc07d3f57b7ccdc2b1a318/docs/puretv/home.jpg)) | An Apple TV-style restyle: symmetric home with weather, full-bleed tiles, a hold-to-edit dock and a glass screensaver | Xiaomi MiTV-MOOR2, Google TV 11 | [Vardxn](https://github.com/Vardxn) |
 | [kermes-tv](https://github.com/kermes/kermes-tv) ([screenshot](https://raw.githubusercontent.com/kermes/kermes-tv/main/docs/switches/recs_hero.jpg), [issues](https://github.com/kermes/kermes-tv/issues)) | A recommendations hero over Home (recent titles on your services, kept when critics and audiences both rate them well; TMDB and OMDb with your own keys), Continue watching and a recent-apps dock. Network: posters, TMDB and OMDb only | TCL 75Q7C (G08), Google TV 12 | [kermes](https://github.com/kermes) |
+| [Chromecast glass fork](https://github.com/NewPlayer0213/cleanyourtv/blob/showcase/FORK.md) ([screenshot](https://raw.githubusercontent.com/NewPlayer0213/cleanyourtv/ea2df03e7f109d0310dbe2a21dd0bb4d12abe545/docs/showcase/chromecast-library.jpg)) | The App library drawn with Home's own tiles (banners, zoom, glass, badges for apps on Home and new installs, hold OK for the app menu), a clearer focus glass for dark wallpapers, remote buttons whose hold fires while still held and that can open an add-on's activity, and quick bars for the Brightness and Sleep Timer add-ons on a remote button. The library and glass changes are off until a theme turns them on; no network permission | Chromecast with Google TV 4K, Google TV 14 | [NewPlayer0213](https://github.com/NewPlayer0213) |
 
 ## Screensavers and add-ons
 
@@ -173,7 +174,7 @@ By the TV each project was built and tested on. Most of them run on other Androi
 - **Baron (CloudWalker OS):** [Baron Home](https://github.com/sethihq/baron-tv)
 - **BenQ:** [Navigation sounds](https://github.com/rocavence/tv-vibehack/tree/nav-sounds)
 - **Changhong:** [Glance line and crimson glass on a Changhong](https://github.com/bayhaqy/cleanyourtv/blob/main/my-tv/README.md)
-- **Chromecast with Google TV:** [Cast Fix](https://github.com/thayford/castfix), [Weather Clock](https://github.com/matyivagyok/weatherclock-tv)
+- **Chromecast with Google TV:** [Cast Fix](https://github.com/thayford/castfix), [Chromecast glass fork](https://github.com/NewPlayer0213/cleanyourtv/blob/showcase/FORK.md), [Weather Clock](https://github.com/matyivagyok/weatherclock-tv)
 - **Formovie:** [CleanTV by VGS](https://github.com/vgscity/vgs-cleantv), [Homelab companion](https://github.com/epochcoder/cleanyourtv/tree/main/companion)
 - **FPT Play:** [TV Remote](https://github.com/HoangTran0410/tv-remote)
 - **Haier:** [cleanyourtv for Haier](https://github.com/abuhasanrumi/cleanyourtv-haier)
