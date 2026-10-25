@@ -704,6 +704,10 @@ Things that bit us or contributors, so they don't bite you. Commands use `tools/
   `tools/tv.py 'am start -n com.android.systemui/.Somnambulator'`, then
   `tools/tv.py 'dumpsys dreams | grep mCurrentDreamName'`. The key helpers hit the same denial: see
   [Accessibility helper enabled but the remote button does nothing](#accessibility-helper-enabled-but-the-remote-button-does-nothing).
+- **The TV wakes from standby back on the last HDMI input, and `power_on_home` takes about 5 s or misses it**
+  (Philips 65OLED706, Android TV 11): the firmware only resumes the `org.droidtv.playtv` window it left, which
+  sends its window event once the input has a picture, if at all. Set `power_on_home_always` too: Home comes
+  up about a second after the screen turns on, whatever is in front (an input, Live TV or an app).
 
 ## Accessibility helper enabled but the remote button does nothing
 
