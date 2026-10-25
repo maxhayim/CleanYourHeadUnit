@@ -98,6 +98,54 @@ class SetValueTest(unittest.TestCase):
         self.assertIn("columns", refusal)
         self.assertIsNone(self.written())
 
+    def test_a_number_key_refuses_a_value_outside_the_tables_range(self):
+        # integer() keeps its own default for a number outside min..max, so set must not write one either.
+        for key, value in (("columns", "9"), ("columns", "0"), ("rows_below_dock", "4"),
+                           ("sky_intensity", "101"), ("clock_wallpaper_dim", "91"), ("dock_opacity", "29")):
+            with self.subTest(key=key, value=value):
+                self.config.unlink(missing_ok=True)
+                refusal = self.set_key(key, value)
+                self.assertIn(key, refusal)
+                self.assertIn("out of range", refusal)
+                self.assertIn(value, refusal)
+                self.assertIsNone(self.written(), "a refused value must not touch the theme")
+                self.push.assert_not_called()
+
+    def test_a_number_key_takes_both_ends_of_its_range(self):
+        # The bounds are read out of the Keys table, so a range that moves there moves here with it.
+        numbers = {k: v for k, v in keys_table_types().items() if manage.declared_kind({"type": v}) == "number"}
+        self.assertGreaterEqual(len(numbers), 10, "the Keys table's number keys were read")
+        for key, cell in sorted(numbers.items()):
+            low, high = manage.declared_range(cell)
+            with self.subTest(key=key, value=low):
+                self.config.unlink(missing_ok=True)
+                self.assertIsNone(self.set_key(key, str(low)))
+                self.assertEqual(low, self.written()[key])
+            with self.subTest(key=key, value=high):
+                self.assertIsNone(self.set_key(key, str(high)))
+                self.assertEqual(high, self.written()[key])
+
+    def test_a_number_key_writes_the_int_the_launcher_would_read(self):
+        # integer() does ((Number) v).intValue(), so 8.9 is eight columns on the TV: write 8, not 8.9.
+        self.assertIsNone(self.set_key("columns", "8.9"))
+        self.assertEqual(8, self.written()["columns"])
+        self.assertIsInstance(self.written()["columns"], int)
+
+    def test_a_number_key_refuses_nan_and_infinity(self):
+        # json.loads accepts these three; intValue() has no answer for them, so the key keeps its default.
+        for text in ("NaN", "Infinity", "-Infinity"):
+            with self.subTest(value=text):
+                self.config.unlink(missing_ok=True)
+                self.assertIn("finite", self.set_key("columns", text))
+                self.assertIsNone(self.written())
+                self.push.assert_not_called()
+
+    def test_a_range_cell_is_read_as_its_two_bounds(self):
+        self.assertEqual((1, 8), manage.declared_range("1 to 8"))
+        self.assertEqual((30, 100), manage.declared_range("30 to 100"))
+        self.assertEqual((None, None), manage.declared_range("bool"))
+        self.assertEqual((None, None), manage.declared_range("1 to 8 if top_menu"))
+
     def test_an_object_key_refuses_a_word_and_takes_a_json_object(self):
         refusal = self.set_key("wallpaper_moods", "nope")
         self.assertIn("wallpaper_moods", refusal)
@@ -151,6 +199,10 @@ class SetValueTest(unittest.TestCase):
         self.assertIn("return v instanceof Boolean ? (Boolean) v : fallback;", config)
         self.assertIn('return v instanceof String ? ((String) v).trim() : fallback;', config)
         self.assertIn("if (!(v instanceof Number)) return fallback;", config)
+        # integer() truncates like Number.intValue() and keeps its default outside min..max: the two rules
+        # set's number handling copies.
+        self.assertIn("int i = ((Number) v).intValue();", config)
+        self.assertIn("return i < min || i > max ? fallback : i;", config)
 
 
 if __name__ == "__main__":

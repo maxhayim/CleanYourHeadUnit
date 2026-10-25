@@ -14,9 +14,11 @@ build-and-install.sh, or the steps in addons/README.md; tools/theme.sh for theme
 install on an installed add-on updates it (pm install -r). set writes the key into a theme folder of your own and
 pushes it with tools/theme.sh, as themes/README.md describes; it never edits the project's themes. set reads the
 value the way the key's own type in the Keys table needs - true or false for a bool, a JSON list, object or number
-where the table says so, the text itself for a string - and refuses one the launcher would ignore.
+where the table says so, the text itself for a string - and refuses one the launcher would ignore or a number
+outside the range the table states.
 """
 import json
+import math
 import os
 import re
 import subprocess
@@ -156,9 +158,37 @@ def declared_kind(item):
         return "list"
     if cell == "object":
         return "object"
-    if re.fullmatch(r"\d+(?:\.\d+)? to \d+(?:\.\d+)?", cell):
+    if declared_range(cell) != (None, None):
         return "number"
     return "string" if cell else None
+
+
+def declared_range(cell):
+    """The (low, high) of a range cell such as '1 to 8', or (None, None) when the cell is not a range."""
+    m = re.fullmatch(r"(-?\d+) to (-?\d+)", cell or "")
+    return (int(m.group(1)), int(m.group(2))) if m else (None, None)
+
+
+def number_in_range(key, item, parsed, text):
+    """An int the launcher's integer() would keep: truncated like Number.intValue(), inside the table's range.
+
+    integer() is `int i = ((Number) v).intValue(); return i < min || i > max ? fallback : i;`, so a float is
+    truncated on the TV and anything outside the range is silently the default. The range comes from the Keys
+    table, so the value set writes is one the launcher reads back. (lunar_utc_offset's floor in Config.java is
+    -1, the "by locale" sentinel the table's Meaning column calls Unset rather than a number to pass.)
+    """
+    cell = (item.get("type") or "").strip()
+    low, high = declared_range(cell)
+    if low is None or high is None:
+        # declared_kind() only sends a range cell here; a cell whose shape changed must not pass unchecked.
+        sys.exit(f"{key} has no range in the Keys table, so there is nothing to check {text} against")
+    # json.loads accepts NaN and Infinity; int() has no answer for them and integer() keeps the default.
+    if isinstance(parsed, float) and not math.isfinite(parsed):
+        sys.exit(f"{key} takes {cell}, so pass a finite number, not {text}")
+    value = int(parsed)
+    if not low <= value <= high:
+        sys.exit(f"{key} takes {cell}, so {text} is out of range and the launcher would keep the default")
+    return value
 
 
 def value_as(key, item, text):
@@ -186,6 +216,8 @@ def value_as(key, item, text):
     if not isinstance(parsed, wanted) or isinstance(parsed, bool):
         example = {"list": '["a", "b"]', "object": '{"key": "value"}', "number": "6"}[kind]
         sys.exit(f"{key} takes {item.get('type')}, so pass {example}, not {text}")
+    if kind == "number":
+        return number_in_range(key, item, parsed, text)
     return parsed
 
 
