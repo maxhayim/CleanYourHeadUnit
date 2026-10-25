@@ -436,6 +436,10 @@ person with your model skips that step: [CONTRIBUTING.md](CONTRIBUTING.md).
 ## Doing it by hand
 
 Everything the assistant does, you can run yourself. The tools need Python 3 and nothing else.
+`tools/tv.py` talks to network ADB on port 5555. If that port stays closed and the TV offers
+Wireless debugging with a pairing code (the Chromecast with Google TV and the Google TV Streamer
+do), pair it once with the stock `adb` and run `adb tcpip 5555` first, as
+[Troubleshooting](docs/TROUBLESHOOTING.md#connecting) describes.
 
 ```bash
 python3 -m venv tools/venv && tools/venv/bin/pip install -r tools/requirements.txt
@@ -841,12 +845,19 @@ It is one explicit "allow this computer" tap on the TV, the
 same as developing an Android app. Network ADB is plaintext on port 5555, and on firmware with
 `ro.adb.secure=0` any device on the LAN gets a shell, so close it when you are done:
 
-1. On the TV: Developer options → turn **USB debugging** and **Network/ADB debugging** off, and
-   revoke the USB debugging authorisations.
+1. On the TV: Developer options → turn **USB debugging**, **Network/ADB debugging** and
+   **Wireless debugging** off, whichever the TV has, and revoke the USB debugging authorisations.
+   Wireless debugging listens on a port of its own and stays open when USB debugging goes off (seen
+   on a Chromecast with Google TV 4K). Note that port before you switch it off (`adb mdns services`
+   lists it as `_adb-tls-connect._tcp`) and check it straight after, before the reboot:
+   `python3 tools/adb-closed.py <tv ip> <port>` must say that port is closed. After the reboot the
+   old number reads closed either way: Wireless debugging takes a new port each time it starts.
 2. Reboot the TV, then confirm the port is gone from your computer:
-   `python3 tools/adb-closed.py <tv ip>` must say the port is closed. With `nc -vz <tv ip> 5555`,
-   only "Connection refused" counts: on macOS, Local Network privacy can block `nc` and make it
-   fail with "No route to host" even while the port is open.
+   `python3 tools/adb-closed.py <tv ip>` must say the port is closed. Wireless debugging must still
+   be off in Developer options, and `adb mdns services` must list no `_adb-tls-connect._tcp` entry
+   for the TV; if it came back, switch it off and check its new port as in step 1. With
+   `nc -vz <tv ip> 5555`, only "Connection refused" counts: on macOS, Local Network privacy can
+   block `nc` and make it fail with "No route to host" even while the port is open.
 
 The launcher keeps working without debugging.
 
