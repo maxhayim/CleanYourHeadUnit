@@ -12,7 +12,9 @@ build-and-install.sh, or the steps in addons/README.md; tools/theme.sh for theme
     TV_HOST=<tv ip> tools/venv/bin/python -I tools/manage.py set <switch> <json value> --theme <your theme folder>
 
 install on an installed add-on updates it (pm install -r). set writes the key into a theme folder of your own and
-pushes it with tools/theme.sh, as themes/README.md describes; it never edits the project's themes.
+pushes it with tools/theme.sh, as themes/README.md describes; it never edits the project's themes. set reads the
+value the way the key's own type in the Keys table needs - true or false for a bool, a JSON list, object or number
+where the table says so, the text itself for a string - and refuses one the launcher would ignore.
 """
 import json
 import os
@@ -132,6 +134,59 @@ def find(name, root=ROOT):
         if n in (item["id"].lower(), item["name"].lower()):
             return item
     return None
+
+
+# ---------------------------------------------------------------- a switch's value
+
+def declared_kind(item):
+    """How the launcher reads a switch, from the type column of the Keys table in themes/README.md.
+
+    Every reader in Config.java is strict about the JSON type - bool() takes a Boolean and nothing else,
+    string() a String, integer() a Number in its range, the list readers an array - and a value of another type
+    is not an error there: the built-in default comes back, so the key silently does nothing on the TV while set
+    reports it as written. The table states the type of every key, so set reads the value the way that type needs
+    and refuses one the launcher would drop.
+    """
+    cell = (item.get("type") or "").strip()
+    if "config.xml only" in cell:
+        return "config-only"
+    if cell == "bool":
+        return "bool"
+    if cell.startswith("list"):
+        return "list"
+    if cell == "object":
+        return "object"
+    if re.fullmatch(r"\d+(?:\.\d+)? to \d+(?:\.\d+)?", cell):
+        return "number"
+    return "string" if cell else None
+
+
+def value_as(key, item, text):
+    """The argument read the way the key's type needs, or a refusal naming what the key takes."""
+    kind = declared_kind(item)
+    if kind == "config-only":
+        sys.exit(f"{key} is only read from config.xml, not from a theme, so a theme push cannot set it")
+    if kind == "bool":
+        if text.strip().lower() not in ("true", "false"):
+            sys.exit(f"{key} is a bool, so pass true or false, not {text}")
+        return text.strip().lower() == "true"
+    if kind in (None, "string"):
+        try:
+            parsed = json.loads(text)
+        except ValueError:
+            return text
+        # A string key is read as a String only, so `set greeting_name 42` means the text 42, not a number.
+        return parsed if isinstance(parsed, str) else text
+    try:
+        parsed = json.loads(text)
+    except ValueError:
+        parsed = None
+    wanted = {"list": list, "object": dict, "number": (int, float)}[kind]
+    # A Python bool is an int, so it would pass the number test while the launcher's integer() drops it.
+    if not isinstance(parsed, wanted) or isinstance(parsed, bool):
+        example = {"list": '["a", "b"]', "object": '{"key": "value"}', "number": "6"}[kind]
+        sys.exit(f"{key} takes {item.get('type')}, so pass {example}, not {text}")
+    return parsed
 
 
 # ---------------------------------------------------------------- the TV
@@ -262,15 +317,13 @@ def cmd_remove(name):
 
 
 def cmd_set(key, value, theme_folder):
-    if not find(key) or find(key)["kind"] != "switch":
+    item = find(key)
+    if not item or item["kind"] != "switch":
         sys.exit(f"no switch called {key}")
     folder = Path(theme_folder).resolve()
     if ROOT / "themes" in folder.parents or folder == ROOT / "themes":
         sys.exit("use a theme folder of your own, not one of the project's (copy one first)")
-    try:
-        parsed = json.loads(value)
-    except ValueError:
-        parsed = value
+    parsed = value_as(key, item, value)   # before the file is written or anything is pushed
     f = folder / "config.json"
     data = json.loads(f.read_text(encoding="utf-8")) if f.is_file() else {}
     data[key] = parsed
