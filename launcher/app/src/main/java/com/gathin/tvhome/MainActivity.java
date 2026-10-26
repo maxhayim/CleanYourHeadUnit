@@ -3374,6 +3374,8 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         if (card == null) return;
 
         View panel = getLayoutInflater().inflate(R.layout.dialog_card_prompt, root, false);
+        boolean rtl = getResources().getBoolean(R.bool.rtl_menu_bar);
+        if (rtl) panel.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
         ((TextView) panel.findViewById(R.id.title)).setText(getString(R.string.card_prompt_title, card.appLabel));
         ((TextView) panel.findViewById(R.id.body)).setText(card.state == Cards.State.RESIGNED
                 ? getString(R.string.card_prompt_resigned, card.appLabel)
@@ -3387,6 +3389,16 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
                 getString(R.string.card_prompt_identity, card.pkg, Cards.shortDigest(card.digest)));
         TextView keep = panel.findViewById(R.id.btnKeep);
         TextView show = panel.findViewById(R.id.btnShow);
+        if (rtl) {
+            LinearLayout buttons = (LinearLayout) keep.getParent();
+            buttons.removeAllViews();
+            buttons.addView(show);
+            buttons.addView(keep);
+            keep.setNextFocusLeftId(R.id.btnShow);
+            keep.setNextFocusRightId(R.id.btnKeep);
+            show.setNextFocusLeftId(R.id.btnShow);
+            show.setNextFocusRightId(R.id.btnKeep);
+        }
 
         final Dialog dialog = new Dialog(this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -3418,8 +3430,10 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         View.OnKeyListener keys = (v, keyCode, event) -> {
             if (event.getAction() != KeyEvent.ACTION_DOWN) return false;
             if (keyCode == KeyEvent.KEYCODE_DPAD_UP || keyCode == KeyEvent.KEYCODE_DPAD_DOWN) return true;
-            if (keyCode == KeyEvent.KEYCODE_DPAD_LEFT) return v.getId() == R.id.btnKeep;
-            return keyCode == KeyEvent.KEYCODE_DPAD_RIGHT && v.getId() == R.id.btnShow;
+            if (keyCode == KeyEvent.KEYCODE_DPAD_LEFT)
+                return v.getId() == (rtl ? R.id.btnShow : R.id.btnKeep);
+            return keyCode == KeyEvent.KEYCODE_DPAD_RIGHT
+                    && v.getId() == (rtl ? R.id.btnKeep : R.id.btnShow);
         };
         keep.setOnKeyListener(keys);
         show.setOnKeyListener(keys);
@@ -3453,6 +3467,8 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
     private void showModuleCardsNow() {
         View anchor = findViewById(R.id.btnSettings);
         View panel = getLayoutInflater().inflate(R.layout.popup_cards, root, false);
+        if (getResources().getBoolean(R.bool.rtl_menu_bar))
+            panel.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
         LinearLayout rows = panel.findViewById(R.id.rows);
         final PopupWindow popup = glassPopup(panel, (int) (400 * density));
         List<Cards.Card> listed = new ArrayList<>(cards);
@@ -3461,6 +3477,12 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
             View row = getLayoutInflater().inflate(R.layout.item_card_row, rows, false);
             row.setTag(card.pkg);
             ((TextView) row.findViewById(R.id.title)).setText(card.label);
+            if (getResources().getBoolean(R.bool.rtl_menu_bar)) {
+                LinearLayout heading = (LinearLayout) row.findViewById(R.id.title).getParent();
+                View status = row.findViewById(R.id.state);
+                heading.removeView(status);
+                heading.addView(status, 0);
+            }
             TextView app = row.findViewById(R.id.app);
             if (Cards.fold(card.label).equals(Cards.fold(card.appLabel))) app.setVisibility(View.GONE);
             else app.setText(getString(R.string.card_app_name, card.appLabel));
