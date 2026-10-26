@@ -33,6 +33,31 @@ public class PrayerScheduler {
     private static final String KEY_PLACE = "place";
 
     public static final String[] NAMES = {"Fajr", "Sunrise", "Dhuhr", "Asr", "Maghrib", "Isha"};
+    public static final int[] NAME_RES = {
+            R.string.prayer_fajr,
+            R.string.prayer_sunrise,
+            R.string.prayer_dhuhr,
+            R.string.prayer_asr,
+            R.string.prayer_maghrib,
+            R.string.prayer_isha
+    };
+    public static final String[] ARABIC = {"الفجر", "الشروق", "الظهر", "العصر", "المغرب", "العشاء"};
+    public static final int[] ICONS = {
+            R.drawable.ic_fajr,
+            R.drawable.ic_sunrise,
+            R.drawable.ic_dhuhr,
+            R.drawable.ic_asr,
+            R.drawable.ic_maghrib,
+            R.drawable.ic_isha
+    };
+
+    public static int getPrayerIndex(String name) {
+        if (name == null) return -1;
+        for (int i = 0; i < NAMES.length; i++) {
+            if (NAMES[i].equalsIgnoreCase(name)) return i;
+        }
+        return -1;
+    }
 
     public static void saveTimingsAndSchedule(Context ctx, String day, String[] names, String[] times, int[] minutes, String place) {
         SharedPreferences prefs = ctx.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
@@ -45,10 +70,51 @@ public class PrayerScheduler {
         }
         editor.apply();
 
-        scheduleNext(ctx);
+        if (ctx.getResources().getBoolean(R.bool.reminders)) {
+            scheduleNext(ctx);
+        } else {
+            cancel(ctx);
+        }
+    }
+
+    public static void cancel(Context ctx) {
+        AlarmManager am = (AlarmManager) ctx.getSystemService(Context.ALARM_SERVICE);
+        if (am == null) return;
+
+        Intent pIntent = new Intent(ctx, PrayerReceiver.class);
+        pIntent.setAction(ACTION_PRAYER_ALARM);
+        PendingIntent pPi = PendingIntent.getBroadcast(
+                ctx,
+                1001,
+                pIntent,
+                PendingIntent.FLAG_NO_CREATE | (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M ? PendingIntent.FLAG_IMMUTABLE : 0)
+        );
+        if (pPi != null) {
+            am.cancel(pPi);
+            pPi.cancel();
+        }
+
+        Intent rIntent = new Intent(ctx, PrayerReceiver.class);
+        rIntent.setAction(ACTION_REFRESH_ALARM);
+        PendingIntent rPi = PendingIntent.getBroadcast(
+                ctx,
+                1002,
+                rIntent,
+                PendingIntent.FLAG_NO_CREATE | (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M ? PendingIntent.FLAG_IMMUTABLE : 0)
+        );
+        if (rPi != null) {
+            am.cancel(rPi);
+            rPi.cancel();
+        }
+        Log.i(TAG, "All prayer reminder alarms cancelled");
     }
 
     public static void scheduleNext(Context ctx) {
+        if (!ctx.getResources().getBoolean(R.bool.reminders)) {
+            cancel(ctx);
+            return;
+        }
+
         SharedPreferences prefs = ctx.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
         String savedDate = prefs.getString(KEY_DATE, "");
         String today = new SimpleDateFormat("yyyy-MM-dd", Locale.ROOT).format(new Date());
@@ -142,6 +208,11 @@ public class PrayerScheduler {
     }
 
     public static void fetchTimingsAndSchedule(Context ctx) {
+        if (!ctx.getResources().getBoolean(R.bool.reminders)) {
+            cancel(ctx);
+            return;
+        }
+
         new Thread(() -> {
             try {
                 Context appContext = ctx.getApplicationContext();

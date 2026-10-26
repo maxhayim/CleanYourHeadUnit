@@ -12,10 +12,14 @@ countdown to it, plus today's Gregorian and Hijri dates. Each prayer has its Ara
   `latitude`, `longitude`, `place` (the name shown) and `method`, Aladhan's
   [method number](https://aladhan.com/calculation-methods) (2 ISNA, 3 Muslim World League, 4 Umm al-Qura,
   5 Egyptian, 13 Turkey, 21 Morocco...). The default is Casablanca with the Morocco method.
+- **Reminders switch**: In `app/src/main/res/values/config.xml`, `reminders` controls whether to schedule
+  on-screen alert cards and notifications when a prayer time arrives. It is `false` (off) by default. When
+  enabled (`true`), an unobtrusive, frameless compact card appears at the top-right corner of the screen
+  displaying the localized prayer name, Arabic script, time, and city. It dismisses automatically after 10
+  seconds or immediately on any remote button press.
 - It reads Aladhan when the page opens and again after midnight. The countdown updates every minute.
   Offline, the last times stay on screen.
-- 24-hour times, English words.
-- **On-Screen Alert**: When a prayer time arrives, an unobtrusive, frameless compact card appears at the top-right corner of the screen displaying the prayer name, Arabic script, time, and city. It dismisses automatically after 10 seconds or immediately on any remote button press.
+- 24-hour times, localized prayer names and strings for English, Indonesian (`values-in`), and Arabic (`values-ar`).
 
 ## Permissions
 

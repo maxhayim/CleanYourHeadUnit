@@ -24,7 +24,13 @@ public class PrayerReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        String action = intent.getAction();
+        if (!context.getResources().getBoolean(R.bool.reminders)) {
+            Log.i(TAG, "Reminders are disabled in config.xml");
+            PrayerScheduler.cancel(context);
+            return;
+        }
+
+        String action = intent != null ? intent.getAction() : null;
         Log.i(TAG, "onReceive: " + action);
 
         if (PrayerScheduler.ACTION_REFRESH_ALARM.equals(action)) {
@@ -36,11 +42,12 @@ public class PrayerReceiver extends BroadcastReceiver {
             String name = intent.getStringExtra(PrayerScheduler.EXTRA_PRAYER_NAME);
             String time = intent.getStringExtra(PrayerScheduler.EXTRA_PRAYER_TIME);
             String place = intent.getStringExtra(PrayerScheduler.EXTRA_PLACE);
-            if (name == null) name = "Sholat";
+            if (name == null) name = "Fajr";
             if (time == null) time = "";
-            if (place == null) place = "Jakarta";
+            if (place == null) place = context.getString(R.string.place);
 
-            String idName = toIndonesianName(name);
+            int idx = PrayerScheduler.getPrayerIndex(name);
+            String localizedName = idx >= 0 ? context.getString(PrayerScheduler.NAME_RES[idx]) : name;
 
             // 1. Post High-Priority Notification (triggers Heads-Up banner on Android TV)
             NotificationManager nm = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
@@ -48,10 +55,10 @@ public class PrayerReceiver extends BroadcastReceiver {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                     NotificationChannel ch = new NotificationChannel(
                             CHANNEL_ID,
-                            "Pengingat Waktu Sholat",
+                            context.getString(R.string.app_name),
                             NotificationManager.IMPORTANCE_HIGH
                     );
-                    ch.setDescription("Notifikasi saat masuk waktu sholat");
+                    ch.setDescription(context.getString(R.string.app_name));
                     ch.enableLights(true);
                     ch.setLightColor(Color.parseColor("#2BB673"));
                     ch.enableVibration(true);
@@ -81,8 +88,8 @@ public class PrayerReceiver extends BroadcastReceiver {
                     nb = new Notification.Builder(context);
                 }
 
-                String title = "Waktu Sholat " + idName + " Telah Tiba";
-                String body = "Saatnya menunaikan ibadah Sholat " + idName + " (" + time + ") untuk wilayah " + place;
+                String title = context.getString(R.string.notification_title, localizedName);
+                String body = context.getString(R.string.notification_body, localizedName, time, place);
 
                 nb.setContentTitle(title)
                         .setContentText(body)
@@ -98,7 +105,7 @@ public class PrayerReceiver extends BroadcastReceiver {
                 nm.notify(notifId, nb.build());
             }
 
-            // 2. Play audible ringtone
+            // 2. Play audible notification sound
             try {
                 Uri ringtoneUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
                 Ringtone r = RingtoneManager.getRingtone(context.getApplicationContext(), ringtoneUri);
@@ -108,7 +115,7 @@ public class PrayerReceiver extends BroadcastReceiver {
             }
 
             // 3. Show Toast on screen
-            final String toastMsg = "🕌 Waktu Sholat " + idName + " telah tiba (" + time + ") - " + place;
+            final String toastMsg = "🕌 " + localizedName + " (" + time + ") · " + place;
             new Handler(Looper.getMainLooper()).post(() ->
                     Toast.makeText(context.getApplicationContext(), toastMsg, Toast.LENGTH_LONG).show()
             );
@@ -116,8 +123,7 @@ public class PrayerReceiver extends BroadcastReceiver {
             // 4. Launch floating alert banner on screen
             try {
                 Intent popup = new Intent(context, PrayerAlertActivity.class);
-                popup.putExtra(PrayerScheduler.EXTRA_PRAYER_NAME, idName);
-                popup.putExtra("raw_name", name);
+                popup.putExtra(PrayerScheduler.EXTRA_PRAYER_NAME, name);
                 popup.putExtra(PrayerScheduler.EXTRA_PRAYER_TIME, time);
                 popup.putExtra(PrayerScheduler.EXTRA_PLACE, place);
                 popup.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -128,18 +134,6 @@ public class PrayerReceiver extends BroadcastReceiver {
 
             // 5. Schedule next prayer
             PrayerScheduler.scheduleNext(context);
-        }
-    }
-
-    private static String toIndonesianName(String prayer) {
-        switch (prayer) {
-            case "Fajr": return "Subuh";
-            case "Sunrise": return "Syuruq";
-            case "Dhuhr": return "Dzuhur";
-            case "Asr": return "Ashar";
-            case "Maghrib": return "Maghrib";
-            case "Isha": return "Isya";
-            default: return prayer;
         }
     }
 }

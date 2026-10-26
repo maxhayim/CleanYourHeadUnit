@@ -13,7 +13,6 @@ import android.os.Looper;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.KeyEvent;
-import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
@@ -22,18 +21,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 public class PrayerAlertActivity extends Activity {
-    private static final String[] NAMES = {"Fajr", "Sunrise", "Dhuhr", "Asr", "Maghrib", "Isha"};
-    private static final String[] DISPLAY_NAMES = {"Subuh", "Syuruq", "Dzuhur", "Ashar", "Maghrib", "Isya"};
-    private static final String[] ARABIC = {"الفجر", "الشروق", "الظهر", "العصر", "المغرب", "العشاء"};
-    private static final int[] ICONS = {
-            R.drawable.ic_fajr,
-            R.drawable.ic_sunrise,
-            R.drawable.ic_dhuhr,
-            R.drawable.ic_asr,
-            R.drawable.ic_maghrib,
-            R.drawable.ic_isha
-    };
-
     // Ultra-compact card dimensions: sleek, narrow, and unobtrusive for TV watching
     private static final int CARD_WIDTH_DP = 285;
     private static final int MARGIN_RIGHT_DP = 24;
@@ -52,7 +39,7 @@ public class PrayerAlertActivity extends Activity {
                 finish();
             } else {
                 if (timerView != null) {
-                    timerView.setText(secondsRemaining + "s");
+                    timerView.setText(getString(R.string.prayer_alert_dismiss, secondsRemaining));
                 }
                 handler.postDelayed(this, 1000);
             }
@@ -71,27 +58,17 @@ public class PrayerAlertActivity extends Activity {
             window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         }
 
-        String name = getIntent().getStringExtra(PrayerScheduler.EXTRA_PRAYER_NAME);
-        String rawName = getIntent().getStringExtra("raw_name");
+        String rawName = getIntent().getStringExtra(PrayerScheduler.EXTRA_PRAYER_NAME);
         String time = getIntent().getStringExtra(PrayerScheduler.EXTRA_PRAYER_TIME);
         String place = getIntent().getStringExtra(PrayerScheduler.EXTRA_PLACE);
-        if (name == null) name = "Sholat";
+        if (rawName == null) rawName = "Fajr";
         if (time == null) time = "";
-        if (place == null) place = "Jakarta";
+        if (place == null) place = getString(R.string.place);
 
-        int iconRes = R.drawable.icon;
-        String arabicText = "الصلاة";
-        for (int i = 0; i < DISPLAY_NAMES.length; i++) {
-            if (DISPLAY_NAMES[i].equalsIgnoreCase(name) || NAMES[i].equalsIgnoreCase(name)
-                    || (rawName != null && NAMES[i].equalsIgnoreCase(rawName))) {
-                iconRes = ICONS[i];
-                arabicText = ARABIC[i];
-                if (DISPLAY_NAMES[i].equalsIgnoreCase(name) || NAMES[i].equalsIgnoreCase(name)) {
-                    name = DISPLAY_NAMES[i];
-                }
-                break;
-            }
-        }
+        int idx = PrayerScheduler.getPrayerIndex(rawName);
+        String displayName = idx >= 0 ? getString(PrayerScheduler.NAME_RES[idx]) : rawName;
+        int iconRes = idx >= 0 ? PrayerScheduler.ICONS[idx] : R.drawable.icon;
+        String arabicText = idx >= 0 ? PrayerScheduler.ARABIC[idx] : "";
 
         Typeface font = getResources().getFont(R.font.outfit);
         int accent = getColor(R.color.accent);
@@ -132,35 +109,37 @@ public class PrayerAlertActivity extends Activity {
         LinearLayout.LayoutParams clp = new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1.0f);
         infoCol.setLayoutParams(clp);
 
-        // Row 1: "Waktu Dzuhur" + "الظهر"
+        // Row 1: Prayer Name + Arabic script
         LinearLayout titleRow = new LinearLayout(this);
         titleRow.setOrientation(LinearLayout.HORIZONTAL);
         titleRow.setGravity(Gravity.CENTER_VERTICAL);
 
         TextView nameView = new TextView(this);
-        nameView.setText("Waktu " + name);
+        nameView.setText(getString(R.string.prayer_alert_title, displayName));
         nameView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
         nameView.setTextColor(Color.WHITE);
         nameView.setTypeface(Build.VERSION.SDK_INT >= 28 ? Typeface.create(font, 700, false) : font);
         titleRow.addView(nameView);
 
-        TextView arabicView = new TextView(this);
-        arabicView.setText(arabicText);
-        arabicView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 13);
-        arabicView.setTextColor(0xCC2BB673);
-        arabicView.setPadding(dp(6), 0, 0, 0);
-        titleRow.addView(arabicView);
+        if (!arabicText.isEmpty()) {
+            TextView arabicView = new TextView(this);
+            arabicView.setText(arabicText);
+            arabicView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 13);
+            arabicView.setTextColor(0xCC2BB673);
+            arabicView.setPadding(dp(6), 0, 0, 0);
+            titleRow.addView(arabicView);
+        }
 
         infoCol.addView(titleRow);
 
-        // Row 2: "04:15 WIB · Jakarta"
+        // Row 2: Time · Place
         LinearLayout subRow = new LinearLayout(this);
         subRow.setOrientation(LinearLayout.HORIZONTAL);
         subRow.setGravity(Gravity.CENTER_VERTICAL);
         subRow.setPadding(0, dp(1), 0, 0);
 
         TextView timeView = new TextView(this);
-        timeView.setText(time + " WIB");
+        timeView.setText(time);
         timeView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
         timeView.setTextColor(0xFF4ADE80); // soft vibrant green
         timeView.setTypeface(Build.VERSION.SDK_INT >= 28 ? Typeface.create(font, 600, false) : font);
@@ -184,7 +163,7 @@ public class PrayerAlertActivity extends Activity {
 
         // 3. Mini Countdown Pill on the right
         timerView = new TextView(this);
-        timerView.setText(secondsRemaining + "s");
+        timerView.setText(getString(R.string.prayer_alert_dismiss, secondsRemaining));
         timerView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 10);
         timerView.setTextColor(0x80FFFFFF);
         timerView.setTypeface(Build.VERSION.SDK_INT >= 28 ? Typeface.create(font, 400, false) : font);
@@ -223,7 +202,7 @@ public class PrayerAlertActivity extends Activity {
         handler.removeCallbacks(countdownRunnable);
         secondsRemaining = TIMEOUT_SECONDS;
         if (timerView != null) {
-            timerView.setText(secondsRemaining + "s");
+            timerView.setText(getString(R.string.prayer_alert_dismiss, secondsRemaining));
         }
         handler.postDelayed(countdownRunnable, 1000);
     }
