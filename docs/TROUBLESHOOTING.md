@@ -293,9 +293,11 @@ Things that bit us or contributors, so they don't bite you. Commands use `tools/
   app that query names and skips it with "the TV opens its HDMI/AV inputs and channels with it", so
   put its line in a list of its own and apply that with `HANDLERS_ALLOW=1` (`$env:HANDLERS_ALLOW`):
   the rest of your list keeps the guard. Run `tools/check.py --fix` on that list with the same
-  switch, or it leaves the app on and exits 1. In PowerShell the switch stays set until the window
-  is closed: run `Remove-Item Env:HANDLERS_ALLOW` after those two, or the next `disable.ps1` or
-  `check.py --fix` on your main list skips the guard too. To turn the app back on, use
+  switch, or it leaves the app on and exits 1. `disable.ps1` reads the switch once and clears it
+  from the environment, so one `$env:HANDLERS_ALLOW=1` covers only that one run (#1845); `check.py
+  --fix` still reads it, and in PowerShell it stays set until the window is closed: run
+  `Remove-Item Env:HANDLERS_ALLOW` after those two, or a later `check.py --fix` on your main list
+  skips the guard too. To turn the app back on, use
   `tools/tv.py 'pm enable --user 0 <package>'`. `tools/restore.sh` with that list turns it back on
   as well, but it also turns the stock launcher back on and makes it Home, as it does for any list.
   Report another one rather than reading it as a firmware quirk: the wrong-handler case needs
