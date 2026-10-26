@@ -14,7 +14,7 @@ set -euo pipefail
 THEME_ARG="${1:-}"
 case "$THEME_ARG" in
   --reset|"") ;;
-  /*) THEME_ARG="$(cd "$THEME_ARG" 2>/dev/null && { pwd -W 2>/dev/null || pwd; } || printf '%s' "$THEME_ARG")" ;;
+  /*|[A-Za-z]:[\\/]*) THEME_ARG="$(cd "$THEME_ARG" 2>/dev/null && { pwd -W 2>/dev/null || pwd; } || printf '%s' "$THEME_ARG")" ;;
   *) THEME_ARG="$(pwd -W 2>/dev/null || pwd)/$THEME_ARG" ;;
 esac
 cd "$(dirname "$0")"
