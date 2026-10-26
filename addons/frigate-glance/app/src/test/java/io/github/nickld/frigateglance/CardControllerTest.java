@@ -36,7 +36,7 @@ public class CardControllerTest {
         view = new FakeView();
         now = 1_000_000L;
         GlanceConfig config = GlanceConfig.parse("{\"mqtt\":\"mqtt://h:1883\",\"frigateUrl\":\"https://h:8971\"}");
-        c = new CardController(view, new ReviewFilter(config), Map.of("porch", "Front door"), 8, () -> now);
+        c = new CardController(view, new ReviewFilter(config), Map.of("porch", "Front door"), 8, true, () -> now);
     }
 
     private static Review rev(String type, String id, String camera, String severity) {
@@ -44,9 +44,18 @@ public class CardControllerTest {
     }
 
     private static Review revWithDetection(String id, String eventId) {
+        return revWithDetections("new", id, eventId);
+    }
+
+    private static Review revWithDetections(String type, String id, String... eventIds) {
         String after = "{\"id\":\"" + id + "\",\"camera\":\"porch\",\"severity\":\"alert\",\"data\":{\"detections\":[\""
-                + eventId + "\"],\"objects\":[\"person\"],\"zones\":[\"front_yard\"]}}";
-        return Review.parse("{\"type\":\"new\",\"after\":" + after + "}");
+                + String.join("\",\"", eventIds) + "\"],\"objects\":[\"person\"],\"zones\":[\"front_yard\"]}}";
+        return Review.parse("{\"type\":\"" + type + "\",\"after\":" + after + "}");
+    }
+
+    private static Detection event(String type, String eventId, boolean stationary) {
+        return Detection.parse("{\"type\":\"" + type + "\",\"after\":{\"id\":\"" + eventId + "\",\"camera\":\"porch\","
+                + "\"label\":\"person\",\"stationary\":" + stationary + "}}", Map.of());
     }
 
     private static Detection det(String eventId, float[] box) {
@@ -308,5 +317,82 @@ public class CardControllerTest {
         assertEquals("porch", c.shownCamera());
         c.dismiss();
         assertEquals(null, c.shownCamera());
+    }
+
+    @Test
+    public void lastObjectLeavingStartsCountdownBeforeTheReviewEnds() {
+        c.onReview(revWithDetection("r1", "ev1"));
+        c.onDetection(event("update", "ev1", false));
+        assertEquals(0, view.lastModel.countdownMs);
+        c.onDetection(event("end", "ev1", false));
+        assertEquals(8000, view.lastModel.countdownMs);
+        now += 8001;
+        c.tick();
+        assertFalse(c.isShowing());
+    }
+
+    @Test
+    public void countdownWaitsForEveryObject() {
+        c.onReview(revWithDetections("new", "r1", "ev1", "ev2"));
+        c.onDetection(event("update", "ev1", false));
+        c.onDetection(event("update", "ev2", false));
+        c.onDetection(event("end", "ev1", false));
+        assertEquals(0, view.lastModel.countdownMs);
+        c.onDetection(event("end", "ev2", false));
+        assertEquals(8000, view.lastModel.countdownMs);
+    }
+
+    @Test
+    public void parkedObjectStartsCountdownAndMovingStopsIt() {
+        c.onReview(revWithDetection("r1", "ev1"));
+        c.onDetection(event("update", "ev1", true));
+        assertEquals(8000, view.lastModel.countdownMs);
+        now += 5000;
+        c.onDetection(event("update", "ev1", false));
+        assertEquals(0, view.lastModel.countdownMs);
+        now += 5000;
+        c.tick();
+        assertTrue(c.isShowing());
+    }
+
+    @Test
+    public void parkedObjectKeepsCardWhenSwitchedOff() {
+        GlanceConfig config = GlanceConfig.parse("{\"mqtt\":\"mqtt://h:1883\",\"frigateUrl\":\"https://h:8971\"}");
+        c = new CardController(view, new ReviewFilter(config), Map.of(), 8, false, () -> now);
+        c.onReview(revWithDetection("r1", "ev1"));
+        c.onDetection(event("update", "ev1", true));
+        assertEquals(0, view.lastModel.countdownMs);
+    }
+
+    @Test
+    public void newObjectNamedByAReviewUpdateStopsCountdown() {
+        // Its event can come before the review update that lists it, and is dropped: the update alone must do.
+        c.onReview(revWithDetection("r1", "ev1"));
+        c.onDetection(event("end", "ev1", false));
+        now += 3000;
+        c.onDetection(event("new", "ev2", false));
+        c.onReview(revWithDetections("update", "r1", "ev1", "ev2"));
+        assertEquals(0, view.lastModel.countdownMs);
+        assertTrue(c.isShowing());
+        c.onDetection(event("end", "ev2", false));
+        assertEquals(8000, view.lastModel.countdownMs);
+    }
+
+    @Test
+    public void reviewUpdateDuringCountdownDoesNotRestartIt() {
+        c.onReview(revWithDetection("r1", "ev1"));
+        c.onDetection(event("end", "ev1", false));
+        now += 3000;
+        c.onReview(revWithDetections("update", "r1", "ev1"));
+        assertEquals(5000, view.lastModel.countdownMs);
+    }
+
+    @Test
+    public void reviewEndDoesNotRestartARunningCountdown() {
+        c.onReview(revWithDetection("r1", "ev1"));
+        c.onDetection(event("end", "ev1", false));
+        now += 3000;
+        c.onReview(revWithDetections("end", "r1", "ev1"));
+        assertEquals(5000, view.lastModel.countdownMs);
     }
 }
