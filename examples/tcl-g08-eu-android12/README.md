@@ -159,10 +159,20 @@ disabled package stayed disabled, and Home and Wi-Fi came back each time. One da
   |---|---|---|
   | YouTube | 245 | `app_keys: scan:245:org.smarttube.stable` |
   | Disney+ | 762 | `app_keys: scan:762:in.startv.hotstar` |
+  | Settings (gear) | 233 | `app_keys: scan:233:settings` |
 
   The YouTube scancode matches the third unit's. `HomeKeyService` is bound alone (`InputKeyService` not
-  needed for these two). `APP_AUTO_START` was set to `allow` with `appops write-settings`, as on the C7K-UK
-  unit, so the helper re-binds after a restart.
+  needed for these), and `app_keys` is read by `HomeKeyService` too (it handles scancode entries first,
+  HomeKeyService.java line 263). `APP_AUTO_START` was set to `allow` with `appops write-settings`, as on
+  the C7K-UK unit, so the helper re-binds after a restart.
+
+  **The gear button on this remote sends scancode 233 (`KEY_FORWARDMAIL`), not keycode 83
+  (`KEYCODE_NOTIFICATION`) as the third unit's gear button does.** Since `settings_key_keycodes` (a theme
+  key, Android keycodes) cannot match a scancode that maps to `KEYCODE_UNKNOWN`, and
+  `settings_key_scancodes` is `config.xml`-only, the gear button is mapped via `app_keys` with the
+  `settings` action: `scan:233:settings`. Other 55C7K owners whose gear button does nothing after
+  `launcherx` is disabled should capture their scancode with `getevent -t` (`adb shell 'timeout 12 getevent
+  -t'`, the `0001 <hex> 00000001` line is the scancode) and use the same `scan:<code>:settings` form.
 - **The volume trade-off applies here too.** With `HomeKeyService` bound, holding Volume moves one step per
   press instead of ramping; clearing the helper restores the ramp. The owner kept the two button mappings
   and accepted stepwise volume, as on the second and third units.
