@@ -45,6 +45,7 @@ public final class WeatherActivity extends Activity {
     private boolean shown;
     private boolean resumed;
     private int requestId;
+    private int searchId; // City searches are independent of forecast refreshes.
     private Forecast.Report lastReport;
     private Date updatedAt;
     /** Saved choices, falling back to options.xml until the owner changes them. */
@@ -87,6 +88,7 @@ public final class WeatherActivity extends Activity {
         super.onPause();
         resumed = false;
         requestId++;
+        searchId++;
         main.removeCallbacks(tick);   // nothing runs while the page is not on screen
     }
 
@@ -283,6 +285,7 @@ public final class WeatherActivity extends Activity {
 
     /** Type a city, pick it from the matches, keep it. Back leaves the current place as it was. */
     private void pickCity() {
+        searchId++;
         EditText name = new EditText(this);
         name.setSingleLine(true);
         name.setHint(R.string.pick_hint);
@@ -309,6 +312,8 @@ public final class WeatherActivity extends Activity {
     }
 
     private void search(String typed) {
+        if (!resumed) return;
+        int search = ++searchId;
         if (typed.trim().isEmpty()) {
             pickCity();
             return;
@@ -322,7 +327,7 @@ public final class WeatherActivity extends Activity {
             }
             List<Forecast.Place> places = found;
             main.post(() -> {
-                if (isDestroyed()) return;
+                if (isDestroyed() || !resumed || search != searchId) return;
                 if (places == null) {
                     Toast.makeText(this, R.string.offline, Toast.LENGTH_LONG).show();
                 } else if (places.isEmpty()) {
