@@ -15,12 +15,16 @@ countdown to it, plus today's Gregorian and Hijri dates. Each prayer has its Ara
 - It reads Aladhan when the page opens and again after midnight. The countdown updates every minute.
   Offline, the last times stay on screen.
 - 24-hour times, English words.
+- **On-Screen Alert**: When a prayer time arrives, an unobtrusive, frameless compact card appears at the top-right corner of the screen displaying the prayer name, Arabic script, time, and city. It dismisses automatically after 10 seconds or immediately on any remote button press.
 
 ## Permissions
 
 | Permission | Why |
 |---|---|
 | `INTERNET` | Aladhan: today's times for the configured coordinates. |
+| `SCHEDULE_EXACT_ALARM` | Exact alarm scheduling for prayer time reminders. |
+| `RECEIVE_BOOT_COMPLETED` | Reschedules prayer alarms automatically when the TV boots. |
+| `WAKE_LOCK` | Briefly wakes the screen to deliver the on-screen alert card. |
 
 That is all. What is sent: today's date, the latitude and longitude from `config.xml`, and the method number. No
 account, no telemetry, no ads, no background service, no location permission. Backups are off.

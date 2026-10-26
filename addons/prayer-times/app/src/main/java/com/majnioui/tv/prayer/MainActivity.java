@@ -35,6 +35,7 @@ import java.util.Locale;
 public class MainActivity extends Activity {
     private static final String TAG = "PrayerTimes";
     private static final String[] NAMES = {"Fajr", "Sunrise", "Dhuhr", "Asr", "Maghrib", "Isha"};
+    private static final String[] DISPLAY_NAMES = {"Subuh", "Syuruq", "Dzuhur", "Ashar", "Maghrib", "Isya"};
     private static final String[] ARABIC = {"الفجر", "الشروق", "الظهر", "العصر", "المغرب", "العشاء"};
     private static final int[] ICONS = {R.drawable.ic_fajr, R.drawable.ic_sunrise, R.drawable.ic_dhuhr,
             R.drawable.ic_asr, R.drawable.ic_maghrib, R.drawable.ic_isha};
@@ -145,6 +146,7 @@ public class MainActivity extends Activity {
                 try {
                     parse(result.getJSONObject("data"));
                     loadedFor = day;
+                    PrayerScheduler.saveTimingsAndSchedule(MainActivity.this, day, NAMES, times, minutes, getString(R.string.place));
                     render();
                 } catch (Exception e) {
                     Log.w(TAG, "parse: " + e);
@@ -188,9 +190,9 @@ public class MainActivity extends Activity {
         }
         if (nextIdx >= 0) {
             int left = minutes[nextIdx] - now;
-            next.setText(NAMES[nextIdx] + " in " + (left >= 60 ? left / 60 + " h " : "") + left % 60 + " min");
+            next.setText(DISPLAY_NAMES[nextIdx] + " dalam " + (left >= 60 ? left / 60 + " jam " : "") + left % 60 + " mnt");
         } else {
-            next.setText("Fajr tomorrow");
+            next.setText("Subuh besok");
         }
 
         rows.removeAllViews();
@@ -216,7 +218,7 @@ public class MainActivity extends Activity {
             ar.setText(ARABIC[i]);
             card.addView(ar);
             TextView name = centered(text(20, 500, hl ? 0xE6FFFFFF : (i == 1 ? 0x80FFFFFF : 0xB3FFFFFF)));
-            name.setText(NAMES[i]);
+            name.setText(DISPLAY_NAMES[i]);
             name.setPadding(0, dp(8), 0, dp(20));
             card.addView(name);
             TextView time = centered(text(42, hl ? 500 : 300, fg));
@@ -229,8 +231,8 @@ public class MainActivity extends Activity {
             lp.setMargins(i == 0 ? 0 : dp(8), 0, i == NAMES.length - 1 ? 0 : dp(8), 0);
             rows.addView(card, lp);
         }
-        status.setText("Aladhan" + (methodName.isEmpty() ? "" : " · " + methodName) + " · updated "
-                + new SimpleDateFormat("HH:mm", Locale.ROOT).format(new Date()));
+        status.setText("Aladhan · " + (methodName.isEmpty() ? "Kemenag RI" : methodName) + " · diperbarui "
+                + new SimpleDateFormat("HH:mm", Locale.ROOT).format(new Date()) + " · Pengingat waktu sholat aktif");
     }
 
     private static String fetch(String url) throws Exception {
