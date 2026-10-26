@@ -367,13 +367,9 @@ final class RemoteKeys {
         String guide = guidePackage(pkg);
         if (guide != null) {
             // The program guide, asked for the way Android TV's Live TV apps take it: the programs directory.
-            Intent view = new Intent(Intent.ACTION_VIEW)
+            start(ctx, new Intent(Intent.ACTION_VIEW)
                     .setDataAndType(TvContract.Programs.CONTENT_URI, "vnd.android.cursor.dir/program")
-                    .setPackage(guide).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            try {
-                ctx.startActivity(view);
-            } catch (ActivityNotFoundException ignored) {
-            }
+                    .setPackage(guide));
             return;
         }
         String inputId = inputId(pkg);
