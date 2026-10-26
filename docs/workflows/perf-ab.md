@@ -10,10 +10,11 @@ whose check fails, then follows the full method
 1. **Before you change anything,** install the base build with `launcher/build-and-install.sh` and run:
 
    ```bash
-   TV_HOST=<tv ip> tools/venv/bin/python tools/bench.py --out-dir work/bench-before
+   TV_HOST=<tv ip> tools/venv/bin/python -I tools/bench.py --out-dir work/bench-before
    ```
 
-2. Make the change, install your build the same way, and run `tools/bench.py --out-dir work/bench-after`.
+2. Make the change, install your build the same way, and run
+   `tools/venv/bin/python -I tools/bench.py --out-dir work/bench-after`.
 3. Compare the two `result.json` files. Leave out any field that is `null` in both:
 
    | Field | Fails when the after value is |
