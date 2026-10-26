@@ -1,12 +1,14 @@
-# TCL 75P635 (reports "Smart TV", device G07), Android TV 11.
-# Build RP1A.200622.001 release-keys. BeyondTV4 firmware.
+# TCL 75P635 (reports "Smart TV", device G07, product G07_4K_GB_NF, client TCL-EU-RTD51A-S1), BeyondTV4 firmware.
+# Android TV 11 (SDK 30), build RP1A.200622.001, incremental AR07 (software V8-R51AT01-LF1V138,
+# built 2026-03-12, security patch 2025-12-05). The fingerprint still says
+# TCL/G07_4K_GB_NF/G07:11/RP1A.200622.001/AR20:user/release-keys; ro.build.version.incremental says AR07.
 # Tested on 2026-10-25. Launcher replacement (CleanYourTV Home) and package
 # persistence verified after reboot.
 #
 # Note: com.tcl.notereminder and com.tcl.usercenter reset to enabled after
-# reboot on this firmware. Re-disable them after each reboot:
-#   TV_HOST=<tv ip> tools/disable.sh examples/tcl-75p635/debloat.txt --only com.tcl.notereminder com.tcl.usercenter
-# Or use a short restore script after startup.
+# reboot on this firmware. Re-disable them after each reboot, one call each:
+#   TV_HOST=<tv ip> tools/tv.py "pm disable-user --user 0 com.tcl.notereminder"
+#   TV_HOST=<tv ip> tools/tv.py "pm disable-user --user 0 com.tcl.usercenter"
 #
 # Apply:   TV_HOST=<tv ip> tools/disable.sh examples/tcl-75p635/debloat.txt
 # Restore: TV_HOST=<tv ip> tools/restore.sh examples/tcl-75p635/debloat.txt com.google.android.apps.tv.launcherx
