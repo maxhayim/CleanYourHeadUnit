@@ -89,3 +89,54 @@ off. Keep `screen_off_timeout` at 2147483647 (never); any finite value makes the
   needs `appops set <pkg> SYSTEM_ALERT_WINDOW allow` to start activities from
   background. A hand-built manifest without `<uses-sdk>` fails to install with
   `INSTALL_FAILED_DEPRECATED_SDK_VERSION`.
+
+## Firmware `OS3.0.119.0.USTAATV`: periodic cleaner, ADB and VPN persistence
+
+Same set, after an OTA from `.106` to `OS3.0.119.0.USTAATV`. Everything above still holds.
+Three further behaviours are worth documenting.
+
+### `PeriodicCleaner` re-enables disabled packages and kills background apps
+
+`pm disable-user --user 0` on `com.xiaomi.wakeupservice` and `com.xiaomi.voicecontrol` does
+not survive a reboot on this build, and a VPN service in the background is killed at idle.
+The cause is the firmware's periodic cleaner:
+
+    adb shell cmd periodic enable false      # -> periodic cleaner enabled: false
+
+That setting survives reboots. It also took `com.xiaomi.wakeupservice` from ~50% CPU in
+`top` down to ~12%; the package still starts and cannot be disabled without root.
+
+### Third-party `BOOT_COMPLETED` is not delivered on this build
+
+A receiver registered for `BOOT_COMPLETED` and `LOCKED_BOOT_COMPLETED` is never invoked,
+and `adb shell am broadcast -a android.intent.action.BOOT_COMPLETED` is refused. Because
+the firmware also clears `adb_enabled` on every boot, ADB cannot be restored from a
+broadcast receiver — which is why an approach that works elsewhere does nothing here.
+
+Home is started on every boot regardless, so the launcher can restore the flag itself:
+
+    adb shell pm grant <home.package> android.permission.WRITE_SECURE_SETTINGS
+
+then from `onCreate`:
+
+    Settings.Global.putInt(getContentResolver(), "adb_enabled", 1);
+
+A single write is not enough when the flag is cleared after Home is already up. Register a
+`ContentObserver` on `Settings.Global.getUriFor("adb_enabled")` and write `1` back whenever
+it reads `0`, guarded by a read so the observer cannot feed itself. Verified across cold
+boots: port 5555 is open again with no manual step.
+
+### Always-on VPN autostarts a VPN client
+
+    adb shell settings put secure always_on_vpn_app <vpn.package>
+    adb shell settings put secure always_on_vpn_lockdown 0
+
+The system starts the app's `VpnService` at boot, so a client whose own `BOOT_COMPLETED`
+receiver is blocked still comes up. Verified with `tun0` present after a cold boot using
+Clash Mi (`com.nebula.clashmi`).
+
+### Debloat list note
+
+Leave `com.xiaomi.mitv.shop` enabled if the set's own app store is wanted: the list in
+`examples/xiaomi-mitv-astr0/debloat.txt` disables it, and without a store the only ways to
+install apps are `adb install` and a USB stick.
