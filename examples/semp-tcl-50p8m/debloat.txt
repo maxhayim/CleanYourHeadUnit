@@ -1,7 +1,15 @@
 # SEMP TCL 50P8M (Chassis R851T02, board RTD2851 rtd285o, client type C02_4K_US,
 # software V8-R851T02-LF1V728.000041 V728), Android TV 11 (API 30), build PPR1.180610.011 AP06,
-# 2 GB RAM. Freeview UK apps preloaded (factory-disabled on some regions, present on LATAM).
-# For the EU/Nordic Android TV 9 (V606) variant on the same chassis, see examples/tcl-beyondtv-rt2851/.
+# 2 GB RAM.
+#
+# Divergence from examples/tcl-beyondtv-rt2851/ (Android 9 V606 EU/Nordic):
+# 1. OS Generation: Runs Android 11 (API 30) instead of Android 9 (API 28). Android 11 ships
+#    separate modular AOSP subsystems (Secure Element com.android.se, DynSystem allocator,
+#    CompanionDeviceManager) that can be safely disabled on TV hardware.
+# 2. Regional ROM & Client: Brazilian/LATAM firmware (client C02_4K_US) carries additional
+#    promo waterfalls (com.tcl.waterfall.overseas), Alexa integration (com.tcl.smartalexa),
+#    and unstripped UK Freeview stubs (uk.co.freeview.*) absent or factory-disabled on EU V606.
+# 3. Terminal Firmware: V8-R851T02-LF1V728.000041 is the final/terminal release for R851T02.
 #
 # Apply:   TV_HOST=<tv ip> tools/disable.sh examples/semp-tcl-50p8m/debloat.txt
 # Undo:    TV_HOST=<tv ip> tools/restore.sh examples/semp-tcl-50p8m/debloat.txt
