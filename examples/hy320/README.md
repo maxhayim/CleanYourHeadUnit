@@ -7,7 +7,7 @@
 - **Resolution**: 1280x720, 213dpi
 
 ## What was done
-1. **Debloated 24 packages** — ad services, app stores, background junk, unused preloaded apps
+1. **Debloated 23 packages** — ad services, app stores, background junk, unused preloaded apps
 2. **Installed Apple TV-style launcher** (com.gathin.tvhome) with dock: Netflix, YouTube, Wave IPTV, MX Player
 3. **Set launcher as default home**, disabled stock launcher (com.htc.htclauncherhighenglishd08)
 4. **Enabled AdGuard Private DNS** for ad blocking
