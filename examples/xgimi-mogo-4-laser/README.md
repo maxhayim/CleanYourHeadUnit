@@ -14,7 +14,7 @@ unit arrived on Android 11 (`RTMA.250416.085`) and took the Google TV 14 update 
 
 | File | What it is |
 |---|---|
-| `debloat.txt` | The 18 packages that were disabled, grouped and commented, with what to keep and why |
+| `debloat.txt` | The 17 packages it disables (the tested unit also had the phone-remote service off), grouped and commented, with what to keep and why |
 | `config.json` | Dock order, 5 columns, no tuner, `stock_home_redirect` and `key_filter` false; push it with `tools/theme.sh` |
 
 All commands run from the repo root, with the projector's IP in `TV_HOST`.

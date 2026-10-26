@@ -262,7 +262,7 @@ class SetThemeFolderTest(unittest.TestCase):
         self.config.write_bytes('{"greeting_name": "Old"}'.encode("utf-16"))
         before = self.config.read_bytes()
         refusal = self.set_key()
-        self.assertIn(f"cannot read {self.config}", refusal)
+        self.assertIn(f"cannot read {self.config.resolve()}", refusal)
         self.assertIn("Nothing was written or pushed", refusal)
         self.assertEqual(before, self.config.read_bytes())
         self.push.assert_not_called()
@@ -286,7 +286,8 @@ class SetThemeFolderTest(unittest.TestCase):
 
     def test_a_folder_this_checkout_ships_is_refused(self):
         # A checkout of its own, so the project's real files are never touched by this test.
-        root = Path(self.tmp.name) / "checkout"
+        # Resolved like manage.ROOT is, so a temporary folder behind a symlink (/var on macOS) still compares.
+        root = (Path(self.tmp.name) / "checkout").resolve()
         for name in manage.PROJECT_FOLDERS:
             (root / name / "shipped").mkdir(parents=True)
             (root / name / "shipped" / "config.json").write_text('{"greeting_name": "Shipped"}\n', encoding="utf-8")

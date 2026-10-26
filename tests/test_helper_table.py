@@ -163,7 +163,8 @@ class HelperTableTest(unittest.TestCase):
         # The point of the row: an app or gear button is handled even though Home is not ALL_APPS.
         body = method_body(self.java["HomeKeyService"], "onKeyEvent")
         all_apps = body.find("KEYCODE_ALL_APPS")
-        for call in ("appScancodes.get(", "isSettingsKey(event)", "appKeys.get("):
+        # The lookups can be wrapped (#1855 picks a front-app target first), so the map names are searched for.
+        for call in ("appScancodes", "isSettingsKey(event)", "appKeys"):
             with self.subTest(call=call):
                 self.assertNotEqual(body.find(call), -1)
                 self.assertLess(body.find(call), all_apps)
