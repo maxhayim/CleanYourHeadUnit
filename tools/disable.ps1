@@ -17,6 +17,23 @@ if (-not (Test-Path $py)) { throw 'run: python -m venv tools\venv; tools\venv\Sc
 if (-not $TvHost) { throw 'pass -TvHost <tv ip> or set $env:TV_HOST' }
 $env:TV_HOST = $TvHost
 
+# The four guard overrides are read once here and then removed from the process environment, so an
+# override set the way the README and the scripts' own messages suggest covers exactly this run
+# (#1845): a value meant for one TV and one list must not silently skip the setupwraith, Home,
+# input-driver and input/Settings guards of every later run in the same window, including
+# `check.py --fix`. TV_HOST stays: it is per window by design.
+$forceSetupwraith = [bool]$env:FORCE_SETUPWRAITH
+$forceHome = [bool]$env:FORCE_HOME
+$tvinputAllow = [bool]$env:TVINPUT_ALLOW
+$handlersAllow = [bool]$env:HANDLERS_ALLOW
+foreach ($name in 'FORCE_SETUPWRAITH', 'FORCE_HOME', 'TVINPUT_ALLOW', 'HANDLERS_ALLOW') {
+    Remove-Item -Path "Env:$name" -ErrorAction SilentlyContinue
+}
+if ($forceSetupwraith) { Write-Warning 'FORCE_SETUPWRAITH is set for this run only: setupwraith is disabled even if it owns the saved Wi-Fi network.' }
+if ($forceHome) { Write-Warning 'FORCE_HOME is set for this run only: the Home guard is skipped for this run.' }
+if ($tvinputAllow) { Write-Warning 'TVINPUT_ALLOW is set for this run only: input-driver packages are disabled even if they ask for TV_INPUT_HARDWARE.' }
+if ($handlersAllow) { Write-Warning 'HANDLERS_ALLOW is set for this run only: input and Settings handlers are disabled even if the launcher needs them.' }
+
 $pkgs = Get-Content $List | ForEach-Object { ($_ -replace '#.*$', '').Trim() } | Where-Object { $_ } | ForEach-Object { ($_ -split '\s+')[0] }
 # Lists come from contributors and each name is pasted into a shell command on the TV (#165).
 $bad = @($pkgs | Where-Object { $_ -notmatch '^[A-Za-z_][A-Za-z0-9_]*(\.[A-Za-z0-9_]+)+$' })
@@ -41,7 +58,7 @@ if ($core.Count -gt 0) {
 # A Wi-Fi network saved during the first-run wizard belongs to setupwraith, and Android deletes it when
 # setupwraith is disabled. Skip it while it owns the saved network; `$env:FORCE_SETUPWRAITH=1` overrides.
 $setup = 'com.google.android.tungsten.setupwraith'
-if ($pkgs -contains $setup -and -not $env:FORCE_SETUPWRAITH) {
+if ($pkgs -contains $setup -and -not $forceSetupwraith) {
     $wifi = (& $py -I (Join-Path $repo 'tools\tv.py') 'dumpsys wifi') -join "`n"
     # Be safe: if we cannot read the owners (tv.py failed, timed out, or showed no network at all),
     # do not disable setupwraith, so the TV cannot lose the network it is on.
@@ -87,7 +104,7 @@ function Read-HomeLaunchers {
         ForEach-Object { $_.Pkg } | Sort-Object -Unique)
     [pscustomobject]@{ Ok = ($answered -and $parsed.Count -gt 0); Launchers = $usable }
 }
-if (-not $env:FORCE_HOME -and $pkgs.Count -gt 0) {
+if (-not $forceHome -and $pkgs.Count -gt 0) {
     $homeQuery = 'cmd package resolve-activity --brief -a android.intent.action.MAIN -c android.intent.category.HOME'
     $ErrorActionPreference = 'Continue'
     $homeLine = @(& $py -I $tvPy $homeQuery 2>$null) | Where-Object { $_ -match '\S' } | Select-Object -Last 1
@@ -151,7 +168,7 @@ if (-not $env:FORCE_HOME -and $pkgs.Count -gt 0) {
 # layer under the HDMI, AV and tuner inputs. Disable one and the port still notices the cable but shows
 # "No Signal" for good; re-enabling the pieces in batches does not bring the picture back, a full restore
 # and a cold boot do. Keep them; `$env:TVINPUT_ALLOW=1` disables them anyway.
-if (-not $env:TVINPUT_ALLOW -and $pkgs.Count -gt 0) {
+if (-not $tvinputAllow -and $pkgs.Count -gt 0) {
     # Trailing `; true`: the loop's status is the last package's `grep -q`, which is nonzero whenever the
     # last listed package is not an input driver, and would look like a failed check.
     $loop = 'for p in ' + ($pkgs -join ' ') + '; do dumpsys package $p | sed -n -E ''/requested permissions:/,/(install|runtime) permissions:|User [0-9]+:/p'' | grep -q TV_INPUT_HARDWARE && echo $p; done; true'
@@ -173,7 +190,7 @@ if (-not $env:TVINPUT_ALLOW -and $pkgs.Count -gt 0) {
 }
 # Same as disable.sh: keep the apps the TV opens its HDMI inputs (VIEW on a passthrough channel) and
 # Settings with, asked from the TV rather than guessed by name. `$env:HANDLERS_ALLOW=1` disables them anyway.
-if (-not $env:HANDLERS_ALLOW -and $pkgs.Count -gt 0) {
+if (-not $handlersAllow -and $pkgs.Count -gt 0) {
     $q = 'cmd package query-activities --brief'
     $ErrorActionPreference = 'Continue'
     $handlers = @(& $py -I (Join-Path $repo 'tools\tv.py') "$q -a android.intent.action.VIEW -t vnd.android.cursor.item/channel 2>/dev/null; echo ==; $q -a android.settings.SETTINGS 2>/dev/null; true" 2>$null)
