@@ -5,6 +5,12 @@ name against the record taken before the change and prints the batch. So the nam
 step is what an owner types when the TV looks wrong. A name that is not there is refused before a
 single command reaches the TV, which is the worst moment to find out.
 
+A list is read the way the pages write it: with Windows backslashes, after the `-TvHost <tv ip>` that
+restore.ps1's usage line puts first, and in quotes. The Apply line above an undo is read the same way,
+for tools/disable.sh and disable.ps1, so a list's own Apply and Undo lines both have to name that
+list: debloat.txt, or a second list beside it such as
+examples/google-chromecast-gtv-4k/debloat-keep-cast.txt.
+
 The same goes for the install and restore scripts three list folders still ship from before the rule
 that a list folder holds none (AGENTS.md, "Hard rules"): a page that sends an owner to
 `examples/<folder>/restore.sh` names a file the folder has to have, and the TCL 55S470G header
@@ -28,8 +34,17 @@ ROOT = Path(__file__).resolve().parents[1]
 # Same walk as tests/test_markdown_links.py: the tools venv CI builds and a launcher build are not docs.
 PRUNE = {".git", "venv", "node_modules", "build", ".gradle", "__pycache__"}
 SUFFIXES = (".md", ".txt", ".sh", ".ps1")
-# `tools/restore.sh examples/x/debloat.txt com.stock.launcher`, and the PowerShell twin.
-REFERENCE = re.compile(r"restore\.(?:sh|ps1)\s+([A-Za-z0-9_./<>-]*\.txt)")
+# The list a command hands to the script: `tools/restore.sh examples/x/debloat.txt com.stock.launcher`,
+# `tools/restore.sh "examples/x/debloat.txt"`, and the PowerShell twin with a Windows path, also after
+# -TvHost: `tools\restore.ps1 -TvHost <tv ip> examples\x\debloat.txt`.
+LIST_ARGUMENT = r"(?:\s+-TvHost\s+(?:<[^<>]*>|\S+))?\s+[\"']?([A-Za-z0-9_./\\<>-]*\.txt)"
+REFERENCE = re.compile(r"restore\.(?:sh|ps1)" + LIST_ARGUMENT)
+# The Apply line the undo replays: `tools/disable.sh examples/x/debloat.txt`, and disable.ps1.
+APPLY = re.compile(r"disable\.(?:sh|ps1)" + LIST_ARGUMENT)
+# README.md writes the reader's own list as examples/<your tv>/debloat.txt, left out below as a
+# placeholder. Three translations (it, ja, vi) write it as a made-up folder name, in quotes.
+PLACEHOLDERS = {"examples/il-tuo-modello/debloat.txt", "examples/your-model/debloat.txt",
+                "examples/model-cua-ban/debloat.txt"}
 # A helper script inside a list folder, e.g. `examples/epson-ls800/restore.sh`. Three folders still
 # ship the install and restore scripts their submission came with (#265); a page or a list header
 # that sends an owner to one names a file the folder has to have.
@@ -49,13 +64,16 @@ def unwrapped(token):
     return token.strip(WRAPPER).rstrip(".")
 
 
-# Every list a reader can run. A page outside examples/ that needs one names that file too.
-LIST_FOLDERS = ROOT / "examples"
+# Every list a reader can run: each folder's debloat.txt and a second list beside it. A page outside
+# examples/ that needs one names that file too.
+LISTS = "examples/*/debloat*.txt"
 
 
-def references(text):
-    """The list names a line of text hands to restore.sh, placeholders like <your tv> left out."""
-    return [name for name in REFERENCE.findall(text) if "<" not in name and ">" not in name]
+def references(text, pattern=REFERENCE):
+    """The list names a line of text hands to restore.sh (or, with APPLY, to disable.sh), with forward
+    slashes, placeholders like <your tv> left out."""
+    names = [name.replace("\\", "/") for name in pattern.findall(text)]
+    return [name for name in names if "<" not in name and ">" not in name and name not in PLACEHOLDERS]
 
 
 def walk(root):
@@ -69,13 +87,25 @@ def walk(root):
             yield path.relative_to(root), path.read_text(encoding="utf-8", errors="replace")
 
 
-def read_references(root):
-    """(file, name) for every restore.sh reference under root, as a reader would copy it."""
+def read_references(root, pattern=REFERENCE):
+    """(file, name) for every restore.sh reference under root (disable.sh with APPLY), as a reader
+    would copy it."""
     found = []
     for path, text in walk(root):
-        for target in references(text):
+        for target in references(text, pattern):
             found.append((path, target))
     return found
+
+
+def own_commands(root, pattern=REFERENCE):
+    """(list, name) for every restore.sh reference (disable.sh with APPLY) in a list in examples/."""
+    return [(path.as_posix(), name) for path, name in read_references(root, pattern)
+            if path.match(LISTS)]
+
+
+def commands_for_another_list(root, pattern=REFERENCE):
+    """(list, name) for each of those that names a file other than the list it is in."""
+    return [(own, name) for own, name in own_commands(root, pattern) if name != own]
 
 
 def script_references(text):
@@ -124,14 +154,26 @@ class RestoreReferencesTest(unittest.TestCase):
     def test_each_list_undo_replays_that_same_list(self):
         # restore.sh replays the list disable.sh ran against, so a list's own undo names that file:
         # 237 of the 238 references in examples/ already do.
-        wrong = []
-        for path, name in read_references(ROOT):
-            own = path.as_posix()
-            if own.startswith(LIST_FOLDERS.relative_to(ROOT).as_posix() + "/") and path.name == "debloat.txt" \
-                    and name != own:
-                wrong.append((own, name))
-        self.assertEqual([], wrong, "a list's undo points somewhere else, so it replays another set "
-                                    "of packages or nothing at all")
+        self.assertEqual([], commands_for_another_list(ROOT),
+                         "a list's undo points somewhere else, so it replays another set of packages "
+                         "or nothing at all")
+
+    def test_every_apply_names_a_list_that_is_there(self):
+        missing = [(str(path), name) for path, name in read_references(ROOT, APPLY)
+                   if not (ROOT / name).is_file()]
+        self.assertEqual([], missing,
+                         "these lines apply a list that is not in the repo, so disable.sh stops on it "
+                         "before anything reaches the TV")
+
+    def test_each_list_apply_runs_that_same_list(self):
+        # The Apply counterpart of the undo rule above: the owner copies the Apply line of the list
+        # they are reading, and the undo below it replays that list.
+        self.assertGreaterEqual(len(own_commands(ROOT, APPLY)), 250,
+                                "the sweep should read the Apply line of nearly every list; it found "
+                                "fewer, so it cannot fail on one")
+        self.assertEqual([], commands_for_another_list(ROOT, APPLY),
+                         "a list's Apply line runs another file, so the TV gets another set of packages "
+                         "than the list shows")
 
     def test_a_folder_script_a_page_names_is_there(self):
         # examples/epson-ls800, anker-nebula-d2426 and tcl-43c645 ship the install and restore scripts
@@ -203,6 +245,34 @@ class RestoreReferencesTest(unittest.TestCase):
             root = Path(tmp)
             self.write(root, "docs/page.md", "Undo: tools\\restore.ps1 examples/x/debloat.txt\n")
             self.assertEqual([(Path("docs/page.md"), "examples/x/debloat.txt")], read_references(root))
+
+    def test_a_windows_path_is_read_with_forward_slashes(self):
+        # How the Windows undo lines in examples/ write it, e.g. hisense-65d62qh and sony-kd-55x8000c.
+        for line in ("tools\\restore.ps1 examples\\gone\\debloat.txt",
+                     "tools\\restore.ps1 -TvHost <tv ip> examples\\gone\\debloat.txt",
+                     "tools\\restore.ps1 -TvHost 192.168.1.50 examples\\gone\\debloat.txt -Stock com.x.y",
+                     "$env:TV_HOST=\"<tv ip>\"; tools\\restore.ps1 examples\\gone\\debloat.txt"):
+            with self.subTest(line=line):
+                self.assertEqual(["examples/gone/debloat.txt"], references(line))
+
+    def test_a_list_in_quotes_is_read(self):
+        self.assertEqual(["examples/gone/debloat.txt"],
+                         references("tools/restore.sh \"examples/gone/debloat.txt\" com.x.y"))
+        self.assertEqual(["examples/gone/debloat.txt"],
+                         references("tools/restore.sh 'examples/gone/debloat.txt'"))
+
+    def test_an_apply_line_is_read_apart_from_the_undo(self):
+        for line in ("# Apply: TV_HOST=<tv ip> tools/disable.sh examples/gone/debloat.txt",
+                     "# Apply:   tools\\disable.ps1 -TvHost <tv ip> examples\\gone\\debloat.txt"):
+            with self.subTest(line=line):
+                self.assertEqual(["examples/gone/debloat.txt"], references(line, APPLY))
+                self.assertEqual([], references(line))
+        self.assertEqual([], references("tools/restore.sh examples/gone/debloat.txt", APPLY))
+
+    def test_a_translated_placeholder_is_not_a_reference(self):
+        # README.it.md, README.ja.md and README.vi.md: README.md's examples/<your tv>/debloat.txt.
+        self.assertEqual([], references("TV_HOST=192.168.1.50 tools/restore.sh "
+                                        "\"examples/il-tuo-modello/debloat.txt\" com.x.y"))
 
     def test_a_placeholder_is_not_a_reference(self):
         with tempfile.TemporaryDirectory() as tmp:

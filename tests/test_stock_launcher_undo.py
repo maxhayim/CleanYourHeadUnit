@@ -56,6 +56,12 @@ PASSED = re.compile(r"\s+(?:-Stock\s+)?[\"`]?(" + PACKAGE + r")")
 DEFAULT_STOCK = "com.google.android.tvlauncher"
 
 
+def list_files(root):
+    """Every list under root's examples/: each folder's debloat.txt and a second list beside it, such
+    as google-chromecast-gtv-4k/debloat-keep-cast.txt, which has its own undo line."""
+    return sorted((root / "examples").glob("*/debloat*.txt"))
+
+
 def active_packages(text):
     """(line number, package) for every package on an active line of a list."""
     found = []
@@ -133,20 +139,27 @@ def undo_problems(text):
     return problems
 
 
+def sweep(root):
+    """What the lists under root's examples/ show: how many lists, restore commands, stock-launcher
+    statements and undos that pass a package there are, and `list: problem` for each undo that misses
+    the stock launcher its list disables."""
+    lists = invocations = claims = passed_somewhere = 0
+    failures = []
+    for path in list_files(root):
+        lists += 1
+        text = path.read_text(encoding="utf-8")
+        calls = restore_invocations(text)
+        invocations += len(calls)
+        passed_somewhere += sum(1 for _, package in calls if package)
+        claims += len(stock_claims(text))
+        for problem in undo_problems(text):
+            failures.append(f"{path.relative_to(root).as_posix()}: {problem}")
+    return lists, invocations, claims, passed_somewhere, failures
+
+
 class StockLauncherUndoTest(unittest.TestCase):
     def test_every_list_passes_the_stock_launcher_it_disables(self):
-        lists = files = invocations = claims = passed_somewhere = 0
-        failures = []
-        for path in sorted((ROOT / "examples").glob("*/debloat.txt")):
-            files += 1
-            text = path.read_text(encoding="utf-8")
-            calls = restore_invocations(text)
-            invocations += len(calls)
-            passed_somewhere += sum(1 for _, package in calls if package)
-            claims += len(stock_claims(text))
-            for problem in undo_problems(text):
-                failures.append(f"examples/{path.parent.name}/debloat.txt: {problem}")
-        lists = files
+        lists, invocations, claims, passed_somewhere, failures = sweep(ROOT)
         self.assertGreaterEqual(lists, 200, "the sweep read too few lists to be meaningful")
         self.assertGreaterEqual(invocations, 150, "the sweep found too few restore commands")
         self.assertGreaterEqual(claims, 150, "the sweep found too few stock-launcher statements")
