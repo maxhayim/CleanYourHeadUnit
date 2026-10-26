@@ -60,7 +60,7 @@ function Drop($name) { "rm -f $dir/$name 2>/dev/null; content delete --uri $uri/
 # empty it too: the launcher's wallpaper picker lists that folder itself, and an on-TV pick of one of its
 # pictures is read back from it, so a reset that left the pictures behind still shows the theme it just removed.
 # Both paths use this one string (the same one theme.sh has).
-$clearWallpapers = "mkdir -p $dir/wallpapers 2>/dev/null; rm -f $dir/wallpapers/*.jpg $dir/wallpapers/*.jpeg $dir/wallpapers/*.png $dir/wallpapers/*.webp $dir/wallpapers/*.JPG $dir/wallpapers/*.JPEG $dir/wallpapers/*.PNG $dir/wallpapers/*.WEBP 2>/dev/null; content delete --uri $uri/wallpapers 2>/dev/null"
+$clearWallpapers = "mkdir -p $dir/wallpapers 2>/dev/null; rm -f $dir/wallpapers/*.[jJ][pP][gG] $dir/wallpapers/*.[jJ][pP][eE][gG] $dir/wallpapers/*.[pP][nN][gG] $dir/wallpapers/*.[wW][eE][bB][pP] 2>/dev/null; content delete --uri $uri/wallpapers 2>/dev/null"
 
 if ($Reset) {
     Invoke-Tv tv.py "mkdir -p $dir 2>/dev/null; $(Drop 'config.json'); $(Drop 'wallpaper.jpg'); $(Drop 'wallpapers/captions.txt'); $clearWallpapers; printf '%s' '$revision' > $tmp-theme_revision; $(Put 'theme_revision'); $restart; echo reset"
@@ -70,6 +70,16 @@ if (-not $Theme) { throw 'usage: theme.ps1 <theme folder> | -Reset' }
 $config = Join-Path $Theme 'config.json'
 if (-not (Test-Path $config)) { throw "no config.json in $Theme" }
 try { Get-Content $config -Raw | ConvertFrom-Json | Out-Null } catch { throw "$config is not valid JSON" }
+# Every collection name is checked before anything changes on the TV, as in theme.sh: a name refused halfway
+# through the push left the new config.json and part of the collection behind. b64push.py refuses '..' in a path.
+$wallpapers = Join-Path $Theme 'wallpapers'
+$images = @()
+if (Test-Path $wallpapers -PathType Container) {
+    $images = @(Get-ChildItem $wallpapers -File | Where-Object { $_.Extension -match '^\.(jpg|jpeg|png|webp)$' })
+    foreach ($image in $images) {
+        if ($image.Name -notmatch '^[A-Za-z0-9_.-]+$' -or $image.Name.Contains('..')) { throw "unsupported wallpaper filename: $($image.Name)" }
+    }
+}
 
 # Tolerated, as in theme.sh: a TV that locks Android/data still takes the files through ThemeProvider.
 Invoke-Tv tv.py "mkdir -p $dir 2>/dev/null; true" | Out-Null
@@ -78,13 +88,9 @@ Invoke-Tv tv.py (Put 'config.json')
 $wall = Join-Path $Theme 'wallpaper.jpg'
 if (Test-Path $wall) { Invoke-Tv b64push.py $wall "$tmp-wallpaper.jpg"; Invoke-Tv tv.py (Put 'wallpaper.jpg') } else { Invoke-Tv tv.py (Drop 'wallpaper.jpg') | Out-Null }
 Invoke-Tv tv.py $clearWallpapers | Out-Null
-$wallpapers = Join-Path $Theme 'wallpapers'
-if (Test-Path $wallpapers -PathType Container) {
-    Get-ChildItem $wallpapers -File | Where-Object { $_.Extension -match '^\.(jpg|jpeg|png|webp)$' } | ForEach-Object {
-        if ($_.Name -notmatch '^[A-Za-z0-9_.-]+$') { throw "unsupported wallpaper filename: $($_.Name)" }
-        Invoke-Tv b64push.py $_.FullName (Stage "wallpapers/$($_.Name)")
-        Invoke-Tv tv.py (Put "wallpapers/$($_.Name)") | Out-Null
-    }
+foreach ($image in $images) {
+    Invoke-Tv b64push.py $image.FullName (Stage "wallpapers/$($image.Name)")
+    Invoke-Tv tv.py (Put "wallpapers/$($image.Name)") | Out-Null
 }
 # The collection's names (wallpaper_captions); a theme without them leaves no stale names behind.
 $captions = Join-Path $Theme 'wallpapers\captions.txt'

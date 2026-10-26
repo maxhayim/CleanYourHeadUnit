@@ -169,7 +169,8 @@ shown once and never blanked on a timer. Images are centre-cropped to fill the 1
 drawn as a black overlay above the picture and below the launcher's text.
 
 When you apply a theme, its collection replaces the one already on the TV. Use filenames containing
-only letters, digits, underscores, dots and hyphens. Images can come from any source; check that you
+only letters, digits, underscores, dots and hyphens, with no two dots in a row; the theme scripts refuse
+any other name before they change anything on the TV. Images can come from any source; check that you
 have permission to use them. The launcher considers
 up to 100 nonempty images, at most 10 MB each, skips unreadable files and keeps the last good background.
 An empty collection falls back to `wallpaper.jpg`, or the background colour if no image is available.
