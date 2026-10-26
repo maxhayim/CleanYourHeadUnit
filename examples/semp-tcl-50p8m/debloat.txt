@@ -34,10 +34,9 @@
 #
 # DO NOT DISABLE (load-bearing on this firmware):
 # com.tcl.tv com.tcl.tvinput com.tcl.tvpassthrough  # Live TV, tuner, HDMI. On R851T02, TclPhoneWindowManager
-                                                    # dispatches short presses of KEYCODE_POWER (key 26) via IPC
-                                                    # to com.tcl.tv.service.GlobalKeyService inside com.tcl.tv. If
-                                                    # com.tcl.tv is disabled, short-pressing Power on the remote is
-                                                    # silently dropped (only long-press forced shutdown works).
+# dispatches short presses of KEYCODE_POWER (key 26) via IPC to com.tcl.tv.service.GlobalKeyService inside
+# com.tcl.tv. If com.tcl.tv is disabled, short-pressing Power on the remote is silently dropped
+# (only long-press forced shutdown works).
 # com.tcl.sourcemananger                            # source/input menu (TIF_SourceMenu)
 # com.tcl.keycustomfunctionservice                  # remote key handling, fallback home
 # com.tcl.framework.custom                          # TCL key receiver
@@ -77,7 +76,7 @@ com.tcl.keyhelp                             # remote-key help overlays
 # 4. Off by choice on this unit
 com.tcl.miracast                            # Miracast screen mirroring
 com.tcl.MultiScreenInteraction_TV           # TCL T-Cast phone app link
-com.tcl.versionUpdateApp                    # TCL firmware updater: firmware stays on V728
+# com.tcl.versionUpdateApp                  # TCL firmware updater, kept
 
 # 5. After the launcher is installed
 com.tcl.tvweishi                            # TCL "TV Guard" cleaner
