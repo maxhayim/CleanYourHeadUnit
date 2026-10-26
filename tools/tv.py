@@ -12,6 +12,7 @@ Set TV_HOST to the TV's IP (or IP:port). Usage:
     tv.py --reboot                     return once the reboot request is accepted; the TV may still be restarting
     tv.py --help                       this text; needs neither the venv nor a TV
 """
+import errno
 import os
 import re
 import sys
@@ -153,6 +154,20 @@ def connect_error(e):
     # carry the file's name, which no socket error does: they keep the traceback, which names the file. A
     # connection reset or broken in the handshake keeps its traceback too, as the port was reached.
     if isinstance(e, OSError) and e.filename is None and not isinstance(e, ConnectionError):
+        # macOS Local Network privacy denies a process the local subnet and the kernel reports that as
+        # EHOSTUNREACH, the same errno as a TV that is switched off, so "is the TV on?" sends people
+        # rebuilding a network that was never broken. The permission belongs to the app that runs this
+        # script (Terminal, iTerm2, VS Code), not to python or adb: switching ADB client does not avoid it,
+        # and a denial sticks once it happens. ARP and mDNS keep answering while it is denied, so the TV
+        # stays discoverable and only unicast fails, which is what makes it read as a network fault. The
+        # default gateway kept answering throughout, so it is the one address that tells the two apart.
+        if sys.platform == "darwin" and e.errno == errno.EHOSTUNREACH:
+            return (f"could not reach {target} ({e}). Is the TV on and on this network?\n"
+                    f"On macOS this is also what Local Network privacy looks like. Allow the app that runs "
+                    f"tv.py (Terminal, iTerm2, VS Code) under System Settings > Privacy & Security > Local "
+                    f"Network, then quit and reopen it; granting it to python or adb does nothing. To tell "
+                    f"the two apart, try the default gateway: if it answers while every other address on "
+                    f"the subnet gives this error, it is the permission and not the TV. {see}")
         return f"could not reach {target} ({e}). Is the TV on and on this network? {see}"
     return None
 
