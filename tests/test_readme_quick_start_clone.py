@@ -110,7 +110,7 @@ class TheCloneStep(unittest.TestCase):
 
     def test_five_readmes_are_read(self):
         found = pages()
-        self.assertEqual(5, len(found), f"expected README.md and four translations, read {[p.name for p in found]}")
+        self.assertEqual(6, len(found), f"expected README.md and five translations, read {[p.name for p in found]}")
         for page in found:
             self.assertGreaterEqual(len(rows(page.read_text(encoding="utf-8"))), 3,
                                     f"{page.name} parses as fewer than three table rows")
