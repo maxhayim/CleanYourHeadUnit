@@ -21,12 +21,11 @@ If you already use a custom theme, add these two keys to that theme's `config.js
 
 ## Reboot note
 
-`com.tcl.notereminder` and `com.tcl.usercenter` reset to enabled after a reboot on this
-firmware. Re-disable them after each restart:
+`com.tcl.notereminder` resets to enabled after a reboot on this firmware
+(`com.tcl.usercenter` stays disabled). Re-disable it after each restart:
 
 ```sh
 TV_HOST=<tv ip> tools/venv/bin/python -I tools/tv.py "pm disable-user --user 0 com.tcl.notereminder"
-TV_HOST=<tv ip> tools/venv/bin/python -I tools/tv.py "pm disable-user --user 0 com.tcl.usercenter"
 ```
 
 ## Launcher Home switch
