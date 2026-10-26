@@ -21,8 +21,9 @@
 # named only com.android.tv.settings, and tools/disable.sh disabled setupwraith without FORCE_SETUPWRAITH.
 #
 # Launcher: launcher/build-and-install.sh with INPUT_KEY_SERVICE=1 and the app_keys in config.json. The remote
-# here is the white TCL one with Netflix and YouTube buttons; those and Settings send the same codes as the
-# 55Q77K's in examples/tcl-g08-us-google-tv/README.md (4062, 190, 83). Its TV button (the screen icon right of
+# here is the white TCL one with Netflix and YouTube buttons. Netflix and Settings send the same codes as the
+# 55Q77K's in examples/tcl-g08-us-google-tv/README.md (4062, 83), but YouTube sends 4065 (scancode 245, taken by
+# TCL's TclShortCutKeyManager), not 190, so it needs "4065:com.google.android.youtube.tv". Its TV button (the screen icon right of
 # Home) sends keycode 4001, scancode 365: com.tcl.tv's GlobalKeyService turns it into KEYCODE_GUIDE for launcherx
 # while the TV app is not running, so with launcherx off it did nothing. "4001:guide:com.tcl.tv" opens the
 # program guide again (com.tcl.tv/.epg.EpgProActivity), as before; "4001:input:com.tcl.tvinput/.TunerInputService/HW2"
