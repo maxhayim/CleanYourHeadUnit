@@ -11,6 +11,16 @@ LIST="${1:?usage: disable.sh <debloat list>}"
 LIST_DIR="$(cd "$(dirname "$LIST")" && { pwd -W 2>/dev/null || pwd; })"
 LIST="$LIST_DIR/$(basename "$LIST")"
 cd "$(dirname "$0")/.."
+# The safety overrides are read from the environment. `FORCE_HOME=1 tools/disable.sh ...` lasts one
+# command, but an exported value stays set for the shell and reaches child processes (check.py --fix).
+# Say which ones are on: without it, a later run skips its safety check and nothing in the output says
+# why (#1845).
+for override in FORCE_SETUPWRAITH FORCE_HOME TVINPUT_ALLOW HANDLERS_ALLOW; do
+  if [ -n "${!override:-}" ]; then
+    echo "note: $override=${!override} is set; the safety check it overrides stays off until it is" >&2
+    echo "cleared (unset $override)." >&2
+  fi
+done
 PY=tools/venv/bin/python
 [ -x "$PY" ] || PY=tools/venv/Scripts/python.exe
 export MSYS_NO_PATHCONV=1

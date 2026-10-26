@@ -17,6 +17,17 @@ if (-not (Test-Path $py)) { throw 'run: python -m venv tools\venv; tools\venv\Sc
 if (-not $TvHost) { throw 'pass -TvHost <tv ip> or set $env:TV_HOST' }
 $env:TV_HOST = $TvHost
 
+# The safety overrides are read from the environment, and in PowerShell a `$env:` value lasts until
+# the window closes and reaches child processes (README's `powershell ... -File` form, check.py --fix).
+# Say which ones are on: without it, a later run in the same window skips its safety check and nothing
+# in the output says why (#1845).
+foreach ($override in 'FORCE_SETUPWRAITH', 'FORCE_HOME', 'TVINPUT_ALLOW', 'HANDLERS_ALLOW') {
+    $set = Get-Item "env:$override" -ErrorAction SilentlyContinue
+    if ($set) {
+        Write-Warning "$override=$($set.Value) is set in this window; the safety check it overrides stays off until it is cleared (Remove-Item env:$override)."
+    }
+}
+
 $pkgs = Get-Content $List | ForEach-Object { ($_ -replace '#.*$', '').Trim() } | Where-Object { $_ } | ForEach-Object { ($_ -split '\s+')[0] }
 # Lists come from contributors and each name is pasted into a shell command on the TV (#165).
 $bad = @($pkgs | Where-Object { $_ -notmatch '^[A-Za-z_][A-Za-z0-9_]*(\.[A-Za-z0-9_]+)+$' })
