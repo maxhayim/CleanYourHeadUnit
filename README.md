@@ -534,6 +534,7 @@ Debloat list paths passed to `disable.sh` and `restore.sh` are relative to the d
 from, so your own lists can live outside the repository. Absolute paths also work.
 
 </details>
+
 ## The microphone, and what can be said about it
 
 "Which of these packages is listening?" has no honest one-line answer, and a permission scan makes
