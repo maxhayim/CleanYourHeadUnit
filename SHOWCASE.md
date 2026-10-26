@@ -10,7 +10,7 @@ project's own issue tracker.
 
 **Jump to:** [Home screens built as their own app](#home-screens-built-as-their-own-app) · [Forks of the launcher](#forks-of-the-launcher) · [Screensavers and add-ons](#screensavers-and-add-ons) · [Tools and companion apps](#tools-and-companion-apps) · [Other platforms: Fire TV and LG webOS](#other-platforms-fire-tv-and-lg-webos) · [Add-ons in this repo](addons/README.md) · [Guides and write-ups](#guides-and-write-ups) · [Find a project by TV brand](#find-a-project-by-tv-brand) · [Add yours](#add-yours)
 
-116 projects so far.
+117 projects so far.
 
 ## Home screens built as their own app
 
@@ -48,6 +48,7 @@ This repo's launcher with new looks or features, often tuned for one TV. Good pl
 | Project | What it is | Built on | By |
 |---|---|---|---|
 | [Liquid Glass Home for Philips TA1](https://github.com/Nefritor/cleanyourtv-liquid-glass/tree/liquid-glass) ([screenshot](https://raw.githubusercontent.com/Nefritor/cleanyourtv-liquid-glass/liquid-glass/docs/liquid-glass/home.jpg), [how it works](https://github.com/Nefritor/cleanyourtv-liquid-glass/blob/liquid-glass/LIQUID_GLASS.md)) | A liquid-glass Home with an animated aurora, 24 widgets with an on-TV editor and a 4K photo screensaver; uses the network (weather, rates, pictures), no analytics | Philips 65PUS8729/60, Google TV 14 | [Nefritor](https://github.com/Nefritor) |
+| [Apple TV Frosted Glass for OnePlus TV](https://github.com/sireesh0204-stack/cleanyourtv/tree/backup/oneplus-apple-frosted-glass) | Frosted liquid glass launcher with split top pills, clear screensaver with radiant glowing clock, and relaxed slide animations | OnePlus TV (D00, Dubai), Android TV 11 | [sireesh0204-stack](https://github.com/sireesh0204-stack) |
 | [Cristal negro](https://github.com/eltiotrondj/cleanyourtv-cristal-negro) ([screenshot](https://github.com/eltiotrondj/cleanyourtv-cristal-negro/blob/main/xiaomi-cristal-negro.png), [issues](https://github.com/eltiotrondj/cleanyourtv-cristal-negro/issues)) | A smoked-glass launcher variant with six translucent columns, a pinned night backdrop, a +30-minute sleep timer and a green-rain screensaver; optional weather via Open-Meteo | Xiaomi MiTV-AFKR0 and TCL Smart TV G07 (retail model unknown), Android 11; session-tested | [eltiotrondj](https://github.com/eltiotrondj) |
 | [Premium Minimal Home](https://github.com/Lzchyi/cleanyourtv/tree/v2.6.0-redesign) ([screenshots](https://github.com/Lzchyi/cleanyourtv/blob/v2.6.0-redesign/docs/screenshots/README.md)) | A v2.6.0 fork with a four-app translucent dock, a banner App Library, category-based settings and smooth Home scrolling; an optional saved Sony remote layout opens Library without the accessibility filter, retaining native held-volume repeat. No network permission or new background service | Sony KD-55X9000H, Android 12 (PA firmware) | [Lzchyi](https://github.com/Lzchyi) |
 | [Skyworth theme-picker fork](https://github.com/abhishek00235/cleanyourtv/tree/codex/on-device-theme-picker) ([notes](https://github.com/abhishek00235/cleanyourtv/blob/codex/on-device-theme-picker/FORK.md), [screenshot](https://raw.githubusercontent.com/abhishek00235/cleanyourtv/codex/on-device-theme-picker/themes/cinematic-sunset/screenshot.jpg)) | A customized fork with an on-device theme picker, Kids Mode shortcut and optional Pixabay images for Photo Prints; the API key is entered on the TV and is not in the source | Skyworth SWTV-24AE-4K (build and physical verification confirmed) | [abhishek00235](https://github.com/abhishek00235) |
@@ -195,6 +196,7 @@ By the TV each project was built and tested on. Most of them run on other Androi
 - **Motorola:** [TV Motorola Launcher](https://github.com/kartikcool15/tv-motorola-launcher)
 - **MYO:** [MYO Launcher](https://github.com/faustinoaq/myo-launcher)
 - **NVIDIA Shield:** [Vibe Launcher](https://github.com/maydings/vibe-launcher)
+- **OnePlus:** [Apple TV Frosted Glass for OnePlus TV](https://github.com/sireesh0204-stack/cleanyourtv/tree/backup/oneplus-apple-frosted-glass)
 - **Philips:** [Cosy Home](https://github.com/oliverjwroberts/cosy-home-tv), [Liquid Glass Home for Philips TA1](https://github.com/Nefritor/cleanyourtv-liquid-glass/tree/liquid-glass), [Moving aurora behind Home](https://github.com/mrk1987/cleanyourtv/tree/aurora), [Forslag](https://github.com/modist/forslag), [XMB Home](https://github.com/amachador/xmb-home)
 - **Polytron:** [Glass and day/night on a Polytron](https://github.com/andikatuluspangestu/cleanyourtv/tree/polytron-glass-launcher)
 - **Sharp:** [Akhter & Ruby TV](https://github.com/arakaneserohingya/ahkter-tv-remake), [Home Deck](https://github.com/glidiandev/home-deck), [KIDŌ](https://github.com/glidiandev/kido)
