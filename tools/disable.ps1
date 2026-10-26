@@ -171,7 +171,12 @@ if (-not $forceHome -and $pkgs.Count -gt 0) {
 if (-not $tvinputAllow -and $pkgs.Count -gt 0) {
     # Trailing `; true`: the loop's status is the last package's `grep -q`, which is nonzero whenever the
     # last listed package is not an input driver, and would look like a failed check.
-    $loop = 'for p in ' + ($pkgs -join ' ') + '; do dumpsys package $p | sed -n -E ''/requested permissions:/,/(install|runtime) permissions:|User [0-9]+:/p'' | grep -q TV_INPUT_HARDWARE && echo $p; done; true'
+    # Per package: the "requested permissions" block (Android 6.0+); on a dump with no such block —
+    # Lollipop prints only "grantedPermissions:" — the package's own granted block; then its Service
+    # Resolver Table, which Lollipop's per-package dump prints and which names what serves
+    # android.media.tv.TvInputService. "Unable to find" is a package not on this TV. A dump with
+    # neither block nor error (NOCHK) is one the guard cannot read: the package is kept on (#1753).
+    $loop = 'for p in ' + ($pkgs -join ' ') + '; do d=$(dumpsys package $p 2>/dev/null); case $d in *"requested permissions:"*) printf ''%s\n'' "$d" | sed -n -E ''/requested permissions:/,/(install|runtime) permissions:|User [0-9]+:/p'' | grep -q TV_INPUT_HARDWARE && echo $p;; *"grantedPermissions:"*) printf ''%s\n'' "$d" | sed -n -E ''/grantedPermissions:/,/(install|runtime) permissions:|User [0-9]+:/p'' | grep -q TV_INPUT_HARDWARE && echo $p;; *"Service Resolver Table:"*) printf ''%s\n'' "$d" | grep -q ''android.media.tv.TvInputService'' && echo $p;; *"Unable to find"*) :;; *) echo "NOCHK $p";; esac; done; true'
     # Windows PowerShell turns redirected stderr into an error that 'Stop' would throw (see getprop).
     $ErrorActionPreference = 'Continue'
     $tvhw = @(& $py -I (Join-Path $repo 'tools\tv.py') $loop 2>$null)
@@ -180,7 +185,14 @@ if (-not $tvinputAllow -and $pkgs.Count -gt 0) {
     if (-not $checked) {
         Write-Warning 'Could not check which listed packages drive the HDMI/AV inputs (tv.py failed). Check every input after this run: a port that notices the cable and stays black means one of them was disabled, and only a full restore and a cold boot bring it back (#321).'
     } else {
-        foreach ($p in ($tvhw | ForEach-Object { $_.Trim() } | Where-Object { $_ })) {
+        foreach ($p in ($tvhw | Where-Object { $_ -match '^NOCHK ' })) {
+            $p = ($p -replace '^NOCHK ', '').Trim()
+            if ($pkgs -contains $p) {
+                Write-Warning "Skipping ${p}: the TV's dumpsys shows neither a requested nor a granted permission block for it, so this firmware's answer cannot be read for the input-driver check (Android 5.x prints neither). It stays enabled: once every input still works after a reboot, set `$env:TVINPUT_ALLOW=1 to disable it (#321)."
+                $pkgs = @($pkgs | Where-Object { $_ -ne $p })
+            }
+        }
+        foreach ($p in ($tvhw | ForEach-Object { $_.Trim() } | Where-Object { $_ -and $_ -notmatch '^NOCHK ' })) {
             if ($pkgs -contains $p) {
                 Write-Warning "Skipping ${p}: it asks for android.permission.TV_INPUT_HARDWARE, so it is the software layer under the HDMI/AV/tuner inputs. With it disabled those inputs still notice the cable but stay black (No Signal), and re-enabling the pieces in batches does not restore the picture: a full restore plus a cold boot does (#321). Set `$env:TVINPUT_ALLOW=1 to disable it."
                 $pkgs = @($pkgs | Where-Object { $_ -ne $p })
@@ -202,6 +214,17 @@ if (-not $handlersAllow -and $pkgs.Count -gt 0) {
         # `@()` so an empty or one-line answer is still an array: IndexOf throws on $null.
         $lines = @($handlers | ForEach-Object { $_.Trim() })
         $split = [array]::IndexOf($lines, '==')
+        # A working query always has some app answering android.settings.SETTINGS. No name after the
+        # "==" line means the firmware has no `cmd` (or answered nothing), and the loop below would
+        # pass in silence (#973, #1089).
+        $settingsSeen = $false
+        for ($i = 0; $i -lt $lines.Count; $i++) {
+            if ($lines[$i] -notmatch '^([A-Za-z_][A-Za-z0-9_]*(\.[A-Za-z0-9_]+)+)/') { continue }
+            if ($split -ge 0 -and $i -gt $split) { $settingsSeen = $true; break }
+        }
+        if (-not $settingsSeen) {
+            Write-Warning 'Could not check which listed packages open the TV''s inputs and Settings: the query answered with nothing at all (this firmware may have no ''cmd''). After this run, open an HDMI input and Settings from the launcher before you put the remote down.'
+        }
         for ($i = 0; $i -lt $lines.Count; $i++) {
             if ($lines[$i] -notmatch '^([A-Za-z_][A-Za-z0-9_]*(\.[A-Za-z0-9_]+)+)/') { continue }
             $p = $Matches[1]
