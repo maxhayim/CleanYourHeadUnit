@@ -5,9 +5,20 @@ Things that bit us or contributors, so they don't bite you. Commands use `tools/
 
 ## Connecting
 
-- **macOS: `adb connect` says "No route to host"** although the port is open. Recent macOS treats
-  the Google-signed `adb` as its own app under Local Network privacy and silently blocks it.
-  `tools/tv.py` avoids the binary entirely.
+- **macOS: "No route to host" (`EHOSTUNREACH`)** although the port is open. Recent macOS keeps a
+  process off the local subnet under Local Network privacy, and the kernel reports that as this
+  error, the same one a TV that is switched off gives. `tools/tv.py` does **not** avoid it: the
+  permission belongs to the app that runs the client (Terminal, iTerm2, VS Code), not to the `adb`
+  binary or to `python`, so changing ADB client makes no difference. Allow that app under System
+  Settings > Privacy & Security > Local Network, then quit and reopen it; a denial sticks once it
+  has happened, and a prompt with no window to appear in is denied for you.
+  Confirm it before changing anything on the network, with the **default gateway**: in practice it
+  keeps answering while every other address on the subnet gives this error, so if the router
+  connects and nothing else does, it is the permission and not the network. ARP and mDNS keep
+  working throughout, which is what makes it read as AP isolation or a router firewall: `arp -an`
+  shows the TV's MAC and `dns-sd -B _androidtvremote2._tcp` still finds it by name while no port on
+  it can be opened. Seen on macOS 26 (Darwin 25.6) against a Hisense `hengshan` set, Google TV 12,
+  where the stock `adb` and `tools/tv.py` failed identically.
 - **No "wireless debugging" toggle** on some TVs, Xiaomi among them. USB debugging alone opens
   network ADB on port 5555.
 - **USB debugging is greyed out and there is no Wireless debugging entry either**, seen on a carrier
