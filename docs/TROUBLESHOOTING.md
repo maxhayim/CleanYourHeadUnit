@@ -101,14 +101,17 @@ Things that bit us or contributors, so they don't bite you. Commands use `tools/
 - **Windows PowerShell 5.1 adds a byte-order mark** to text piped into a program, which turned the
   first batch command into gibberish. `tv.py` now strips it, and the `.ps1` scripts pipe clean UTF-8.
 - **"Allow USB debugging?" comes back**, or the TV answers `unauthorized` although `adb devices` already
-  works: `tv.py` keeps a key of its own in `tools/adbkey/`, and it only falls back to the stock
-  `~/.android/adbkey` ([#105](https://github.com/Gathin23/cleanyourtv/issues/105)) while that folder does
-  not exist. So a set that was first reached with this client is asked for a key platform-tools never
-  registered, and revoking the authorisations or toggling USB debugging brings the prompt back instead of
-  a connection. Delete the folder and the next run takes the stock key: `rm -rf tools/adbkey`
-  (`rmdir /s /q tools\adbkey` in PowerShell), then `tools/tv.py --probe` and accept that one prompt.
-  Every attempt with an unaccepted key queues one more prompt on the TV, so dismiss them all (Back)
-  before testing with key presses ([#1526](https://github.com/Gathin23/cleanyourtv/issues/1526)).
+  works: `tv.py` keeps a key of its own in `tools/adbkey/` and offers the stock `~/.android/adbkey`
+  ([#105](https://github.com/Gathin23/cleanyourtv/issues/105)) after it, so a set that trusts either key
+  connects with no prompt. Older copies offered the stock key only while `tools/adbkey` did not exist,
+  which kept a TCL 55C61B `unauthorized` ([#1526](https://github.com/Gathin23/cleanyourtv/issues/1526)),
+  so update the checkout first. When the TV trusts neither key, the prompt asks for `tv.py`'s own. To have
+  it register the stock key instead, so `adb` and `tv.py` share one approval, delete the folder:
+  `rm -rf tools/adbkey` (`Remove-Item -Recurse -Force tools\adbkey` in PowerShell,
+  `rmdir /s /q tools\adbkey` in Command Prompt), then `tools/tv.py --probe`
+  (`tools\venv\Scripts\python.exe -I tools\tv.py --probe` on Windows) and accept that one prompt. Every
+  attempt with an unaccepted key queues one more prompt on the TV, so dismiss them all (Back) before
+  testing with key presses.
 - **Git Bash rewrites paths** like `/data/local/tmp` into Windows paths. The scripts set
   `MSYS_NO_PATHCONV=1` for you. Set `JAVA_HOME` and `ANDROID_HOME` before building there.
 
