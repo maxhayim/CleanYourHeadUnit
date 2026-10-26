@@ -87,7 +87,7 @@ def main():
     p.add_argument("--port", type=int, default=15555, help="local port to listen on (default 15555; 0 picks one)")
     args = p.parse_args()
     if not args.tv_host:
-        p.error("give the TV's IP address, e.g.  tools/relay.py 192.168.1.50")
+        p.error("give the TV's IP address, e.g.  tools/venv/bin/python -I tools/relay.py 192.168.1.50")
     # Both options are ports, and neither was checked: --port went to bind() as typed, and bind() refuses a
     # port above 65535 (or a negative one) with an OverflowError - not an OSError, so the "cannot listen"
     # message below never saw it - while --tv-port skipped the 1..65535 check the address and TV_PORT get a
@@ -114,7 +114,7 @@ def main():
     env_host = split_host_port(os.environ.get("TV_HOST", ""))[0]
     if port_from_env and (args.tv_port == args.port or (env_host in loopback and args.tv_host not in loopback)):
         p.error(f"TV_PORT={args.tv_port} is a relay's port, set for the tools: unset TV_HOST TV_PORT in this "
-                "terminal, or give the TV's port, e.g.  tools/relay.py 192.168.1.50:5555")
+                "terminal, or give the TV's port, e.g.  tools/venv/bin/python -I tools/relay.py 192.168.1.50:5555")
     if args.tv_host in loopback and args.tv_port == args.port:
         p.error("that is the relay itself: give the TV's IP address")
 
