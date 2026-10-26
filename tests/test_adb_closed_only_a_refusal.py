@@ -142,6 +142,44 @@ class ThisComputerIsNotTheTvTest(unittest.TestCase):
                 self.assertIn("nothing listens there, which says nothing about the TV.", result.stderr)
                 self.assertIn(NOTE, result.stderr)
 
+    # Every other way the socket API takes to write this computer (#1837 review). On 8a945a09 each of
+    # these said "the TV refused the connection" and exited 0.
+    ALIASES = ("localhost.", "LOCALHOST.", "127.1", "2130706433", "0x7f000001", "0177.0.0.1",
+               "::ffff:127.0.0.1", "[::ffff:127.0.0.1]:5555", "0.0.0.0", "::", "tv.localhost")
+
+    def test_every_way_of_writing_this_computer_is_this_computer(self):
+        for host in self.ALIASES:
+            with self.subTest(host=host):
+                result = check_tv(host, tv="5555=refused")
+                self.assertEqual(result.returncode, 2, result.stdout + result.stderr)
+                self.assertEqual(result.stdout, "")
+                self.assertIn("nothing listens there, which says nothing about the TV.", result.stderr)
+                self.assertIn(NOTE, result.stderr)
+
+    def test_a_short_ipv4_form_is_this_computer_on_real_sockets(self):
+        # Numeric forms getaddrinfo itself resolves to 127.0.0.1, so no name service is involved.
+        port = free_port()
+        for host in ("127.1", "2130706433", "0x7f000001"):
+            with self.subTest(host=host):
+                result = check(host, str(port))
+                self.assertEqual(result.returncode, 2, result.stdout + result.stderr)
+                self.assertEqual(result.stdout, "")
+                self.assertIn(f"could not check {host}:{port}: nothing listens there", result.stderr)
+        with socket.socket() as server:
+            server.bind(("127.0.0.1", 0))
+            server.listen(1)
+            port = server.getsockname()[1]
+            result = check("127.1", str(port))
+        self.assertEqual(result.returncode, 1, result.stderr)
+        self.assertIn("127.1 " + NOTE, result.stderr)
+
+    def test_names_that_only_look_local_are_still_the_tvs(self):
+        for host in ("localhost.example.com", "mytv.local", "127.example", "10.0.0.1", "::ffff:192.0.2.1"):
+            with self.subTest(host=host):
+                result = check_tv(host, tv="5555=refused")
+                self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+                self.assertIn("is closed: the TV refused the connection.", result.stdout)
+
     def test_an_open_port_on_this_computer_is_said_to_be_the_relays(self):
         with socket.socket() as server:
             server.bind(("127.0.0.1", 0))
@@ -170,6 +208,16 @@ class ARelaysPortIsNotTheTvsTest(unittest.TestCase):
                 self.assertIn(f"TV_PORT={env['TV_PORT']} is a relay's port, set for the tools: unset TV_HOST "
                               f"TV_PORT in this terminal, or give the TV's port, e.g.  tools/adb-closed.py {TV} "
                               "5555", result.stderr)
+                self.assertNotIn("[stand-in]", result.stderr, "it must not check the TV's IP on the relay's port")
+
+    def test_a_relay_written_another_way_is_still_a_relay(self):
+        # A second relay's port beside TV_HOST written as 127.1, localhost. and the like.
+        for relay_host in ThisComputerIsNotTheTvTest.ALIASES:
+            env = env_with(TV_HOST=relay_host, TV_PORT="15556")
+            with self.subTest(TV_HOST=relay_host):
+                result = check_tv(TV, tv="5555=open,15556=refused", env=env)
+                self.assertEqual(result.returncode, 2, result.stdout + result.stderr)
+                self.assertIn("TV_PORT=15556 is a relay's port", result.stderr)
                 self.assertNotIn("[stand-in]", result.stderr, "it must not check the TV's IP on the relay's port")
 
     def test_a_port_given_with_the_tvs_ip_is_used(self):

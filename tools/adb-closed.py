@@ -22,11 +22,28 @@ RELAY_PORT = 15555   # relay.py's default --port, the TV_PORT it tells the tools
 
 
 def this_computer(host):
-    """127.0.0.1, localhost or another loopback address: where a relay listens, never the TV."""
+    """127.0.0.1, localhost or another loopback address: where a relay listens, never the TV.
+
+    Every way the socket API takes to write it counts: localhost with the root's trailing dot, the short
+    IPv4 forms (127.1, 2130706433, 0x7f000001), ::1 and an IPv4-mapped ::ffff:127.0.0.1, and 0.0.0.0 or ::,
+    which connect to this computer as well.
+    """
+    name = host.lower()
+    if name.endswith("."):
+        name = name[:-1]
+    if name == "localhost" or name.endswith(".localhost"):
+        return True
     try:
-        return host.lower() == "localhost" or ipaddress.ip_address(host).is_loopback
+        address = ipaddress.ip_address(name.split("%", 1)[0])
     except ValueError:
-        return False
+        try:
+            address = ipaddress.IPv4Address(socket.inet_aton(name))
+        except (OSError, ValueError):
+            return False
+    # Before Python 3.13 an IPv4-mapped loopback is not is_loopback.
+    if getattr(address, "ipv4_mapped", None):
+        address = address.ipv4_mapped
+    return address.is_loopback or address.is_unspecified
 
 
 def split_host_port(endpoint):
