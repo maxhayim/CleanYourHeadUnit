@@ -128,6 +128,19 @@ Things that bit us or contributors, so they don't bite you. Commands use `tools/
   `com.google.android.apps.tv.dreamx`, the same package as the promo screensaver, and Apps only mode hides it
   too. Re-enable dreamx and switch Apps only mode off to bring it back; the screensaver can stay on the
   launcher's clock. Seen on a TCL Smart TV Pro (`G03_4K_US`, Google TV 11, GTV93).
+- **The Google Home panel opens and closes at once, though dreamx is still enabled**, once the stock
+  launcher is off: dreamx (`com.google.android.apps.tv.dreamx`) loads the panel's account and the device
+  trust through launcherx, so with `com.google.android.apps.tv.launcherx` disabled logcat shows
+  `Failed to find provider info for
+  com.google.android.apps.tv.launcherx.coreservices.account.AccountModeContentProvider`, then
+  `EligibilityManagerImpl: SmartHome: Error loading account`, and a `bindService` to launcherx's
+  `TrustedNetworkStateService` returning false. Re-enabling launcherx brings the panel back straight away,
+  with no reboot. Sparing launcherx's home activity alone is refused as well (`Shell cannot change
+  component state`, as in the bullet on `pm disable <package>/<class>` below), so it is the whole package
+  or the panel: if the household uses Google Home lights, keep launcherx enabled and hand Home to the new
+  launcher with `stock_home_redirect` (`themes/README.md`) instead of disabling it. Seen on a TCL Smart TV
+  Pro (`G03_4K_US`, Google TV 11, GTV93,
+  [#1653](https://github.com/Gathin23/cleanyourtv/issues/1653)).
 - **Large pushes hang** through the Python client. Use `tools/b64push.py` for APKs.
 - **`tools/tv.py reboot` never comes back.** `reboot` is a shell command, and adbd stops before it
   sends the shell's last `CLSE`, so the client waits for a reply that cannot arrive: two minutes,
