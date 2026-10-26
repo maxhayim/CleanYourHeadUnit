@@ -32,6 +32,14 @@ public class ReviewTest {
     }
 
     @Test
+    public void verifiedObjectReadsAsItsLabelAndCarriesItsName() {
+        Review r = Review.parse("{\"type\":\"update\",\"after\":{\"id\":\"r1\",\"camera\":\"porch\",\"severity\":\"alert\","
+                + "\"data\":{\"objects\":[\"person-verified\",\"person\",\"car\"],\"sub_labels\":[\"Alex\"]}}}");
+        assertEquals(List.of("person", "car"), r.objects);
+        assertEquals(List.of("Alex"), r.subLabels);
+    }
+
+    @Test
     public void parsesEnd() {
         assertEquals("end", Review.parse(fixture("review_end.json")).type);
     }

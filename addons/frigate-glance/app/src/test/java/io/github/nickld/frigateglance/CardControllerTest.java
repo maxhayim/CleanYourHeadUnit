@@ -395,4 +395,11 @@ public class CardControllerTest {
         c.onReview(revWithDetections("end", "r1", "ev1"));
         assertEquals(5000, view.lastModel.countdownMs);
     }
+
+    @Test
+    public void verifiedPersonShowsTheirName() {
+        c.onReview(Review.parse("{\"type\":\"new\",\"after\":{\"id\":\"r1\",\"camera\":\"porch\",\"severity\":\"alert\","
+                + "\"data\":{\"objects\":[\"person-verified\"],\"sub_labels\":[\"Alex\"],\"zones\":[]}}}"));
+        assertEquals("Person · Alex", view.lastModel.detail);
+    }
 }
