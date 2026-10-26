@@ -11,9 +11,13 @@ Set TV_HOST to the TV's IP (or IP:port). Usage:
     tv.py --pull <remote> <local>
     tv.py --reboot                     return once the reboot request is accepted; the TV may still be restarting
     tv.py --help                       this text; needs neither the venv nor a TV
+
+Set TV_ADB_BINARY to the Google adb executable to use an already connected, paired transport
+(including encrypted Wireless debugging). See tools/native-adb.md.
 """
 import os
 import re
+import subprocess
 import sys
 import time
 
@@ -159,7 +163,67 @@ def stock_signer():
         return None
 
 
+class NativeAdbError(RuntimeError):
+    """The selected Google ADB transport is unavailable or an operation failed."""
+
+
+class NativeAdbDevice:
+    """The subset of adb_shell used by the tools, over an existing Google ADB transport.
+
+    Every command selects the same explicit endpoint. Never select the first connected TV,
+    change adbd's mode, or disconnect a transport another program may be using.
+    """
+
+    # b64push sizes its shell commands from this payload bound. A small value also
+    # keeps adb's command-line arguments below Windows' process argument limit.
+    max_chunk_size = 4096
+
+    def __init__(self, binary, host, port, timeout):
+        self.binary = binary
+        self.serial = f"[{host}]:{port}" if ":" in host else f"{host}:{port}"
+        self.timeout = float(timeout)
+        if self._run(["get-state"]).strip() != "device":
+            raise NativeAdbError(f"{self.serial} is not an authorized ADB transport; pair and connect it first.")
+
+    def _run(self, args, timeout=None):
+        limit = self.timeout if timeout is None else float(timeout)
+        try:
+            result = subprocess.run([self.binary, "-s", self.serial, *args],
+                                    capture_output=True, text=True, errors="replace", timeout=limit)
+        except subprocess.TimeoutExpired as e:
+            raise NativeAdbError(f"Google ADB {args[0]} on {self.serial} timed out after {limit:g}s.") from e
+        except OSError as e:
+            raise NativeAdbError(f"Could not run Google ADB {self.binary!r}: {e}") from e
+        if result.returncode:
+            detail = result.stderr.strip() or result.stdout.strip() or f"exit {result.returncode}"
+            raise NativeAdbError(f"Google ADB {args[0]} on {self.serial}: {detail}")
+        return result.stdout
+
+    def shell(self, command, read_timeout_s=None, **kwargs):
+        # -T avoids a PTY; -x matches adb_shell's shell service: remote stderr is in the
+        # returned text and a remote exit code is not mistaken for a transport failure.
+        # Guards still see remote Error/Failure lines. No local shell interprets command.
+        return self._run(["shell", "-T", "-x", command], read_timeout_s)
+
+    def push(self, local, remote, transport_timeout_s=None, read_timeout_s=None, **kwargs):
+        self._run(["push", os.fspath(local), os.fspath(remote)],
+                  read_timeout_s if read_timeout_s is not None else transport_timeout_s)
+
+    def pull(self, remote, local, transport_timeout_s=None, read_timeout_s=None, **kwargs):
+        self._run(["pull", os.fspath(remote), os.fspath(local)],
+                  read_timeout_s if read_timeout_s is not None else transport_timeout_s)
+
+    def reboot(self):
+        self._run(["reboot"])
+
+    def close(self):
+        pass  # Each subprocess is closed; leave the shared ADB server and transport alone.
+
+
 def connect(timeout=120):
+    binary = os.environ.get("TV_ADB_BINARY")
+    if binary:
+        return NativeAdbDevice(binary, HOST, PORT, timeout)
     dev = AdbDeviceTcp(HOST, PORT, default_transport_timeout_s=float(timeout))
     keys = [get_signer()]   # first, so the prompt asks for the same key as before
     stock = stock_signer()
@@ -176,6 +240,8 @@ def connect_error(e):
     about the port to use instead (#1578). connect() itself still raises: check.py (through
     recovery.connect()) and privacy.py catch its errors with wording and exit codes of their own, and
     recovery.py --save still lets them through (a follow-up)."""
+    if isinstance(e, NativeAdbError):
+        return str(e)
     # Imported here rather than with the client above, so the stub adb_shell in the tests (adb_device
     # and auth only) still loads this file.
     from adb_shell.exceptions import AdbTimeoutError, InvalidCommandError, TcpTimeoutException

@@ -328,6 +328,7 @@ on that firmware, grouped and commented. These are starting points: comment out 
 
 Notes for models that have no tested list yet live in [`docs/devices/`](../docs/devices/):
 
+- [Homatics Box R 4K Plus](../docs/devices/homatics-box-r-4k-plus.md), `SEI804HM` / `YYJ`, Android TV 14 build `8963`: paired encrypted ADB from a wired computer, standard Home handover, theme and physical-remote checks, package state retained after cold boot, and closing both debugging modes; single-session observations, no several-day debloat list.
 - [Pixpaq Gold Ray-Mastered Edition](../docs/devices/pixpaq-gold-ray-mastered.md), Android 13 (reports `ADT-3`): Activity Launcher paths into Android Settings and Developer options, a separate Settings shortcut, Projectivy Home and reboot observations, and screensaver selection; no packages disabled.
 - [Amazon Fire TV Stick AFTMA08C15](../docs/devices/amazon-fire-tv-aftma08c15.md), Fire OS 8.1.8.5 / Android 11: external dumbtv Home 1.3 observations, physical Home failure despite passing injected-key checks, recovery limits, updater preservation, and media-folder wallpaper configuration; single-session notes, no tested list.
 
