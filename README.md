@@ -57,9 +57,12 @@ before touching anything you might use.
 | You have | Do this |
 |---|---|
 | **A computer** | Use the prompt with a coding assistant: the three steps below. |
+| **A computer, no coding assistant** | Run the three steps yourself: the commands are in [Doing it by hand](#doing-it-by-hand). |
 | **Only an Android phone** | Use the community-built [Clean Your TV app](https://cleanyour.tv/app) by [@udhaykumarbala](https://github.com/udhaykumarbala): connect, analyse, clean, in about five minutes. No laptop, no coding agent. |
 
-With a computer, you need it on the same Wi-Fi as the TV and a coding assistant with shell access.
+The three steps below are written for a coding assistant: the computer needs to be on the same Wi-Fi as
+the TV, with a shell on it. Without an assistant, [Doing it by hand](#doing-it-by-hand) is the same job,
+run by you.
 
 Any of these work: Claude Code (on [0G Private Computer](https://pc.0g.ai) or an [Anthropic plan](https://claude.com/pricing)), [Codex](https://github.com/openai/codex) or [Gemini CLI](https://github.com/google-gemini/gemini-cli).
 
