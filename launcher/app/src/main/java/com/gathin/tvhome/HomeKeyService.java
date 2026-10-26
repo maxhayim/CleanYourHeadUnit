@@ -354,6 +354,17 @@ public class HomeKeyService extends AccessibilityService {
         return now < armedUntil;
     }
 
+    /** The settings menu offers Restart only while this helper is bound: it opens the system power menu. */
+    static boolean canOpenPowerMenu() {
+        return running != null;
+    }
+
+    /** The system power menu (Restart, and Power off where the firmware has it); the TV asks before it acts. */
+    static void openPowerMenu() {
+        HomeKeyService service = running;
+        if (service != null) service.performGlobalAction(GLOBAL_ACTION_POWER_DIALOG);
+    }
+
     static boolean powerOnRedirect(String liveTv, CharSequence pkg, long now, long armedUntil) {
         return !liveTv.isEmpty() && pkg != null && liveTv.contentEquals(pkg) && now < armedUntil;
     }
