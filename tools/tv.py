@@ -24,9 +24,35 @@ if sys.argv[1:2] and sys.argv[1] in ("-h", "--help"):
     print((__doc__ or "").strip())
     sys.exit(0)
 
-from adb_shell.adb_device import AdbDeviceTcp
-from adb_shell.auth.keygen import keygen
-from adb_shell.auth.sign_pythonrsa import PythonRSASigner
+# The docs type `tools/tv.py ...`, which starts the first python3 on PATH, and that one seldom has
+# adb_shell: the README installs it into tools/venv only. Run that way, tv.py starts again under the
+# venv's Python, or says how to make the venv, instead of ending in a ModuleNotFoundError traceback.
+# Only when run as a script: recovery.py, privacy.py, bench.py and the tests import this file and
+# handle a missing client themselves.
+try:
+    from adb_shell.adb_device import AdbDeviceTcp
+    from adb_shell.auth.keygen import keygen
+    from adb_shell.auth.sign_pythonrsa import PythonRSASigner
+except ImportError as e:
+    if __name__ != "__main__":
+        raise
+    _dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "venv")
+    _venv = next((p for p in (os.path.join(_dir, "bin", "python"), os.path.join(_dir, "Scripts", "python.exe"))
+                  if os.path.isfile(p)), None)
+    # Once only, marked in the environment: a venv that lacks adb_shell as well gets the message below
+    # rather than another run of itself.
+    if _venv and not os.environ.get("CLEANYOURTV_TV_PY_VENV"):
+        os.environ["CLEANYOURTV_TV_PY_VENV"] = "1"
+        _args = [_venv, "-I", os.path.abspath(__file__), *sys.argv[1:]]
+        if os.name == "nt":
+            # No exec on Windows: os.execv starts a second process, and the shell takes its prompt back.
+            import subprocess
+            sys.exit(subprocess.call(_args))
+        os.execv(_venv, _args)
+    _make = (r"python -m venv tools\venv; tools\venv\Scripts\python.exe -m pip install -r tools\requirements.txt"
+             if os.name == "nt" else
+             "python3 -m venv tools/venv && tools/venv/bin/pip install -r tools/requirements.txt")
+    sys.exit(f"tools/tv.py needs the packages in tools/requirements.txt ({e}).\nrun: {_make}")
 
 # Windows consoles often use an old code page (cp1251, cp1252 and others) that cannot print every character
 # in dumpsys output. Python then stops with an error in the middle. disable.ps1 reads this output to see if
