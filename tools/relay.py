@@ -70,6 +70,14 @@ def serve(srv, tv_host, tv_port):
             threading.Thread(target=pipe, args=(a, b), daemon=True).start()
 
 
+def checked_port(p, flag, port, lowest):
+    """A port this script can bind or connect to, or the parser's refusal: --port may be 0, the TV's port may not."""
+    if port is not None and not lowest <= port <= 65535:
+        hint = " (0 picks one)" if lowest == 0 else ""
+        p.error(f"{flag}: not a port number: {port!r}{hint}")
+    return port
+
+
 def main():
     p = argparse.ArgumentParser(description="Forward 127.0.0.1:PORT to the TV's ADB port. See tools/relay.md.")
     p.add_argument("tv_host", nargs="?", default=os.environ.get("TV_HOST"),
@@ -80,6 +88,13 @@ def main():
     args = p.parse_args()
     if not args.tv_host:
         p.error("give the TV's IP address, e.g.  tools/relay.py 192.168.1.50")
+    # Both options are ports, and neither was checked: --port went to bind() as typed, and bind() refuses a
+    # port above 65535 (or a negative one) with an OverflowError - not an OSError, so the "cannot listen"
+    # message below never saw it - while --tv-port skipped the 1..65535 check the address and TV_PORT get a
+    # few lines further down. socket.create_connection cuts a servname to 16 bits, so "--tv-port 70000" printed
+    # "-> <tv>:70000" and forwarded to <tv>:4464, whatever service is there.
+    args.port = checked_port(p, "--port", args.port, 0)
+    args.tv_port = checked_port(p, "--tv-port", args.tv_port, 1)
     # The same order as tv.py and adb-closed.py (#997). With 5555 fixed, a TV whose adbd has a port of its
     # own (5877 on the Wanbo T6R Max) was relayed to 5555 whatever TV_HOST and TV_PORT said.
     args.tv_host, endpoint_port = split_host_port(args.tv_host)
