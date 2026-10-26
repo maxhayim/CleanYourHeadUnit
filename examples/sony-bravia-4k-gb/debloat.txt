@@ -1,8 +1,9 @@
 # Sony BRAVIA 4K GB (EU: device BRAVIA_ATV2_EU, product BRAVIA_ATV2). Android TV 9 (API 28).
+# Retail model verified on the same platform and firmware: KD-75XE8596.
 # Firmware BRAVIA_ATV2_EU-user 9 PTT1.190515.001.S54 672201 release-keys
 #
-# Apply:   TV_HOST=<tv ip> tools/disable.sh examples/sony-bravia-4k-gb/debloat.txt
-# Undo:    TV_HOST=<tv ip> tools/restore.sh examples/sony-bravia-4k-gb/debloat.txt
+# Apply: TV_HOST=<tv ip> tools/disable.sh examples/sony-bravia-4k-gb/debloat.txt
+# Undo:  TV_HOST=<tv ip> tools/restore.sh examples/sony-bravia-4k-gb/debloat.txt
 # Everything is DISABLED, not uninstalled. Comment out any line you want to keep.
 #
 # Same platform and firmware build as examples/sony-xbr-x900e and the same package set, so this list
@@ -11,6 +12,9 @@
 # every HDMI input come from com.sony.dtv.tvx, so keep it. Launcher installed and Home switched,
 # verified across a reboot. Not lived with for weeks yet: re-enable anything that breaks with
 # `pm enable <package>`, or tools/restore.sh with this file.
+#
+# Owner report: ran the site's default debloat.txt on a Sony KD-75XE8596 (same BRAVIA_ATV2_EU
+# platform and firmware above); this identifies the commercial TV model for the existing profile.
 #
 # Left enabled on purpose because they are features, not bloat: Chromecast built-in, screen mirroring,
 # DLNA renderer, Android TV phone remote, USB Media Player and music player. Uncomment the last group
