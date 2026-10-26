@@ -32,7 +32,13 @@ case "$OUT" in *Success*) ;; *) echo "ERROR: pm install failed" >&2; exit 1 ;; e
 if [ -n "$CONFIG" ]; then
   STAGE=/data/local/tmp/smart-home-config.json
   tv --push "$CONFIG" "$STAGE" >/dev/null
-  tv "content write --uri content://$PKG.config/config.json < $STAGE; rm -f $STAGE; echo config pushed"
+  # The provider can take a moment to appear after pm install. tv.py does not pass the remote
+  # shell's exit status through, so require a success marker from content write itself.
+  OUT=$(tv "ok=0; for attempt in 1 2 3; do if content write --user 0 --uri content://$PKG.config/config.json < $STAGE; then ok=1; break; fi; [ \"\$attempt\" -eq 3 ] || sleep 1; done; if rm -f $STAGE && [ \"\$ok\" -eq 1 ]; then echo __SMART_HOME_CONFIG_OK__; fi")
+  case "$OUT" in
+    *__SMART_HOME_CONFIG_OK__*) echo "config pushed" ;;
+    *) echo "$OUT" >&2; echo "ERROR: config write failed (or staged config could not be removed)" >&2; exit 1 ;;
+  esac
 fi
 tv "am start -n $PKG/.MainActivity >/dev/null; echo opened"
 echo "Installed. Smart Home is open on the TV; press Home and answer Show card for the card."
