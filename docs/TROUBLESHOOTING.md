@@ -575,6 +575,21 @@ Things that bit us or contributors, so they don't bite you. Commands use `tools/
   disabled logs `Unable to start service Intent { act=...AtvSearchAssistantService ... } U=0: not found`
   — that service lives in the package — and re-enabling only it, with every other line applied, brought
   the button back, so `tcl-g10-google-tv` keeps it now.
+- **The remote's voice button stops working after the package that owns Home is installed or updated,
+  and comes back after one reboot** ([#1869](https://github.com/Gathin23/cleanyourtv/issues/1869), a TCL
+  BeyondTV2, board `rtd285o`, Android TV 11, `PPR1.180610.011`/`AR05`, the same model and build as
+  `examples/tcl-beyondtv2-android-11/`). The button is the firmware's on this build, not the Assistant's:
+  `KEYCODE_SEARCH` (84) sends the system to the activity that owns Home, which clicks its own voice
+  button, so only the `ACTION_ASSIST` fired there records - a background one is refused with
+  `Recording audio is not allowed for this invocation on R.`. Installing or updating that package, a
+  rebuild over a different signing key included, leaves that routing stale: every press is denied until
+  the TV reboots, and then 3 of 3 presses recorded with a 16 kHz mono stream and no denials. Reboot once
+  before judging the button, and take installing the launcher again as no fix - changing which launcher
+  owns Home is not what breaks it, `cmd package set-home-activity` in both directions recorded normally.
+  If the button was dead before that too, check `com.google.android.katniss` first: the lists that turn
+  voice off, `tcl-beyondtv2-android-11` among them, disable it on purpose. `input keyevent 84` goes
+  through this firmware path rather than the launcher's (see "Accessibility helper enabled but the remote
+  button does nothing" below), so the physical button is the only test.
 - **Casting from a phone fails with "Untrusted device" after setupwraith is disabled**, seen on
   Chromecast with Google TV HD (`boreal`) on Google TV 14 build UTTC.250917.004, the build the
   `examples/google-chromecast-gtv-4k/` list was made on. YouTube on the phone says "Untrusted device.
