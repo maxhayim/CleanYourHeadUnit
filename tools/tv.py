@@ -195,7 +195,8 @@ def connect_error(e):
     if isinstance(e, ConnectionRefusedError):
         return (f"{target} refused the connection: nothing listens for ADB there, so network ADB is off "
                 f"or on another port.\nIf the TV has Wireless debugging, {pair}. {reboot} A firmware that "
-                f"runs adbd on a port of its own takes TV_HOST=<tv ip>:<port>. {see}")
+                f"runs adbd on a port of its own takes TV_HOST=<tv ip>:<port>.\nNot an Android TV (Samsung, LG, "
+                f"Roku)? There's no ADB to connect to; see https://cleanyour.tv/not-android. {see}")
     if isinstance(e, (TcpTimeoutException, AdbTimeoutError)):
         return (f"{target} took the connection, but ADB did not finish the handshake "
                 f"({type(e).__name__}: {e}).\nIf the TV shows \"Allow USB debugging?\", accept it and run "

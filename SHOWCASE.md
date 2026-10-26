@@ -164,6 +164,8 @@ Ways to run the cleanup or control the TV from a phone or a computer, without an
 
 Fire OS won't let another launcher replace Amazon's home, and LG TVs run webOS rather than Android, so these take their own routes.
 
+Only want the tracking off on a Samsung, LG, Roku or other non-Android TV? [cleanyour.tv/not-android](https://cleanyour.tv/not-android) does it step by step with the remote, no root.
+
 | Project | What it is | Built on | By |
 |---|---|---|---|
 | [CleanYourTV AFTSS minimal fork](https://github.com/bearylabs/cleanyourtv/tree/firetv) ([build and test notes](https://github.com/bearylabs/cleanyourtv/blob/firetv/FIRETV.md), [screenshot](https://github.com/bearylabs/cleanyourtv/releases/download/firetv-device-check-images-2026-10-25/rc1-home.jpg)) | No-root fork with a Home redirect in its accessibility service and a fail-open cover; Amazon Home stays enabled, no new network permission | Fire TV Stick Lite 2020 (AFTSS / sheldon), Fire OS 7.7.1.7 / Android 9 | [bearylabs](https://github.com/bearylabs) |

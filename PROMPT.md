@@ -3,7 +3,8 @@
 Paste this into Claude Code (or another coding assistant with shell access) on a computer that is
 on the same Wi-Fi as the TV. Works on Android TV / Google TV sets (Xiaomi, TCL, Hisense, Sony,
 OnePlus, Realme, Nvidia Shield and most others). It will not work on Samsung Tizen, LG webOS or
-Fire TV. If you cloned this repo, mention that: the assistant can reuse `tools/` and `launcher/`
+Fire TV. For Samsung, LG, Roku and other non-Android TVs, use https://cleanyour.tv/not-android instead:
+it turns off the tracking with the remote. If you cloned this repo, mention that: the assistant can reuse `tools/` and `launcher/`
 instead of writing them from scratch, and only needs to edit `launcher/.../values/config.xml`.
 
 Before you start, on the TV: Settings → Device Preferences → About → press OK on "Build" 7 times,
@@ -39,6 +40,9 @@ Connect
   and `adb tcpip 5555`. Android switches Wireless debugging off whenever Wi-Fi drops.
   Some firmware runs network ADB on another fixed port instead (a projector used 5877): if 5555 refuses and
   nothing advertises Wireless debugging, scan the TV's own TCP ports and try each open one with `TV_PORT`.
+- If the TV turns out not to be Android TV / Google TV (no ADB port at all, or it identifies as Tizen,
+  webOS, Roku OS, VIDAA or SmartCast), stop and tell me to use https://cleanyour.tv/not-android, which
+  turns off the tracking with the remote. Nothing in this repo applies to it.
 - Tell me when the "Allow USB debugging?" prompt will appear on the TV so I can accept it.
 - If `adb install` hangs on Android 14 it is waiting for an on-screen confirmation; push the APK and run
   `pm install -r` over the shell instead.

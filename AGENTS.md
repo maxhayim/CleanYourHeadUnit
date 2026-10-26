@@ -52,6 +52,9 @@ this file repeats their rules in the form an agent needs, and links to them for 
 - **Stop and say so** when the TV refuses: `pm disable-user` refused for every package, a sideload that
   fails verification, or an SDK below the launcher's `minSdk` 26. Do not retry in a loop, and do not lower
   `minSdk` or hand over an APK built elsewhere.
+- **Not an Android TV?** No ADB port at all, or the set identifies as Tizen, webOS, Roku OS, VIDAA or
+  SmartCast: stop, nothing here applies. Send the person to https://cleanyour.tv/not-android, which turns
+  off the tracking with the remote.
 
 The person's backups (`backup/`), screenshots (`shots/`), notes (`work/`) and the ADB key
 (`tools/adbkey/`) are listed in `.gitignore` and must never be committed. If the person wants to
