@@ -26,13 +26,21 @@ $forceSetupwraith = [bool]$env:FORCE_SETUPWRAITH
 $forceHome = [bool]$env:FORCE_HOME
 $tvinputAllow = [bool]$env:TVINPUT_ALLOW
 $handlersAllow = [bool]$env:HANDLERS_ALLOW
-foreach ($name in 'FORCE_SETUPWRAITH', 'FORCE_HOME', 'TVINPUT_ALLOW', 'HANDLERS_ALLOW') {
+# Name each one as it was set and say how to clear it (#1845): with `powershell ... -File` the script
+# runs in a child process, so removing it here does not clear the caller's window.
+$overrideCost = [ordered]@{
+    FORCE_SETUPWRAITH = 'setupwraith is disabled even if it owns the saved Wi-Fi network'
+    FORCE_HOME = 'the Home guard is skipped'
+    TVINPUT_ALLOW = 'input-driver packages are disabled even if they ask for TV_INPUT_HARDWARE'
+    HANDLERS_ALLOW = 'input and Settings handlers are disabled even if the launcher needs them'
+}
+foreach ($name in $overrideCost.Keys) {
+    $value = [Environment]::GetEnvironmentVariable($name)
+    if ($value) {
+        Write-Warning "$name=$value is set: the safety check it overrides stays off for this run only ($($overrideCost[$name])). If this note comes back on the next run, clear it in your window with Remove-Item env:$name."
+    }
     Remove-Item -Path "Env:$name" -ErrorAction SilentlyContinue
 }
-if ($forceSetupwraith) { Write-Warning 'FORCE_SETUPWRAITH is set for this run only: setupwraith is disabled even if it owns the saved Wi-Fi network.' }
-if ($forceHome) { Write-Warning 'FORCE_HOME is set for this run only: the Home guard is skipped for this run.' }
-if ($tvinputAllow) { Write-Warning 'TVINPUT_ALLOW is set for this run only: input-driver packages are disabled even if they ask for TV_INPUT_HARDWARE.' }
-if ($handlersAllow) { Write-Warning 'HANDLERS_ALLOW is set for this run only: input and Settings handlers are disabled even if the launcher needs them.' }
 
 $pkgs = Get-Content $List | ForEach-Object { ($_ -replace '#.*$', '').Trim() } | Where-Object { $_ } | ForEach-Object { ($_ -split '\s+')[0] }
 # Lists come from contributors and each name is pasted into a shell command on the TV (#165).
