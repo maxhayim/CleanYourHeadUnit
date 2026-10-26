@@ -130,16 +130,7 @@ Kayo `au.com.kayosports.tv`, 7plus `com.swm.live`, 9Now `au.com.ninenow.ctv`, 10
 SBS `com.sbs.ondemand.tv`, Spotify `com.spotify.tv.android`, YouTube Music
 `com.google.android.youtube.tvmusic`, Live TV `com.tcl.tv`.
 
-## Ad-blocking DNS (optional)
-
-Private DNS to an ad-blocking resolver works on this TV (it does not block YouTube ads):
-
-```
-TV_HOST=<tv ip> tools/tv.py 'settings put global private_dns_specifier dns.adguard-dns.com'
-TV_HOST=<tv ip> tools/tv.py 'settings put global private_dns_mode hostname'
-```
-
-Undo with `settings put global private_dns_mode opportunistic`.
+Private DNS to an ad-blocking resolver works on this TV (it does not block YouTube ads).
 
 ## After a firmware update
 

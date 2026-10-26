@@ -33,4 +33,5 @@ TV_HOST=<tv ip> tools/venv/bin/python -I tools/tv.py "pm disable-user --user 0 c
 On this TV, `cmd package set-home-activity` must be called while the new launcher is
 already in the foreground, then `setupwraith` must be disabled immediately after.
 The /product system version of setupwraith respawns on every HOME keyevent until it
-is fully disabled-user. `launcher/build-and-install.sh` handles this automatically.
+is fully disabled-user. `launcher/build-and-install.sh` runs set-home-activity but does not disable
+setupwraith, so disable it by hand right after the install, as the list's header says.

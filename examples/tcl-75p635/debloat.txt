@@ -12,7 +12,8 @@
 # Apply:   TV_HOST=<tv ip> tools/disable.sh examples/tcl-75p635/debloat.txt
 # Restore: TV_HOST=<tv ip> tools/restore.sh examples/tcl-75p635/debloat.txt com.google.android.apps.tv.launcherx
 # Everything is DISABLED, not uninstalled. Comment out anything you use.
-# Disable setupwraith before launcherx (order matters on this TV).
+# Disable setupwraith before launcherx (order matters on this TV). Disabling setupwraith gives Home
+# back but can break casting (Chromecast built-in) after a reboot; comment out its line if you cast.
 # Run set-home-activity while the new launcher is in the foreground, then
 # immediately disable setupwraith; the system /product version respawns
 # on HOME keyevents if set-home-activity is not set first.
