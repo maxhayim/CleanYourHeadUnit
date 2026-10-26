@@ -24,7 +24,10 @@ jobs:
       - name: Example lists, README tables, shell helpers
         env:
           CLEANYOURTV_STRICT: ${{ github.event_name == 'push' && '1' || '' }}
-        run: python3 -m unittest discover -s tests -v
+        # The venv interpreter, not the runner's python3: the runner has no adb_shell, so
+        # running the suite with it leaves test_tv_reboot to its child-rerun workaround
+        # instead of running in-process (#1800).
+        run: tools/venv/bin/python -m unittest discover -s tests -v
 
   tables:
     # Main only: a list PR adds just its folder and tv.json, so on a pull request the tables lag on purpose.
