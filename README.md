@@ -61,7 +61,7 @@ before touching anything you might use.
 
 With a computer, you need it on the same Wi-Fi as the TV and a coding assistant with shell access.
 
-Any of these work: Claude Code (on [0G Private Computer](https://pc.0g.ai) or an [Anthropic plan](https://claude.com/pricing)), [Codex](https://github.com/openai/codex) or [Gemini CLI](https://github.com/google-gemini/gemini-cli).
+Any of these work: Claude Code (on [0G Private Computer](https://pc.0g.ai) or an [Anthropic plan](https://claude.com/pricing)), [Codex](https://github.com/openai/codex) or [Antigravity CLI](https://antigravity.google/product/antigravity-cli).
 
 | Where | What to do |
 |---|---|
