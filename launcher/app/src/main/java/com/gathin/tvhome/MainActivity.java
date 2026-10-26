@@ -251,6 +251,24 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
     private boolean bootToLiveTv;
     /** open_on_start_choice: the app picked in Launcher settings may open on the first Home of each boot. */
     private boolean openOnStartChoice;
+    /** open_on_start_network_wait, in ms; the boot's app while it waits for the network, and until when. */
+    private long openOnStartWaitMs;
+    private Intent startPending;
+    private long startDeadline;
+    private final Runnable openWhenOnline = new Runnable() {
+        @Override
+        public void run() {
+            if (startPending == null) return;
+            if (!OpenOnStart.opensNow(OpenOnStart.online(MainActivity.this), SystemClock.elapsedRealtime(),
+                    startDeadline)) {
+                handler.postDelayed(this, 500);
+                return;
+            }
+            Intent i = startPending;
+            startPending = null;
+            open(i);
+        }
+    };
     /** hidden_apps as the adapter sees them (config.xml or a theme's config.json): a hidden app gets no card either. */
     private Set<String> hiddenApps = Collections.emptySet();
     private List<Cards.Card> cards = Collections.emptyList();
@@ -415,6 +433,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         idleClockMs = cfg.homeIdleClockMinutes * MINUTE_MS;
         bootToLiveTv = cfg.bootToLiveTv;
         openOnStartChoice = cfg.openOnStartChoice;
+        openOnStartWaitMs = cfg.openOnStartNetworkWait * 1000L;
         liveTvAction = cfg.liveTvAction;
         liveTvInputId = cfg.liveTvInputId;
         appLibraryEnabled = cfg.appLibrary;
@@ -1162,6 +1181,8 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         ambient.animate().cancel();
         heroArt.animate().cancel();
         handler.removeCallbacks(minuteTick);
+        handler.removeCallbacks(openWhenOnline);
+        startPending = null;   // leaving Home before the network came back: the boot's app stays closed
         stopStats();
         if (diya != null) diya.stop();
         cancelPendingFocusScroll();
@@ -2883,6 +2904,13 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         if (!prefs.edit().putInt(OpenOnStart.BOOT_KEY, boot).commit()) return false;
         Intent i = bootToLiveTv ? liveTvIntent() : OpenOnStart.intent(getPackageManager(), app);
         if (i == null) return false;
+        // open_on_start_network_wait: Home stays on screen until the network is back or the wait is over.
+        if (openOnStartWaitMs > 0 && !OpenOnStart.online(this)) {
+            startPending = i;
+            startDeadline = SystemClock.elapsedRealtime() + openOnStartWaitMs;
+            handler.postDelayed(openWhenOnline, 500);
+            return false;
+        }
         open(i);
         return true;
     }
