@@ -328,6 +328,7 @@ on that firmware, grouped and commented. These are starting points: comment out 
 
 Notes for models that have no tested list yet live in [`docs/devices/`](../docs/devices/):
 
+- [Hisense 55U8G](../docs/devices/hisense-55u8g.md), owner-identified US model, `SmartTV 4K FFM` / `huangshan`, Android TV 10, vendor software `V0000.01.00U.Q0506` / `D01`: identifier mapping, original Inputs handler and bounded updater-role observations; no several-day debloat list.
 - [Pixpaq Gold Ray-Mastered Edition](../docs/devices/pixpaq-gold-ray-mastered.md), Android 13 (reports `ADT-3`): Activity Launcher paths into Android Settings and Developer options, a separate Settings shortcut, Projectivy Home and reboot observations, and screensaver selection; no packages disabled.
 - [Amazon Fire TV Stick AFTMA08C15](../docs/devices/amazon-fire-tv-aftma08c15.md), Fire OS 8.1.8.5 / Android 11: external dumbtv Home 1.3 observations, physical Home failure despite passing injected-key checks, recovery limits, updater preservation, and media-folder wallpaper configuration; single-session notes, no tested list.
 
