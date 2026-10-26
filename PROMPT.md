@@ -102,7 +102,11 @@ Debloat
   `docs/TROUBLESHOOTING.md` has the way out if one has been opened.
 - Disable in small batches and screenshot between them: a batch can take something load-bearing with
   it and you cannot tell which.
-- After the last batch, reboot once and compare `pm list packages -d` with what you disabled: some
+- After the last batch, wait about 15 seconds before rebooting - Android writes package state to
+  disk about ten seconds after a change (`WRITE_SETTINGS_DELAY`, `docs/TROUBLESHOOTING.md`), so a
+  reboot sent straight after the batch boots with the old state and what came back reads as
+  firmware re-enabling packages it never re-enabled. `adb shell sync` first is fine too. Then reboot
+  once and compare `pm list packages -d` with what you disabled: some
   firmware re-enables packages at every boot from its own list (TCL Android 9 does this for its user
   center). Note those in the list header instead of disabling them again after each boot. If
   setupwraith or the stock launcher came back and Home is black, check `logcat | grep
