@@ -751,7 +751,16 @@ Settings → Apps page can re-enable packages too.
 
 An update installs over the cleaned-up system: the listed packages come back, Home goes to the
 stock launcher, and new preloads appear that no list mentions. Nothing else here notices, so
-compare the TV with the list you applied:
+compare the TV with the list you applied.
+
+The check and `--fix` reach the TV over network ADB. If you closed ADB as
+[Isn't ADB access a security hole?](#questions-people-ask) describes, open it again first: USB
+debugging, and Network/ADB debugging if the TV has it, back on as in [Quick start](#quick-start)
+step 1. On a TV whose port 5555 only opens through Wireless debugging, switch that on as well, pair
+it again with the stock `adb` and run `adb tcpip 5555`, as in [Doing it by hand](#doing-it-by-hand).
+Closing revoked this computer's authorisation, so accept "Allow USB debugging?" on the TV when the
+check connects. While ADB is closed the check can only report "could not reach the TV", even with
+the TV on and `TV_HOST` right. Close ADB the same way once you are done. With it open:
 
 ```bash
 TV_HOST=192.168.1.50 tools/venv/bin/python -I tools/check.py examples/<your tv>/debloat.txt
@@ -772,6 +781,13 @@ well, and a weekly job on a home server or a Pi is enough to hear about it:
 `TV_HOST` is read before any of that: a run that leaves it unset stops in `tools/tv.py` with its own
 message and also exits 1, so set it in the job line, as above, where cron does not inherit it from
 your shell.
+
+The job only gets an answer from a TV that keeps network ADB listening between runs and has
+accepted "Allow USB debugging?" for the computer that runs it with "Always allow from this computer"
+ticked: without the tick the TV asks again at every run, and with nobody there to accept, the run
+exits 2. A port left listening is the one [Isn't ADB access a security hole?](#questions-people-ask)
+says to close, since anything on the network can reach it. With ADB closed as described there,
+every run exits 2: run the check by hand after an update instead, with ADB opened again as above.
 
 `--fix` reapplies the list to what drifted: it switches Home to the launcher the list does not
 disable (pass a package as the second argument if you run a fork), then disables the listed packages
