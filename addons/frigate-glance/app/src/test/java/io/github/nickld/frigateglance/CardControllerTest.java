@@ -36,7 +36,7 @@ public class CardControllerTest {
         view = new FakeView();
         now = 1_000_000L;
         GlanceConfig config = GlanceConfig.parse("{\"mqtt\":\"mqtt://h:1883\",\"frigateUrl\":\"https://h:8971\"}");
-        c = new CardController(view, new ReviewFilter(config), Map.of("frontdoooor", "Front door"), 8, () -> now);
+        c = new CardController(view, new ReviewFilter(config), Map.of("porch", "Front door"), 8, () -> now);
     }
 
     private static Review rev(String type, String id, String camera, String severity) {
@@ -44,20 +44,20 @@ public class CardControllerTest {
     }
 
     private static Review revWithDetection(String id, String eventId) {
-        String after = "{\"id\":\"" + id + "\",\"camera\":\"frontdoooor\",\"severity\":\"alert\",\"data\":{\"detections\":[\""
-                + eventId + "\"],\"objects\":[\"person\"],\"zones\":[\"entire_front_yard\"]}}";
+        String after = "{\"id\":\"" + id + "\",\"camera\":\"porch\",\"severity\":\"alert\",\"data\":{\"detections\":[\""
+                + eventId + "\"],\"objects\":[\"person\"],\"zones\":[\"front_yard\"]}}";
         return Review.parse("{\"type\":\"new\",\"after\":" + after + "}");
     }
 
     private static Detection det(String eventId, float[] box) {
         String b = box == null ? "null" : "[" + (box[0] * 100) + "," + (box[1] * 100) + "," + (box[2] * 100) + "," + (box[3] * 100) + "]";
-        return Detection.parse("{\"type\":\"update\",\"after\":{\"id\":\"" + eventId + "\",\"camera\":\"frontdoooor\",\"label\":\"person\","
-                + "\"sub_label\":[\"Nick\",0.9],\"score\":0.9,\"box\":" + b + "}}", Map.of("frontdoooor", new int[] {100, 100}));
+        return Detection.parse("{\"type\":\"update\",\"after\":{\"id\":\"" + eventId + "\",\"camera\":\"porch\",\"label\":\"person\","
+                + "\"sub_label\":[\"Alex\",0.9],\"score\":0.9,\"box\":" + b + "}}", Map.of("porch", new int[] {100, 100}));
     }
 
     @Test
     public void newAlertShowsCard() {
-        c.onReview(rev("new", "r1", "frontdoooor", "alert"));
+        c.onReview(rev("new", "r1", "porch", "alert"));
         assertEquals(List.of("show:r1"), view.calls);
         assertTrue(c.isShowing());
     }
@@ -70,7 +70,7 @@ public class CardControllerTest {
 
     @Test
     public void secondReviewReplacesFirst() {
-        c.onReview(rev("new", "r1", "frontdoooor", "alert"));
+        c.onReview(rev("new", "r1", "porch", "alert"));
         c.onReview(rev("new", "r2", "driveway", "alert"));
         assertEquals("show:r2", view.last());
         assertTrue(c.isShowing());
@@ -78,22 +78,22 @@ public class CardControllerTest {
 
     @Test
     public void updateForShownCardRefreshesIt() {
-        c.onReview(rev("new", "r1", "frontdoooor", "alert"));
-        c.onReview(rev("update", "r1", "frontdoooor", "alert"));
+        c.onReview(rev("new", "r1", "porch", "alert"));
+        c.onReview(rev("update", "r1", "porch", "alert"));
         assertEquals("update:r1", view.last());
     }
 
     @Test
     public void updateForOtherReviewIsIgnored() {
-        c.onReview(rev("new", "r1", "frontdoooor", "alert"));
-        c.onReview(rev("update", "r9", "frontdoooor", "alert"));
+        c.onReview(rev("new", "r1", "porch", "alert"));
+        c.onReview(rev("update", "r9", "porch", "alert"));
         assertEquals(List.of("show:r1"), view.calls);
     }
 
     @Test
     public void endHidesAfterDismissSeconds() {
-        c.onReview(rev("new", "r1", "frontdoooor", "alert"));
-        c.onReview(rev("end", "r1", "frontdoooor", "alert"));
+        c.onReview(rev("new", "r1", "porch", "alert"));
+        c.onReview(rev("end", "r1", "porch", "alert"));
         now += 7_999;
         c.tick();
         assertTrue(c.isShowing());
@@ -105,7 +105,7 @@ public class CardControllerTest {
 
     @Test
     public void missingEndHidesAfter120s() {
-        c.onReview(rev("new", "r1", "frontdoooor", "alert"));
+        c.onReview(rev("new", "r1", "porch", "alert"));
         now += 119_999;
         c.tick();
         assertTrue(c.isShowing());
@@ -116,9 +116,9 @@ public class CardControllerTest {
 
     @Test
     public void updateExtendsTheHardDeadline() {
-        c.onReview(rev("new", "r1", "frontdoooor", "alert"));
+        c.onReview(rev("new", "r1", "porch", "alert"));
         now += 100_000;
-        c.onReview(rev("update", "r1", "frontdoooor", "alert"));
+        c.onReview(rev("update", "r1", "porch", "alert"));
         now += 100_000;
         c.tick();
         assertTrue(c.isShowing());
@@ -129,7 +129,7 @@ public class CardControllerTest {
         c.onReview(revWithDetection("r1", "ev1"));
         c.onDetection(det("ev1", BOX));
         assertEquals(1, view.lastModel.boxes.size());
-        assertEquals("Person · Nick · Entire Front Yard", view.lastModel.detail);
+        assertEquals("Person · Alex · Front Yard", view.lastModel.detail);
     }
 
     @Test
@@ -144,12 +144,12 @@ public class CardControllerTest {
         c.onReview(revWithDetection("r1", "ev1"));
         c.onDetection(det("ev1", null));
         assertEquals(0, view.lastModel.boxes.size());
-        assertEquals("Person · Nick · Entire Front Yard", view.lastModel.detail);
+        assertEquals("Person · Alex · Front Yard", view.lastModel.detail);
     }
 
     @Test
     public void dismissHides() {
-        c.onReview(rev("new", "r1", "frontdoooor", "alert"));
+        c.onReview(rev("new", "r1", "porch", "alert"));
         c.dismiss();
         assertFalse(c.isShowing());
         assertEquals("hide", view.last());
@@ -157,14 +157,14 @@ public class CardControllerTest {
 
     @Test
     public void snoozeHidesAndBlocksNewCards() {
-        c.onReview(rev("new", "r1", "frontdoooor", "alert"));
+        c.onReview(rev("new", "r1", "porch", "alert"));
         c.snooze(60);
         assertFalse(c.isShowing());
         assertEquals(now + 60 * 60_000L, c.snoozedUntil());
-        c.onReview(rev("new", "r2", "frontdoooor", "alert"));
+        c.onReview(rev("new", "r2", "porch", "alert"));
         assertFalse(c.isShowing());
         now += 60 * 60_000L;
-        c.onReview(rev("new", "r3", "frontdoooor", "alert"));
+        c.onReview(rev("new", "r3", "porch", "alert"));
         assertTrue(c.isShowing());
     }
 
@@ -173,20 +173,20 @@ public class CardControllerTest {
         c.snooze(60);
         c.resume();
         assertEquals(0, c.snoozedUntil());
-        c.onReview(rev("new", "r1", "frontdoooor", "alert"));
+        c.onReview(rev("new", "r1", "porch", "alert"));
         assertTrue(c.isShowing());
     }
 
     @Test
     public void frigateOfflineHidesCard() {
-        c.onReview(rev("new", "r1", "frontdoooor", "alert"));
+        c.onReview(rev("new", "r1", "porch", "alert"));
         c.onAvailable(false);
         assertFalse(c.isShowing());
     }
 
     @Test
     public void displayNameFromConfig() {
-        c.onReview(rev("new", "r1", "frontdoooor", "alert"));
+        c.onReview(rev("new", "r1", "porch", "alert"));
         assertEquals("Front door", view.lastModel.title);
     }
 
@@ -209,23 +209,23 @@ public class CardControllerTest {
 
     @Test
     public void activeCardHasNoCountdown() {
-        c.onReview(rev("new", "r1", "frontdoooor", "alert"));
+        c.onReview(rev("new", "r1", "porch", "alert"));
         assertEquals(0, view.lastModel.countdownMs);
-        c.onReview(rev("update", "r1", "frontdoooor", "alert"));
+        c.onReview(rev("update", "r1", "porch", "alert"));
         assertEquals(0, view.lastModel.countdownMs);
     }
 
     @Test
     public void endStartsCountdownOfDismissSeconds() {
-        c.onReview(rev("new", "r1", "frontdoooor", "alert"));
-        c.onReview(rev("end", "r1", "frontdoooor", "alert"));
+        c.onReview(rev("new", "r1", "porch", "alert"));
+        c.onReview(rev("end", "r1", "porch", "alert"));
         assertEquals(8000, view.lastModel.countdownMs);
     }
 
     @Test
     public void detectionAfterEndKeepsTheCountdownRunning() {
         c.onReview(revWithDetection("r1", "ev1"));
-        c.onReview(Review.parse("{\"type\":\"end\",\"after\":{\"id\":\"r1\",\"camera\":\"frontdoooor\",\"severity\":\"alert\",\"data\":{\"detections\":[\"ev1\"],\"objects\":[\"person\"]}}}"));
+        c.onReview(Review.parse("{\"type\":\"end\",\"after\":{\"id\":\"r1\",\"camera\":\"porch\",\"severity\":\"alert\",\"data\":{\"detections\":[\"ev1\"],\"objects\":[\"person\"]}}}"));
         now += 3000;
         c.onDetection(det("ev1", BOX));
         assertEquals(5000, view.lastModel.countdownMs);
@@ -239,40 +239,40 @@ public class CardControllerTest {
 
     @Test
     public void replayCardSaysReplay() {
-        c.onReview(rev("new", "r1", "_replay_frontdoooor", "alert"));
+        c.onReview(rev("new", "r1", "_replay_porch", "alert"));
         assertEquals("Front door (replay)", view.lastModel.title);
     }
 
     @Test
     public void updateForAnAlertNeverShownOpensACard() {
         // Connected mid-event (a reconnect, a reinstall): only updates arrive for it.
-        c.onReview(rev("update", "r1", "frontdoooor", "alert"));
+        c.onReview(rev("update", "r1", "porch", "alert"));
         assertEquals("show:r1", view.last());
     }
 
     @Test
     public void dismissedAlertDoesNotReopenOnUpdate() {
-        c.onReview(rev("new", "r1", "frontdoooor", "alert"));
+        c.onReview(rev("new", "r1", "porch", "alert"));
         c.dismiss();
-        c.onReview(rev("update", "r1", "frontdoooor", "alert"));
+        c.onReview(rev("update", "r1", "porch", "alert"));
         assertFalse(c.isShowing());
     }
 
     @Test
     public void replacedAlertDoesNotStealTheCardBack() {
-        c.onReview(rev("new", "r1", "frontdoooor", "alert"));
+        c.onReview(rev("new", "r1", "porch", "alert"));
         c.onReview(rev("new", "r2", "driveway", "alert"));
-        c.onReview(rev("update", "r1", "frontdoooor", "alert"));
+        c.onReview(rev("update", "r1", "porch", "alert"));
         assertEquals("show:r2", view.last());
     }
 
     @Test
     public void endedAlertDoesNotReopen() {
-        c.onReview(rev("new", "r1", "frontdoooor", "alert"));
-        c.onReview(rev("end", "r1", "frontdoooor", "alert"));
+        c.onReview(rev("new", "r1", "porch", "alert"));
+        c.onReview(rev("end", "r1", "porch", "alert"));
         now += 9000;
         c.tick();
-        c.onReview(rev("update", "r1", "frontdoooor", "alert"));
+        c.onReview(rev("update", "r1", "porch", "alert"));
         assertFalse(c.isShowing());
     }
 
@@ -281,8 +281,8 @@ public class CardControllerTest {
         c.onReview(revWithDetection("r1", "ev1"));
         c.onDetection(det("ev1", BOX));
         assertEquals(1, view.lastModel.boxes.size());
-        c.onDetection(Detection.parse("{\"type\":\"end\",\"after\":{\"id\":\"ev1\",\"camera\":\"frontdoooor\",\"label\":\"person\",\"box\":[0,0,50,50]}}",
-                Map.of("frontdoooor", new int[] {100, 100})));
+        c.onDetection(Detection.parse("{\"type\":\"end\",\"after\":{\"id\":\"ev1\",\"camera\":\"porch\",\"label\":\"person\",\"box\":[0,0,50,50]}}",
+                Map.of("porch", new int[] {100, 100})));
         assertEquals(0, view.lastModel.boxes.size());
     }
 
@@ -304,8 +304,8 @@ public class CardControllerTest {
     @Test
     public void shownCameraIsKnownForFullScreen() {
         assertEquals(null, c.shownCamera());
-        c.onReview(rev("new", "r1", "frontdoooor", "alert"));
-        assertEquals("frontdoooor", c.shownCamera());
+        c.onReview(rev("new", "r1", "porch", "alert"));
+        assertEquals("porch", c.shownCamera());
         c.dismiss();
         assertEquals(null, c.shownCamera());
     }
