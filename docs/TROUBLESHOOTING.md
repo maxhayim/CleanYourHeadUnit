@@ -164,6 +164,29 @@ Things that bit us or contributors, so they don't bite you. Commands use `tools/
   is already `disabled` (`enabled=2` in `dumpsys package`, as `tvrecommendations` is on a Chromecast
   with Google TV 4K). There is no shell route around it, so don't retry it with other flags: disable the
   whole package with `pm disable-user --user 0`, or keep it.
+- **`pm disable-user` answers `Error: java.lang.IllegalArgumentException: Unknown package: <package>`**,
+  by hand or for one line of a list ([#1880](https://github.com/Gathin23/cleanyourtv/issues/1880), a Konka
+  B50U). Nothing of that name is installed for the user the command names, so that one line changed
+  nothing - and the lines around it still run: `tools/disable.sh` pipes the list into
+  `tools/tv.py --batch`, which runs each line as its own shell call and carries on to the next whatever
+  this one answered, so a list with three unknown names in it still finishes, and the client's exit
+  status says nothing about them. What the line is worth is the name in it. Two causes. The list was
+  written on another set: every list here names the model and firmware build in its header, preloads
+  differ between regional builds of the same model, and
+  [`examples/tcl-c845x2-google-tv/debloat.txt`](../examples/tcl-c845x2-google-tv/debloat.txt) calls its
+  own two `Unknown package` errors harmless for exactly that reason. Or the name is not a package at all:
+  a store title, a home-screen tile, or a name guessed from the app's look, as
+  `com.vendor.recommendations` was. `pm list packages` is the only list of names the TV answers to, and a
+  fragment of the app's name usually finds it:
+  ```sh
+  tools/tv.py 'pm list packages | grep -i recommend'
+  tools/tv.py 'pm list packages -u --user 0 <package>'    # -u: one removed earlier still shows
+  ```
+  Nothing from the first command means the app is not on this TV, so comment its line out of the list
+  instead of retrying it - and check the model and Android version `tools/tv.py --probe` prints against
+  the header of the list you are following. A name the TV does list is the case the bullet below covers:
+  `tools/recovery.py` records a listed package that was already gone before the first run as `absent`,
+  and `restore.sh` and `check.py` say so in their own words.
 - **A package removed with `pm uninstall --user 0`, by hand or by another debloat tool, stays gone
   after `tools/restore.sh`.** The [Toshiba 55Z500QF](devices/toshiba-55z500qf-cn.md) note (Hisense
   firmware, Android 11, `RD2A.211001.002`) has 23 preinstalled packages its owner removed that way. The
