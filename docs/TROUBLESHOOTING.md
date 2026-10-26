@@ -1069,6 +1069,27 @@ While the opt-in is on, `dumpsys accessibility` naming no `com.gathin.tvhome/.Ho
 standby is the opt-in working, not a fault: wake the TV and read it again. Only that helper stands down;
 `InputKeyService` keeps filtering, so the Input button still works.
 
+A power button that does nothing at all while the TV is **on**, with a long press opening the shutdown
+dialog instead, is a different fault: [a TCL 43BP615 whose stock launcher switched the TV off on one press](#a-power-press-that-does-nothing-and-a-long-press-opens-the-shutdown-dialog).
+
+## A power press that does nothing and a long press opens the shutdown dialog
+
+A press on the remote's power button does nothing, and a long press brings up Android's shutdown
+confirmation instead of turning the set off, where the stock launcher switched it off on one press.
+Checked on a TCL 43BP615 (BeyondTV, Android 11, SDK 30, #1608) after an ordinary
+`launcher/build-and-install.sh` with no key helper flags, and again with `HomeKeyService` bound through
+`settings put secure enabled_accessibility_services`: the dialog came up both times, so the helper is not
+what changes the key. The owner's reading is that the platform takes `KEYCODE_POWER` itself, in the
+window policy, before an application or an accessibility service is handed it, and the launcher maps no
+power key of its own (its only `KEYCODE_POWER` mention keeps the key out of the `power_on_home`
+handover) — so there is no `app_keys` entry, theme key or `config.xml` value that takes the press back.
+On this set the one-press power-off belonged to the firmware's own home screen and went with it.
+
+Nothing is broken: the install, the debloat and the key helper are not involved, and the shutdown dialog
+is Android's, so the TV still turns off from it. An owner who wants the one-press power-off back gets it by
+putting the stock launcher back — `tools/restore.sh <list> <stock launcher>` — and hands Home back to it
+at the same time.
+
 ## The soundbar on ARC/eARC falls asleep and the TV does not wake it
 
 A soundbar on the TV's ARC or eARC port can go to standby on its own after a stretch of silence while
