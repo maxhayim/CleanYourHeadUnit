@@ -19,6 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.time.format.TextStyle;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -226,7 +227,9 @@ public final class WeatherActivity extends Activity {
     /** Native lists keep D-pad focus, checked values and Back handling without a new dependency. */
     private void settings() {
         int initialDays = forecastDays;
-        ArrayAdapter<String> rows = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, optionRows());
+        // The array overload uses a fixed-size list; saved changes must be able to replace its rows.
+        ArrayAdapter<String> rows = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, new ArrayList<>());
+        rows.addAll(optionRows());
         AlertDialog dialog = new AlertDialog.Builder(this, android.R.style.Theme_DeviceDefault_Dialog_Alert)
                 .setTitle(R.string.weather_settings)
                 .setAdapter(rows, null)
