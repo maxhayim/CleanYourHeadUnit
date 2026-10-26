@@ -250,6 +250,19 @@ Things that bit us or contributors, so they don't bite you. Commands use `tools/
   Save on the TV and pull the file instead: `screencap -p /data/local/tmp/s.png`, or cut
   everything before the `\x89PNG` header. `tools/tv.py --screenshot shots/home.png` does the save,
   the pull and the cleanup in one command, and says so when the capture is 0 bytes.
+- **Gradle says "Your project path contains non-ASCII characters" on Windows** before building the
+  launcher. Android's build tools reject a checkout under a localized folder such as `桌面` (Desktop).
+  This was seen while installing on a Sony KM-55X85J (Google TV 12, Taiwan firmware); the TV is not
+  changed when the build stops here ([#1777](https://github.com/Gathin23/cleanyourtv/issues/1777)).
+  Clone the repo into an ASCII-only path such as `C:\cleanyourtv`, or map a drive letter to the
+  checkout's parent directory and run the build through it:
+  ```powershell
+  subst X: 'C:\Users\<user>\OneDrive\桌面\sideproject'
+  Set-Location X:\cleanyourtv
+  .\launcher\build-and-install.ps1 -TvHost <tv ip>
+  Set-Location C:\
+  subst X: /D  # after the build is finished
+  ```
 - **Play Protect blocked the launcher** ("unsafe app blocked, built for an older version of Android")
   and `pm install` hung, then failed with `INSTALL_FAILED_VERIFICATION_FAILURE`, while it targeted
   SDK 29. It targets 34 now; if you built an old checkout, rebuild.
