@@ -67,7 +67,7 @@ The three steps below are written for a coding assistant: the computer needs to 
 the TV, with a shell on it. Without an assistant, [Doing it by hand](#doing-it-by-hand) is the same job,
 run by you.
 
-Any of these work: Claude Code (on [0G Private Computer](https://pc.0g.ai) or an [Anthropic plan](https://claude.com/pricing)), [Codex](https://github.com/openai/codex) or [Gemini CLI](https://github.com/google-gemini/gemini-cli).
+Any of these work: Claude Code (on [0G Private Computer](https://pc.0g.ai) or an [Anthropic plan](https://claude.com/pricing)), [Codex](https://github.com/openai/codex) or [Antigravity CLI](https://antigravity.google/product/antigravity-cli).
 
 | Where | What to do |
 |---|---|
