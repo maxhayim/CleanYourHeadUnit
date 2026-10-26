@@ -32,6 +32,7 @@
 # Self-installed streaming apps untouched.
 
 # --- Ads, telemetry and partner auto-installs
+tv.anoki.acr.controller                         # Anoki automatic content recognition telemetry
 com.cltv.fast                                   # FAST channels: ad-supported channel rows
 com.google.android.feedback                     # Google feedback / bug report uploader
 com.google.android.partnersetup                 # partner-app attribution (RLZ)
