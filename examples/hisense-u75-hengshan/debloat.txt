@@ -8,6 +8,9 @@
 # Third unit: Hisense 55U7N, same device and build, reported 2026-10-24 (#1326): the volume ramp goes the
 # same way with HomeKeyService alone and no CEC soundbar, so that trade is the board's, not the soundbar's.
 # README.md carries it.
+# Fourth unit: Hisense 65U7ESG, Colombia, same device and build (00.00.00.135), applied 2026-10-25. Its own
+# list is debloat-65u7esg.txt (no VIDAA packages there; casting and ambient mode off, HiAlexa kept), and
+# README.md has how it keeps both the remote's app buttons and the volume ramp.
 #
 # Apply:   TV_HOST=<tv ip> tools/disable.sh examples/hisense-u75-hengshan/debloat.txt
 # Undo:    TV_HOST=<tv ip> tools/restore.sh examples/hisense-u75-hengshan/debloat.txt com.google.android.apps.tv.launcherx
