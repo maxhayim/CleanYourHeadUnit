@@ -29,7 +29,7 @@
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
             </intent-filter>
-            <!-- Clean Your TV module card (docs/specs/card.md): the tile shows as "Bluetooth" once the owner says Show. -->
+            <!-- Clean Your TV module card (docs/specs/card.md): the tile shows as "Bluetooth Toggle" once the owner says Show. -->
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="com.gathin.tvhome.category.DOCK_CARD" />

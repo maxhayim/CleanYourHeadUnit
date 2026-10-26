@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Bluetooth</string>
+    <string name="app_name">Bluetooth Toggle</string>
 
     <string name="state_on">Bluetooth on</string>
     <string name="state_off">Bluetooth off</string>
