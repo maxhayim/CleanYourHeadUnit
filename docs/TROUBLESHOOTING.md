@@ -253,7 +253,16 @@ Things that bit us or contributors, so they don't bite you. Commands use `tools/
   HDMI and AV rows carry no package. Until the launcher checks that the handler is a TV-input app,
   hide the rows instead: a theme with `source_panel_service` set and `live_tv_package` empty makes
   the Inputs pill open the TV's own source panel (what the reporter did), or disable the app that
-  answers. Report another one rather than reading it as a firmware quirk: the wrong-handler case needs
+  answers when it is not a Live TV or input app. `tools/disable.sh` (`disable.ps1`) keeps any listed
+  app that query names and skips it with "the TV opens its HDMI/AV inputs and channels with it", so
+  put its line in a list of its own and apply that with `HANDLERS_ALLOW=1` (`$env:HANDLERS_ALLOW`):
+  the rest of your list keeps the guard. Run `tools/check.py --fix` on that list with the same
+  switch, or it leaves the app on and exits 1. In PowerShell the switch stays set until the window
+  is closed: run `Remove-Item Env:HANDLERS_ALLOW` after those two, or the next `disable.ps1` or
+  `check.py --fix` on your main list skips the guard too. To turn the app back on, use
+  `tools/tv.py 'pm enable --user 0 <package>'`. `tools/restore.sh` with that list turns it back on
+  as well, but it also turns the stock launcher back on and makes it Home, as it does for any list.
+  Report another one rather than reading it as a firmware quirk: the wrong-handler case needs
   a source change, not a setting.
 - **`adb exec-out screencap -p` gives a broken PNG** on some MediaTek sets (Xiaomi, and Amazon's
   own Fire TV smart TVs): the binary prints `Init wrapper sys mutex successful` on stdout first.
