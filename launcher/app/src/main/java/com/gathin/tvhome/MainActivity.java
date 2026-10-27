@@ -2347,7 +2347,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
             if (launch == null) continue;   // not installed, or disabled
             // Use the same configured launch_actions as tiles; retain the normal entry if unavailable.
             launch = LaunchActions.select(pkg, launchActions, launch, (targetPackage, action) -> {
-                Intent custom = new Intent(action).setPackage(targetPackage);
+                Intent custom = LaunchActions.intent(targetPackage, action);
                 return pm.resolveActivity(custom, 0) != null ? custom : null;
             });
             Drawable logo;
