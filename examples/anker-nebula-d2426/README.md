@@ -102,6 +102,28 @@ remote: if it does not land on the new launcher, undo as above.
 - All remote buttons (Home, Back, Settings, app buttons, mic, focus) were tested on the real remote after the
   stock home was disabled and still work.
 
+### Second unit (France, 2026-10-27, same build)
+
+- Everything above held on a second D2426 on `UKNV.260603.001`, through three reboots. Seven more packages
+  off by choice are in `debloat.txt` as commented lines (Play Movies, YouTube Music, text-to-speech, Calendar
+  sync, Health Connect, Nearby). `com.android.devicelockcontroller` is a protected package: `pm disable-user`
+  refuses it.
+- **What the kept Nebula packages send.** `com.oceanwing.nebulalinker` (kept: shutdown, firmware updates)
+  posts to `aiot-nebula-api-pr.goroav.com` about two minutes after every boot: `/app/news/get_device_exception`
+  and `/app/news/get_popup_from_device` (pop-ups the maker can push to the home screen), then checks
+  `display-ota.goroav.com/v1/app/ota/get_rom_version` three times. The APK also names
+  `vsaas-api-qa.eufylife.com` as a fallback host. `com.zhixin.logservice.nebula`, although disabled by the
+  list, still has a process after boot (persistent, system uid) and contacts the same goroav host.
+  `tools/tv.py 'logcat -d | grep OkHttp'` shows all of it.
+- To cut that off without touching the kept packages, the AdGuard app (not Private DNS) with two user rules,
+  `||aiot-nebula-api-pr.goroav.com^` and `||vsaas-api-qa.eufylife.com^`, leaves `display-ota.goroav.com` and
+  firmware updates alone: after the next boot the two `news` calls fail and the three `get_rom_version` calls
+  still answer 200. The app itself did not survive a reboot on this projector until it was made the always-on
+  VPN; the why and the two commands are in
+  [TROUBLESHOOTING](../../docs/TROUBLESHOOTING.md#an-ad-blocker-that-runs-as-a-local-vpn-is-on-until-the-next-boot-then-gone).
+- The Wi-Fi pill says "Wi-Fi" and never the network name on this unit, with `ACCESS_FINE_LOCATION` and
+  `ACCESS_COARSE_LOCATION` granted and location switched on (`dumpsys wifi` shows the SSID). Not solved.
+
 ## ADB
 
 ADB was left on at the end of the setup, by choice. Port 5555 is plaintext, so close it when you no longer need it:
