@@ -572,7 +572,7 @@ Things that bit us or contributors, so they don't bite you. Commands use `tools/
   list is involved; `katniss` and `com.google.android.tv.remote.service` were both enabled. What works is the same
   as in the entry above: launcherx enabled, with this launcher opened from its row or reached through
   `stock_home_redirect` (see `examples/tcl-q7c-google-tv`, "Working alternative").
-- **The mic button does nothing at all, and the TV shows no listening indicator**, seen on the same 75Q7CXB
+- **Pressing the mic shows no listening indicator at all**, seen on the same 75Q7CXB
   before the entry above: each press logs `AtvRemote.BleRemoteDevice: HTT session initiated`, so the remote does
   send it, then `AtvRemote.AppOpsDisclosureService: com.google.android.katniss doesn't have access to the
   on-remote mic` and a `SensorPrivacyService` line saying katniss started using sensor 1 (the microphone).

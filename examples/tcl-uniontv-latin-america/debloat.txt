@@ -66,7 +66,7 @@
 # com.tcl.keycustomfunctionservice (remote keys), com.tcl.autopair, com.tcl.tcl_bt_rcu_service (remote
 # pairing), com.tcl.settings, com.tcl.initsetup, com.tcl.appstatecontroller,
 # com.tcl.xian.StartandroidService, com.tcl.ui_mediaCenter (USB playback), com.realtek.netflix.setting
-# (Netflix ESN/config), Chromecast (mediashell, but see "off by choice" below), firmware updates
+# (Netflix ESN/config), Chromecast (mediashell), firmware updates
 # (versionUpdateApp, rc.ota).
 # Also left alone on the 32S6500S unit, none of them tested further: com.tcl.factory.view (a BootUpReceive
 # receiver and a .MainMenu activity; the name alone puts it in PROMPT.md's "never even open a factory
@@ -108,12 +108,13 @@ com.google.android.katniss              # Google Assistant / voice search
 com.nousguide.android.rbtv              # Red Bull TV
 tv.twitch.android.app
 
-# Off by choice on the 32S6500S unit instead (its owner's streaming apps and Miracast; keep what you use)
-com.netflix.ninja
-com.amazon.amazonvideo.livingroom       # Prime Video
-com.spotify.tv.android
-com.google.android.apps.mediashell      # Chromecast receiver
-com.tcl.MultiScreenInteraction_TV       # TCL's Miracast-like screen mirroring/DLNA app
+# The 32S6500S owner also switched off their own streaming apps and Miracast. Left commented out here,
+# since most owners use them; uncomment any you don't:
+# com.netflix.ninja
+# com.amazon.amazonvideo.livingroom       # Prime Video
+# com.spotify.tv.android
+# com.google.android.apps.mediashell      # Chromecast receiver
+# com.tcl.MultiScreenInteraction_TV       # TCL's Miracast-like screen mirroring/DLNA app
 
 # Second pass, applied the same day. The launcher's Clock screensaver replaces Ambient Mode:
 #   tools/tv.py 'settings put secure screensaver_components com.gathin.tvhome/.ClockDream'

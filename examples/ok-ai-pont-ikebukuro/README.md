@@ -4,13 +4,11 @@ A second set on the same platform and firmware as the list above: **Nikkei DVB91
 device `ikebukuro`, MediaTek/MStar `m5621`), Android TV 11, build `RTO2.250804.001`, Italy, Wi-Fi, 0.9 GB RAM, 4.2 GB
 data partition, 32-bit ARM. One evening of use, one reboot after the cleanup.
 
-## Additional owner test: Changhong AI PONT / DVB91
+## Also reported: Changhong AI PONT / DVB91
 
-The owner reports running the site's default `debloat.txt` on a **Changhong AI PONT / DVB91** (device `ikebukuro`),
-Android TV 11 / API 30, build `RTO2.250804.001` / incremental `13882904`, Italy. ADB reports 32-bit ARM (`armeabi-v7a`),
-about 0.9 GB RAM and a 4.2 GB data partition. This is the same device and firmware family as this existing profile.
-
-This report confirms the default debloat list was run on the unit; it does not identify a separate custom package list.
+An owner reports a **Changhong AI PONT / DVB91** with the same device (`ikebukuro`) and build (`RTO2.250804.001`,
+incremental `13882904`), Android TV 11 / API 30, Italy, 32-bit ARM (`armeabi-v7a`), about 0.9 GB RAM and a 4.2 GB data
+partition. Which list was applied there isn't recorded, so read it as a model match for this folder, not a second test of it.
 
 ## What was disabled
 
