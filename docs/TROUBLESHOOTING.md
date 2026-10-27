@@ -84,7 +84,10 @@ Things that bit us or contributors, so they don't bite you. Commands use `tools/
   `TVOS-04.16.031.01.12`): the firmware starts `adbd` on its own port, 5877 there (`service.adb.tcp.port`),
   and the TV never shows it. Scan the TV's TCP ports (`nmap -p- <tv ip>`, or a short Python loop over
   `socket.connect_ex`; skip `nc` on macOS) and try each open port with `TV_HOST=<tv ip> TV_PORT=<port>
-  tools/tv.py --probe`: the ADB one answers, the others time out. Every script here honours `TV_PORT`, and
+  tools/tv.py --probe`: the ADB one answers, the others time out. A sandboxed shell can make `nmap`'s own
+  ping-discovery probe fail outright ("Network is down", SO_ERROR 50) before it scans anything;
+  `nmap -sT -Pn` (a plain TCP connect scan, no ping, no raw sockets) or the Python loop above still
+  works there. Every script here honours `TV_PORT`, and
   the closing check is `tools/adb-closed.py <tv ip> <port>`.
 - **Close port 5555 when you're done**: plaintext, and a shell for anyone on the LAN when `ro.adb.secure=0`. Steps in the README FAQ.
 - **The TV sits on a separate VLAN or IoT network** and `tools/tv.py` times out although debugging
