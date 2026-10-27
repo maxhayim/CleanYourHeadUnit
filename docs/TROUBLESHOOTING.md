@@ -647,6 +647,19 @@ Things that bit us or contributors, so they don't bite you. Commands use `tools/
   com.google.android.apps.mediashell"` restarts it (the TV starts it again on demand), and
   advertising returned within seconds, without a reboot. Device notes:
   [TCL 75QM751G](devices/tcl-75qm751g-qm7.md).
+  On Android 14 the receiver may be frozen rather than hung: with launcherx disabled nothing keeps it
+  above the cached state, and the cached-app freezer stops it a few minutes after each wake. A TCL Smart TV Pro
+  (`G08_4K_US`, `UTT2.250416.001 AU16`) showed `isFrozen=true` and `curProcState=19` in
+  `tools/tv.py "dumpsys activity processes | grep -A3 mediashell"`, and `ActivityManager: freezing <pid>
+  com.google.android.apps.mediashell` in `logcat` every two or three minutes, with the same slow and
+  missing discovery and, once, the `CLOSE_WAIT` sockets on 8009. A force-stop only helps until the next
+  freeze. What lasts is an app that is always running binding the receiver: there, the Home app binding
+  `com.google.android.apps.mediashell/.CastReceiverService` (action `com.google.cast.action.BIND`, with
+  the package in its `<queries>`) moved it to `vis` with `(service)` in
+  `tools/tv.py "dumpsys activity oom | grep -A1 mediashell"`, and it has not frozen since. This repo's
+  launcher does not do that today. That the freezing causes the lost discovery is inferred from the two
+  showing up together, not proven: if `isFrozen=true` is not there, the receiver is hung, as above.
+  [The G08 US notes](../examples/tcl-g08-us-google-tv/README.md#fourth-unit-cast-and-the-freezer).
 - **The TV drops off Wi-Fi every minute right after the install**, seen on Google TV 14 (Xiaomi
   MiTV-MZTU0): the same setupwraith `.RecoveryActivity` took Home and system_server crash-looped
   on it. The install script now starts the new launcher before disabling the stock one, sets the
