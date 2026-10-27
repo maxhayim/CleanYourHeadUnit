@@ -734,6 +734,16 @@ Things that bit us or contributors, so they don't bite you. Commands use `tools/
   package that also claims HOME (PatchWall on Xiaomi) makes Android drop the default. The install
   script now picks the known stock launcher among the candidates by itself; otherwise choose one on
   the TV or pass `STOCK_LAUNCHER=<package>`.
+- **`tools/restore.sh` leaves the packages an earlier batch disabled off, after the TV changed its
+  address mid-cleanup.** The recovery record is one file per list and address
+  (`~/.cleanyourtv/recovery-<address>-<list hash>.json`), so a new DHCP lease - a router restart, or
+  the Wi-Fi forget and re-join the setupwraith step asks for itself - makes the next
+  `tools/disable.sh` run find no record and write a fresh one from a TV that is already partly
+  cleaned: every package the earlier batches disabled is in it as "already disabled, left alone by
+  undo", and undo at the new address leaves them off. `tools/disable.sh` now says so on stderr, names
+  the record under the old address and the packages the two disagree about. Run `tools/restore.sh` at
+  the old address first, or move that record to the new address's name once you are sure it is this
+  set and not a second one cleaned with the same list ([#2139](https://github.com/Gathin23/cleanyourtv/issues/2139)).
 - **Stremio fails every stream with `ConnectException: Failed to connect to /127.0.0.1:11470`**,
   and only Force stop brings it back until the next reboot. This is not the debloat. It is a Stremio
   regression in 1.11 ([stremio-bugs#2866](https://github.com/Stremio/stremio-bugs/issues/2866)):
