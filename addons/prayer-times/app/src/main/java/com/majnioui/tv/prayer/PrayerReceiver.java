@@ -13,10 +13,7 @@ import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
-import android.os.Handler;
-import android.os.Looper;
 import android.util.Log;
-import android.widget.Toast;
 
 public class PrayerReceiver extends BroadcastReceiver {
     private static final String TAG = "PrayerReceiver";
@@ -117,13 +114,7 @@ public class PrayerReceiver extends BroadcastReceiver {
                 Log.w(TAG, "Play sound error: " + e);
             }
 
-            // 3. Show Toast on screen
-            final String toastMsg = "🕌 " + localizedName + " (" + time + ") · " + place;
-            new Handler(Looper.getMainLooper()).post(() ->
-                    Toast.makeText(context.getApplicationContext(), toastMsg, Toast.LENGTH_LONG).show()
-            );
-
-            // 4. Launch floating alert banner on screen
+            // 3. Launch floating alert banner on screen
             try {
                 Intent popup = new Intent(context, PrayerAlertActivity.class);
                 popup.putExtra(PrayerScheduler.EXTRA_PRAYER_NAME, name);
