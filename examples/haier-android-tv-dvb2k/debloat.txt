@@ -45,12 +45,13 @@
 #   com.google.android.apps.mediashell and com.google.android.katniss, which are on the KEEP list above anyway.
 #   Worth re-checking on the original test set, since the firmware build string matches. Hidden in the
 #   launcher's hidden_apps instead of fought at the package level; with app_library on, the stock library
-#   screen ignored hidden_apps and offered the factory-menu packages above as "Add to Home" entries, so that
-#   bug was fixed too (same companion pull request as the HDMI tile, since this also is not TV-specific).
+#   screen ignored hidden_apps and offered the factory-menu packages above as "Add to Home" entries. Fixed
+#   with a library_excluded_apps config key (its own launcher pull request), since it isn't specific to
+#   this TV and changes App Library behaviour for every set with app_library on.
 # - The Live TV dock tile needed a small launcher fix to land on HDMI1: a plain tap just reopened
 #   com.mediatek.wwtv.tvcenter to whatever input it last remembered (Composite, on this unit), since
 #   live_tv_input_id only matches TYPE_TUNER inputs, never TYPE_HDMI. Sent as its own launcher pull request
-#   (an "input:<id>" launch_actions prefix), since it isn't specific to this TV.
+#   too (an "input:<id>" launch_actions prefix), since it isn't specific to this TV.
 
 # Content recognition and retail demo
 tv.anoki.acr.controller                          # Anoki ACR
