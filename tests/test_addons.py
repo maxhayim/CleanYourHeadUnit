@@ -143,6 +143,15 @@ class AddonBuildRouteTest(unittest.TestCase):
         self.assertIn("gradlew.bat assembleRelease", page,
                       "addons/README.md builds an add-on in Command Prompt with gradlew.bat")
 
+    def test_the_recipe_asks_for_both_wrappers(self):
+        """docs/workflows/addon.md is what a new add-on is made from: it has to name both files."""
+        page = (ROOT / "docs" / "workflows" / "addon.md").read_text(encoding="utf-8")
+        step = page.split("\n1. ", 1)[1].split("\n2. ", 1)[0] if "\n1. " in page else ""
+        self.assertIn("gradlew", step, "the recipe's first step no longer names the wrapper")
+        self.assertIn("gradlew.bat", step,
+                      "docs/workflows/addon.md asks for a `gradlew` and not its `gradlew.bat`, which this "
+                      "test refuses: a folder made from the page fails on the Command Prompt route")
+
 
 if __name__ == "__main__":
     unittest.main()
