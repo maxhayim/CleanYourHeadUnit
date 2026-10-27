@@ -1407,3 +1407,35 @@ tools/tv.py 'settings put global private_dns_mode opportunistic'
 
 or keep Private DNS and accept that the router's domain rules no longer cover the TV. Write down which one
 you chose, so the next "this one service is slow on the TV" does not start from scratch.
+
+## An ad blocker that runs as a local VPN is on until the next boot, then gone
+
+The app form of AdGuard (4.6.207, local VPN mode, "Launch at TV startup" on) on an Anker Nebula D2426
+projector (Android TV 14, `UKNV.260603.001`, 1.7 GB) filters fine once switched on, and after every
+reboot the TV comes up without it: no `tun0`, no process. Its boot receiver did run. The TV's log shows
+`ActivityManager: Start proc <pid>:com.adguard.android ... for broadcast {.../BootUpReceiver}`, then 12 s
+later `Process com.adguard.android (pid <pid>) has died: cch+95 CEM`, while the app's own lines still say
+`The stage 'Stage2' is starting...`. The receiver had returned and handed the loading to a thread, no
+foreground service was up yet, so to Android the process was an empty cached one, and this firmware keeps
+very few of those: `tools/tv.py 'dumpsys activity settings' | grep CUR_MAX` prints
+`CUR_MAX_CACHED_PROCESSES=8` and `CUR_MAX_EMPTY_PROCESSES=4`. The first boot services push it out before
+it reaches the VPN. The same can happen to any DNS filter or VPN app that loads slowly on a small TV;
+Private DNS (the README's option) is not affected, since the system resolver does the work.
+
+What does not help: the background exemptions (`cmd appops set <package> RUN_ANY_IN_BACKGROUND allow`,
+`dumpsys deviceidle whitelist +<package>`, `am set-standby-bucket <package> active`), because the app
+was never restricted, only evicted; and `device_config put activity_manager max_cached_processes 32`,
+which leaves `CUR_MAX_CACHED_PROCESSES` at the maker's 8. What does: make the system itself bring the VPN
+up at boot, by declaring the app as the always-on VPN. The app must have had its VPN consent dialog
+accepted once before (it has, if protection was ever switched on by hand):
+
+```sh
+tools/tv.py 'settings put secure always_on_vpn_app com.adguard.android; settings put secure always_on_vpn_lockdown 0'
+```
+
+At the next boot the log shows `Background started FGS: Allowed [callingPackage: com.adguard.android`
+about 25 s after the process start, and `tools/tv.py 'ip addr show tun0'` has an address, before the
+firmware's own boot-time calls go out (about two minutes in, here). Keep `always_on_vpn_lockdown` at 0:
+with 1 Android drops every packet until the VPN is up, and a TV whose filter app fails to start stays
+offline, with no screen that says why. Undo:
+`tools/tv.py 'settings delete secure always_on_vpn_app; settings delete secure always_on_vpn_lockdown'`.
