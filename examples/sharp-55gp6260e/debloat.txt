@@ -37,6 +37,8 @@
 #                (hardcoded, no setting), so with the e-manual disabled it does nothing. Re-enable
 #                com.mtc.emanual to restore it, or map it: app_keys KEYCODE_BUTTON_11:<package>.
 #   Here they open Spotify and LocalSend through HOME_KEY_SERVICE=1; both checked on the real remote.
+#   Netflix      KEYCODE_STEM_1 (scancode 104): firmware opens com.netflix.ninja, so with Netflix disabled it does
+#                nothing; app_keys KEYCODE_STEM_1:<package> maps it (Jellyfin here, checked on the real remote).
 #
 # Private DNS (dns.adguard-dns.com) validated on this set; not part of the list.
 #
