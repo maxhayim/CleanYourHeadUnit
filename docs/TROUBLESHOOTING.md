@@ -894,6 +894,17 @@ running back on the list the next time it starts; a helper turned off in Setting
 - **All vendor buttons die at once** and `logcat` says `GLOBAL_BUTTON ... process is bad`: the
   global-key receiver crashes on the disabled launcherx and Android stops starting it. Map every such
   keycode in the helpers, also for disabled apps. See [the MOSR4 note](devices/xiaomi-mitv-mosr4.md).
+- **A remote shortcut (such as a "Live" or TV button) opens Google Play Store or crashes after debloating**:
+  When a target app such as Live Channels (`com.google.android.tv`) is disabled, pressing its physical
+  button makes OEM broadcast receivers (such as Xiaomi's `com.xiaomi.android.tvsetup.partnercustomizer/.GlobalKeyReceiver`)
+  launch a market intent to install the missing package, or crash repeatedly.
+  To remap it cleanly, put its hardware scancode in `app_keys`: `"scan:<scancode>:<package>"` (e.g.
+  `"scan:399:org.smarttube.stable"` on the Xiaomi Mi Box S, read from `getevent -lt`) and rebuild with
+  `INPUT_KEY_SERVICE=1`.
+  **Use the scancode form (`scan:<scancode>`) rather than a raw keycode (`191`):** generic button keycodes
+  like `KEYCODE_BUTTON_4` (191) may be shared with other buttons on some remotes/key layouts, so mapping by keycode
+  can unintentionally hijack other buttons.
+  `scan:` checks match first and target only that specific physical button. See [the Mi Box S note](devices/xiaomi-mi-box-s.md).
 - **The list still names the helper but `accessibility_enabled` is `0`**, so nothing is bound and the
   button does nothing (not the force stop below): on a TCL C6K Pro (`G08`, Android 14,
   [#1047](https://github.com/Gathin23/cleanyourtv/issues/1047)) a reboot left
