@@ -94,4 +94,6 @@ gear-button fix on after a reinstall. Before the first install, check that the s
 
 Port 5555 is plaintext, so leave it off: Settings > System > Developer options > switch off USB debugging
 (and Wireless debugging if it is on), choose "Revoke USB debugging authorisations", then restart the TV.
-From the PC, `nc -vz <tv ip> 5555` should then fail.
+From the PC, `tools/venv/bin/python -I tools/adb-closed.py <tv ip>` must then say the port is closed.
+Only a refused connection proves that: with `nc -vz <tv ip> 5555`, only "Connection refused" counts, and a
+timeout or "No route to host" proves nothing.
