@@ -83,6 +83,30 @@ public class GameDayTest {
         assertFalse(GameDay.live(t, t.endMs));
     }
 
+    @Test public void rowsAreParsedAndBadOnesSkipped() {
+        List<Object[]> rows = Arrays.asList(
+                new Object[] {"Minnesota Wild at Dallas Stars", "Puck drop", 1000L, 5000L, 0xFF2E7D32, "Minnesota Wild", 45},
+                new Object[] {null, "Puck drop", 1000L, 5000L, 0, "x", 45},
+                new Object[] {"Bad start", "Kickoff", -1L, 5000L, 0, "x", 45},
+                new Object[] {"Ends first", "Kickoff", 5000L, 5000L, 0, "x", 45},
+                new Object[] {"No word", null, 2000L, 6000L, 0xFF1565C0, "x", 45});
+        List<GameDay.Turn> t = GameDay.fromRows(rows);
+        assertEquals(2, t.size());
+        assertEquals("Minnesota Wild at Dallas Stars", t.get(0).topLine);
+        assertEquals("Puck drop", t.get(0).word);
+        assertEquals(1000L, t.get(0).startMs);
+        assertEquals(5000L, t.get(0).endMs);
+        assertEquals(0xFF2E7D32, t.get(0).colour);
+        assertEquals("", t.get(1).word);
+        assertEquals(45, GameDay.turnSeconds(rows));
+    }
+
+    @Test public void turnSecondsOutOfRangeBecomesThirty() {
+        assertEquals(30, GameDay.turnSeconds(Collections.singletonList(new Object[] {"a", "b", 1L, 2L, 0, "c", 500})));
+        assertEquals(30, GameDay.turnSeconds(Collections.singletonList(new Object[] {"a", "b", 1L, 2L, 0, "c", 3})));
+        assertEquals(30, GameDay.turnSeconds(Collections.emptyList()));
+    }
+
     @Test public void durationHelperMatchesTheCountdown() {
         assertEquals(Duration.ofMinutes(125), GameDay.until(game("Game", 125 * 60_000L, HOUR), NOW.toEpochMilli()));
     }
