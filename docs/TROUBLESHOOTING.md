@@ -564,6 +564,21 @@ Things that bit us or contributors, so they don't bite you. Commands use `tools/
   above) and open this launcher from its app row, where voice search works normally because the results
   screen comes up over it; or search inside YouTube with its on-screen mic. The Projectivy community found
   the same (voice results "need the launcher X search results page").
+- **Every mic press answers "Sorry, not available in this profile yet"** once launcherx is disabled, seen on a
+  TCL 75Q7CXB (G08, Google TV 14, `UTT2.250416.001 AU02`) with this launcher as Home. The Assistant opens and
+  hears the press, then gives up before listening: logcat has `katniss_interactor_KatnissVoiceInteractionUtilsImpl:
+  Assistant is not enabled in LauncherX kids mode or privacy mode. Will punt.` It reads that mode from launcherx,
+  so with launcherx disabled it cannot tell and refuses, whatever profile is signed in. Nothing in the debloat
+  list is involved; `katniss` and `com.google.android.tv.remote.service` were both enabled. What works is the same
+  as in the entry above: launcherx enabled, with this launcher opened from its row or reached through
+  `stock_home_redirect` (see `examples/tcl-q7c-google-tv`, "Working alternative").
+- **The mic button does nothing at all, and the TV shows no listening indicator**, seen on the same 75Q7CXB
+  before the entry above: each press logs `AtvRemote.BleRemoteDevice: HTT session initiated`, so the remote does
+  send it, then `AtvRemote.AppOpsDisclosureService: com.google.android.katniss doesn't have access to the
+  on-remote mic` and a `SensorPrivacyService` line saying katniss started using sensor 1 (the microphone).
+  Switching on Microphone access in the TV's Settings (Privacy > Microphone) brought the button back, and it
+  stayed after a reboot. Don't judge it from `dumpsys sensor_privacy`: that set read `state_type=1` for the
+  microphone both before and after, while the button failed and while it worked.
 - **The remote's mic button does nothing, or opens the Assistant and it never hears you**, seen on a
   Xiaomi TV Box S 3rd gen (`MiTV-AFMU0`, `twilight`, Google TV 14, `V816.0.7.0.UZFAABX`). Two
   packages have to stay enabled, and re-enabling only one of them is what makes this hard to
