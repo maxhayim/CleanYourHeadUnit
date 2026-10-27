@@ -486,7 +486,9 @@ Things that bit us or contributors, so they don't bite you. Commands use `tools/
   Confirmed on this set: with `HomeKeyService` bound, Volume Down held for 3 s gave one step in
   `dumpsys audio`; unbound, a 1.07 s hold gave 14 repeats 50 ms apart. Single presses step once either
   way, also through HDMI ARC to a home cinema system. Choose between a firm Home press and a held volume
-  ramp; this set cannot have both.
+  ramp; this set cannot have both. A 50PUS7354 on the same board and firmware does the same with its original
+  Philips remote, so a slow remote is not needed: firm presses sent `ALL_APPS` to FallbackHome there
+  too, and `home_long_press_home` fixed it.
 - **The TV drops off Wi-Fi for good the moment setupwraith is disabled**, seen on Google TV 14 (Sony
   BRAVIA 9 II, Philips R8G, Skyworth SWTV-24NA-4K NF, Xiaomi TV Box S 3rd gen MiTV-AFMU0) and on a TCL
   G07 on Google TV 11 (build AR17; on AR20 the network belonged to `android.uid.system`). A Wi-Fi
