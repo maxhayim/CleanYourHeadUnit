@@ -44,7 +44,7 @@ $bad = $false
 foreach ($line in $lines) {
     $f = $line -split '\|', 5
     switch ($f[0]) {
-        'ok' { Write-Host ('  {0,-22} {1,-14} ' -f $f[1], $f[2]) -NoNewline; Write-Host 'ok' -ForegroundColor Green -NoNewline; Write-Host "  $($f[3]) $(if ($f[3] -eq '1') { 'entry' } else { 'entries' }), next $($f[4])"; $sent++ }
+        'ok' { Write-Host ('  {0,-22} {1,-14} ' -f $f[1], $f[2]) -NoNewline; Write-Host 'ok' -ForegroundColor Green -NoNewline; Write-Host "  $($f[3]) $(if ($f[3] -eq '1') { 'entry' } else { 'entries' }), $(if ($f[4] -like 'nothing*') { $f[4] } else { "next $($f[4])" })"; $sent++ }
         'fail' { Write-Host ('  {0,-22} {1,-14} ' -f $f[1], $f[2]) -NoNewline; Write-Host $f[3] -ForegroundColor Red; $sent++; $failed = $true }
         'error' { Write-Host ('  ' + ($line -replace '^error\|[^|]*\|', '')) -ForegroundColor Red; $failed = $true; $bad = $true }
     }

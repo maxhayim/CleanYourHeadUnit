@@ -48,7 +48,8 @@ while IFS= read -r LINE; do
   IFS='|' read -r KIND A B C D <<< "$LINE"
   case "$KIND" in
     ok) E=entries; [ "$C" = 1 ] && E=entry
-        printf '  %-22s %-14s \033[32mok\033[0m  %s %s, next %s\n' "$A" "$B" "$C" "$E" "$D"; N=$((N + 1)) ;;
+        case "$D" in nothing*) ;; *) D="next $D" ;; esac
+        printf '  %-22s %-14s \033[32mok\033[0m  %s %s, %s\n' "$A" "$B" "$C" "$E" "$D"; N=$((N + 1)) ;;
     fail) printf '  %-22s %-14s \033[31m%s\033[0m\n' "$A" "$B" "$C"; N=$((N + 1)); STATUS=1 ;;
     error) printf '  \033[31m%s\033[0m\n' "${LINE#error|*|}"; STATUS=1 ;;
   esac
