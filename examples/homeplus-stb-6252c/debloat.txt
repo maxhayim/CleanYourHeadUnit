@@ -26,12 +26,13 @@
 # closes again, which looks like a crash. Set "live_tv_input_id": "none" in a theme so the Live TV row starts
 # the app normally, and "input_sources": ["HW28=-"] to drop the tuner's own row, which sends the same URI.
 #
-# Firmware updater: this list DISABLES com.inspur.httpupgrade (the operator's OTA client, a PERSISTENT
-# priv-app). Reason: the owner chose to freeze the firmware so that an operator update cannot re-enable the
-# packages below or hand Home back to the stock launcher. Consequence: no firmware, security-patch or
-# channel-table updates arrive while it is off. Being PERSISTENT, an empty process still starts at boot
-# (no services, about 5 MB). Re-enable it (`pm enable com.inspur.httpupgrade`), let the update run, then
-# re-apply the list with tools\check.py --fix.
+# Firmware updater: com.inspur.httpupgrade (the operator's OTA client, a PERSISTENT priv-app) stays ON:
+# its line at the end is commented out. The tested unit had it disabled, because its owner chose to freeze
+# the firmware so that an operator update cannot re-enable the packages below or hand Home back to the
+# stock launcher. Uncomment the line to do the same. Then no firmware, security-patch or channel-table
+# updates arrive while it is off, and being PERSISTENT an empty process still starts at boot (no services,
+# about 5 MB). To take an update later: `pm enable com.inspur.httpupgrade`, let it run, then re-apply the
+# list with tools\check.py --fix.
 #
 # Watchdog: com.inspur.android.daemon is left enabled. From its APK: LightsService (front LED),
 # ProcessMonitorService (force-stops cached processes not on the allow list in assets/processes.json),
@@ -82,5 +83,5 @@ tv.fourgtv.video                          # 四季線上 4gTV (base /system/prod
 com.hbo.asia.androidtv                    # HBO GO (plain third-party app, Play Store reinstalls it)
 com.google.android.videos                 # Google Play Movies & TV (base /system/product/app/VideosPano)
 
-# Operator firmware updater (see header for why; comment this line out to receive updates again)
-com.inspur.httpupgrade                    # 中嘉 OTA client, resident HttpService, PERSISTENT
+# Operator firmware updater: kept on by default (see header). Uncomment to freeze the firmware.
+# com.inspur.httpupgrade                  # 中嘉 OTA client, resident HttpService, PERSISTENT
