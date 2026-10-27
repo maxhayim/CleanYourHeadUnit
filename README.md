@@ -780,8 +780,12 @@ yourself stays disabled and Home goes back to the component that owned it:
 
 The `stock launcher` argument is only a fallback: with a record, the launcher that actually owned Home
 is the one that gets it back, and the argument is used only when nothing answered HOME at the time
-or this project's launcher owned it. The stock launcher is enabled again either way, unless it was
-already disabled when the record was taken.
+or this project's launcher owned it. The record also notes whether the known stock launchers were on,
+listed or not, and the stock launcher is enabled again only if it was. One that was already off (from
+the factory, or because the install script had disabled it before you applied this list) stays off,
+and if this project's launcher owned Home then, Home goes back to it. A record from before this note
+was added does not say, so the script leaves that launcher as it is and prints the
+`tools/tv.py 'pm enable <package>'` that turns it on.
 Without a record (an older run, or a record you deleted) the script says so and falls back to
 enabling the whole list and resetting the scales to `1.0`, which is what it used to do.
 

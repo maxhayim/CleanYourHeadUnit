@@ -313,7 +313,8 @@ Things that bit us or contributors, so they don't bite you. Commands use `tools/
   `Remove-Item Env:HANDLERS_ALLOW` after those two, or a later `check.py --fix` on your main list
   skips the guard too. To turn the app back on, use
   `tools/tv.py 'pm enable --user 0 <package>'`. `tools/restore.sh` with that list turns it back on
-  as well, but it also turns the stock launcher back on and makes it Home, as it does for any list.
+  as well, and leaves Home on this project's launcher: it turns the stock launcher back on and makes
+  it Home only if the stock launcher was on when the list was applied (#1714).
   Report another one rather than reading it as a firmware quirk: the wrong-handler case needs
   a source change, not a setting.
 - **`adb exec-out screencap -p` gives a broken PNG** on some MediaTek sets (Xiaomi, and Amazon's
