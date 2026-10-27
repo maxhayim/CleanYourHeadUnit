@@ -51,6 +51,9 @@ final class Ics {
     /** An event without an end is kept when it started less than this long before the window. */
     static final Duration NO_END_GRACE = Duration.ofHours(24);
 
+    /** Some servers start the file with one (U+FEFF); it is not part of BEGIN:VCALENDAR. */
+    private static final char BYTE_ORDER_MARK = (char) 0xFEFF;
+
     private static final DateTimeFormatter DATE_TIME = DateTimeFormatter.ofPattern("yyyyMMdd'T'HHmmss", Locale.ROOT);
     private static final DateTimeFormatter DATE = DateTimeFormatter.ofPattern("yyyyMMdd", Locale.ROOT);
 
@@ -80,7 +83,7 @@ final class Ics {
                 String line = pending;
                 pending = null;
                 if (!started) {
-                    if (line.startsWith("﻿")) line = line.substring(1);
+                    if (!line.isEmpty() && line.charAt(0) == BYTE_ORDER_MARK) line = line.substring(1);
                     if (line.trim().isEmpty()) {
                         if (raw == null) break;
                         pending = raw;

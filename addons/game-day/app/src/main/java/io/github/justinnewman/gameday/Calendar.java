@@ -19,6 +19,23 @@ final class Calendar {
         this.colour = colour;
     }
 
+    Calendar withName(String n) {
+        return new Calendar(id, n, link, sport, colour);
+    }
+
+    Calendar withSport(Sport s) {
+        return new Calendar(id, name, link, s, colour);
+    }
+
+    Calendar withColour(int c) {
+        return new Calendar(id, name, link, sport, c);
+    }
+
+    /** A new link is a new calendar to fetch: its id follows the link. */
+    Calendar withLink(String l) {
+        return new Calendar(Links.id(l), name, l, sport, colour);
+    }
+
     @Override
     public String toString() {
         return name + " (" + Links.mask(link) + ")";

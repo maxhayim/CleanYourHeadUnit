@@ -73,6 +73,52 @@ final class Repository {
         }
     }
 
+    /** Adds a calendar at the end; false when its link is already on the list or the list is full. */
+    boolean add(Calendar c) {
+        List<Calendar> list = calendars();
+        if (list.size() >= CalendarStore.MAX) return false;
+        for (Calendar o : list) {
+            if (o.id.equals(c.id)) return false;
+        }
+        list.add(c);
+        save(list);
+        return true;
+    }
+
+    /** Puts {@code c} where the calendar {@code id} was (its id changes when its link does). */
+    void replace(String id, Calendar c) {
+        List<Calendar> list = calendars();
+        for (int i = 0; i < list.size(); i++) {
+            if (list.get(i).id.equals(id)) list.set(i, c);
+        }
+        save(list);
+    }
+
+    /** One place up: the higher calendar's colour wins when two share a game. */
+    void moveUp(String id) {
+        List<Calendar> list = calendars();
+        for (int i = 1; i < list.size(); i++) {
+            if (list.get(i).id.equals(id)) {
+                list.add(i - 1, list.remove(i));
+                break;
+            }
+        }
+        save(list);
+    }
+
+    void remove(String id) {
+        List<Calendar> list = calendars();
+        list.removeIf(c -> c.id.equals(id));
+        save(list);
+    }
+
+    Calendar find(String id) {
+        for (Calendar c : calendars()) {
+            if (c.id.equals(id)) return c;
+        }
+        return null;
+    }
+
     int turnSeconds() {
         String json = read(new File(dir, "settings.json"));
         if (json == null) return TURN_DEFAULT;
@@ -131,8 +177,50 @@ final class Repository {
 
     /** "Sat 1:00 AM", or "nothing in the next 7 days". */
     String nextLine(Calendar c, long nowMs, ZoneId zone) {
+        Schedule.Turn t = next(c, nowMs, zone);
+        return t == null ? NOTHING : when(t, zone);
+    }
+
+    /** "Sat 1:00 AM". */
+    static String when(Schedule.Turn t, ZoneId zone) {
+        return NEXT.format(Instant.ofEpochMilli(t.startMs).atZone(zone));
+    }
+
+    /** The calendar's turn on Home right now, or null. */
+    Schedule.Turn next(Calendar c, long nowMs, ZoneId zone) {
         List<Schedule.Turn> t = turns(Collections.singletonList(c), nowMs, zone);
-        return t.isEmpty() ? NOTHING : NEXT.format(Instant.ofEpochMilli(t.get(0).startMs).atZone(zone));
+        return t.isEmpty() ? null : t.get(0);
+    }
+
+    /** The calendar's next entry that has not ended, however far ahead: the settings preview. */
+    Ics.Event nextEvent(Calendar c, long nowMs, ZoneId zone) {
+        File f = Fetcher.cacheFile(dir, c.id);
+        if (!f.exists()) return null;
+        Instant now = Instant.ofEpochMilli(nowMs);
+        Ics.Event best = null;
+        try (Reader r = Files.newBufferedReader(f.toPath(), StandardCharsets.UTF_8)) {
+            for (Ics.Event e : Ics.parse(r, zone, now, now.plus(Duration.ofDays(366)))) {
+                if (!Schedule.endOf(e, c.sport, zone).isAfter(now)) continue;
+                if (best == null || e.start.isBefore(best.start)) best = e;
+            }
+        } catch (IOException | Ics.NotACalendar unreadable) {
+            return null;
+        }
+        return best;
+    }
+
+    /** Every title in the calendar's copy from now on, for suggesting its name and sport. */
+    List<String> titles(Calendar c, long nowMs, ZoneId zone) {
+        List<String> out = new ArrayList<>();
+        File f = Fetcher.cacheFile(dir, c.id);
+        if (!f.exists()) return out;
+        Instant now = Instant.ofEpochMilli(nowMs);
+        try (Reader r = Files.newBufferedReader(f.toPath(), StandardCharsets.UTF_8)) {
+            for (Ics.Event e : Ics.parse(r, zone, now, now.plus(Duration.ofDays(366)))) out.add(e.title);
+        } catch (IOException | Ics.NotACalendar unreadable) {
+            // nothing to suggest from
+        }
+        return out;
     }
 
     private List<Schedule.Turn> turns(List<Calendar> calendars, long nowMs, ZoneId zone) {

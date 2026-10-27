@@ -18,13 +18,21 @@ import java.util.concurrent.atomic.AtomicBoolean;
  */
 final class Background {
     private static final ExecutorService ONE = Executors.newSingleThreadExecutor();
+    /** Reading the saved files for a screen; never waits behind a slow fetch. */
+    private static final ExecutorService READ = Executors.newSingleThreadExecutor();
     private static final AtomicBoolean REFRESHING = new AtomicBoolean();
 
     private Background() {
     }
 
+    /** Network work: fetches. */
     static void execute(Runnable r) {
         ONE.execute(r);
+    }
+
+    /** File work for a screen. */
+    static void read(Runnable r) {
+        READ.execute(r);
     }
 
     /** Fetch the calendars that are due; tell the launcher when one came in. */

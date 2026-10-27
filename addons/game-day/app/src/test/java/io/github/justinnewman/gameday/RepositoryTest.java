@@ -82,6 +82,21 @@ public class RepositoryTest {
         assertEquals("nothing in the next 7 days", repo.nextLine(cal("Nobody", "Hockey", 3), NOW.toEpochMilli(), UTC));
     }
 
+    @Test public void titlesForSuggestions() throws Exception {
+        Calendar wild = cal("Minnesota Wild", "Hockey", 16);
+        cache(wild, "🏒 Minnesota Wild @ Dallas Stars", "20270403T010000Z");
+        assertEquals(Arrays.asList("🏒 Minnesota Wild @ Dallas Stars"), repo.titles(wild, NOW.toEpochMilli(), UTC));
+        assertTrue(repo.titles(cal("Nobody", "Hockey", 3), NOW.toEpochMilli(), UTC).isEmpty());
+    }
+
+    @Test public void nextEventIgnoresTheWeekLimit() throws Exception {
+        Calendar wild = cal("Minnesota Wild", "Hockey", 16);
+        cache(wild, "🏒 Minnesota Wild @ Dallas Stars", "20270420T010000Z");
+        Ics.Event e = repo.nextEvent(wild, NOW.toEpochMilli(), UTC);
+        assertEquals("🏒 Minnesota Wild @ Dallas Stars", e.title);
+        assertEquals(null, repo.nextEvent(cal("Nobody", "Hockey", 3), NOW.toEpochMilli(), UTC));
+    }
+
     @Test public void resultFileNeverHasALink() {
         String result = repo.applySetupFile("Hockey|Minnesota Wild|http://127.0.0.1:1/secret-token.ics\n"
                 + "Soccer|Utah Royals|https://127.0.0.1:1/other-secret.ics", NOW.toEpochMilli(), new Fetcher(300, 300), UTC);
