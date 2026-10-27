@@ -41,10 +41,20 @@ public class FetcherTest {
             while (!server.isClosed()) {
                 try (Socket s = server.accept()) {
                     BufferedReader in = new BufferedReader(new InputStreamReader(s.getInputStream(), StandardCharsets.ISO_8859_1));
+                    String request = in.readLine();
                     for (String line = in.readLine(); line != null && !line.isEmpty(); line = in.readLine()) {
-                        // request line and headers: not needed
+                        // headers: not needed
                     }
                     OutputStream o = s.getOutputStream();
+                    // "/old" moved to "/cal.ics"; "/loop" moves to itself forever.
+                    String path = request == null ? "" : request.split(" ")[1];
+                    if (path.equals("/old") || path.equals("/loop")) {
+                        String to = path.equals("/old") ? "/cal.ics" : "/loop";
+                        o.write(("HTTP/1.0 301 Moved\r\nLocation: " + to + "\r\nContent-Length: 0\r\nConnection: close\r\n\r\n")
+                                .getBytes(StandardCharsets.ISO_8859_1));
+                        o.flush();
+                        continue;
+                    }
                     o.write(("HTTP/1.0 " + status + " X\r\nContent-Type: " + type + "\r\nContent-Length: " + body.length
                             + "\r\nConnection: close\r\n\r\n").getBytes(StandardCharsets.ISO_8859_1));
                     o.write(body);
@@ -115,6 +125,33 @@ public class FetcherTest {
         body = big;
         FetchStatus s = new Fetcher().fetch(calendar(), tmp.newFolder(), null, NOW);
         assertEquals("Over 5 MB", s.error);
+    }
+
+    private Calendar at(String path) {
+        String link = "http://127.0.0.1:" + server.getLocalPort() + path;
+        return new Calendar(Links.id(link), "Wild", link, Sport.byLabel("Hockey"), 12);
+    }
+
+    @Test public void redirectIsFollowed() throws Exception {
+        FetchStatus s = new Fetcher().fetch(at("/old"), tmp.newFolder(), null, NOW);
+        assertNull(s.error);
+        assertEquals(1, s.entries);
+    }
+
+    @Test public void redirectLoopGivesUp() throws Exception {
+        FetchStatus s = new Fetcher().fetch(at("/loop"), tmp.newFolder(), null, NOW);
+        assertEquals("Too many redirects", s.error);
+    }
+
+    @Test public void nextHopRules() throws Exception {
+        java.net.URL http = new java.net.URL("http://a.example/x");
+        java.net.URL https = new java.net.URL("https://a.example/x");
+        assertEquals("https://b.example/y", Fetcher.nextHop(http, "https://b.example/y").toString());
+        assertEquals("http://a.example/z", Fetcher.nextHop(http, "/z").toString());
+        assertEquals("https://a.example/z", Fetcher.nextHop(https, "/z").toString());
+        assertNull("never from https down to http", Fetcher.nextHop(https, "http://b.example/y"));
+        assertNull(Fetcher.nextHop(https, "ftp://b.example/y"));
+        assertNull(Fetcher.nextHop(https, null));
     }
 
     @Test public void noAnswerIsReported() throws Exception {

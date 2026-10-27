@@ -24,6 +24,7 @@ final class Fetcher {
     static final int MAX_BYTES = 5 * 1024 * 1024;
     static final long STALE_MS = 24 * 3_600_000L;
     static final long RETRY_MS = 3_600_000L;
+    static final int MAX_REDIRECTS = 5;
 
     private static final Instant ALL_FROM = Instant.EPOCH;
     private static final Instant ALL_TO = Instant.parse("2200-01-01T00:00:00Z");
@@ -73,28 +74,60 @@ final class Fetcher {
 
     /** Writes the body to {@code to}; returns an error to show, or null. */
     private String download(String link, File to) throws IOException {
-        HttpURLConnection conn = (HttpURLConnection) new URL(link).openConnection();
-        try {
-            conn.setConnectTimeout(connectMs);
-            conn.setReadTimeout(readMs);
-            conn.setInstanceFollowRedirects(true);
-            conn.setRequestProperty("User-Agent", "GameDay/1 (Android TV)");
-            int code = conn.getResponseCode();
-            if (code != HttpURLConnection.HTTP_OK) return "Link refused (" + code + ")";
-            long length = conn.getContentLengthLong();
-            if (length > MAX_BYTES) return "Over 5 MB";
-            try (InputStream in = conn.getInputStream(); OutputStream out = new FileOutputStream(to)) {
-                byte[] buf = new byte[16 * 1024];
-                long total = 0;
-                for (int n = in.read(buf); n >= 0; n = in.read(buf)) {
-                    total += n;
-                    if (total > MAX_BYTES) return "Over 5 MB";
-                    out.write(buf, 0, n);
+        URL url = new URL(link);
+        for (int hop = 0; hop <= MAX_REDIRECTS; hop++) {
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            try {
+                conn.setConnectTimeout(connectMs);
+                conn.setReadTimeout(readMs);
+                conn.setInstanceFollowRedirects(false);
+                conn.setRequestProperty("User-Agent", "GameDay/1 (Android TV)");
+                int code = conn.getResponseCode();
+                if (code == 301 || code == 302 || code == 303 || code == 307 || code == 308) {
+                    URL next = nextHop(url, conn.getHeaderField("Location"));
+                    if (next == null) return "Link moved (" + code + ")";
+                    url = next;
+                    continue;
                 }
+                return body(conn, code, to);
+            } finally {
+                conn.disconnect();
             }
+        }
+        return "Too many redirects";
+    }
+
+    /** Writes a 200's body to {@code to}; returns an error to show, or null. */
+    private static String body(HttpURLConnection conn, int code, File to) throws IOException {
+        if (code != HttpURLConnection.HTTP_OK) return "Link refused (" + code + ")";
+        if (conn.getContentLengthLong() > MAX_BYTES) return "Over 5 MB";
+        try (InputStream in = conn.getInputStream(); OutputStream out = new FileOutputStream(to)) {
+            byte[] buf = new byte[16 * 1024];
+            long total = 0;
+            for (int n = in.read(buf); n >= 0; n = in.read(buf)) {
+                total += n;
+                if (total > MAX_BYTES) return "Over 5 MB";
+                out.write(buf, 0, n);
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Where a redirect leads, or null when it must not be followed. Android follows a redirect only within the
+     * same scheme, and most sites send http:// on to https://, so redirects are followed here: up to https from
+     * http, never down from https to http.
+     */
+    static URL nextHop(URL from, String location) {
+        if (location == null || location.trim().isEmpty()) return null;
+        try {
+            URL to = new URL(from, location.trim());
+            String scheme = to.getProtocol().toLowerCase(java.util.Locale.ROOT);
+            if (scheme.equals("https")) return to;
+            if (scheme.equals("http") && from.getProtocol().equalsIgnoreCase("http")) return to;
             return null;
-        } finally {
-            conn.disconnect();
+        } catch (java.net.MalformedURLException bad) {
+            return null;
         }
     }
 
