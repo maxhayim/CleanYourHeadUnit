@@ -537,8 +537,9 @@ public class AppAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         // already running resumes instead of restarting; only phone apps added from the library use plain MAIN.
         if (leanbackPackages.contains(e.pkg)) i.addCategory(Intent.CATEGORY_LEANBACK_LAUNCHER);
         String action = launchActions.get(e.pkg);
-        if (action != null && action.startsWith("input:")) {
-            listener.onOpenInput(action.substring("input:".length()).trim());
+        String inputId = LaunchActions.inputId(action);
+        if (inputId != null) {
+            listener.onOpenInput(inputId);
             return;
         }
         if (action != null) {

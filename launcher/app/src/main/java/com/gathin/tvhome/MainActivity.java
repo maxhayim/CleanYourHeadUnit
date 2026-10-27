@@ -1619,7 +1619,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
             grid.post(() -> {
                 if (libraryFocusPending && appLibrary == null && hasWindowFocus() && !isFinishing()) focusLibrary();
             });
-        }, hiddenApps);
+        });
         openPopup = appLibrary.popup;
         appLibrary.show();
     }

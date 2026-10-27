@@ -33,4 +33,18 @@ public class LaunchActionsTest {
         assertSame(normal, LaunchActions.select("store", Map.of(), normal,
                 (pkg, action) -> { throw new AssertionError("Unnecessary resolution"); }));
     }
+
+    @Test public void inputIdStripsThePrefixAndTrimsTheId() {
+        assertEquals("com.mediatek.tvinput/.hdmi.HDMIInputService/HW5",
+                LaunchActions.inputId("input:com.mediatek.tvinput/.hdmi.HDMIInputService/HW5"));
+        assertEquals("HW5", LaunchActions.inputId("input: HW5 "));
+        assertEquals("", LaunchActions.inputId("input:"));
+    }
+
+    @Test public void inputIdIsNullForEverythingElse() {
+        assertNull(LaunchActions.inputId(null));
+        assertNull(LaunchActions.inputId("FEATURED_LAUNCH"));
+        assertNull(LaunchActions.inputId("INPUT:HW5"));
+        assertNull(LaunchActions.inputId("not-input:HW5"));
+    }
 }

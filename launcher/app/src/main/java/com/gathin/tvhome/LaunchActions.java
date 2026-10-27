@@ -14,4 +14,11 @@ final class LaunchActions {
         T custom = resolver.apply(pkg, action);
         return custom != null ? custom : fallback;
     }
+
+    private static final String INPUT_PREFIX = "input:";
+
+    /** The TV input id from an "input:<id>" launch_actions value, or null when the value isn't one. */
+    static String inputId(String action) {
+        return action != null && action.startsWith(INPUT_PREFIX) ? action.substring(INPUT_PREFIX.length()).trim() : null;
+    }
 }
