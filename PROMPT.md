@@ -65,8 +65,8 @@ Back up first
   over a USB Ethernet adapter, unplug and replug the adapter once debugging is off - the port comes
   back with it - and have me confirm the TV is on Ethernet again, not Wi-Fi. Don't trust `nc` on macOS:
   Local Network privacy can block it too, and its "No route to host" proves nothing; only "Connection
-  refused" does. Port 5555 is plaintext, and on firmware with `ro.adb.secure=0` any device on the LAN
-  can get a shell.
+  refused" does. Port 5555 is plaintext, and on firmware with `ro.adb.secure=0` (or with it unset, on a
+  debug build or Android 4.4) any device on the LAN can get a shell.
 
 Debloat
 - List installed packages and sort them into: manufacturer telemetry/analytics, manufacturer content

@@ -80,11 +80,13 @@ if ($pkgs -contains $setup -and -not $forceSetupwraith) {
     }
 }
 # Same as disable.sh: on firmware with ro.adb.secure=0, port 5555 gives a shell to any device on the
-# network without the "Allow" prompt. Read it now and say so once the list is done; a failed read only
-# skips the note. Windows PowerShell turns redirected stderr into an error that 'Stop' would throw.
+# network without the "Allow" prompt, and an empty value counts too (a debug build or Android 4.4 reads
+# a missing ro.adb.secure as 0, #1720). Read it now and say so once the list is done; a failed read
+# only skips the note, so it is $null, apart from an empty answer. Windows PowerShell turns redirected
+# stderr into an error that 'Stop' would throw.
 $ErrorActionPreference = 'Continue'
 $adbSecure = ((& $py -I (Join-Path $repo 'tools\tv.py') 'getprop ro.adb.secure' 2>$null) -join '').Trim()
-if ($LASTEXITCODE -ne 0) { $adbSecure = '' }
+if ($LASTEXITCODE -ne 0) { $adbSecure = $null }
 $ErrorActionPreference = 'Stop'
 
 # Home guard (#239), the same check as disable.sh: a list that disables the app owning Home leaves the
@@ -284,8 +286,9 @@ if ($pkgs.Count -gt 0) {
     }
 }
 
-if ($adbSecure -eq '0') {
-    Write-Warning "This TV reports ro.adb.secure=0, so network ADB on port 5555 accepts any device on your network without the `"Allow`" prompt. When you are done, turn USB debugging and Network/ADB debugging off on the TV and reboot it (README: `"Isn't ADB access a security hole?`")."
+if ($null -ne $adbSecure -and ($adbSecure -eq '0' -or $adbSecure -eq '')) {
+    $why = if ($adbSecure -eq '') { 'This TV does not set ro.adb.secure. On a debug (userdebug) build or Android 4.4 that is the same as ro.adb.secure=0: network ADB on port 5555 accepts any device on your network without the "Allow" prompt.' } else { 'This TV reports ro.adb.secure=0, so network ADB on port 5555 accepts any device on your network without the "Allow" prompt.' }
+    Write-Warning "$why When you are done, turn USB debugging, Network/ADB debugging and Wireless debugging off on the TV and reboot it (README: `"Isn't ADB access a security hole?`")."
 }
 if ($batchExit -ne 0) { throw "tv.py --batch failed (exit code $batchExit): the list may be only partly applied; run it again once the TV answers" }
 # Last, so the warnings above are printed either way: a listed package the TV left enabled fails the

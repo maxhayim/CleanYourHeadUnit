@@ -947,7 +947,8 @@ TV at their home routing to it. Never by opening the ADB port on their router. S
 
 It is one explicit "allow this computer" tap on the TV, the
 same as developing an Android app. Network ADB is plaintext on port 5555, and on firmware with
-`ro.adb.secure=0` any device on the LAN gets a shell, so close it when you are done:
+`ro.adb.secure=0` (or with it unset, on a debug build or Android 4.4) any device on the LAN gets a
+shell, so close it when you are done:
 
 1. On the TV: Developer options → turn **USB debugging**, **Network/ADB debugging** and
    **Wireless debugging** off, whichever the TV has, and revoke the USB debugging authorisations.

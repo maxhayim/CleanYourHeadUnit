@@ -93,8 +93,11 @@ if printf '%s\n' "$PKGS" | grep -x "$SETUP" >/dev/null && [ -z "${FORCE_SETUPWRA
 fi
 
 # On firmware with ro.adb.secure=0, port 5555 gives a shell to any device on the network without the
-# "Allow" prompt. Read it now and say so once the list is done; a failed read only skips the note.
-ADB_SECURE="$("$PY" -I tools/tv.py "getprop ro.adb.secure" 2>/dev/null | tr -d '[:space:]')" || ADB_SECURE=""
+# "Allow" prompt. An empty value counts too: on a debug (userdebug or eng) build, and on Android 4.4,
+# adbd reads a missing ro.adb.secure as 0, and sets in examples/ give a shell that way (#1720). Read it
+# now and say so once the list is done; a failed read only skips the note, so it is kept apart from an
+# empty answer.
+ADB_SECURE="$("$PY" -I tools/tv.py "getprop ro.adb.secure" 2>/dev/null | tr -d '[:space:]')" || ADB_SECURE="unread"
 
 # Home guard (#239): a list that disables the app owning Home leaves the TV with nothing to start the
 # next time Home is pressed, and on Google TV the setup wizard can take the category instead and
@@ -356,10 +359,17 @@ if [ -n "$PKGS" ]; then
   fi
 fi
 
-if [ "$ADB_SECURE" = "0" ]; then
-  echo "Warning: this TV reports ro.adb.secure=0, so network ADB on port 5555 accepts any device on" >&2
-  echo "your network without the \"Allow\" prompt. When you are done, turn USB debugging and" >&2
-  echo "Network/ADB debugging off on the TV and reboot it (README: \"Isn't ADB access a security hole?\")." >&2
+if [ "$ADB_SECURE" = "0" ] || [ -z "$ADB_SECURE" ]; then
+  if [ -z "$ADB_SECURE" ]; then
+    echo "Warning: this TV does not set ro.adb.secure. On a debug (userdebug) build or Android 4.4 that" >&2
+    echo "is the same as ro.adb.secure=0: network ADB on port 5555 accepts any device on your network" >&2
+    echo "without the \"Allow\" prompt." >&2
+  else
+    echo "Warning: this TV reports ro.adb.secure=0, so network ADB on port 5555 accepts any device on" >&2
+    echo "your network without the \"Allow\" prompt." >&2
+  fi
+  echo "When you are done, turn USB debugging, Network/ADB debugging and Wireless debugging off on the" >&2
+  echo "TV and reboot it (README: \"Isn't ADB access a security hole?\")." >&2
 fi
 
 # Last, so the warning above is printed either way: a listed package the TV left enabled fails the
