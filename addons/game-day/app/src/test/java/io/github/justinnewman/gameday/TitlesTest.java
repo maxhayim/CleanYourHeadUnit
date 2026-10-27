@@ -57,6 +57,11 @@ public class TitlesTest {
         assertEquals("Starts", Titles.word(f1, "FP2 Mexico City"));
         assertEquals("Starts", Titles.word(f1, "Sprint Qualifying, Austin"));
         assertEquals("Lights out", Titles.word(f1, "Sprint, Austin"));
+        // Titles as a real F1 calendar writes them.
+        assertEquals("Starts", Titles.word(f1, "🏎 FORMULA 1 GRAN PREMIO DE LA CIUDAD DE MÉXICO 2026 - Practice 1"));
+        assertEquals("Starts", Titles.word(f1, "⏱️ FORMULA 1 MSC CRUISES GRANDE PRÊMIO DE SÃO PAULO 2026 - Sprint Qualification"));
+        assertEquals("Lights out", Titles.word(f1, "🏁 FORMULA 1 MSC CRUISES GRANDE PRÊMIO DE SÃO PAULO 2026 - Sprint Race"));
+        assertEquals("Lights out", Titles.word(f1, "🏁 FORMULA 1 GRAN PREMIO DE LA CIUDAD DE MÉXICO 2026 - Race"));
         assertEquals("Tee time", Titles.word(golf, "The Masters, Round 1"));
         assertEquals("First serve", Titles.word(tennis, "Sinner vs Alcaraz"));
     }

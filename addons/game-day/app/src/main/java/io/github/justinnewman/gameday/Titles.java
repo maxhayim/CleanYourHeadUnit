@@ -15,7 +15,7 @@ final class Titles {
     private static final String STARTS = "Starts";
     /** Sessions before the main event: they count down to "Starts", the race itself to "Lights out". */
     private static final Pattern SESSION = Pattern.compile(
-            "\\b(practice|fp1|fp2|fp3|qualifying|quali|shootout)\\b", Pattern.CASE_INSENSITIVE);
+            "\\b(practice|fp1|fp2|fp3|qualifying|qualification|quali|shootout)\\b", Pattern.CASE_INSENSITIVE);
 
     private Titles() {
     }
