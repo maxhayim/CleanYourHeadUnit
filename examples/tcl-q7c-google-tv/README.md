@@ -500,8 +500,8 @@ to `com.google.android.tungsten.setupwraith`. With the owner's agreement it was 
 ### The list as applied
 
 41 packages in five batches with `tools/disable.ps1` and a screenshot after each, then setupwraith, then launcherx
-through `launcher/build-and-install.ps1`: 43 in all. After three reboots `pm list packages -d` still listed all 43;
-the firmware re-enabled nothing. Compared with this folder's list:
+through `launcher/build-and-install.ps1`: 43 in all.
+After three reboots `pm list packages -d` still listed all 43; the firmware re-enabled nothing. Compared with this folder's list:
 
 | Q7C entry or group | Here |
 |---|---|

@@ -75,7 +75,8 @@ class NothingWrittenTest(unittest.TestCase):
             metadata(root).write_text('{"tv": "TCL A",}', encoding="utf-8")
         err = self.refused(break_it)
         self.assertIn("examples/tcl-a/tv.json: not valid JSON", err)
-        self.assertIn("Expecting property name", err)
+        # json names a trailing comma differently by Python version (3.13: "Illegal trailing comma").
+        self.assertRegex(err, "Expecting property name|Illegal trailing comma")
 
     def test_json_that_is_not_an_object(self):
         # It parsed and then met d.get(): AttributeError, exit 1.

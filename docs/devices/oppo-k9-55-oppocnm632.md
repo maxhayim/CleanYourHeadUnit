@@ -49,6 +49,7 @@ persistence were not part of the check.
 ## Undo
 
 ```bash
+PY=tools/venv/bin/python
 "$PY" -I tools/tv.py 'cmd package set-home-activity --user 0 com.heytap.tv.launcher/com.oneplus.tv.launcher2.HomeLauncher'
 "$PY" -I tools/tv.py 'pm uninstall com.oneplus.tv.launcher2'
 ```
