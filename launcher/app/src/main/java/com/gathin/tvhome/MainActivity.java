@@ -2817,7 +2817,8 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         libraryFromVpnPill = true;
     }
 
-    /** vpn_pill: the whole pill solid green with a lock while a VPN is up, solid red "VPN off" while it is not. */
+    /** vpn_pill: the pill outlined in green with a lock while a VPN is up, outlined in red "VPN off" while it is not;
+     *  solid with a white ring only while focused. */
     private void updateVpnPill(boolean vpn) {
         int state = VpnBadge.pillState(vpn, vpnAppIntent() != null);
         if (state == VpnBadge.PILL_HIDDEN) {
@@ -2830,8 +2831,10 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         if (state != vpnPillState) {
             vpnPillState = state;
             boolean up = state == VpnBadge.PILL_UP;
-            // Dark ink on green, white on red, focused or not: the white focus ring is drawn by the background.
-            ColorStateList ink = ColorStateList.valueOf(up ? VpnBadge.INK : VpnBadge.INK_OFF);
+            // The state colour at rest (the pill is an outline then), the contrasting ink on the solid focused fill.
+            ColorStateList ink = new ColorStateList(
+                    new int[][]{new int[]{android.R.attr.state_focused}, new int[0]},
+                    new int[]{VpnBadge.pillInkColor(up, true), VpnBadge.pillInkColor(up, false)});
             btnVpn.setText(up ? R.string.vpn : R.string.vpn_off);
             btnVpn.setTextColor(ink);
             btnVpn.setBackground(VpnBadge.pillBackground(up, density));
