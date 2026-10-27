@@ -1,0 +1,6 @@
+{
+  "tv": "CANDY Android TV DVB2K (CANDYATVT56, device broadway, Haier/CVTE board)",
+  "os": "Android TV 11 (SDK 30)",
+  "brand": "CANDY",
+  "notes": "Haier-built, CVTE/MediaTek chassis. Has Haier/CVTE factory-menu packages that must never be launched or disabled; the Live TV dock tile needed a launcher fix to reach HDMI1 instead of Composite: [notes](candy-android-tv-dvb2k/README.md)"
+}

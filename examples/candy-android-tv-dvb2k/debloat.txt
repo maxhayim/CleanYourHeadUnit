@@ -1,0 +1,68 @@
+# CANDY Android TV DVB2K, product CANDYATVT56, device "broadway".
+# Android TV 11 (SDK 30), Haier-built board on a CVTE/MediaTek chassis, 720p, armeabi-v7a.
+# Stock launcher: com.google.android.tvlauncher (Google TV UI). Live TV / HDMI: com.mediatek.wwtv.tvcenter,
+# input via com.mediatek.tvinput. Default IME: com.google.android.inputmethod.latin (Gboard), not the
+# bundled com.haier.tv.hmagicboard.
+#
+# Apply:   TV_HOST=<tv ip> tools/disable.sh examples/candy-android-tv-dvb2k/debloat.txt
+# Undo:    TV_HOST=<tv ip> tools/restore.sh examples/candy-android-tv-dvb2k/debloat.txt
+# Everything is DISABLED, not uninstalled. Comment out any line you want to keep.
+#
+# DANGER on this board (Haier/CVTE): never launch or disable any factory/AT/fac-menu package -
+# com.at.factory.androidtvaidlservice, com.at.factory.factorymanager, com.cvte.tv.at, com.cvte.tv.hkcfac,
+# com.cvte.tv.fac.menu, com.cvte.tv.fac.aging, mediatek.factorymenu.ui. Opening one flips a factory-mode
+# flag on this board family and disables Play Services, Netflix and Chromecast on the next boot with no
+# way back from the shell. Left out of this list on purpose; do not add them.
+#
+# Also left alone (role unclear, low confidence it's pure bloat): com.cvte.haier.tv.appmanager,
+# com.cvte.r_agent_overlay, com.mstar.android.tv.disclaimercustomization.
+#
+# Does not stay disabled: the firmware re-enables these four at every boot regardless of
+# pm disable-user, so they are left out of this list on purpose - hide them in the launcher's
+# hidden_apps instead once it's built:
+#   com.haier.launcher.haiermatrix     (Haier TV+, alternate launcher, not a HOME claimant)
+#   com.google.android.tvrecommendations (drives the "Play Next" row)
+#   com.google.android.apps.mediashell (Chromecast receiver)
+#   com.google.android.katniss         (voice search)
+#
+# DO NOT DISABLE on this TV: com.mediatek.wwtv.tvcenter, com.mediatek.tv.service, com.mediatek.tvinput,
+# com.android.providers.tv, com.android.tv.settings, com.android.systemui, com.android.vending,
+# com.google.android.gms, com.google.android.gsf, com.mediatek.autopair, com.example.bt_pair_tips,
+# com.telink.lt.ota, com.android.bluetooth, com.google.android.inputmethod.latin (active IME).
+#
+# Owner uses: Live TV, YouTube, the Play Store, and the bundled Multi Media (USB) player. Netflix and
+# Prime Video kept installed for future use though not watched today. Nothing else on this TV.
+#
+# Status: disabled in one batch on one TV on 2026-10-27, checked with screenshots and a reboot the same day
+#         (same-day only, not yet lived with for several days). Working after disabling and surviving the
+#         reboot: Home (launcher/ as default), Live TV via com.mediatek.wwtv.tvcenter switching straight to
+#         HDMI1, YouTube, Play Store, Netflix, Prime Video, the Multi Media (USB) player, and HDMI-CEC
+#         remote input. Will update this line after a few more days of normal use.
+
+# Haier manufacturer apps (smart-home, content, housekeeper, alternate launcher)
+com.haierubic.usmartdevice             # Haier IoT/smart-device discovery, unused on a TV-only setup
+com.haier.yudee.tv                     # Haier content/catalogue app
+com.haier.sharetv.webview              # webview helper for the app above
+com.haier.tvhousekeeper                # "TV_Assistant" housekeeper/cleaner
+com.haier.apps                         # Haier evoSmart companion app
+
+# Ad-tracking, retail demo and promo rows
+tv.anoki.acr.controller                # ACR: watches on-screen content to build an ad/viewing profile
+fusion.android.tv.demo                 # in-store retail demo mode
+com.mediatek.android.leanbacklauncher.partnercustomizer # injects promo rows into the stock launcher
+android.autoinstalls.config.haier.hanyang # partner auto-install config stub
+com.mediatek.androidbox                # "HaiCast" screen-mirroring app; owner doesn't cast
+
+# Google extras not used on this TV (per owner: only Live TV, YouTube, Play Store, Multi Media)
+com.google.android.youtube.tvmusic     # YouTube Music
+miada.tv.webbrowser                    # bundled web browser
+com.google.android.play.games
+com.google.android.feedback
+com.google.android.syncadapters.calendar
+com.google.android.partnersetup
+
+# Already disabled when the unit arrived; left as-is.
+# com.google.android.marvin.talkback
+# com.cltv.fast
+# com.haier.apps.evoSmart
+# ru.haier.evo
