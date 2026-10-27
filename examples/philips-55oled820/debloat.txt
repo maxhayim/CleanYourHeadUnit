@@ -42,7 +42,8 @@ com.google.android.feedback               # Market Feedback Agent
 com.android.tv.feedbackconsent            # feedback consent collector
 
 # Promos and sync nobody uses
-com.google.android.apps.tv.dreamx         # Google ambient screensaver and Google Home panelcom.google.android.syncadapters.calendar  # synced a Google calendar to the TV every day; no calendar app is installed
+com.google.android.apps.tv.dreamx         # Google ambient screensaver and Google Home panel
+com.google.android.syncadapters.calendar  # synced a Google calendar to the TV every day; no calendar app is installed
 com.tpv.nftgallery                        # "NFT Collection" art gallery app
 
 # Preinstalled apps that were never used on this unit. All sit in /data/app.

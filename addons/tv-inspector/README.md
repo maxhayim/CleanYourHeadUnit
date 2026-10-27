@@ -29,7 +29,7 @@ TV_HOST=<tv ip> tools/venv/bin/python -I tools/tv.py 'logcat -d -s TvInspector'
 JDK 17 and Android SDK 34, from this folder: `./gradlew testReleaseUnitTest lintRelease assembleRelease`.
 The small gradlew scripts reuse the repository's pinned Gradle wrapper with this folder as the project, so
 keep the folder inside the repository when building. Install it as `addons/README.md` describes, or with
-`tools/manage.py install tv-inspector`. No binaries or prebuilt APKs are committed.
+`TV_HOST=<tv ip> tools/venv/bin/python -I tools/manage.py install tv-inspector`. No binaries or prebuilt APKs are committed.
 
 The launcher discovers the static module card and asks once whether to show it. Module spec 1 has static
 captions, so the card always reads "Remote keys and TV info"; OK opens the app.
