@@ -21,6 +21,7 @@ tools/venv/bin/python tools/screendiff.py shots/before.png shots/after.png \
 | `--blur x0,y0,x1,y1` | Pixelated in both screenshots of the pair. Repeatable. For the Wi-Fi name, account pictures. It doesn't affect the comparison. |
 | `--out PNG` | The labelled pair, at `--scale` (default 0.5). |
 | `--diff PNG` | The differing pixels, white on black. |
+| `--labels` | The two labels over the pair, comma-separated (`Before,After` by default); anything but two is refused. |
 | `--threshold N` | Channel difference to ignore (default 8, compression noise). |
 
 ## Boxes
