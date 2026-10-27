@@ -60,6 +60,7 @@ NAMES = {
     "th": "Thai",
     "tr": "Turkish",
     "uk": "Ukrainian",
+    "sv": "Swedish",
     "uz": "Uzbek (Latin)",
     "vi": "Vietnamese",
     "zh-CN": "Simplified Chinese",
