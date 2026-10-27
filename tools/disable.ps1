@@ -113,7 +113,9 @@ function Read-HomeLaunchers {
     # Nor is a factory-test app (com.duokan.factorytest/.FactoryLauncher answers HOME on a Mi TV 4A).
     $usable = @($parsed | Where-Object { $_.Cls -notmatch 'FallbackHome$' -and $notLaunchers -notcontains $_.Pkg -and $_.Pkg -notmatch 'factorytest|factory_test|factorymode' } |
         ForEach-Object { $_.Pkg } | Sort-Object -Unique)
-    [pscustomobject]@{ Ok = ($answered -and $parsed.Count -gt 0); Launchers = $usable }
+    # Whether setupwraith answers HOME, for the check below (#1573).
+    $setupAnswers = @($parsed | Where-Object { $_.Pkg -eq $setup }).Count -gt 0
+    [pscustomobject]@{ Ok = ($answered -and $parsed.Count -gt 0); Launchers = $usable; SetupAnswers = $setupAnswers }
 }
 if (-not $forceHome -and $pkgs.Count -gt 0) {
     $homeQuery = 'cmd package resolve-activity --brief -a android.intent.action.MAIN -c android.intent.category.HOME'
@@ -144,6 +146,12 @@ if (-not $forceHome -and $pkgs.Count -gt 0) {
             $others = @(@($found.Launchers) | Where-Object { $_ -ne $homePkg -and $pkgs -notcontains $_ })
             if (-not $found.Ok -or $others.Count -eq 0) {
                 Write-Warning "Skipping ${homePkg}: it owns Home, and no other app that can answer Home is installed and staying enabled. Make the new launcher Home first (launcher\build-and-install.ps1), then run this list again to disable the old one; or set `$env:FORCE_HOME=1 if you can still reach the TV."
+                $pkgs = @($pkgs | Where-Object { $_ -ne $homePkg })
+            } elseif ($found.SetupAnswers -and $pkgs -notcontains $setup) {
+                # Same as disable.sh (#1573): setupwraith answers HOME ahead of an installed launcher and
+                # stays enabled (not listed, or skipped above for the Wi-Fi network), so with the owner
+                # disabled Home goes to its RecoveryActivity, not to the other launcher.
+                Write-Warning "Skipping ${homePkg}: it owns Home, and $setup stays enabled and answers Home ahead of the other launchers here, so with $homePkg disabled Home would go to its RecoveryActivity, the black screen system_server can crash-loop on (docs\TROUBLESHOOTING.md). Make the new launcher Home first (launcher\build-and-install.ps1), or disable setupwraith in the same run (if it was skipped for the Wi-Fi network, forget the network and join it again in Settings > Network & Internet), then run this list again; or set `$env:FORCE_HOME=1 if you can still reach the TV."
                 $pkgs = @($pkgs | Where-Object { $_ -ne $homePkg })
             }
         }

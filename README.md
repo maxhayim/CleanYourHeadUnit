@@ -567,7 +567,9 @@ in `KNOWN_STOCK_LAUNCHERS`: `com.google.android.tvlauncher`, `com.google.android
 contains the app that owns Home and no other app on the TV answers HOME, it skips that entry, says
 why, and disables the rest of the list. The setup wizard, the settings apps, a vendor `FallbackHome`
 and factory-test apps (Xiaomi's `com.duokan.factorytest`) answer HOME too and don't count. So a list applied before the launcher handover cannot leave
-the TV with nothing to start. Run the same list again once `launcher/build-and-install.sh` has made
+the TV with nothing to start. On Google TV it also keeps the owner while setupwraith answers HOME and
+stays enabled (not listed, or kept for the Wi-Fi network): setupwraith answers ahead of an installed
+launcher that is not Home yet, so it would take Home. Run the same list again once `launcher/build-and-install.sh` has made
 the new launcher Home and the entry is applied; `FORCE_HOME=1` (`$env:FORCE_HOME`) disables it anyway.
 
 </details>
