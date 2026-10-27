@@ -35,7 +35,7 @@ public class CalendarStoreTest {
             fail();
         } catch (CalendarStore.BadLine e) {
             assertEquals(1, e.line);
-            assertTrue(e.getMessage(), e.getMessage().contains("Basketbal"));
+            assertTrue(e.getMessage(), e.getMessage().contains("first column"));
             assertTrue(e.getMessage(), e.getMessage().contains("Choose one of: American football"));
         }
     }
@@ -58,6 +58,20 @@ public class CalendarStoreTest {
             fail();
         } catch (CalendarStore.BadLine e) {
             assertTrue(!e.getMessage().contains("secret-token"));
+        }
+    }
+
+    @Test public void columnsInTheWrongOrderNeverQuoteTheLink() {
+        assertNoLink("https://h.example/secret-token | Wild | Hockey");
+        assertNoLink("Hockey | Wild | https://h.example/a.ics | https://h.example/secret-token");
+    }
+
+    private static void assertNoLink(String line) {
+        try {
+            CalendarStore.parseSetupFile(line);
+            fail("accepted: " + line);
+        } catch (CalendarStore.BadLine e) {
+            assertTrue(e.getMessage(), !e.getMessage().contains("secret") && !e.getMessage().contains("://"));
         }
     }
 

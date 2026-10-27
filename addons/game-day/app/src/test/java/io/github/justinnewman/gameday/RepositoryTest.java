@@ -107,10 +107,18 @@ public class RepositoryTest {
         assertEquals(2, repo.calendars().size());
     }
 
+    @Test public void misorderedLineNeverPutsTheLinkInTheResult() {
+        String result = repo.applySetupFile("https://h.example/secret-token.ics | Minnesota Wild | Hockey",
+                NOW.toEpochMilli(), new Fetcher(300, 300), UTC);
+        assertTrue(result, result.startsWith("error|1|"));
+        assertFalse(result, result.contains("secret"));
+        assertFalse(result, result.contains("://"));
+    }
+
     @Test public void badSetupFileLeavesTheListAlone() {
         repo.save(Arrays.asList(cal("Minnesota Wild", "Hockey", 16)));
         String result = repo.applySetupFile("Basketbal|Jazz|https://h.example/j.ics", NOW.toEpochMilli(), new Fetcher(300, 300), UTC);
-        assertTrue(result, result.startsWith("error|1|Line 1: unknown sport"));
+        assertTrue(result, result.startsWith("error|1|Line 1: the first column is not a sport"));
         assertTrue(result.endsWith("done\n"));
         assertEquals(1, repo.calendars().size());
         assertEquals("Minnesota Wild", repo.calendars().get(0).name);

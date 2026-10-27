@@ -42,7 +42,8 @@ final class CalendarStore {
             if (f.length < 3 || f.length > 4) throw new BadLine(n, "expected sport | name | link, optionally | colour");
             Sport sport = Sport.byLabel(f[0]);
             if (sport == null) {
-                throw new BadLine(n, "unknown sport \"" + f[0].trim() + "\". Choose one of: " + Sport.labels());
+                // The column is named, never quoted: in a line written in the wrong order it can be the link.
+                throw new BadLine(n, "the first column is not a sport. Choose one of: " + Sport.labels());
             }
             String name = f[1].trim();
             if (name.isEmpty()) throw new BadLine(n, "the name is empty");
@@ -52,7 +53,7 @@ final class CalendarStore {
             int colour;
             if (f.length == 4 && !f[3].trim().isEmpty()) {
                 colour = Palette.byName(f[3]);
-                if (colour < 0) throw new BadLine(n, "unknown colour \"" + f[3].trim() + "\", for example \"Green, dark\"");
+                if (colour < 0) throw new BadLine(n, "the fourth column is not one of the 36 colours, for example \"Green, dark\"");
             } else {
                 colour = Palette.firstUnused(colours);
             }
