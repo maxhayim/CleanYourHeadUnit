@@ -13,7 +13,7 @@
 # findings on it: com.zhixin.logservice.nebula keeps a process after pm disable-user (it is persistent and
 # shares the system uid, so dumpsys activity processes still lists it as *PERS*), and it reaches
 # aiot-nebula-api-pr.goroav.com at boot; the README says what com.oceanwing.nebulalinker, kept below, sends
-# to the same host and how both were cut off. com.android.devicelockcontroller answers pm disable-user with
+# to the same host. com.android.devicelockcontroller answers pm disable-user with
 # "Cannot disable a protected package", so it is not listed.
 #
 # Stock launcher: com.google.android.tvlauncher (classic Android TV home, HOME priority 2). The setup wizard

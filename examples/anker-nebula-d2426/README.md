@@ -115,12 +115,6 @@ remote: if it does not land on the new launcher, undo as above.
   `vsaas-api-qa.eufylife.com` as a fallback host. `com.zhixin.logservice.nebula`, although disabled by the
   list, still has a process after boot (persistent, system uid) and contacts the same goroav host.
   `tools/tv.py 'logcat -d | grep OkHttp'` shows all of it.
-- To cut that off without touching the kept packages, the AdGuard app (not Private DNS) with two user rules,
-  `||aiot-nebula-api-pr.goroav.com^` and `||vsaas-api-qa.eufylife.com^`, leaves `display-ota.goroav.com` and
-  firmware updates alone: after the next boot the two `news` calls fail and the three `get_rom_version` calls
-  still answer 200. The app itself did not survive a reboot on this projector until it was made the always-on
-  VPN; the why and the two commands are in
-  [TROUBLESHOOTING](../../docs/TROUBLESHOOTING.md#an-ad-blocker-that-runs-as-a-local-vpn-is-on-until-the-next-boot-then-gone).
 - The Wi-Fi pill says "Wi-Fi" and never the network name on this unit, with `ACCESS_FINE_LOCATION` and
   `ACCESS_COARSE_LOCATION` granted and location switched on (`dumpsys wifi` shows the SSID). Not solved.
 
