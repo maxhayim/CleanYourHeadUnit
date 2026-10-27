@@ -2590,6 +2590,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         GameDay.Turn t = turns.get(on);
         if (t.f1) {
             raceBar.setBackgroundResource(R.drawable.race_bar);
+            raceSessions.setVisibility(View.VISIBLE);
             updateRace();
         } else {
             GradientDrawable bar = new GradientDrawable();
@@ -2605,7 +2606,8 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
                 String in = RaceWeekend.countdown(getResources(), GameDay.until(t, now));
                 raceHeadline.setText(t.word.isEmpty() ? in : getString(R.string.race_next, t.word, in));
             }
-            raceSessions.setText("");
+            // No session times for a game: the line takes no room, so the dots sit under the countdown.
+            raceSessions.setVisibility(View.GONE);
             racePanel.setVisibility(View.VISIBLE);
         }
         showPager(turns.size(), on);
