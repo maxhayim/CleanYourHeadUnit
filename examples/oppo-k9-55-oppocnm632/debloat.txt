@@ -9,9 +9,7 @@
 #
 # Keep com.heytap.tv.launcher enabled. It is the stock home. Do not build the launcher over
 # that package name, and do not pass it as STOCK_LAUNCHER: build-and-install.sh would disable
-# it, and the default com.gathin.tvhome id is refused as a HOME install. The working build is
-# -PlauncherApplicationId=com.oneplus.tv.launcher2, installed by hand (device note).
-# Keep com.android.tv.settings enabled.
+# it. Keep com.android.tv.settings enabled.
 #
 # On this unit the alternate-id launcher installed, set-home-activity succeeded, the stock
 # home stayed enabled and the owner confirmed the screen. The packages below are the debloat

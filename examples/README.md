@@ -342,6 +342,8 @@ on that firmware, grouped and commented. These are starting points: comment out 
 
 <!-- tv-table:end -->
 
+[OPPO K9 55 (OPPOCNM632)](../docs/devices/oppo-k9-55-oppocnm632.md): ColorOS Home allowlist; stock home stays enabled.
+
 Notes for models that have no tested list yet live in [`docs/devices/`](../docs/devices/):
 
 - [Homatics Box R 4K Plus](../docs/devices/homatics-box-r-4k-plus.md), `SEI804HM` / `YYJ`, Android TV 14 build `8963`: paired encrypted ADB from a wired computer, standard Home handover, theme and physical-remote checks, package state retained after cold boot, and closing both debugging modes; single-session observations, no several-day debloat list.
