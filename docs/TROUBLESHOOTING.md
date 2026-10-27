@@ -409,7 +409,11 @@ Things that bit us or contributors, so they don't bite you. Commands use `tools/
   itself, not bloat. `tools/disable.sh`, `disable.ps1` and `check.py --fix` now refuse any list that
   names them (or `com.android.providers.*` other than calendar, contacts, user dictionary and
   blocked numbers, `com.android.systemui`, `com.android.shell`, `com.android.phone`,
-  `com.android.settings`, `com.android.tv.settings` or `android`), with no switch to override it.
+  `com.android.settings`, `com.android.tv.settings` or `android`), with no switch to override it, and
+  since [#1578](https://github.com/Gathin23/cleanyourtv/issues/1578) the same refusal covers the TV
+  middleware: `com.cltv.mal`, `com.mediatek.tis`, `com.mediatek.tv.service` and
+  `com.mediatek.tv.agent` (the bullet below). The three tools say "core Android or TV middleware
+  packages" in that message, so a run that refuses one of the four reads the same way as this one.
   If a set is already stuck and still answers ADB, `pm enable` each of those packages and reboot;
   if ADB is gone too, a factory reset from the recovery menu is usually the only way back.
 - **The TV restarts in a loop after a debloat**, seen once, on a Haier H50H5F (Google TV 14,
@@ -426,7 +430,9 @@ Things that bit us or contributors, so they don't bite you. Commands use `tools/
   Wireless debugging usually goes off at every restart and gets a new port each time it is switched
   on, so read the port from its screen or `adb mdns services`. This set never stayed up long enough
   to switch it back on, and then restarted into the recovery menu, where a factory reset turns every
-  disabled package back on (nothing was uninstalled).
+  disabled package back on (nothing was uninstalled). One of those eight, `com.cltv.mal`, is on the
+  list `tools/disable.sh`, `disable.ps1` and `check.py --fix` refuse (the bullet above), so a debloat
+  cannot take it out again; the other seven are not guarded.
 - **The TV stays on the boot logo after a list, and disabling the only Home app is enough to do
   it**, seen on a KitKat-era set ([COOP COTV-0001](https://github.com/Gathin23/cleanyourtv/issues/795):
   Realtek `rtd298x`, Android 4.4.2, SDK 19). 17 packages were disabled over Ethernet ADB, each
