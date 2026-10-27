@@ -349,6 +349,7 @@ on that firmware, grouped and commented. These are starting points: comment out 
 
 Notes for models that have no tested list yet live in [`docs/devices/`](../docs/devices/):
 
+- [Xiaomi MiTV-MOSR1](../docs/devices/xiaomi-mitv-mosr1.md), Android TV 11, `RTT8.210119.001.1239`: short-session Home handover and package-persistence observations; PatchWall opens after reboot despite the Home preference, its input popup was retained, and the Home key helper costs held-volume repeat; physical Apps scancode and test limits; no several-day debloat list.
 - [Homatics Box R 4K Plus](../docs/devices/homatics-box-r-4k-plus.md), `SEI804HM` / `YYJ`, Android TV 14 build `8963`: paired encrypted ADB from a wired computer, standard Home handover, theme and physical-remote checks, package state retained after cold boot, and closing both debugging modes; single-session observations, no several-day debloat list.
 - [Hisense 55U8G](../docs/devices/hisense-55u8g.md), owner-identified US model, `SmartTV 4K FFM` / `huangshan`, Android TV 10, vendor software `V0000.01.00U.Q0506` / `D01`: identifier mapping, original Inputs handler and bounded updater-role observations; no several-day debloat list.
 - [Pixpaq Gold Ray-Mastered Edition](../docs/devices/pixpaq-gold-ray-mastered.md), Android 13 (reports `ADT-3`): Activity Launcher paths into Android Settings and Developer options, a separate Settings shortcut, Projectivy Home and reboot observations, and screensaver selection; no packages disabled.
