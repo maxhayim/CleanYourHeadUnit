@@ -19,6 +19,11 @@ Things that bit us or contributors, so they don't bite you. Commands use `tools/
   shows the TV's MAC and `dns-sd -B _androidtvremote2._tcp` still finds it by name while no port on
   it can be opened. Seen on macOS 26 (Darwin 25.6) against a Hisense `hengshan` set, Google TV 12,
   where the stock `adb` and `tools/tv.py` failed identically.
+  The closing check is denied the same way, and it is the one the procedure accepts: `tools/adb-closed.py
+  <tv ip>` answers `could not check <ip>:5555 ([Errno 65] No route to host). Is the TV on and on this
+  network?` followed by the Local Network note, exit 2, so a machine without the permission can neither
+  confirm nor deny that the port is closed. Grant it to the terminal, reopen it, and check again: only a
+  "closed" from a granted terminal counts.
 - **No "wireless debugging" toggle** on some TVs, Xiaomi among them. USB debugging alone opens
   network ADB on port 5555.
 - **USB debugging is greyed out and there is no Wireless debugging entry either**, seen on a carrier
