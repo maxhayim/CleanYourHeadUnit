@@ -37,7 +37,10 @@
             android:name=".PrayerAlertActivity"
             android:exported="true"
             android:theme="@android:style/Theme.Material.Dialog.NoActionBar"
-            android:launchMode="singleTop" />
+            android:launchMode="singleTop"
+            android:taskAffinity=""
+            android:excludeFromRecents="true"
+            android:noHistory="true" />
 
         <receiver android:name=".PrayerReceiver" android:exported="true" />
 

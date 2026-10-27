@@ -9,7 +9,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.media.AudioAttributes;
-import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
@@ -18,6 +17,7 @@ import android.util.Log;
 public class PrayerReceiver extends BroadcastReceiver {
     private static final String TAG = "PrayerReceiver";
     private static final String CHANNEL_ID = "prayer_reminder";
+    private static final int NOTIFICATION_ID = 1001;
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -46,7 +46,7 @@ public class PrayerReceiver extends BroadcastReceiver {
             int idx = PrayerScheduler.getPrayerIndex(name);
             String localizedName = idx >= 0 ? context.getString(PrayerScheduler.NAME_RES[idx]) : name;
 
-            // 1. Post High-Priority Notification (triggers Heads-Up banner on Android TV)
+            // 1. Post High-Priority Notification (handles sound and tray indicator with fixed ID)
             NotificationManager nm = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
             if (nm != null) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -69,15 +69,12 @@ public class PrayerReceiver extends BroadcastReceiver {
                     nm.createNotificationChannel(ch);
                 }
 
-                Intent alertIntent = new Intent(context, PrayerAlertActivity.class);
-                alertIntent.putExtra(PrayerScheduler.EXTRA_PRAYER_NAME, name);
-                alertIntent.putExtra(PrayerScheduler.EXTRA_PRAYER_TIME, time);
-                alertIntent.putExtra(PrayerScheduler.EXTRA_PLACE, place);
-                alertIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                PendingIntent alertPi = PendingIntent.getActivity(
+                Intent mainIntent = new Intent(context, MainActivity.class);
+                mainIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                PendingIntent contentPi = PendingIntent.getActivity(
                         context,
-                        (int) System.currentTimeMillis(),
-                        alertIntent,
+                        0,
+                        mainIntent,
                         PendingIntent.FLAG_UPDATE_CURRENT | (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M ? PendingIntent.FLAG_IMMUTABLE : 0)
                 );
 
@@ -95,26 +92,15 @@ public class PrayerReceiver extends BroadcastReceiver {
                         .setContentText(body)
                         .setSmallIcon(R.drawable.icon)
                         .setAutoCancel(true)
-                        .setContentIntent(alertPi)
-                        .setFullScreenIntent(alertPi, true)
+                        .setContentIntent(contentPi)
                         .setPriority(Notification.PRIORITY_MAX)
                         .setCategory(Notification.CATEGORY_ALARM)
                         .setColor(Color.parseColor("#2BB673"));
 
-                int notifId = (int) System.currentTimeMillis();
-                nm.notify(notifId, nb.build());
+                nm.notify(NOTIFICATION_ID, nb.build());
             }
 
-            // 2. Play audible notification sound
-            try {
-                Uri ringtoneUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-                Ringtone r = RingtoneManager.getRingtone(context.getApplicationContext(), ringtoneUri);
-                if (r != null) r.play();
-            } catch (Exception e) {
-                Log.w(TAG, "Play sound error: " + e);
-            }
-
-            // 3. Launch floating alert banner on screen
+            // 2. Launch floating alert banner on screen (single launch path)
             try {
                 Intent popup = new Intent(context, PrayerAlertActivity.class);
                 popup.putExtra(PrayerScheduler.EXTRA_PRAYER_NAME, name);
@@ -126,7 +112,7 @@ public class PrayerReceiver extends BroadcastReceiver {
                 Log.w(TAG, "Launch alert activity error: " + e);
             }
 
-            // 5. Schedule next prayer
+            // 3. Schedule next prayer
             PrayerScheduler.scheduleNext(context);
         }
     }

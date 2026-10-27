@@ -15,8 +15,8 @@ countdown to it, plus today's Gregorian and Hijri dates. Each prayer has its Ara
 - **Reminders switch**: In `app/src/main/res/values/config.xml`, `reminders` controls whether to schedule
   on-screen alert cards and notifications when a prayer time arrives. It is `false` (off) by default. When
   enabled (`true`), an unobtrusive, frameless compact card appears at the top-right corner of the screen
-  displaying the localized prayer name, Arabic script, time, and city. It dismisses automatically after 10
-  seconds or immediately on any remote button press.
+  displaying the localized prayer name, Arabic script, time, and city, accompanied by a single notification chime.
+  It dismisses automatically after 10 seconds or immediately on any remote button press.
 - It reads Aladhan when the page opens and again after midnight. The countdown updates every minute.
   Offline, the last times stay on screen.
 - 24-hour times, localized prayer names and strings for English, Indonesian (`values-in`), and Arabic (`values-ar`).
@@ -43,6 +43,14 @@ cd addons/prayer-times && ./gradlew assembleRelease
 TV_HOST=<tv ip> ../../tools/venv/bin/python -I ../../tools/tv.py --push app/build/outputs/apk/release/app-release.apk /data/local/tmp/addon.apk
 TV_HOST=<tv ip> ../../tools/venv/bin/python -I ../../tools/tv.py 'pm install -r /data/local/tmp/addon.apk; rm -f /data/local/tmp/addon.apk'
 ```
+
+If `reminders` is set to `true`, grant the overlay permission so the on-screen alert card can display over playing video and other apps:
+
+```bash
+TV_HOST=<tv ip> ../../tools/venv/bin/python -I ../../tools/tv.py 'appops set com.majnioui.tv.prayer SYSTEM_ALERT_WINDOW allow'
+```
+
+> **Note:** Force-stopping the app (`am force-stop com.majnioui.tv.prayer`) removes all pending alarms scheduled in Android's `AlarmManager`. When testing real alarms, do not force-stop the app.
 
 Press Home: the launcher asks once whether to show the card. Change the answer later by holding OK on
 Settings, then Module cards.
