@@ -108,7 +108,7 @@ class TheCloneStep(unittest.TestCase):
         self.assertRegex(slug(), r"^[\w.-]+/[\w.-]+$",
                          "the issue template names no github.com/<owner>/<repo> URL")
 
-    def test_five_readmes_are_read(self):
+    def test_six_readmes_are_read(self):
         found = pages()
         self.assertEqual(6, len(found), f"expected README.md and five translations, read {[p.name for p in found]}")
         for page in found:
