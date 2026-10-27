@@ -303,7 +303,7 @@ Things that bit us or contributors, so they don't bite you. Commands use `tools/
   answers when it is not a Live TV or input app. `tools/disable.sh` (`disable.ps1`) keeps any listed
   app that query names and skips it with "the TV opens its HDMI/AV inputs and channels with it", so
   put its line in a list of its own and apply that with `HANDLERS_ALLOW=1` (`$env:HANDLERS_ALLOW`):
-  the rest of your list keeps the guard. Run `tools/check.py --fix` on that list with the same
+  the rest of your list keeps the guard. Run `tools/venv/bin/python -I tools/check.py --fix` on that list with the same
   switch, or it leaves the app on and exits 1. `disable.ps1` reads the switch once and clears it
   from the environment, so one `$env:HANDLERS_ALLOW=1` covers only that one run (#1845); `check.py
   --fix` still reads it, and in PowerShell it stays set until the window is closed: run
