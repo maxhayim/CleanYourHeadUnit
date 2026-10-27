@@ -55,7 +55,7 @@
 #
 # Fourth VU31, same build, 2026-10-25/26: most of the list above (Google TV, Apple TV and dreamx kept; Alexa and
 # camera2 off by choice), four batches with a screenshot and crash-log check after each, then the launcher; several
-# reboots. Not lived with for days yet. Remote: SONY TV VRC 001 (Bluetooth, mic). Notes from it:
+# reboots. Lived with for 2 days so far. Remote: SONY TV VRC 001 (Bluetooth, mic). Notes from it:
 # - com.sony.dtv.m2.seeds.iot and com.sony.dtv.m2.seeds.iot.remotestart (Alexa) were enabled again after every
 #   reboot, like Eco Dashboard (applicationdisabler presumably; not confirmed). Left alone: harmless while Alexa is
 #   not linked to an account.
