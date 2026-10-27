@@ -23,7 +23,7 @@ of these projects ask for far more than the reference launcher does:
 
 **Jump to:** [Home screens built as their own app](#home-screens-built-as-their-own-app) · [Forks of the launcher](#forks-of-the-launcher) · [Screensavers and add-ons](#screensavers-and-add-ons) · [Tools and companion apps](#tools-and-companion-apps) · [Other platforms: Fire TV and LG webOS](#other-platforms-fire-tv-and-lg-webos) · [Add-ons in this repo](addons/README.md) · [Guides and write-ups](#guides-and-write-ups) · [Find a project by TV brand](#find-a-project-by-tv-brand) · [Add yours](#add-yours)
 
-137 projects so far.
+138 projects so far.
 
 ## Home screens built as their own app
 
@@ -63,6 +63,7 @@ This repo's launcher with new looks or features, often tuned for one TV. Good pl
 
 | Project | What it is | Built on | By |
 |---|---|---|---|
+| [CleanYourTV Cinema & OLED Edition](https://github.com/RuckieOfficial/cleanyourtv) ([screenshot](https://raw.githubusercontent.com/RuckieOfficial/cleanyourtv/main/themes/cinematic/screenshot.jpg)) | Cinematic OLED-optimised fork: live TMDb 4K backdrops with ratings & metadata crossfade, Apple Liquid Glass screensaver, adaptive 75% grid dimming, "+ Add" dock tile, ARGB_8888 32-bit color, and hold-Pause instant OLED blackout | Philips 55OLED706/12, Android TV 11 | [RuckieOfficial](https://github.com/RuckieOfficial) |
 | [Header Grid](https://github.com/OrenDdp/cleanyourtv-header-grid/blob/header-grid/FORK.md) ([screenshot](https://raw.githubusercontent.com/OrenDdp/cleanyourtv-header-grid/e7ba15e1fcc07c478e8c18455a1f24ab7db85961/themes/header-grid/screenshot.jpg), [issues](https://github.com/OrenDdp/cleanyourtv-header-grid/issues)) | An Apple TV style home for a Xiaomi Mi Box S: clock and app name in the header, five apps per row, a double focus frame, and LIVE remapped to an app on Android 9 | Xiaomi Mi Box S (MIBOX4), Android TV 12 and Android TV 9 | [OrenDdp](https://github.com/OrenDdp) |
 | [Quay](https://github.com/checkmate-automate/Quay-DebloatedAndroidLauncher) ([screenshots](https://github.com/checkmate-automate/Quay-DebloatedAndroidLauncher#quay)) | A macOS-style magnifying dock with glass tiles (blur baked once, no RenderEffect), and input tiles that switch HDMI and start an app on the device behind it over DIAL | Kogan KALED50RN9220STA, Android TV 11 | [checkmate-automate](https://github.com/checkmate-automate) |
 | [PeachOS TV](https://github.com/BrainDeLook/peachos-tv) ([screenshot](https://raw.githubusercontent.com/BrainDeLook/peachos-tv/383e50f/docs/images/home.png), [issues](https://github.com/BrainDeLook/peachos-tv/issues)) | A fork with large app-specific poster shelves from Android TV channels and Watch Next (including Lampa history), portrait and landscape cards, a translucent dock with spring focus, optional navigation sounds, and a compact HDMI picker on TVs with inputs. Network: artwork URLs published by apps and optional Stremio/Cinemeta metadata backgrounds; no launcher account or API key required | Homatics Box R 4K Plus and TCL Q6CS (G10), Android 12 | [BrainDeLook](https://github.com/BrainDeLook) |
@@ -235,7 +236,7 @@ By the TV each project was built and tested on. Most of them run on other Androi
 - **MYO:** [MYO Launcher](https://github.com/faustinoaq/myo-launcher)
 - **NVIDIA Shield:** [Vibe Launcher](https://github.com/maydings/vibe-launcher)
 - **OnePlus:** [Apple TV Frosted Glass for OnePlus TV](https://github.com/sireesh0204-stack/cleanyourtv/tree/backup/oneplus-apple-frosted-glass), [KinoDock](https://github.com/vedraj360/kinodock)
-- **Philips:** [CleanYourTV UI, themes edition](https://github.com/pokelvo/cleanyourtv-ui), [Cosy Home](https://github.com/oliverjwroberts/cosy-home-tv), [Liquid Glass Home for Philips TA1](https://github.com/Nefritor/cleanyourtv-liquid-glass/tree/liquid-glass), [Moving aurora behind Home](https://github.com/mrk1987/cleanyourtv/tree/aurora), [Forslag](https://github.com/modist/forslag), [XMB Home](https://github.com/amachador/xmb-home), [QuickVol TV](https://github.com/thenewnano/quickvol-google-tv)
+- **Philips:** [CleanYourTV Cinema & OLED Edition](https://github.com/RuckieOfficial/cleanyourtv), [CleanYourTV UI, themes edition](https://github.com/pokelvo/cleanyourtv-ui), [Cosy Home](https://github.com/oliverjwroberts/cosy-home-tv), [Liquid Glass Home for Philips TA1](https://github.com/Nefritor/cleanyourtv-liquid-glass/tree/liquid-glass), [Moving aurora behind Home](https://github.com/mrk1987/cleanyourtv/tree/aurora), [Forslag](https://github.com/modist/forslag), [XMB Home](https://github.com/amachador/xmb-home), [QuickVol TV](https://github.com/thenewnano/quickvol-google-tv)
 - **Polytron:** [Glass and day/night on a Polytron](https://github.com/andikatuluspangestu/cleanyourtv/tree/polytron-glass-launcher)
 - **RCA:** [ZenTV](https://github.com/hernanzini/zentv)
 - **Samsung:** [Skylight](https://github.com/SaudSatopay/skylight-tizen)
