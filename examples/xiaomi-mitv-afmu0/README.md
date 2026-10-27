@@ -27,13 +27,4 @@ Enabling `HomeKeyService` (`settings put secure enabled_accessibility_services c
 - `app_keys` maps `scan:207` and `KEYCODE_BUTTON_7` to `com.truedmp.idtv` (TrueID TV).
 
 ## Private DNS (AdGuard DoT)
-
-Android TV hides the Private DNS menu from Settings, but the Android 14 system supports DoT:
-```bash
-settings put global private_dns_specifier dns.adguard-dns.com
-settings put global private_dns_mode hostname
-```
-Blocks trackers and general app ads via Anycast DoT (port 853). To revert to default:
-```bash
-settings put global private_dns_mode opportunistic
-```
+Private DNS (such as AdGuard DoT) works on this set.
