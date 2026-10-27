@@ -20,7 +20,7 @@
 # packages. While ADB stayed connected the TV also kept cycling between standby and semi-standby
 # (wake reason WIFI/cast), which made some samples much longer; that was already there before any change.
 # The Home Assistant Android TV Remote integration and the launcher worked after the reboot.
-# NOT yet lived with for days; this PR stays a draft until it has been.
+# In daily use since then.
 #
 # Memory: MemAvailable 755 MB before, 916 MB right after the first batch (TV in standby, same uptime).
 # The six user apps below (not listed, see the end) were uninstalled in the same session.
@@ -28,7 +28,7 @@
 # Launcher and Cast: launcherx and setupwraith are KEPT on purpose. The Cast receiver reads its device
 # credentials from setupwraith's CastInfoProvider (confirmed with `dumpsys package providers` on this
 # unit), and setupwraith's RecoveryActivity claims Home at priority 1, above the usual third-party launcher.
-# The owner's launcher takes Home through an accessibility service, so nothing about Home changed.
+# The third-party launcher takes Home through an accessibility service, so nothing about Home changed.
 
 # TP Vision and Philips telemetry
 tv.samba.ssm                              # Samba TV ACR (what is on screen, for ad targeting); sent only about 33 kB in 44 h on this unit, but it has no use here
@@ -42,11 +42,10 @@ com.google.android.feedback               # Market Feedback Agent
 com.android.tv.feedbackconsent            # feedback consent collector
 
 # Promos and sync nobody uses
-com.google.android.apps.tv.dreamx         # Google ambient screensaver and Google Home panel; the owner's screensaver is Immich
-com.google.android.syncadapters.calendar  # synced a Google calendar to the TV every day; no calendar app is installed
+com.google.android.apps.tv.dreamx         # Google ambient screensaver and Google Home panelcom.google.android.syncadapters.calendar  # synced a Google calendar to the TV every day; no calendar app is installed
 com.tpv.nftgallery                        # "NFT Collection" art gallery app
 
-# Preinstalled apps the household does not use. All sit in /data/app.
+# Preinstalled apps that were never used on this unit. All sit in /data/app.
 com.amazon.amazonvideo.livingroom         # Prime Video
 com.google.android.youtube.tvmusic        # YouTube Music
 com.google.android.play.games             # Play Games
