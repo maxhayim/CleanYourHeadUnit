@@ -25,6 +25,9 @@ function Tv([string]$cmd) { & $py -I tv.py $cmd; if ($LASTEXITCODE) { throw "tv.
 
 if (-not ((Tv "pm path $pkg; true") -match 'package:')) { throw 'Game Day is not on the TV: build and install it first (README.md)' }
 Write-Host 'Game Day is installed.'
+# TCL firmware (TclAppBoot) refuses to start an app for another app's request without its AUTO_START app-op, so
+# neither this script nor Home could reach Game Day. Allow it where the op exists; elsewhere this does nothing.
+Tv "appops set $pkg AUTO_START allow 2>/dev/null; true" | Out-Null
 & $py -I b64push.py $Calendars $tmp | Out-Null
 if ($LASTEXITCODE) { throw 'sending the calendars failed' }
 Tv "content write --uri $uri/calendars.txt < $tmp; rm -f $tmp" | Out-Null

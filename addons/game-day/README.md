@@ -85,6 +85,11 @@ TV_HOST=<tv ip> ../../tools/venv/bin/python -I ../../tools/tv.py 'pm install -r 
 
 Press Home: the launcher asks once whether to show the card.
 
+**TCL sets:** the firmware's app boot manager (`TclAppBoot`) refuses to start an app for another app unless it
+has TCL's `AUTO_START` app-op, so Home sees no games and the script gets "Could not find provider". The setup
+scripts allow it for Game Day; to do it by hand: `tools/tv.py 'appops set io.github.justinnewman.gameday AUTO_START allow'`.
+Seen on a TCL 55Q77K (Google TV 14); `appops reset io.github.justinnewman.gameday` undoes it.
+
 ## Permissions
 
 | Permission | Why |

@@ -28,6 +28,9 @@ tv() { "$PY" -I tv.py "$@"; }
 
 tv "pm path $PKG; true" | grep -q package: || { echo "Game Day is not on the TV: build and install it first (README.md)" >&2; exit 1; }
 echo "Game Day is installed."
+# TCL firmware (TclAppBoot) refuses to start an app for another app's request without its AUTO_START app-op, so
+# neither this script nor Home could reach Game Day. Allow it where the op exists; elsewhere this does nothing.
+tv "appops set $PKG AUTO_START allow 2>/dev/null; true" >/dev/null
 # Git Bash: the venv's Windows Python needs a Windows path for the file.
 "$PY" -I b64push.py "$(cygpath -w "$FILE" 2>/dev/null || printf '%s' "$FILE")" "$TMP" | grep -q md5 \
   || { echo "sending the calendars failed" >&2; exit 1; }
