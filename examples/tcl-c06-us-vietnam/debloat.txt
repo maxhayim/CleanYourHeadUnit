@@ -1,0 +1,80 @@
+# TCL C06 "Smart TV" (C06_2K_GB), Android TV 11 (SDK 30), build AR2101 / AR14, MediaTek mt5867,
+# security patch Thu Nov 2022 (ro.build.date 2022-11-17), 1 GB RAM (MemTotal ~918 MB), 1280x720 @ 213 dpi,
+# Vietnam unit (persist locale vi), Google TV home. Fingerprint TCL/C06_2K_GB/C06:11/AR2101/AR14:user/release-keys.
+#
+# Derived from examples/tcl-40s5400a (same product C06_2K_GB and build AR2101) and adjusted to this
+# unit's owner choices and its installed packages.
+#
+# Apply:  TV_HOST=<tv ip> tools/disable.sh examples/tcl-c06-us-vietnam/debloat.txt
+# Undo:   TV_HOST=<tv ip> tools/restore.sh examples/tcl-c06-us-vietnam/debloat.txt
+# Everything is DISABLED, not uninstalled. Comment out any line you want to keep.
+#
+# Stock launcher: com.google.android.tvlauncher (HOME priority 2 on this firmware, so
+# cmd package set-home-activity alone does not take Home while it is enabled; build-and-install.sh
+# disables it after Home has moved). Live TV app: com.tcl.tv, which also plays HDMI and is the only
+# handler of the passthrough VIEW intent the Inputs menu sends. Inputs: com.tcl.tvinput.
+#
+# KEPT ON PURPOSE on this unit:
+# com.google.android.tungsten.setupwraith  # it owns every saved Wi-Fi network (dumpsys wifi, four
+#                                          # cname=setupwraith): disabling it deletes the network and
+#                                          # takes the TV off Wi-Fi and ADB.
+# com.tcl.usercenter      # the system switches it back on at every boot; left idle. Reported below.
+# com.tcl.ttvs            # firmware updater; owner keeps OTA.
+# com.google.android.apps.mediashell  # Chromecast; owner casts from a phone.
+# com.google.android.youtube.tv       # in use.
+# com.viettel.tv360.tv, vn.vtv.vtvgotv # in use.
+# com.google.android.tvlauncher is disabled by launcher/build-and-install.sh, not by this list.
+# Already disabled before this list: au.com.stan.and, tv.wuaki.apptv, com.tcl.smartalexa.
+#
+# Preload stubs: Netflix, Prime Video, Play Games, TCL HOME (com.tcl.dashboard) and Quick panel
+# (com.tcl.suspension) are placeholder tiles on this unit, not the apps. Netflix sits as a 6.6 MB stub in
+# /data/app while the real 83 MB APK stays in /product/app/Netflix, and `pm enable` on the stub brings
+# its tile back, so a debloated set keeps offering tiles for apps it disabled. TCL HOME and Quick panel
+# are enabled on a stock set and off in this list. The launcher shows the rest until Play installs
+# the real app or the owner hides them (launcher Settings > tile menu, with app_library).
+#
+# Owner choices behind the "off by choice" block: voice disabled, Chromecast kept, USB media suite
+# disabled, Google photo screensaver replaced by the AOSP colours one first:
+#   tools/tv.py 'settings put secure screensaver_components com.android.dreams.basic/.Colors'
+#
+# com.tcl.ttvs is not text-to-speech: its activities are versionUpdateApp SystemUpdateActivity and
+# NetworkUpdateActivity. Kept.
+# Known quirk: com.tcl.usercenter comes back at every boot (firmware re-enables it). Noted, not
+# re-disabled after each boot.
+
+# TCL account, promos and content
+com.tcl.usercenter                     # TCL account, re-enabled by the system at boot (idle)
+com.tcl.guard                          # TGuard cleaner/support
+com.tcl.partnercustomizer              # promo rows / partner customization
+com.tcl.waterfall.overseas             # TCL web-video portal
+com.tcl.esticker                       # store-demo sticker
+com.tcl.copydatatotv                   # "copy your data to the TV" phone migration
+com.tcl.t_solo                         # Bluetooth "listen alone" dock helper (BluetoothDiscoveryReceiver)
+com.tcl.dashboard                      # "TCL HOME" preload tile
+com.tcl.suspension                     # "Quick panel" preload tile
+android.autoinstalls.config.tcl.device # partner-app auto installer config
+
+# Google extras
+com.google.android.feedback
+com.google.android.videos              # Play Movies
+com.google.android.play.games           # preload stub tile on this unit
+com.google.android.youtube.tvmusic
+com.google.android.syncadapters.calendar
+com.google.android.partnersetup        # RLZ ping receiver (partner revenue logging)
+
+# Stock home recommendation rows
+com.google.android.tvrecommendations
+
+# Off by choice on this unit: comment out what you use
+com.google.android.katniss             # Google search/voice: owner does not use the mic
+com.google.android.tv.remote.service   # BT remote's mic bridge; needs katniss for voice
+com.google.android.marvin.talkback     # TalkBack
+com.tcl.ui_mediaCenter                 # USB media player, with the next three
+com.tcl.audioplayer
+com.tcl.videoplayer
+com.tcl.imageplayer
+
+# Already disabled when the TV arrived; left as-is.
+# au.com.stan.and
+# tv.wuaki.apptv
+# com.tcl.smartalexa

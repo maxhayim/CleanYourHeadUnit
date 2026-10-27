@@ -1,0 +1,12 @@
+{
+  "dock_apps": [
+    "com.google.android.youtube.tv",
+    "com.viettel.tv360.tv",
+    "vn.vtv.vtvgotv",
+    "org.smarttube.stable"
+  ],
+  "live_tv_package": "com.tcl.tv",
+  "app_labels": [
+    "com.tcl.tv=Live TV"
+  ]
+}

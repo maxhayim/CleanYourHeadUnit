@@ -1,0 +1,6 @@
+{
+  "tv": "TCL C06 \"Smart TV\" (C06_2K_GB, MediaTek MT9221 / mt5867, 1 GB), Vietnam",
+  "os": "Android TV 11",
+  "brand": "TCL",
+  "notes": "Google TV home on build AR2101 (same platform as the 40S5400A list); TCL account/TGuard/promo/portal, sticker, phone migration, TCL HOME and Quick panel tiles, Play Movies, YouTube Music, RLZ ping and recommendation rows off; voice, remote-mic bridge and TalkBack off by choice; Chromecast, firmware updater and setupwraith kept (setupwraith owns the saved Wi-Fi network); Google photo screensaver swapped to the AOSP one first; usercenter returns at every boot; Netflix/Prime Video/Play Games are preload stubs whose tiles survive pm enable; launcher/ is default Home, stock tvlauncher disabled"
+}
