@@ -137,6 +137,13 @@ public class RepositoryTest {
         assertEquals(null, repo.status(royals.id));
     }
 
+    @Test public void aSaveNeverTripsOverAnotherSavesTemporaryFile() throws Exception {
+        // Another save of the same file is half done: its temporary file is in the way.
+        assertTrue(new File(dir, "calendars.json.tmp").mkdir());
+        repo.save(Arrays.asList(cal("Minnesota Wild", "Hockey", 16)));
+        assertEquals(1, repo.calendars().size());
+    }
+
     @Test public void dueCalendars() {
         Calendar wild = cal("Minnesota Wild", "Hockey", 16);
         Calendar royals = cal("Utah Royals", "Soccer", 14);

@@ -270,10 +270,22 @@ final class Repository {
         }
     }
 
-    /** Write to a temporary file, then move it into place, so a reader never sees half a file. */
+    private static final Object WRITING = new Object();
+
+    /**
+     * Write to a temporary file of its own, then move it into place, so a reader never sees half a file. One write at
+     * a time: the TV's settings and the setup script can both save the list.
+     */
     static void write(File f, String text) {
-        File tmp = new File(f.getParentFile(), f.getName() + ".tmp");
+        synchronized (WRITING) {
+            writeNow(f, text);
+        }
+    }
+
+    private static void writeNow(File f, String text) {
+        File tmp = null;
         try {
+            tmp = Files.createTempFile(f.getParentFile().toPath(), f.getName() + ".", ".part").toFile();
             Files.write(tmp.toPath(), text.getBytes(StandardCharsets.UTF_8));
             try {
                 Files.move(tmp.toPath(), f.toPath(), StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.ATOMIC_MOVE);
@@ -282,6 +294,9 @@ final class Repository {
             }
         } catch (IOException e) {
             throw new IllegalStateException("could not save " + f.getName(), e);
+        } finally {
+            //noinspection ResultOfMethodCallIgnored
+            if (tmp != null && tmp.exists()) tmp.delete();
         }
     }
 }
