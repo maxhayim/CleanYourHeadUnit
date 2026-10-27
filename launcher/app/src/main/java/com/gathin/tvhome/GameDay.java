@@ -21,7 +21,7 @@ import java.util.concurrent.RejectedExecutionException;
 
 /**
  * game_day (config.xml or a theme): each team's next game in the race panel's place, from an add-on such as
- * addons/game-day, rotating with the theme's F1 weekend. The launcher only reads what the add-on publishes and stays
+ * Game Day, rotating with the theme's F1 weekend. The launcher only reads what the add-on publishes and stays
  * offline. Contract: docs/modules.md.
  */
 final class GameDay {
