@@ -114,9 +114,9 @@
 
 # ---- com.cibn.tv re-enables itself ----
 # pm disable-user --user 0 com.cibn.tv held for about an hour, then the firmware brought the package
-# back enabled (no reboot in between; the other five licensed-content packages disabled the same day
-# stayed disabled). pm uninstall -k --user 0 com.cibn.tv holds; pm install-existing com.cibn.tv
-# restores it. A one-off for this package so far, not a general watchdog.
+# back enabled, with no reboot in between (the other five licensed-content packages disabled the same
+# day stayed disabled). Re-running pm disable-user takes it out again; seen once so far, so whether it
+# keeps reviving on this firmware stays an open question. Disable, never uninstall, as ever.
 
 # ---- 32-bit userspace ----
 # An arm64-v8a APK fails with INSTALL_FAILED_NO_MATCHING_ABIS (res=-113); armeabi-v7a installs fine.
