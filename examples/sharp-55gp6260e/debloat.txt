@@ -29,9 +29,19 @@
 # stock launcher and the YouTube app. With them gone the buttons did nothing. Mapped with the launcher's
 # HOME_KEY_SERVICE=1: settings_key_keycodes 80 and app_keys KEYCODE_TV_INPUT_COMPOSITE_1:org.smarttube.stable.
 # Both worked on the real remote; the price was that a held volume key moves one step per press.
-# Input and Home needed no helper.
+# Input and Home needed no helper. Two more buttons break the same way and were mapped the same way:
+#   Prime Video  KEYCODE_TV_INPUT_COMPONENT_2 (183): the firmware starts com.amazon.amazonvideo.livingroom
+#                directly (AMAZON_BUTTON), so with Prime Video disabled it does nothing. Re-enable the app to get
+#                the stock behaviour back, or map it: app_keys KEYCODE_TV_INPUT_COMPONENT_2:<package>.
+#   FAV APP      KEYCODE_BUTTON_11: com.mediatek.wwtv.setupwizard's FavKeyReceiver opens com.mtc.emanual
+#                (hardcoded, no setting), so with the e-manual disabled it does nothing. Re-enable
+#                com.mtc.emanual to restore it, or map it: app_keys KEYCODE_BUTTON_11:<package>.
+#   Here they open Spotify and LocalSend through HOME_KEY_SERVICE=1; both checked on the real remote.
 #
 # Private DNS (dns.adguard-dns.com) validated on this set; not part of the list.
+#
+# Re-enabled along the way: only the stock launcher, once and automatically, when launcher/build-and-install.sh
+# rolled the first handover back because setupwraith took Home. Nothing else was re-enabled.
 #
 # Already disabled before this list, left as they were: com.android.tv.settings.mtc.overlay,
 # com.google.android.marvin.talkback, com.mtc.emanual.overlay.ok (also listed below, harmless).
