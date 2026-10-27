@@ -55,9 +55,10 @@ if (-not $pkgs -or $pkgs.Count -eq 0) {
     throw "refusing ${List}: no package names in it (every line is a comment or blank), so nothing was sent to the TV and no recovery record was written."
 }
 # Core Android packages, the same block as disable.sh: with one of these disabled Android itself can stop
-# booting (#884, an original Mi TV Stick). No switch overrides it. Keep both patterns in step with
-# disable.sh and recovery.py (tests/test_core_packages.py).
-$coreRe = '^(android|com\.android\.systemui|com\.android\.shell|com\.android\.phone|com\.android\.settings|com\.android\.tv\.settings|com\.(google\.)?android\.(permissioncontroller|packageinstaller|ext\.services|ext\.shared|modulemetadata)|com\.google\.android\.overlay\.modules.*|com\.android\.providers\..*)$'
+# booting (#884, an original Mi TV Stick). No switch overrides it. Ext services and ext shared also
+# ship under AOSP's bare names, android.ext.services and android.ext.shared (#1711). Keep both
+# patterns in step with disable.sh and recovery.py (tests/test_core_packages.py).
+$coreRe = '^(android|android\.ext\.(services|shared)|com\.android\.systemui|com\.android\.shell|com\.android\.phone|com\.android\.settings|com\.android\.tv\.settings|com\.(google\.)?android\.(permissioncontroller|packageinstaller|ext\.services|ext\.shared|modulemetadata)|com\.google\.android\.overlay\.modules.*|com\.android\.providers\..*)$'
 $coreOk = '^com\.android\.providers\.(calendar|contacts|userdictionary|blockednumber)$'
 $core = @($pkgs | Where-Object { $_ -cmatch $coreRe -and $_ -cnotmatch $coreOk })
 if ($core.Count -gt 0) {

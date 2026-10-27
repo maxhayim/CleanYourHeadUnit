@@ -80,7 +80,8 @@ Debloat
   still unclear.
 - Never disable Android's own core packages, or the TV may not boot again: the permission controller,
   the package installer, ext services and ext shared, module metadata (each as `com.android.*` or
-  `com.google.android.*`), `com.google.android.overlay.modules*`, `com.android.providers.*` (calendar,
+  `com.google.android.*`, and ext services and ext shared also as the bare `android.ext.services` and
+  `android.ext.shared`), `com.google.android.overlay.modules*`, `com.android.providers.*` (calendar,
   contacts, user dictionary and blocked numbers aside), `com.android.systemui`, `com.android.shell`,
   `com.android.phone`, `com.android.settings`, `com.android.tv.settings` and `android`. An original Mi TV
   Stick never booted again after a list took the first six

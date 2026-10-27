@@ -23,7 +23,8 @@ this file repeats their rules in the form an agent needs, and links to them for 
   the input/source menu, remote and Bluetooth pairing, the on-screen keyboard, Play Store and Play
   Services. When a package name says nothing, read `dumpsys package <name>`, then ask.
 - **Never disable Android's core packages:** the permission controller, package installer, ext
-  services/shared and module metadata (`com.android.*` and `com.google.android.*`),
+  services/shared and module metadata (`com.android.*` and `com.google.android.*`; ext services/shared
+  also as the bare `android.ext.services` and `android.ext.shared`),
   `com.google.android.overlay.modules*`, `com.android.providers.*` (calendar, contacts, user dictionary
   and blocked numbers aside), `com.android.systemui`, `com.android.shell`, `com.android.phone`,
   `com.android.settings`, `com.android.tv.settings`, `android`. Without them Android may not boot (#884);

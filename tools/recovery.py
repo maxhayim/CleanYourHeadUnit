@@ -48,9 +48,11 @@ VERSION = 1
 # Core Android packages no list may disable: with one of these off, Android itself can stop booting
 # (#884: an original Mi TV Stick that lost its permission controller, package installer, ext services,
 # module metadata and mainline overlays never came back). The content providers in CORE_OK are the
-# exception, since tested lists turn them off and no TV feature uses them. disable.sh and disable.ps1
+# exception, since tested lists turn them off and no TV feature uses them. Ext services and ext shared
+# also ship under AOSP's bare names, android.ext.services and android.ext.shared (#1711: an OBE R3
+# Ultra, a CVTE SMART_TV and a MIBOX4 list them that way). disable.sh and disable.ps1
 # carry the same two patterns (tests/test_core_packages.py keeps the three in step).
-CORE_RE = re.compile(r"^(android|com\.android\.systemui|com\.android\.shell|com\.android\.phone|com\.android\.settings|com\.android\.tv\.settings|com\.(google\.)?android\.(permissioncontroller|packageinstaller|ext\.services|ext\.shared|modulemetadata)|com\.google\.android\.overlay\.modules.*|com\.android\.providers\..*)$")
+CORE_RE = re.compile(r"^(android|android\.ext\.(services|shared)|com\.android\.systemui|com\.android\.shell|com\.android\.phone|com\.android\.settings|com\.android\.tv\.settings|com\.(google\.)?android\.(permissioncontroller|packageinstaller|ext\.services|ext\.shared|modulemetadata)|com\.google\.android\.overlay\.modules.*|com\.android\.providers\..*)$")
 CORE_OK = re.compile(r"^com\.android\.providers\.(calendar|contacts|userdictionary|blockednumber)$")
 
 
