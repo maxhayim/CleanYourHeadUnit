@@ -522,6 +522,21 @@ def main():
     parser.add_argument("--idle", type=int, default=60, help="idle seconds")
     parser.add_argument("--out-dir", default="bench-results", help="where to write the results")
     args = parser.parse_args()
+    # Each of these five is a count of what the run measures, and zero of one measures nothing there
+    # while the run still exits 0: --series 0 and --keys 0 wrote a result.json whose key numbers are
+    # all null, and --cold 0 / --returns 0 the same for their fields, which in that file cannot be
+    # told apart from a TV that does not report them. --idle is worse than silent: idle_cpu() divides
+    # by the seconds, so 0 was a ZeroDivisionError and a negative one a ValueError out of time.sleep,
+    # both after the keys, the cold starts, the returns and the 20 s settle - a full run's numbers
+    # gone, with the traceback and exit 1 that a run which wrote nothing returns. Judged here, before
+    # the host is looked at and before the venv re-exec, the way --out-dir and tools/trace.py's --runs
+    # are; no run loses a capability, since a TV that cannot do a cold start already reports null.
+    for option, unit in (("keys", "keys per series"), ("series", "series"),
+                         ("cold", "cold starts"), ("returns", "returns to Home")):
+        if getattr(args, option) < 1:
+            parser.error(f"--{option} is the number of {unit}: pass at least 1, not {getattr(args, option)}")
+    if args.idle < 1:
+        parser.error(f"--idle is the number of idle seconds: pass at least 1, not {args.idle}")
     if not args.host:
         raise SystemExit("pass --host or set TV_HOST")
     venv = venv_python()
