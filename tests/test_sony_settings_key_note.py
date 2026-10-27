@@ -5,14 +5,16 @@ The report (Google TV 14, `BRAVIA_VU3`, launcher 3.0 as Home) is a key-routing o
 the press arrives and nothing opens - `WindowManager` logs
 `mShortPressOnSettingsBehavior=SHORT_PRESS_SETTINGS_NOTHING` - while Sony's own ribbon still opens when
 its activity is started by hand. An owner who reads the keycode bullet above this one goes looking for
-a scancode to add, so the page says why that cannot work here: everything the launcher does with a
-settings key ends in `Settings.ACTION_SETTINGS`, and `settings_fallback_components` is only consulted
-when that action resolves to nothing.
+a scancode to add, so the page carries both halves of the answer: everything the launcher's own settings
+keys do ends in `Settings.ACTION_SETTINGS`, with `settings_fallback_components` consulted only when that
+action resolves to nothing - while an `app_keys` `scan:` entry is answered before that branch and opens
+the activity it names.
 
-Documentation only. These tests pin the words a reader acts on, and the three things in the launcher
+Documentation only. These tests pin the words a reader acts on, and the four things in the launcher
 that make the answer true, so the page cannot claim it after the code changes:
-`HomeKeyService` taking `KEYCODE_SETTINGS`, the two targets its settings branch opens, and
-`SystemSettings` preferring the standard action over the vendor list.
+`HomeKeyService` taking `KEYCODE_SETTINGS`, the two targets its settings branch opens,
+`SystemSettings` preferring the standard action over the vendor list, and the order in which
+`onKeyEvent()` asks the app-scancode map, the settings branch and the app-keycode map.
 """
 import re
 from pathlib import Path
@@ -24,6 +26,8 @@ HOME_KEYS = ROOT / "launcher" / "app" / "src" / "main" / "java" / "com" / "gathi
 SYSTEM_SETTINGS = ROOT / "launcher" / "app" / "src" / "main" / "java" / "com" / "gathin" / "tvhome" / "SystemSettings.java"
 KEYS_PAGE = ROOT / "themes" / "README.md"
 CONFIG_XML = ROOT / "launcher" / "app" / "src" / "main" / "res" / "values" / "config.xml"
+CONFIG_JAVA = ROOT / "launcher" / "app" / "src" / "main" / "java" / "com" / "gathin" / "tvhome" / "Config.java"
+REMOTE_KEYS = ROOT / "launcher" / "app" / "src" / "main" / "java" / "com" / "gathin" / "tvhome" / "RemoteKeys.java"
 
 SECTION = "## Accessibility helper enabled but the remote button does nothing"
 START = "- **The Settings button opens Android TV Settings, not the TV's own menu**"
@@ -79,12 +83,49 @@ class SonySettingsKeyNoteTest(unittest.TestCase):
         for key in ("settings_key_keycodes", "settings_key_scancodes"):
             self.assertIn(key, self.note)
 
-    def test_bullet_says_a_setting_cannot_put_the_ribbon_back(self):
-        # The answer to "which scancode do I add": none, and the page has to say so or the next owner
-        # spends the session on getevent.
-        self.assertIn("cannot be put back on the", self.note)
+    def test_bullet_names_the_app_keys_scancode_way_back(self):
+        # The answer to "which scancode do I add": a scan: entry in app_keys, pointed at the ribbon's
+        # activity. The page has to name the key, the target and where the number comes from, or the
+        # reader is left with the am start and no way to put the ribbon back on the button.
+        self.assertIn("app_keys", self.note)
+        self.assertIn('"scan:<scancode>:com.sony.dtv.smartui/.settings.SmartSettingsActivity"', self.note)
+        self.assertIn("getevent -lt", self.note)
+        self.assertNotIn("cannot be put back on the", self.note)
+
+    def test_bullet_keeps_the_settings_keys_ending_in_the_standard_action(self):
+        # The other half: settings_key_keycodes and settings_key_scancodes, and the vendor fallback list,
+        # cannot reach the ribbon while Settings.ACTION_SETTINGS resolves on the set.
         self.assertIn("Settings.ACTION_SETTINGS", self.note)
         self.assertIn("settings_fallback_components", self.note)
+        for key in ("settings_key_keycodes", "settings_key_scancodes"):
+            self.assertIn(key, self.note)
+
+    def test_a_scancode_app_key_is_answered_before_the_settings_branch(self):
+        # Why the quoted entry works: onKeyEvent() asks RemoteKeys for the app-scancode map first, then
+        # takes KEYCODE_SETTINGS itself, and only after that asks the app-keycode map - so a scan: entry
+        # is the one setting that reaches the activity it names, and "176=..." is not.
+        on_key = self.home_keys.index("protected boolean onKeyEvent(KeyEvent event)")
+        scancodes = self.home_keys.index("inFront(appScancodes, frontAppScancodes", on_key)
+        settings = self.home_keys.index("if (isSettingsKey(event)) {", on_key)
+        keycodes = self.home_keys.index("inFront(appKeys, frontAppKeys", on_key)
+        self.assertLess(scancodes, settings)
+        self.assertLess(settings, keycodes)
+
+    def test_the_quoted_entry_is_one_remote_keys_reads_and_opens(self):
+        # Both halves of "scan:<scancode>:package/.Activity", in RemoteKeys: parseAppScancodes() reads
+        # the three-part entry, and launch() opens "package/.Activity" as that component rather than the
+        # package's launcher entry.
+        remote = REMOTE_KEYS.read_text(encoding="utf-8")
+        self.assertIn('if (parts.length != 3 || !parts[0].trim().equals("scan") '
+                      '|| parts[2].trim().isEmpty()) continue;', remote)
+        self.assertIn("ComponentName activity = isActivity(pkg) "
+                      "? ComponentName.unflattenFromString(pkg) : null;", remote)
+        self.assertIn("ctx.startActivity(new Intent().setComponent(activity)", remote)
+
+    def test_a_theme_can_carry_the_app_keys_entry(self):
+        # "...or in a theme's app_keys": Config.read() asks the overlay for this list by name.
+        self.assertIn('appKeys = stringList(json, "app_keys", appKeys);',
+                      CONFIG_JAVA.read_text(encoding="utf-8"))
 
     def test_bullet_names_the_model_and_links_the_report(self):
         self.assertIn("BRAVIA_VU3", self.note)
