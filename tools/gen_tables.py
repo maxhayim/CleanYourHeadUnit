@@ -315,6 +315,8 @@ def main(argv=None):
                                    "docs/stats.png and docs/card.jpg when a count changed")
     ap.add_argument("--adopt", metavar="PATCH", help="write missing tv.json files from the rows in PATCH first")
     a = ap.parse_args(argv)
+    if a.check and a.adopt is not None:
+        ap.error("--check and --adopt cannot be used together")
     if a.font and not Path(a.font).is_file():
         # The scripts this hands the font to exit with their own line, but subprocess.run(check=True) would
         # then turn that into a CalledProcessError traceback, which names neither the file nor where it is.
