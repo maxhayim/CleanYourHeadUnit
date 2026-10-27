@@ -1,10 +1,10 @@
 # CleanYourTV in the press
 
-Every article about CleanYourTV (called tv-vibehack until 19 October 2026) that we could open and check: **296 articles**, 250 of them from outlets in 42 countries, 9 from Spanish-language sites in Latin America and 37 from newsletters, blogs and AI news sites. Headlines are in the language they were published in. Syndicated copies and auto-generated listings are left out. [147 videos](#videos) follow the articles.
+Every article about CleanYourTV (called tv-vibehack until 19 October 2026) that we could open and check: **306 articles**, 259 of them from outlets in 44 countries, 10 from Spanish-language sites in Latin America and 37 from newsletters, blogs and AI news sites. Headlines are in the language they were published in. Syndicated copies and auto-generated listings are left out. [147 videos](#videos) follow the articles.
 
 Wrote about it and not here? Open an issue or a pull request with the link.
 
-[United States](#united-states)&nbsp;24 · [United Kingdom](#united-kingdom)&nbsp;5 · [India](#india)&nbsp;5 · [Denmark](#denmark)&nbsp;1 · [Japan](#japan)&nbsp;4 · [Bangladesh](#bangladesh)&nbsp;1 · [United Arab Emirates](#united-arab-emirates)&nbsp;1 · [France](#france)&nbsp;20 · [Germany](#germany)&nbsp;8 · [Spain](#spain)&nbsp;9 · [Italy](#italy)&nbsp;17 · [Norway](#norway)&nbsp;1 · [Portugal](#portugal)&nbsp;5 · [Czechia](#czechia)&nbsp;3 · [Ukraine](#ukraine)&nbsp;4 · [Greece](#greece)&nbsp;6 · [Egypt](#egypt)&nbsp;5 · [Brazil](#brazil)&nbsp;16 · [Latin America (Spanish-language)](#latin-america-spanish-language)&nbsp;9 · [China](#china)&nbsp;31 · [Taiwan](#taiwan)&nbsp;7 · [Indonesia](#indonesia)&nbsp;15 · [Thailand](#thailand)&nbsp;3 · [Vietnam](#vietnam)&nbsp;8 · [Netherlands](#netherlands)&nbsp;3 · [Poland](#poland)&nbsp;7 · [Russia](#russia)&nbsp;12 · [Belarus](#belarus)&nbsp;2 · [Turkey](#turkey)&nbsp;4 · [Jordan](#jordan)&nbsp;1 · [South Korea](#south-korea)&nbsp;4 · [Australia](#australia)&nbsp;2 · [Pakistan](#pakistan)&nbsp;1 · [Hungary](#hungary)&nbsp;2 · [Saudi Arabia](#saudi-arabia)&nbsp;1 · [Romania](#romania)&nbsp;2 · [Sweden](#sweden)&nbsp;2 · [Hong Kong](#hong-kong)&nbsp;2 · [Bulgaria](#bulgaria)&nbsp;2 · [Slovakia](#slovakia)&nbsp;1 · [Belgium](#belgium)&nbsp;1 · [Kenya](#kenya)&nbsp;1 · [Israel](#israel)&nbsp;1 · [Online (newsletters, blogs, AI news)](#online-newsletters-blogs-ai-news)&nbsp;37
+[United States](#united-states)&nbsp;24 · [United Kingdom](#united-kingdom)&nbsp;5 · [India](#india)&nbsp;5 · [Denmark](#denmark)&nbsp;1 · [Japan](#japan)&nbsp;4 · [Bangladesh](#bangladesh)&nbsp;2 · [United Arab Emirates](#united-arab-emirates)&nbsp;1 · [France](#france)&nbsp;20 · [Germany](#germany)&nbsp;8 · [Spain](#spain)&nbsp;9 · [Italy](#italy)&nbsp;17 · [Norway](#norway)&nbsp;1 · [Portugal](#portugal)&nbsp;5 · [Czechia](#czechia)&nbsp;4 · [Ukraine](#ukraine)&nbsp;4 · [Greece](#greece)&nbsp;6 · [Egypt](#egypt)&nbsp;5 · [Brazil](#brazil)&nbsp;17 · [Latin America (Spanish-language)](#latin-america-spanish-language)&nbsp;10 · [China](#china)&nbsp;31 · [Taiwan](#taiwan)&nbsp;8 · [Indonesia](#indonesia)&nbsp;15 · [Thailand](#thailand)&nbsp;3 · [Vietnam](#vietnam)&nbsp;9 · [Netherlands](#netherlands)&nbsp;3 · [Poland](#poland)&nbsp;7 · [Russia](#russia)&nbsp;13 · [Belarus](#belarus)&nbsp;2 · [Turkey](#turkey)&nbsp;4 · [Jordan](#jordan)&nbsp;1 · [South Korea](#south-korea)&nbsp;4 · [Australia](#australia)&nbsp;2 · [Pakistan](#pakistan)&nbsp;1 · [Hungary](#hungary)&nbsp;2 · [Saudi Arabia](#saudi-arabia)&nbsp;1 · [Romania](#romania)&nbsp;2 · [Sweden](#sweden)&nbsp;2 · [Hong Kong](#hong-kong)&nbsp;2 · [Bulgaria](#bulgaria)&nbsp;2 · [Slovakia](#slovakia)&nbsp;1 · [Belgium](#belgium)&nbsp;1 · [Kenya](#kenya)&nbsp;1 · [Israel](#israel)&nbsp;2 · [Finland](#finland)&nbsp;1 · [Serbia](#serbia)&nbsp;1 · [Online (newsletters, blogs, AI news)](#online-newsletters-blogs-ai-news)&nbsp;37
 
 ## United States
 
@@ -75,6 +75,7 @@ Wrote about it and not here? Open an issue or a pull request with the link.
 | Outlet | Article | Date |
 | --- | --- | --- |
 | The Daily Star | [Smart TV owners are using AI to get rid of ads: report](https://www.thedailystar.net/news/technology/news/smart-tv-owners-are-using-ai-get-rid-ads-report-4303291) | 20&nbsp;Oct |
+| 24 Live Newspaper | [স্মার্ট টিভির যন্ত্রণাদায়ক বিজ্ঞাপন বন্ধ করবে কৃত্রিম বুদ্ধিমত্তা!](https://www.bangla.24livenewspaper.com/post-161290) | 26&nbsp;Oct |
 
 ## United Arab Emirates
 
@@ -179,6 +180,7 @@ Wrote about it and not here? Open an issue or a pull request with the link.
 | Insmart | [Android TV bez reklam s AI a Claude Code](https://insmart.cz/android-tv-bez-reklam-ai-claude-code/) | 19&nbsp;Oct |
 | CzechCrunch | [Chytré televize jsou plné reklam a balastu. Lidé ale našli šikovný trik a pomocí AI je upravují](https://cc.cz/chytre-televize-jsou-plne-reklam-a-balastu-lide-ale-nasli-sikovny-trik-a-pomoci-ai-je-upravuji/) | 25&nbsp;Oct |
 | AVmania (Živě.cz) | [Udělejme chytré televize zase hloupější. AI agenti z nich umí vyhodit všechno, co otravuje](https://avmania.zive.cz/archiv-clanku/udelejme-chytre-televize-zase-hloupejsi) | 20&nbsp;Oct |
+| SMARTmania.cz | [Reklamy z televize pryč za čtvrt hodiny? Lidé si je čistí sami s pomocí Claude Code](https://smartmania.cz/reklamy-z-televize-pryc-za-ctvrt-hodiny-lide-si-je-cisti-sami-s-pomoci-claude-code/) | 26&nbsp;Oct |
 
 ## Ukraine
 
@@ -230,6 +232,7 @@ Wrote about it and not here? Open an issue or a pull request with the link.
 | CenárioMT | [Smart TV mais rápida: como usar IA e reduzir anúncios](https://cenariomt.com.br/tecnologia/smart-tv-mais-rapida-como-usar-ia-e-reduzir-anuncios/) | 24&nbsp;Oct |
 | Hardware.com.br | [Usuários usam IA para remover anúncios e rastreamento de smart TVs](https://www.hardware.com.br/?p=384756) | 24&nbsp;Oct |
 | O Cafezinho | [Donos de smart TV usam IA para tirar anúncios e rastreamento, diz TechCrunch](https://www.ocafezinho.com/2026-10-19/donos-de-smart-tv-usam-ia-para-tirar-anuncios-e-rastreamento-diz-techcrunch/) | 19&nbsp;Oct |
+| Ver-o-Fato | [Inteligência artificial permite modificar smart TVs e eliminar aplicativos indesejados](https://ver-o-fato.com.br/inteligencia-artificial-permite-modificar-smart-tvs-e-eliminar-aplicativos-indesejados/) | 23&nbsp;Oct |
 
 ## Latin America (Spanish-language)
 
@@ -244,6 +247,7 @@ Wrote about it and not here? Open an issue or a pull request with the link.
 | Cadena 3 | [El auge de los hacks de IA para convertir televisores inteligentes en modelos simples](https://www.cadena3.com/noticia/tecnologia/el-auge-de-los-hacks-de-ia-para-convertir-televisores-inteligentes-en-modelos-simples_604870) | 19&nbsp;Oct |
 | OneDigital | [CleanYourTV limpia tu Android TV de publicidad con IA](https://onedigital.mx/2026/10/21/cleanyourtv-limpiar-android-tv/) | 21&nbsp;Oct |
 | ENTER.CO | [¿Cómo volver 'tonto' tu smart TV con IA para quitarle los anuncios?](https://www.enter.co/chips-bits/como-volver-tonto-smart-tv-ia-anuncios/) | 21&nbsp;Oct |
+| Digital Trends Español | [Cómo usar IA para convertir tu Smart TV en una TV “tonta” y eliminar anuncios, rastreo y bloatware](https://es.digitaltrends.com/inteligente/como-usar-ia-convertir-smart-tv-tv-tonta-guia/) | 20&nbsp;Oct |
 
 ## China
 
@@ -292,6 +296,7 @@ Wrote about it and not here? Open an issue or a pull request with the link.
 | electrify.tw | [告別 Google TV 首頁廣告！CleanYourTV 免 Root 換上 Apple TV 極簡桌面](https://electrify.tw/cleanyourtv-google-tv-apple-tv-launcher-ai-agent/) | 25&nbsp;Oct |
 | 商傳媒 SUN MEDIA | [厭煩廣告追蹤 用戶利用AI工具讓智慧電視「變笨」](https://sunmedia.tw/news/technology/1792450714-%E5%8E%AD%E7%85%A9%E5%BB%A3%E5%91%8A%E8%BF%BD%E8%B9%A4%E3%80%80%E7%94%A8%E6%88%B6%E5%88%A9%E7%94%A8AI%E5%B7%A5%E5%85%B7%E8%AE%93%E6%99%BA%E6%85%A7%E9%9B%BB%E8%A6%96%E3%80%8C%E8%AE%8A%E7%AC%A8%E3%80%8D) | 20&nbsp;Oct |
 | 方格子 Vocus (HKT實驗室) | [告別煩人廣告！用 CleanYourTV 把你的 Android TV 變成 Apple TV 風格](https://vocus.cc/article/6ad814e1fd89780001ca9516) | – |
+| BigGo 財經 | [電視使用者靠 Claude Code 移除廣告與追蹤軟體](https://finance.biggo.com.tw/news/241f874a-3b79-487d-a7d2-3774ed007a45) | 21&nbsp;Oct |
 
 ## Indonesia
 
@@ -333,6 +338,7 @@ Wrote about it and not here? Open an issue or a pull request with the link.
 | AnonyViet (English edition) | [Instructions for using CleanYourTV: Remove ads on Android TV, Google TV](https://en.anonyviet.com/instructions-for-using-cleanyourtv-remove-ads-on-android-tv-google-tv/) | 23&nbsp;Oct |
 | 24h.com.vn | [Nở rộ trào lưu dùng AI dọn dẹp quảng cáo và phần mềm rác trên Smart TV](https://www.24h.com.vn/cong-nghe-thong-tin/no-ro-trao-luu-dung-ai-don-dep-quang-cao-va-phan-mem-rac-tren-smart-tv-c55a1805057.html) | 23&nbsp;Oct |
 | GenK | [Nhờ Claude vibe code biến TV thành "Jarvis", nói một câu là Netflix tự chạy](https://genk.vn/nho-claude-vibe-code-bien-tv-thanh-jarvis-noi-mot-cau-la-netflix-tu-chay-165262610142221263.chn) | 26&nbsp;Oct |
+| Báo Hà Tĩnh | [Dùng Claude để "giải cứu" ti vi cũ](https://baohatinh.vn/dung-claude-de-giai-cuu-ti-vi-cu-post319150.html) | 22&nbsp;Oct |
 
 ## Netherlands
 
@@ -370,6 +376,7 @@ Wrote about it and not here? Open an issue or a pull request with the link.
 | MyKreaTool | [AI Removes Smart TV Ads in 5 Minutes: CleanYourTV](https://mykreatool.com/en/news/kak-ubrat-reklamu-smart-tv-ai-cleanyourtv) | 22&nbsp;Oct |
 | Carexpo.ru | [Умные телевизоры становятся «глупыми»: ИИ помогает избавиться от рекламы и слежки](https://carexpo.ru/ii-na-strazhe-vashikh-nervov-kak-sdelat-televizor-glupym-i-izbavitsya-ot-reklamy) | 25&nbsp;Oct |
 | Habr | [OpenAI и Anthropic ограничили использование своих ИИ-моделей для создания бесплатных клонов платного ПО](https://habr.com/ru/news/1099152/) | 26&nbsp;Oct |
+| Клуб DNS | [Владельцы умных телевизоров стали использовать ИИ для отключения рекламы и слежки](https://club.dns-shop.ru/digest/186725-vladeltsyi-umnyih-televizorov-stali-ispolzovat-ii-dlya-otklucheniya/) | 20&nbsp;Oct |
 
 ## Belarus
 
@@ -479,6 +486,19 @@ Wrote about it and not here? Open an issue or a pull request with the link.
 | Outlet | Article | Date |
 | --- | --- | --- |
 | Geektime | [תופעה: משתמשים בקלוד כדי לנקות את הטלוויזיה מכל מה שגרוע בה](https://www.geektime.co.il/developers-using-ai-claude-to-hack-smart-tv/) | 24&nbsp;Oct |
+| C14 | [ויראלי: הטריק שינקה לכם את הטלוויזיה מפרסומות](https://www.c14.co.il/article/1752065) | 25&nbsp;Oct |
+
+## Finland
+
+| Outlet | Article | Date |
+| --- | --- | --- |
+| Tivi | [Uusi ilmiö leviää: Näin älytelevisiosta poistetaan mainokset ja seuranta](https://www.tivi.fi/uutiset/a/a53cf770-c442-48dc-ae8b-79f148d40a88) | 20&nbsp;Oct |
+
+## Serbia
+
+| Outlet | Article | Date |
+| --- | --- | --- |
+| Kurir | [Ljudi koriste AI da uklone reklame sa pametnih televizora: Evo kako ih vraćaju na staro](https://www.kurir.rs/techvision/saveti/10139632/reklame-na-pametnim-televizorima-kako-ih-ukloniti-uz-ai) | 20&nbsp;Oct |
 
 ## Online (newsletters, blogs, AI news)
 
