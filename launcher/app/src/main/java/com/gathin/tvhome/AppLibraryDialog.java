@@ -143,7 +143,14 @@ final class AppLibraryDialog {
         if (popup.isShowing()) popup.update(width, height);
     }
 
-    AppLibraryDialog(Activity activity, boolean animations, boolean reducedMotion, boolean selectionMode, boolean okOpens, Predicate<String> onHome, Runnable changed, Runnable dismissed) {
+    /** Packages kept out of the catalogue entirely, never just hidden from Home: on some boards a hidden
+     *  package must never be reachable from here either, e.g. a factory/AT/fac-menu package that can flip a
+     *  factory-mode flag with no way back if opened even once (see examples/candy-android-tv-dvb2k/README.md).
+     *  Elsewhere this is empty and hidden_apps still only hides an app from Home while leaving it in the
+     *  library, unchanged for every package not listed here. */
+    private final Set<String> excludedFromLibrary;
+
+    AppLibraryDialog(Activity activity, boolean animations, boolean reducedMotion, boolean selectionMode, boolean okOpens, Predicate<String> onHome, Runnable changed, Runnable dismissed, Set<String> excludedFromLibrary) {
         this.activity = activity;
         this.animations = animations;
         this.rtl = activity.getResources().getBoolean(R.bool.rtl_app_grid);
@@ -153,6 +160,7 @@ final class AppLibraryDialog {
         this.onHome = onHome;
         this.changed = changed;
         this.dismissed = dismissed;
+        this.excludedFromLibrary = excludedFromLibrary;
         density = activity.getResources().getDisplayMetrics().density;
         panel = new LinearLayout(activity);
         panel.setLayoutDirection(rtl ? View.LAYOUT_DIRECTION_RTL : View.LAYOUT_DIRECTION_LTR);
@@ -229,7 +237,7 @@ final class AppLibraryDialog {
                     if (info.activityInfo == null || !info.activityInfo.exported) continue;
                     String pkg = info.activityInfo.packageName;
                     if (Intent.CATEGORY_LEANBACK_LAUNCHER.equals(category)) tv.add(pkg);
-                    if (!pkg.equals(self) && !unique.containsKey(pkg)) unique.put(pkg, info);
+                    if (!pkg.equals(self) && !excludedFromLibrary.contains(pkg) && !unique.containsKey(pkg)) unique.put(pkg, info);
                 }
             }
             Map<String, String> names = new HashMap<>();

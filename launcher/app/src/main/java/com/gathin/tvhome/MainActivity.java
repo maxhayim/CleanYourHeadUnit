@@ -1619,7 +1619,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
             grid.post(() -> {
                 if (libraryFocusPending && appLibrary == null && hasWindowFocus() && !isFinishing()) focusLibrary();
             });
-        });
+        }, hiddenApps);
         openPopup = appLibrary.popup;
         appLibrary.show();
     }
@@ -3317,6 +3317,13 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         dropIn(popup, panel, anchor, getResources().getBoolean(R.bool.rtl_menu_bar)
                 ? Gravity.START : Gravity.END);
         rows.getChildAt(0).requestFocus();
+    }
+
+    /** A tile configured with launch_actions "input:<id>" (config.xml): switch to that TV input directly,
+     *  the same path the Inputs menu's own rows use, instead of opening the input's owning app normally. */
+    @Override
+    public void onOpenInput(String inputId) {
+        openInput(inputId);
     }
 
     /**
