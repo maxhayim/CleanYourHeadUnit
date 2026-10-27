@@ -29,6 +29,7 @@ countdown to it, plus today's Gregorian and Hijri dates. Each prayer has its Ara
 | `SCHEDULE_EXACT_ALARM` | Exact alarm scheduling for prayer time reminders. |
 | `RECEIVE_BOOT_COMPLETED` | Reschedules prayer alarms automatically when the TV boots. |
 | `WAKE_LOCK` | Briefly wakes the screen to deliver the on-screen alert card. |
+| `SYSTEM_ALERT_WINDOW` | Displays the unobtrusive top-right alert card over other apps and video playback on Android 10+. |
 
 That is all. What is sent: today's date, the latitude and longitude from `config.xml`, and the method number. No
 account, no telemetry, no ads, no background service, no location permission. Backups are off.
@@ -56,8 +57,8 @@ Prayer icons: [Lucide](https://lucide.dev) (ISC) and [Feather](https://featheric
 
 ## Tested on
 
-Xiaomi TV (MiTV-MOOR2), Google TV 11, RTM5.220609.003: the page, the countdown, the card prompt and the card
-shown in the launcher's dock.
+- Xiaomi TV (MiTV-MOOR2), Google TV 11, RTM5.220609.003: the page, the countdown, the card prompt and the card shown in the launcher's dock.
+- TCL 43A50 (Smart TV Pro), Android 11 (build RP1A.200622.001): background prayer alarms, top-right unobtrusive alert card over active apps and home screen, and auto-dismiss after 10 seconds.
 
 ## Maintainer
 

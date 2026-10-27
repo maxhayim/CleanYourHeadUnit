@@ -72,12 +72,15 @@ public class PrayerReceiver extends BroadcastReceiver {
                     nm.createNotificationChannel(ch);
                 }
 
-                Intent openIntent = new Intent(context, MainActivity.class);
-                openIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                PendingIntent contentPi = PendingIntent.getActivity(
+                Intent alertIntent = new Intent(context, PrayerAlertActivity.class);
+                alertIntent.putExtra(PrayerScheduler.EXTRA_PRAYER_NAME, name);
+                alertIntent.putExtra(PrayerScheduler.EXTRA_PRAYER_TIME, time);
+                alertIntent.putExtra(PrayerScheduler.EXTRA_PLACE, place);
+                alertIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                PendingIntent alertPi = PendingIntent.getActivity(
                         context,
-                        0,
-                        openIntent,
+                        (int) System.currentTimeMillis(),
+                        alertIntent,
                         PendingIntent.FLAG_UPDATE_CURRENT | (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M ? PendingIntent.FLAG_IMMUTABLE : 0)
                 );
 
@@ -95,8 +98,8 @@ public class PrayerReceiver extends BroadcastReceiver {
                         .setContentText(body)
                         .setSmallIcon(R.drawable.icon)
                         .setAutoCancel(true)
-                        .setContentIntent(contentPi)
-                        .setFullScreenIntent(contentPi, true)
+                        .setContentIntent(alertPi)
+                        .setFullScreenIntent(alertPi, true)
                         .setPriority(Notification.PRIORITY_MAX)
                         .setCategory(Notification.CATEGORY_ALARM)
                         .setColor(Color.parseColor("#2BB673"));
