@@ -506,7 +506,8 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         raceBar = findViewById(R.id.raceBar);
         racePager = findViewById(R.id.racePager);
         gameDay = GameDay.create(this, cfg.gameDay, handler, this::updatePanel);
-        rotationStart = System.currentTimeMillis();
+        // The rotation runs on the clock that never jumps: setting the TV's time must not stall or stretch a turn.
+        rotationStart = SystemClock.elapsedRealtime();
         showStats = cfg.showStats;
         inputsConnectedOnly = cfg.inputsConnectedOnly;
         shamsi = cfg.shamsiDate;
@@ -2584,7 +2585,8 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
             return;
         }
         int seconds = gameDay.turnSeconds();
-        int on = GameDay.current(turns.size(), now - rotationStart, seconds);
+        long since = SystemClock.elapsedRealtime() - rotationStart;
+        int on = GameDay.current(turns.size(), since, seconds);
         GameDay.Turn t = turns.get(on);
         if (t.f1) {
             raceBar.setBackgroundResource(R.drawable.race_bar);
@@ -2607,10 +2609,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
             racePanel.setVisibility(View.VISIBLE);
         }
         showPager(turns.size(), on);
-        if (turns.size() > 1 && !stopped) {
-            long turnMs = seconds * 1000L;
-            handler.postDelayed(turnTick, turnMs - (now - rotationStart) % turnMs);
-        }
+        if (turns.size() > 1 && !stopped) handler.postDelayed(turnTick, GameDay.delayToNextTurn(since, seconds));
     }
 
     /** One dot per turn, the one on screen bright; none for a single turn. */

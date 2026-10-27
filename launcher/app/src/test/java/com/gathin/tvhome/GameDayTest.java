@@ -75,6 +75,15 @@ public class GameDayTest {
         assertEquals(0, GameDay.current(1, 500_000, 30));
     }
 
+    @Test public void nextTurnIsNeverMoreThanOneTurnAway() {
+        assertEquals(30_000, GameDay.delayToNextTurn(0, 30));
+        assertEquals(1_000, GameDay.delayToNextTurn(29_000, 30));
+        assertEquals(30_000, GameDay.delayToNextTurn(60_000, 30));
+        // A clock set back while Home is open must not stretch the turn.
+        assertTrue(GameDay.delayToNextTurn(-45_000, 30) <= 30_000);
+        assertTrue(GameDay.delayToNextTurn(-45_000, 30) > 0);
+    }
+
     @Test public void turnIsLiveOnlyBetweenStartAndEnd() {
         GameDay.Turn t = game("Game", HOUR, 3 * HOUR);
         assertFalse(GameDay.live(t, t.startMs - 1));

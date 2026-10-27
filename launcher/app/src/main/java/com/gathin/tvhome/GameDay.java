@@ -203,6 +203,12 @@ final class GameDay {
         return (int) ((Math.max(0, sinceMs) / (turnSeconds * 1000L)) % count);
     }
 
+    /** Milliseconds until the next turn, {@code sinceMs} after the rotation started. */
+    static long delayToNextTurn(long sinceMs, int turnSeconds) {
+        long turnMs = turnSeconds * 1000L;
+        return turnMs - Math.floorMod(sinceMs, turnMs);
+    }
+
     static boolean live(Turn t, long nowMs) {
         return nowMs >= t.startMs && nowMs < t.endMs;
     }
