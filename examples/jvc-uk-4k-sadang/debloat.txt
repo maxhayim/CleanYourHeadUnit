@@ -1,4 +1,4 @@
-# JVC UK 4K Android TV (built by MTC, product MTCMSD6886UK, codename sadang, MediaTek m7322), Android TV 11 (API 30),
+# JVC LT-58CA810 (JVC UK 4K Android TV, built by MTC, product MTCMSD6886UK, codename sadang, MediaTek m7322), Android TV 11 (API 30),
 # firmware RTO8.250915.001, security patch 2025-07-01, 1.4 GB RAM, 1920x1080. UK unit.
 # Fingerprint: JVC/MTCMSD6886UK/sadang:11/RTO8.250915.001/14107831:user/release-keys
 # Same MTC board and firmware build as examples/hitachi-65qledsm20 (bangbae), with the UK Freeview Play
@@ -22,7 +22,12 @@
 # - Assistant (katniss) and the Ambient screensaver (backdrop), by choice.
 #
 # Status: disabled in five batches on one TV on 2026-10-21, with a reboot the same evening, then three
-# days of daily use and about 30 reboots. Home, the remote's app buttons, HDMI inputs and Live TV all work.
+# days of daily use and about 30 reboots. The Home, remote app-button, HDMI input and Live TV checks passed
+# in that list test. The 2026-10-27 Clean Your TV 0.4.5 report for LT-58CA810 found the app's Home switch
+# blocked with WIZARD_STAYS_ON.
+# Owner-confirmed: after the first Clean Your TV launcher handoff, the launcher was working and in use.
+# A later dock-order update was installed, but its launch check timed out and the TV capture was black; that
+# revision is unconfirmed.
 #
 # Notes from this TV:
 # - The Freeview Play apps come back enabled at every boot (Freeview Play certification), so they are not
