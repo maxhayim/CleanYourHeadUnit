@@ -44,7 +44,7 @@ com.google.android.feedback
 
 # Not needed on a TV
 com.security.SwaiotTV                        # Tuya smart-home preload
-org.liskovsoft.androidtv.rukeyboard          # Russian soft keyboard
+# org.liskovsoft.androidtv.rukeyboard       # Russian soft keyboard; left enabled, lists never disable a keyboard
 
 # Unused preloaded streaming / media apps, off by owner's choice
 com.amazon.amazonvideo.livingroom            # Prime Video
