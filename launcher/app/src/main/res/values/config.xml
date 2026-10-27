@@ -391,6 +391,15 @@
     <string-array name="library_apps" translatable="false">
     </string-array>
 
+    <!-- Packages the App library catalogue never offers, even with app_library on (config.xml
+         library_excluded_apps, or a theme's config.json). Different from hidden_apps, which only keeps a
+         package off Home while still listing it here: some boards hide a package because opening it is
+         unsafe (a factory-test menu that can misconfigure the TV), and the catalogue otherwise ignores
+         hidden_apps and offers it as "Add to Home" anyway. Empty (off) by default, so existing setups
+         change nothing. -->
+    <string-array name="library_excluded_apps" translatable="false">
+    </string-array>
+
     <!-- Module cards: an app that declares a card (docs/specs/card.md) can stand in for its tile with its own
          label, caption and glow colour, once you answer Show on the prompt. false: never look for cards or ask. -->
     <bool name="module_cards">true</bool>
