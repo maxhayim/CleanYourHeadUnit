@@ -33,4 +33,6 @@ android {
 dependencies {
     // Test only (never in the APK): plain JVM tests for the calendar reading and the schedule, src/test.
     testImplementation 'junit:junit:4.13.2'
+    // Android's own org.json, which the JVM tests cannot reach through android.jar's stubs.
+    testImplementation 'org.json:json:20231013'
 }
