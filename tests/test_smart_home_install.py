@@ -55,7 +55,7 @@ else:
         bin_dir.mkdir()
         for name, body in {
             "pm": '#!/bin/sh\necho Success\n',
-            "am": '#!/bin/sh\nexit 0\n',
+            "am": '#!/bin/sh\ntouch "$FAKE_ROOT/app-running"\nexit 0\n',
             "sleep": '#!/bin/sh\nexit 0\n',
             "content": '''#!/bin/sh
 count_file="$FAKE_ROOT/count"
@@ -64,6 +64,7 @@ count=$((count + 1))
 echo "$count" > "$count_file"
 case "$CONTENT_MODE" in
   success) exit 0 ;;
+  provider_requires_launch) if [ -f "$FAKE_ROOT/app-running" ]; then exit 0; fi; echo 'Could not find provider' >&2; exit 0 ;;
   error_then_success) if [ "$count" -lt 3 ]; then echo 'Could not find provider' >&2; fi; exit 0 ;;
   error) echo 'Could not find provider' >&2; exit 0 ;;
   nonzero) echo 'write failed' >&2; exit 1 ;;
@@ -101,6 +102,12 @@ esac
         self.assertEqual(self.attempts(), 3)
         self.assertIn("config pushed", result.stdout)
         self.assertFalse((self.root / "smart-home-config.json").exists())
+
+    def test_provider_that_requires_running_app_receives_config(self):
+        result = self.install("provider_requires_launch")
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual(self.attempts(), 1)
+        self.assertIn("config pushed", result.stdout)
 
     def test_silent_success_needs_one_attempt(self):
         result = self.install("success")
