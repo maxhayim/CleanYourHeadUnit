@@ -50,7 +50,9 @@
 #
 # Kept on purpose: Play Store + Play Services, Gboard, Dolby audio, com.mediatek.tvinput / com.mediatek.tv.service /
 # com.mediatek.wwtv.tvcenter (Live TV and HDMI), com.mediatek.wwtv.setupwizard (channel scan),
-# com.mediatek.wwtv.mediaplayer, com.mediatek.autopair (remote pairing), com.mediatek.mtc.factory and
+# com.mediatek.wwtv.mediaplayer (USB media player; tools/disable.sh skips it because it holds
+# TV_INPUT_HARDWARE, but `cmd package query-services --components -a android.media.tv.TvInputService` does not list
+# it here, only com.mediatek.tvinput and the TV agent, so it is probably a false positive. Not tried: no input check), com.mediatek.autopair (remote pairing), com.mediatek.mtc.factory and
 # mediatek.factorymenu.ui (factory tools, never launched), com.mediatek.androidbox (Wi-Fi Display Sink test app),
 # com.google.android.katniss + com.google.android.tv.remote.service (voice), com.google.android.apps.mediashell
 # (Chromecast), com.google.android.tts, com.google.android.apps.tv.dreamx, the user-installed browser and file managers.
