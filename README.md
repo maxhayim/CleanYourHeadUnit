@@ -873,10 +873,12 @@ TV_HOST=192.168.1.50 tools/venv/bin/python -I tools/check.py examples/google-chr
 TV_HOST=192.168.1.50 tools/venv/bin/python -I tools/check.py examples/acer-ar55ar2851udpro/debloat.txt com.google.android.tvlauncher
 ```
 
-Leave the argument out where the stock launcher is meant to be off, disabled by the list or by the
-install script: the Chromecast's `debloat.txt`, where the install script disables launcherx, and the
-XGIMI projectors, where the redirect only covers for firmware that turns it back on. There the
-stock launcher on Home is drift, and naming it as the second argument would hide that drift.
+Leave the argument out where the stock launcher is meant to be off. Where the install script
+disables it, as with the Chromecast's `debloat.txt` and the XGIMI MoGo 3 Pro list (there the
+redirect only covers for firmware that turns it back on), the stock launcher on Home is drift, and
+naming it as the second argument would hide that drift. Where the list disables it itself, as the
+XGIMI MoGo 4's does, `check.py` refuses that argument with exit 2 and checks nothing: a launcher the
+list disables cannot be the one Home stays on.
 
 Lists that also disable the updater get no updates at all. To install one, re-enable the updater on
 the TV, let it update, run `check.py --fix`, and disable the updater again.
