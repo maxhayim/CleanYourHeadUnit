@@ -98,7 +98,10 @@ needs `WRITE_SECURE_SETTINGS`, which only the ADB shell has. Nothing is backed u
 
 ## Tested on
 
-Not yet tested on a TV.
+Hisense 75U75N (`hengshan`), Google TV 12, firmware `STT2.230310.002`, on 26 October 2026: two calendars from the
+setup script (a Stanza feed through Google Calendar's secret address, and a team's own feed through a Google
+import), the settings and the 36-colour grid with the remote, and Home with the launcher's `game_day` key: the
+countdowns, "Live now" from a test calendar, the rotation with dots, and a test F1 weekend as one turn.
 
 ## Maintainer
 

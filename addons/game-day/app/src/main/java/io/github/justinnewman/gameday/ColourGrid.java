@@ -88,7 +88,8 @@ public final class ColourGrid extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         float cell = getWidth() / (float) Palette.COLUMNS;
-        float r = cell * 0.36f;
+        // Small enough that the focused circle and its ring stay inside the cell (the bottom row was clipped).
+        float r = cell * 0.30f;
         ring.setStrokeWidth(cell * 0.06f);
         for (int i = 0; i < Palette.COUNT; i++) {
             float cx = (i % Palette.COLUMNS + 0.5f) * cell;
