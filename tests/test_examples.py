@@ -28,6 +28,12 @@ def folders():
     return sorted(p for p in EXAMPLES.iterdir() if p.is_dir())
 
 
+def list_files(examples):
+    """Every list under examples: each folder's debloat.txt and a second list beside it, such as
+    google-chromecast-gtv-4k/debloat-keep-cast.txt, which tools/disable.sh applies the same way."""
+    return sorted(examples.glob("*/debloat*.txt"))
+
+
 def commented_out_but_listed(lines):
     """(line number, package) for each package commented out below the first package line that an
     active line still names.
@@ -55,6 +61,35 @@ def commented_out_but_listed(lines):
     return found
 
 
+def format_problems(examples):
+    """`list: what` for every way a list under examples breaks the list format, debloat.txt and a
+    second list beside it alike."""
+    out = []
+    for path in list_files(examples):
+        own = path.relative_to(examples).as_posix()
+        lines = path.read_text(encoding="utf-8").split("\n")
+        if not lines[0].startswith("#"):
+            out.append(f"{own}: first line should be a comment naming the TV, Android version and build")
+        packages = []
+        for n, line in enumerate(lines, 1):
+            body = line.split("#", 1)[0].strip()
+            if not body:
+                continue
+            if not PACKAGE.search(body):
+                out.append(f"{own}: line {n}: not a package name: {line!r}")
+                continue
+            packages.append(body)
+        if not packages:
+            out.append(f"{own}: no packages: notes without a list belong in docs/devices/")
+        dupes = sorted({p for p in packages if packages.count(p) > 1})
+        if dupes:
+            out.append(f"{own}: listed twice: {dupes}")
+        kept = [f"line {n}: {p}" for n, p in commented_out_but_listed(lines)]
+        if kept:
+            out.append(f"{own}: commented out to keep it, but an active line still disables it: {kept}")
+    return out
+
+
 def table_rows(path, header_prefix):
     """Rows of the first markdown table whose header starts with header_prefix."""
     lines = path.read_text(encoding="utf-8").split("\n")
@@ -74,27 +109,8 @@ class ExampleListsTest(unittest.TestCase):
                 self.assertTrue((folder / "debloat.txt").is_file(), "no debloat.txt")
 
     def test_list_format(self):
-        for folder in folders():
-            path = folder / "debloat.txt"
-            if not path.is_file():
-                continue
-            with self.subTest(folder=folder.name):
-                lines = path.read_text(encoding="utf-8").split("\n")
-                self.assertTrue(lines and lines[0].startswith("#"),
-                                "first line should be a comment naming the TV, Android version and build")
-                packages = []
-                for n, line in enumerate(lines, 1):
-                    body = line.split("#", 1)[0].strip()
-                    if not body:
-                        continue
-                    self.assertRegex(body, PACKAGE, f"line {n}: not a package name: {line!r}")
-                    packages.append(body)
-                self.assertTrue(packages, "no packages: notes without a list belong in docs/devices/")
-                dupes = sorted({p for p in packages if packages.count(p) > 1})
-                self.assertFalse(dupes, f"listed twice: {dupes}")
-                kept = [f"line {n}: {p}" for n, p in commented_out_but_listed(lines)]
-                self.assertFalse(kept, "commented out to keep it, but an active line still disables it: "
-                                       f"{kept}")
+        problems = format_problems(EXAMPLES)
+        self.assertEqual([], problems, "\n".join(problems))
 
     def test_every_folder_has_a_valid_tv_json(self):
         try:
@@ -103,13 +119,22 @@ class ExampleListsTest(unittest.TestCase):
             self.fail(str(e))
 
     def test_readme_table_has_one_row_per_list(self):
-        readme_rows = table_rows(ROOT / "README.md", "| TV | OS |")
+        # README.md has no TV table of its own any more: it points at examples/README.md and the site's
+        # search. A translation that still carries the short table has one row per list.
+        readme = (ROOT / "README.md").read_text(encoding="utf-8")
+        self.assertIn("[examples/README.md](examples/README.md)", readme)
+        self.assertIn("https://cleanyour.tv/tvs", readme)
         example_rows = table_rows(EXAMPLES / "README.md", "| Folder |")
-        self.assertEqual(len(readme_rows), len(example_rows),
-                         "README.md TV table and examples/README.md have a different number of rows")
-        readme_tvs = sorted(r.split("|")[1].strip() for r in readme_rows)
         example_tvs = sorted(r.split("|")[2].strip() for r in example_rows)
-        self.assertEqual(readme_tvs, example_tvs, "the TV column differs between the two tables")
+        for name in ("README.md", "README.nl.md"):
+            if "\n| TV | OS |\n" not in (ROOT / name).read_text(encoding="utf-8"):
+                continue
+            readme_rows = table_rows(ROOT / name, "| TV | OS |")
+            with self.subTest(readme=name):
+                self.assertEqual(len(readme_rows), len(example_rows),
+                                 f"{name} TV table and examples/README.md have a different number of rows")
+                readme_tvs = sorted(r.split("|")[1].strip() for r in readme_rows)
+                self.assertEqual(readme_tvs, example_tvs, "the TV column differs between the two tables")
 
 
 class CommentedOutReaderTest(unittest.TestCase):

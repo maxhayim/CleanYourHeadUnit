@@ -94,7 +94,20 @@ final class RemoteKeys {
     }
 
     static Map<Integer, String> parseHoldAppKeys(Iterable<String> entries, ToIntFunction<String> names) {
-        return parseAppKeys(holdEntries(entries), names);
+        return parseAppKeys(prefixed(entries, "hold:"), names);
+    }
+
+    /** keycode -> target from the "front:" entries, used while the button's own app is already in front. */
+    static Map<Integer, String> parseFrontAppKeys(Iterable<String> entries) {
+        return parseFrontAppKeys(entries, KeyEvent::keyCodeFromString);
+    }
+
+    static Map<Integer, String> parseFrontAppKeys(Iterable<String> entries, ToIntFunction<String> names) {
+        return parseAppKeys(prefixed(entries, "front:"), names);
+    }
+
+    static Map<Integer, String> parseFrontAppScancodes(Iterable<String> entries) {
+        return parseAppScancodes(prefixed(entries, "front:"));
     }
 
     /**
@@ -134,18 +147,35 @@ final class RemoteKeys {
 
     /** scancode -> package from the "hold:scan:..." entries; the rest reads as it does in parseAppScancodes. */
     static Map<Integer, String> parseHoldAppScancodes(Iterable<String> entries) {
-        return parseAppScancodes(holdEntries(entries));
+        return parseAppScancodes(prefixed(entries, "hold:"));
     }
 
-    /** The entries with the "hold:" prefix removed, so the normal parsers can read them. */
-    private static Iterable<String> holdEntries(Iterable<String> entries) {
-        List<String> holds = new ArrayList<>();
+    /** The entries with this prefix ("hold:", "front:"), the prefix removed, so the normal parsers can read them. */
+    private static Iterable<String> prefixed(Iterable<String> entries, String prefix) {
+        List<String> found = new ArrayList<>();
         for (String entry : entries) {
             if (entry == null) continue;
             String text = entry.trim();
-            if (text.startsWith("hold:")) holds.add(text.substring(5).trim());
+            if (text.startsWith(prefix)) found.add(text.substring(prefix.length()).trim());
         }
-        return holds;
+        return found;
+    }
+
+    /** The package of a "guide:<package>" target, or null for any other target. */
+    static String guidePackage(String target) {
+        if (target == null || !target.startsWith("guide:")) return null;
+        String pkg = target.substring(6).trim();
+        return pkg.isEmpty() ? null : pkg;
+    }
+
+    /**
+     * True when a tap's target is the app already in front ("package" or "package/.Activity"), so its "front:"
+     * entry applies instead. Inputs and action words never match.
+     */
+    static boolean inFront(String target, String front) {
+        if (target == null || front == null || front.isEmpty()) return false;
+        int slash = target.indexOf('/');
+        return (slash < 0 ? target : target.substring(0, slash)).equals(front);
     }
 
     /** Created on first use: building a Handler while the class loads breaks the JVM tests. */
@@ -258,11 +288,14 @@ final class RemoteKeys {
         }
     }
 
-    /** Whether a target is an action word rather than an app or an input. A package name always has a dot. */
+    /**
+     * Whether a target is an action word rather than an app or an input. A package name always has a dot.
+     * "ignore" does nothing on purpose: the button is swallowed, for a remote shortcut that is pressed by accident.
+     */
     static boolean isAction(String target) {
         switch (target) {
             case "back": case "home": case "recents": case "mute": case "sleep":
-            case "screensaver": case "settings": case "wifi":
+            case "screensaver": case "settings": case "wifi": case "ignore":
                 return true;
             default:
                 return false;
@@ -299,7 +332,7 @@ final class RemoteKeys {
                 start(ctx, SystemSettings.intent(ctx, Settings.ACTION_WIFI_SETTINGS));
                 break;
             default:
-                break;   // "sleep" below Android 9: consumed, nothing to do
+                break;   // "ignore", or "sleep" below Android 9: consumed, nothing to do
         }
         return true;
     }
@@ -332,6 +365,14 @@ final class RemoteKeys {
                         .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
             } catch (ActivityNotFoundException ignored) {
             }
+            return;
+        }
+        String guide = guidePackage(pkg);
+        if (guide != null) {
+            // The program guide, asked for the way Android TV's Live TV apps take it: the programs directory.
+            start(ctx, new Intent(Intent.ACTION_VIEW)
+                    .setDataAndType(TvContract.Programs.CONTENT_URI, "vnd.android.cursor.dir/program")
+                    .setPackage(guide));
             return;
         }
         String inputId = inputId(pkg);

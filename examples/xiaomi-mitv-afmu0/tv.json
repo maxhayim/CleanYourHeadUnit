@@ -3,4 +3,5 @@
   "os": "Google TV 14",
   "brand": "Xiaomi",
   "notes": "Mi analytics, PatchWall/Mi Home tab, Mi connect/SmartShare; voice and phone remote off by choice; setup wizard off so launcherx can go; second unit: Privacy Sandbox ad services off, remote's YouTube/Prime Video/Apps buttons mapped back in config.json"
+  "notes": "Mi analytics, PatchWall/Mi Home tab, Mi connect/SmartShare; voice and phone remote off by choice; setup wizard off so launcherx can go; second unit: [notes](xiaomi-mitv-afmu0/README.md)"
 }
