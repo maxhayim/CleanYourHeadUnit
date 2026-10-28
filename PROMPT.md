@@ -23,6 +23,28 @@ folder, you are running without this repo: clone it first with
 `git clone https://github.com/Gathin23/cleanyourtv` and work from there, so `tools/disable.sh` and the
 rest keep their safety checks, rather than stopping or writing your own.
 
+Check the computer
+- Before Connect, see what this computer already has, install what you can, and give me one short
+  summary. Stay here until Python 3, JDK 17 and Android SDK platform 34 with build-tools 34.0.0 are
+  present, or I tell you to do the debloat half only.
+- Python 3 runs the tools. A full JDK 17 with `jlink` builds the launcher: `java -version` must say
+  17. Android SDK platform 34 and build-tools 34.0.0 have to be installed under `ANDROID_HOME`,
+  `~/Library/Android/sdk`, `~/Android/Sdk`, or `%LOCALAPPDATA%\Android\Sdk`. Git is required only when
+  this folder is not already the repo.
+- Install a missing piece yourself when the command does not ask for a password: on macOS,
+  `brew install openjdk@17 android-commandlinetools` and
+  `sdkmanager "platforms;android-34" "build-tools;34.0.0"`; on Linux, that same `sdkmanager` line when
+  the command-line tools are already there, and a JDK 17 package when it installs without a prompt;
+  on Windows, Python from winget, and platform 34 plus build-tools 34.0.0 through `sdkmanager` when
+  an Android SDK is already there. Once Python 3 is present, create `tools/venv` and
+  `pip install -r tools/requirements.txt`.
+- Leave anything that needs an admin password, a store click, or a JDK other than 17, and put the
+  exact command in the summary. A full Android Studio install is one of those: name it, don't start
+  it. Stock `adb` stays optional. `tools/tv.py` is the client, and the stock binary is only for
+  Wireless debugging pairing when port 5555 stays closed.
+- The summary is three lines: what was already installed, what you installed, and what I still have
+  to install. Debloat can start with only Python 3 if I say to skip the launcher.
+
 Connect
 - Find the TV on my network (hostname, ARP table, or ask me for the IP) and connect over ADB on port 5555.
   If the TV is in another home, I'll give you its Tailscale address instead (docs/REMOTE.md): use that,
