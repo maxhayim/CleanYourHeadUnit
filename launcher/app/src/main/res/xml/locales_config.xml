@@ -34,4 +34,5 @@
     <locale android:name="ko" />
     <locale android:name="da" />
     <locale android:name="sv" />
+    <locale android:name="ast" />
 </locale-config>
