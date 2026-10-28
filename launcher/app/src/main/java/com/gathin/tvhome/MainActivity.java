@@ -253,6 +253,8 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
     private boolean openOnStartChoice;
     /** hidden_apps as the adapter sees them (config.xml or a theme's config.json): a hidden app gets no card either. */
     private Set<String> hiddenApps = Collections.emptySet();
+    /** library_excluded_apps: packages the App library catalogue never offers. */
+    private Set<String> libraryExcludedApps = Collections.emptySet();
     private List<Cards.Card> cards = Collections.emptyList();
     /** The grid has been laid out and focused since the last resume; the card prompt waits for this. */
     private boolean tilesReady;
@@ -517,6 +519,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         btnVpn = findViewById(R.id.btnVpn);
         moduleCards = cfg.moduleCards;
         hiddenApps = new HashSet<>(cfg.hiddenApps);
+        libraryExcludedApps = new HashSet<>(cfg.libraryExcludedApps);
 
         grid = findViewById(R.id.grid);
         rtlAppGrid = getResources().getBoolean(R.bool.rtl_app_grid);
@@ -1619,7 +1622,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
             grid.post(() -> {
                 if (libraryFocusPending && appLibrary == null && hasWindowFocus() && !isFinishing()) focusLibrary();
             });
-        });
+        }, libraryExcludedApps);
         openPopup = appLibrary.popup;
         appLibrary.show();
     }
