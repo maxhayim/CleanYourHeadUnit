@@ -123,7 +123,7 @@ review.
   small switch that only needs its default turned off is still a rework.
 
 ## Policies from Rounds AA–AG (25–28 Oct)
-Drafted from the round notes; Gathin to approve. Each line names the PRs it comes from.
+Drawn from the round notes. Each line names the PRs it comes from.
 - The bar: lean to closing low-value PRs, kindly. The core only takes switches most owners want. Look-only
   switches and niche top-bar buttons or rows are **closed** with a fork/SHOWCASE pointer, even small and tested,
   even when the bot leaned merge (#1748, #1830, #1863, #1864, #1965, #1966, #1995, #2001, #2002, #2010, #2067,
@@ -151,7 +151,7 @@ Drafted from the round notes; Gathin to approve. Each line names the PRs it come
   becomes its second unit (#2114/#1990, #2120 over #1621).
 - Hold: drafts (#1990, #2188, #2305); commits *authored* by Claude, not just a Co-Authored-By trailer (#2098);
   Home/boot path changes without a real-TV run (#1992, #2193, #2194, #2327, #2328); forks shipping APKs under our
-  package name `com.gathin.tvhome` (#2150); big features with broad permissions or a LAN server (#2192, #2325).
+  package name `com.gathin.tvhome`; big features with broad permissions or a LAN server (#2192, #2325).
 - Close: anything needing root, Magisk or custom firmware, or going around the China TCL install check (#1729,
   #2318); a workflow change that widens CI token permissions, flagged (#1883); day-old tools repos shipping
   prebuilt binaries under our name (#1742, #1768). Quick start stays on the one reviewed phone app (#1630).
