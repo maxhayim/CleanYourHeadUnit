@@ -1,6 +1,7 @@
 # Coocaa P9 Projector (MediaTek mt5862, Android 9 / Coocaa OS)
 
 Notes for the Coocaa P9 (酷开 P9) LCD smart projector running Coocaa OS on Android 9 (MediaTek mt5862 platform).
+Verified across cold reboots with 16 packages disabled.
 
 ## Device Information
 
@@ -38,7 +39,9 @@ The 15-second boot ad can be skipped permanently without root:
 tools/tv.py 'setprop persist.sys.bootvideo.time 1'
 ```
 
-## Launcher Replacement
+*Stock value before modification was unset / empty (system defaults to 15s video at `/vendor/stream/bootvideo.mp4`).*
+
+## Launcher Handover & Undo
 
 The reference launcher works smoothly when built with application ID `com.coocaa.tvhome`:
 
@@ -54,3 +57,15 @@ The reference launcher works smoothly when built with application ID `com.coocaa
    tools/tv.py 'cmd package set-home-activity com.coocaa.tvhome/com.gathin.tvhome.MainActivity'
    ```
 4. Remote Home key will now cleanly open CleanYourTV launcher.
+
+### Undo Launcher Handover
+
+To restore the stock Coocaa launcher:
+
+```bash
+tools/tv.py 'setprop persist.service.homepage.pkg com.tianci.movieplatform'
+tools/tv.py 'setprop persist.service.homepage.cls com.coocaa.homepage.vast.projector.ProjectorHomeActivity'
+tools/tv.py 'cmd package set-home-activity com.tianci.movieplatform/com.coocaa.homepage.vast.projector.ProjectorHomeActivity'
+```
+
+*Note: Unlike the Realtek board in `skyworth-8r40-k5c`, modifying `persist.service.homepage.*` on this MediaTek mt5862 board did NOT stop `adbd` from starting after a cold reboot.*

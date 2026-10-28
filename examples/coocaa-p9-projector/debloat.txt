@@ -1,5 +1,7 @@
 # Coocaa P9 projector (MediaTek mt5862_bga_1g), Android 9 (SDK 28),
 # build PPR2.180905.006.A1 dev-keys, China-market Coocaa OS.
+# Verified across cold reboots: 16 packages disabled with pm disable-user --user 0.
+# Autofocus, electric focus, keystone correction, remote Bluetooth, Wi-Fi and ADB reconnect remain fully functional.
 #
 # Apply:   TV_HOST=<tv ip> tools/disable.sh examples/coocaa-p9-projector/debloat.txt
 # Undo:    TV_HOST=<tv ip> tools/restore.sh examples/coocaa-p9-projector/debloat.txt
@@ -13,6 +15,7 @@
 #
 # Boot video ad skip (no root, survives reboot):
 # tools/tv.py 'setprop persist.sys.bootvideo.time 1'
+# Stock value before modification was unset / empty (defaults to 15s video at /vendor/stream/bootvideo.mp4).
 #
 # ⚠ DO NOT DISABLE:
 # - com.tianci.movieplatform: Coocaa stock launcher base, boot hard-depends on it.
@@ -30,6 +33,11 @@
 #    tools/tv.py 'setprop persist.service.homepage.pkg com.coocaa.tvhome'
 #    tools/tv.py 'setprop persist.service.homepage.cls com.gathin.tvhome.MainActivity'
 #    tools/tv.py 'cmd package set-home-activity com.coocaa.tvhome/com.gathin.tvhome.MainActivity'
+# 3. Undo launcher handover:
+#    tools/tv.py 'setprop persist.service.homepage.pkg com.tianci.movieplatform; setprop persist.service.homepage.cls com.coocaa.homepage.vast.projector.ProjectorHomeActivity; cmd package set-home-activity com.tianci.movieplatform/com.coocaa.homepage.vast.projector.ProjectorHomeActivity'
+# Note: Stock values were pkg=com.tianci.movieplatform, cls=com.coocaa.homepage.vast.projector.ProjectorHomeActivity.
+# Unlike the Realtek board in skyworth-8r40-k5c, modifying persist.service.homepage.* on this MediaTek mt5862 board
+# did NOT stop adbd from starting after a cold reboot.
 #
 # =============================================================================
 # Ads / telemetry / tracking
@@ -50,7 +58,7 @@ com.coocaa.guide                     # boot guide & EPG pusher
 # Stores / theme packages
 com.tianci.appstore                  # stock store with recommendations (Dangbei Market kept)
 com.coocaa.os.thememanager           # theme store
-com.coocaa.theme_package_starry_night# preloaded starry night theme
+com.coocaa.theme_package_starry_night # preloaded starry night theme
 com.coocaa.theme_world_cup           # preloaded world cup theme
 
 # Voice assistant (optional)
