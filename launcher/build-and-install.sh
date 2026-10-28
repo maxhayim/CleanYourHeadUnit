@@ -3,7 +3,7 @@
 set -euo pipefail
 cd "$(dirname "$0")"
 : "${TV_HOST:?set TV_HOST to the TV IP address, e.g. TV_HOST=192.168.1.50 $0}"
-TOOLS="$(cd ../tools && pwd)"   # absolute, so the venv's Python doesn't warn about "../" in its prefix
+TOOLS="$(cd ../tools && (pwd -W 2>/dev/null || pwd))"   # absolute (Windows form on Git Bash, for Windows Python), so the venv's Python doesn't warn about "../" in its prefix
 PY=$TOOLS/venv/bin/python
 [ -x "$PY" ] || PY=$TOOLS/venv/Scripts/python.exe
 # No venv yet: say how to make one (as tools/disable.sh does) instead of failing on the Windows path (#1142).
