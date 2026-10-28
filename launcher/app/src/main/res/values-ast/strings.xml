@@ -28,7 +28,7 @@
     <string name="dream_name">Reló</string>
     <string name="vpn_off">VPN apagada</string>
     <string name="home_settings">Escoyer pantalla d\'aniciu predeterminá</string>
-    <string name="home_settings_help">Escueyi la to pantalla d\'aniciu orixinal pa dexar d\'usar CleanYourTV como pantalla d\'aniciu, o CleanYourTV pa volver a él. El llanzador orixinal tien de tar activáu y el televisor tien d\'ufiertar un seleutor de pantalles d\'aniciu; si taba desactiváu, usa enantes el script de restauración.</string>
+    <string name="home_settings_help">Escueyi la to pantalla d\'aniciu orixinal pa dexar d\'usar CleanYourTV como pantalla d\'aniciu, o CleanYourTV pa volver a él. El llanzador orixinal tien que tar activáu y el televisor tien qu\'ufiertar un seleutor de pantalles d\'aniciu; si taba desactiváu, usa enantes el script de restauración.</string>
     <string name="launcher_settings">Axustes del llanzador</string>
     <string name="native_settings">Axustes del fabricante</string>
     <string name="columns_label">Aplicaciones por filera</string>
@@ -63,7 +63,7 @@
     <string name="card_prompt_names">La tarxeta llámase «%1$s». L\'aplicación ye «%2$s».</string>
     <string name="card_prompt_resigned">%1$s anovóse con otra clave de firma, poro la to rempuesta anterior yá nun val. Vuelve decidir sobre la so tarxeta.</string>
     <string name="card_prompt_relabelled">%1$s camudó\'l nome de la so tarxeta dende que decidisti. Vuelve decidir sobre ella.</string>
-    <string name="card_prompt_hint">Puesti camudalo dempués: caltén calcáu OK n\'Axustes y escueyi Tarxetes de módulos.</string>
+    <string name="card_prompt_hint">Pues camudalo dempués: caltén calcáu OK n\'Axustes y escueyi Tarxetes de módulos.</string>
     <string name="card_prompt_identity">%1$s, clave %2$s</string>
     <string name="card_keep_hidden">Caltener ancultada</string>
     <string name="card_show">Amosar tarxeta</string>
