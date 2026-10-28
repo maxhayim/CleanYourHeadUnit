@@ -173,11 +173,7 @@ public class PrayerScheduler {
                     PendingIntent.FLAG_UPDATE_CURRENT | (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M ? PendingIntent.FLAG_IMMUTABLE : 0)
             );
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                am.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, triggerAtMillis, pi);
-            } else {
-                am.setExact(AlarmManager.RTC_WAKEUP, triggerAtMillis, pi);
-            }
+            setAlarm(am, triggerAtMillis, pi);
         } else {
             // All prayers for today have passed. Schedule refresh at 00:05 tomorrow morning
             Calendar target = (Calendar) now.clone();
@@ -199,11 +195,25 @@ public class PrayerScheduler {
                     PendingIntent.FLAG_UPDATE_CURRENT | (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M ? PendingIntent.FLAG_IMMUTABLE : 0)
             );
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                am.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, target.getTimeInMillis(), pi);
-            } else {
-                am.setExact(AlarmManager.RTC_WAKEUP, target.getTimeInMillis(), pi);
+            setAlarm(am, target.getTimeInMillis(), pi);
+        }
+    }
+
+    private static void setAlarm(AlarmManager am, long triggerAtMillis, PendingIntent pi) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            if (am.canScheduleExactAlarms()) {
+                try {
+                    am.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, triggerAtMillis, pi);
+                    return;
+                } catch (SecurityException e) {
+                    Log.w(TAG, "Exact alarm disallowed at runtime, falling back: " + e);
+                }
             }
+            am.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, triggerAtMillis, pi);
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            am.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, triggerAtMillis, pi);
+        } else {
+            am.setExact(AlarmManager.RTC_WAKEUP, triggerAtMillis, pi);
         }
     }
 

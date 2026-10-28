@@ -58,7 +58,6 @@ public class PrayerReceiver extends BroadcastReceiver {
                     ch.setDescription(context.getString(R.string.app_name));
                     ch.enableLights(true);
                     ch.setLightColor(Color.parseColor("#2BB673"));
-                    ch.enableVibration(true);
 
                     Uri soundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
                     AudioAttributes audioAttributes = new AudioAttributes.Builder()
