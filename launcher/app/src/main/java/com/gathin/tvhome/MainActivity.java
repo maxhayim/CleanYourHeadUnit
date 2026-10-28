@@ -3319,6 +3319,13 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         rows.getChildAt(0).requestFocus();
     }
 
+    /** A tile configured with launch_actions "input:<id>" (config.xml): switch to that TV input directly,
+     *  the same path the Inputs menu's own rows use, instead of opening the input's owning app normally. */
+    @Override
+    public void onOpenInput(String inputId) {
+        openInput(inputId);
+    }
+
     /**
      * Hold OK on a tile: a glass menu next to it. Move starts reorder mode with this tile already picked up;
      * Remove from Home takes the shortcut off (only with the app library on, where one press adds it back);

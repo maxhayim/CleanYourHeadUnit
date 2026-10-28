@@ -61,6 +61,8 @@ public class AppAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         /** Hold OK on a tile: the activity shows the tile menu (move, remove from Home, app info). */
         void onTileLongPress(int position, View card);
         void onLibraryUp();
+        /** A tile whose launch_actions entry is "input:<id>": switch to that TV input instead of opening an app. */
+        void onOpenInput(String inputId);
     }
 
     static final class Entry {
@@ -536,6 +538,11 @@ public class AppAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         // already running resumes instead of restarting; only phone apps added from the library use plain MAIN.
         if (leanbackPackages.contains(e.pkg)) i.addCategory(Intent.CATEGORY_LEANBACK_LAUNCHER);
         String action = launchActions.get(e.pkg);
+        String inputId = LaunchActions.inputId(action);
+        if (inputId != null) {
+            listener.onOpenInput(inputId);
+            return;
+        }
         if (action != null) {
             // NEW_TASK only: with RESET_TASK_IF_NEEDED, Android just brings a running task of the app to the front
             // ("Activity not started"), so the screen never opens while the app is up, e.g. MagentaTV's boot-time task.
