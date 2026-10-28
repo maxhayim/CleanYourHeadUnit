@@ -55,17 +55,20 @@ com.google.android.partnersetup
 com.google.android.feedback
 com.android.tv.feedbackconsent
 
-# Not used (by choice, per the owner)
-com.netflix.ninja                                # Netflix
-com.amazon.amazonvideo.livingroom                # Prime Video
-com.disney.disneyplus                            # Disney+
-com.hbo.hbonow                                   # HBO Max
-com.viaplay.android                              # Viaplay
-com.spotify.tv.android                           # Spotify
-tv.twitch.android.app                            # Twitch
-dk.dr.tvplayer                                   # DR TV
-dk.yousee.tv.leanback                            # YouSee; also claims HOME
-com.google.android.youtube.tvmusic               # YouTube Music
+# Streaming and media apps: off on this set by the owner's choice, left commented so a shared run keeps
+# yours. Uncomment the ones you never use.
+# com.netflix.ninja                                # Netflix
+# com.amazon.amazonvideo.livingroom                # Prime Video
+# com.disney.disneyplus                            # Disney+
+# com.hbo.hbonow                                   # HBO Max
+# com.viaplay.android                              # Viaplay
+# com.spotify.tv.android                           # Spotify
+# tv.twitch.android.app                            # Twitch
+# dk.dr.tvplayer                                   # DR TV
+# dk.yousee.tv.leanback                            # YouSee; also claims HOME
+# com.google.android.youtube.tvmusic               # YouTube Music
+
+# Google apps not used here
 com.google.android.videos                        # Google TV / Play Movies store
 com.google.android.play.games                    # Play Games
 com.google.android.apps.tachyon                  # Google Meet / Duo
