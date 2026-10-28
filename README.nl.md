@@ -226,8 +226,8 @@ Alwtniet, Anker Nebula, BYINTEK, Epson, Formovie, Gadnic, HOTACK, HY320, JMGO, M
 | JMGO N1S projector (K80A, holan, MediaTek m7332), Australia | Google TV 14 |
 | JVC Android TV (Vestel-built, BARTU_Jvc, menlo, MediaTek mt5867), Spain | Android TV 11 |
 | JVC LT-43KM348 (KTC-built, KTC_JVC_2K_25GV1, jagalchi, MediaTek mt5867 / T56) | Google TV 14 |
+| JVC LT-58CA810 (UK 4K Android TV, MTC, MTCMSD6886UK, sadang, MediaTek m7322), UK | Android TV 11 |
 | JVC LT55MB508 (MTC, seocho, MediaTek MSD6886), Brazil | Android TV 11 |
-| JVC UK 4K Android TV (MTC, MTCMSD6886UK, sadang, MediaTek m7322), UK | Android TV 11 |
 | Kalley 43G200 (device R3_GTV, MOKA, Realtek RTD2841A), Latin America | Google TV 14 |
 | Kalley R10G (device R10G, product ACER_FFM, MOKA, Realtek RTD2875P), Latin America | Google TV 14 |
 | Karbonn / Motorola SWTV-20AE (Skyworth OEM, SW4H, MediaTek), India | Android TV 10 |
