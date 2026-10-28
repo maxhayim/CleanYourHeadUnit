@@ -55,8 +55,10 @@ com.google.android.partnersetup
 com.google.android.feedback
 com.android.tv.feedbackconsent
 
-# Streaming and media apps: off on this set by the owner's choice, left commented so a shared run keeps
-# yours. Uncomment the ones you never use.
+# Streaming and media apps. Netflix, Prime Video and YouTube Music are in the system image; the rest are not:
+# the Play Store installs them in the first minutes after sign-in, from the partner list the auto-install stub
+# above points at (the same batch brought ANT+, Meet and Google TV). Off on this set; left commented so a shared
+# run keeps the ones you use. Uncomment the rest.
 # com.netflix.ninja                                # Netflix
 # com.amazon.amazonvideo.livingroom                # Prime Video
 # com.disney.disneyplus                            # Disney+
