@@ -250,6 +250,26 @@ Things that bit us or contributors, so they don't bite you. Commands use `tools/
   device-owner app that hid it, or leave it, as the
   [Chromecast with Google TV 4K list](../examples/google-chromecast-gtv-4k/debloat.txt) does with
   `cast2class` (`hidden=true` and `enabled=2` there).
+- **A second Google TV profile keeps the listed packages enabled for itself.** The lists,
+  `tools/disable.sh`, `tools/restore.sh` and `tools/check.py` act on user 0, the TV's main profile. A
+  profile added on Google TV is a user of its own (type `com.android.tv.profile` in `dumpsys user`), with
+  its own enabled state for every package, so the list never reaches it. On a Chromecast with Google TV
+  4K (`sabrina`, Google TV 14, `UTTC.250917.004`) with one such profile, six packages the list had
+  disabled for user 0 were still enabled for that profile, user 10: `com.google.android.videos`,
+  `com.android.tv.feedbackconsent`, `com.google.android.adservices.api`,
+  `com.google.android.ext.adservices.api`, `com.google.android.federatedcompute` and
+  `com.google.android.ondevicepersonalization.services`. They run only while that profile is in use; it
+  had not been since setup. See which profiles there are, and what each still has on:
+  ```sh
+  tools/tv.py 'pm list users'                    # UserInfo{10:...} after user 0 is a second profile
+  tools/tv.py 'pm list packages -e --user 10'    # what that profile has enabled
+  ```
+  To clean that profile as well, run the list's names for its user by hand (both lines below were run on
+  that Chromecast). The recovery record, `restore.sh` and `check.py` do not see it, so undo it the same way:
+  ```sh
+  tools/tv.py 'pm disable-user --user 10 com.google.android.videos'
+  tools/tv.py 'pm enable --user 10 com.google.android.videos'          # undo
+  ```
 - **The Input key and CEC die after the hidden factory menu is opened**, seen on a Haier/CVTE set
   (Durabrand `DURAT32ISDB`, `dupont`, Android TV 11 build `RTM6.230109.232`,
   [#470](https://github.com/Gathin23/cleanyourtv/issues/470)). `com.cvte.tv.hkcfac` is the
@@ -936,6 +956,23 @@ running back on the list the next time it starts; a helper turned off in Setting
   like `KEYCODE_BUTTON_4` (191) may be shared with other buttons on some remotes/key layouts, so mapping by keycode
   can unintentionally hijack other buttons.
   `scan:` checks match first and target only that specific physical button. See [the Mi Box S note](devices/xiaomi-mi-box-s.md).
+- **The Settings button opens Android TV Settings, not the TV's own menu** (Sony BRAVIA VU3, Google TV 14,
+  `BRAVIA_VU3`; the report records no build, [#2131](https://github.com/Gathin23/cleanyourtv/issues/2131)):
+  the Quick Settings ribbon that button used to open (Picture mode, Picture settings, Brightness) is Sony's
+  own app, and the helper takes `KEYCODE_SETTINGS` before any app is asked, so the press opens the standard
+  settings action - on this set `com.android.tv.settings/.MainSettings`, or the launcher's own panel with
+  `settings_key_panel`. With the helper off the press arrives and nothing opens: `WindowManager` logs
+  `mShortPressOnSettingsBehavior=SHORT_PRESS_SETTINGS_NOTHING`. The ribbon is still installed and opens when
+  it is asked directly: `tools/tv.py 'am start -n com.sony.dtv.smartui/.settings.SmartSettingsActivity'`.
+  `settings_key_keycodes` and `settings_key_scancodes` do not bring the ribbon back on their own: both end in
+  `Settings.ACTION_SETTINGS`, and `settings_fallback_components` is read only when that action resolves to
+  nothing, which it does not on this set. If the remote reports a scancode for that button, an `app_keys`
+  entry should put it back (read from the launcher's code, not yet tried on a set), because a `scan:` entry is
+  answered before the settings branch in
+  `HomeKeyService.onKeyEvent`: `"scan:<scancode>:com.sony.dtv.smartui/.settings.SmartSettingsActivity"` in
+  `config.xml`, or in a theme's `app_keys` (find `<scancode>` with `getevent -lt` while pressing the button,
+  as the `scan:` bullet above does for a Sony remote). A keycode entry cannot: `"176:..."` is
+  `KEYCODE_SETTINGS`, which the helper takes itself before it looks at any app key.
 - **The list still names the helper but `accessibility_enabled` is `0`**, so nothing is bound and the
   button does nothing (not the force stop below): on a TCL C6K Pro (`G08`, Android 14,
   [#1047](https://github.com/Gathin23/cleanyourtv/issues/1047)) a reboot left
