@@ -193,6 +193,13 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
     private List<RaceWeekend.Race> raceCalendar;
     private View racePanel;
     private TextView raceKicker, raceHeadline, raceSessions;
+    /** game_day: each team's next game from an add-on, rotating in the race panel; null when the key is off. */
+    private GameDay gameDay;
+    private View raceBar;
+    private LinearLayout racePager;
+    private long rotationStart;
+    private long lastEndedRead;
+    private final Runnable turnTick = this::updatePanel;
     /** config.xml show_stats, overridable by a theme. Off: the line is gone and nothing is read. */
     private boolean showStats;
     /** config.xml inputs_connected_only: the Inputs menu lists only connected inputs, the rest behind "More inputs". */
@@ -375,7 +382,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         @Override
         public void run() {
             updateGreeting();
-            updateRace();
+            updatePanel();
             // The pill follows the network callbacks and each return to Home; only the diya's flame follows the
             // signal level, so only it needs this minute's binder calls (about 7 ms on the UI thread).
             if (festive) updateWifiLabel();
@@ -498,6 +505,11 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         raceKicker = findViewById(R.id.raceKicker);
         raceHeadline = findViewById(R.id.raceHeadline);
         raceSessions = findViewById(R.id.raceSessions);
+        raceBar = findViewById(R.id.raceBar);
+        racePager = findViewById(R.id.racePager);
+        gameDay = GameDay.create(this, cfg.gameDay, handler, this::updatePanel);
+        // The rotation runs on the clock that never jumps: setting the TV's time must not stall or stretch a turn.
+        rotationStart = SystemClock.elapsedRealtime();
         showStats = cfg.showStats;
         inputsConnectedOnly = cfg.inputsConnectedOnly;
         shamsi = cfg.shamsiDate;
@@ -673,6 +685,22 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
                 }
             }
         });
+
+        // game_day: the panel above the dock rides up with the cards instead of being covered by them, and fades
+        // out by the time it reaches the clock. The grid's own offset is read, so a jump (Home, a restored focus)
+        // lands right too.
+        if (gameDay != null) {
+            View clockBlock = findViewById(R.id.leftBlock);
+            grid.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                @Override
+                public void onScrolled(@NonNull RecyclerView rv, int dx, int dy) {
+                    int shift = rv.canScrollVertically(-1) ? rv.computeVerticalScrollOffset() : 0;
+                    racePanel.setTranslationY(-shift);
+                    int room = Math.max(1, racePanel.getTop() - clockBlock.getBottom());
+                    racePanel.setAlpha(Math.max(0f, 1f - shift / (float) room));
+                }
+            });
+        }
 
         // Liquid feel: soft springs on the highlight's position.
         springX = new SpringAnimation(glass, new FloatPropertyCompat<View>("glassContentX") {
@@ -917,6 +945,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         if (openLauncherSettingsIfAsked(intent)) return;
         if (openInputsIfAsked(intent)) return;
         if (intent == null || !intent.hasCategory(Intent.CATEGORY_HOME)) return;
+        if (gameDay != null && !stopped) gameDay.read();
         grid.scrollToPosition(0);
         lastFocused = 0;
         lastFocusedKey = adapter.getItemCount() > 0 ? adapter.keyAt(0) : null;
@@ -976,7 +1005,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         }
         if (openLiveTvAfterBoot()) return;
         updateGreeting();
-        updateRace();
+        updatePanel();
         // The network and Inputs pills keep their state while Home is in the background, and callbacks update them
         // when the network or the inputs change, so this refresh only catches anything missed. Its binder calls
         // (about 7 ms on a TCL C755, most of it WifiManager.getConnectionInfo) would hold up the first frame back
@@ -989,6 +1018,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
             pillsShown = true;
         }
         if (showStats) startStats();
+        if (gameDay != null) gameDay.start();
         sky.update();
         wallpaperPlayer.start();
         handler.postDelayed(minuteTick, MINUTE_MS);
@@ -1166,6 +1196,8 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         heroArt.animate().cancel();
         handler.removeCallbacks(minuteTick);
         stopStats();
+        if (gameDay != null) gameDay.stop();
+        handler.removeCallbacks(turnTick);
         if (diya != null) diya.stop();
         cancelPendingFocusScroll();
         // Nothing of ours stays on screen over another app; an undecided prompt simply returns next time.
@@ -1219,6 +1251,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        if (gameDay != null) gameDay.shutdown();
         unregisterReceiver(packageReceiver);
         wallpaperPlayer.close();
         ConnectivityManager cm = getSystemService(ConnectivityManager.class);
@@ -2544,8 +2577,87 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
      * Shows or hides the race-weekend panel for this minute. Text only, set once a minute with the clock:
      * nothing animates, so the panel costs the GPU nothing between ticks.
      */
-    private void updateRace() {
-        // an empty calendar (a theme without race_calendar, or a reset) hides a panel the last theme showed
+    /**
+     * The race panel's place under the clock. With game_day off it is exactly the F1 panel (updateRace). With it on,
+     * each team's next game takes a turn there, and the theme's F1 weekend is one more turn drawn as today.
+     */
+    private void updatePanel() {
+        if (gameDay == null) {
+            updateRace();
+            return;
+        }
+        handler.removeCallbacks(turnTick);
+        long now = System.currentTimeMillis();
+        List<GameDay.Turn> games = gameDay.turns();
+        for (GameDay.Turn g : games) {
+            if (g.endMs <= now && now - lastEndedRead > MINUTE_MS) {
+                // A game is over: the add-on already has that team's next one.
+                lastEndedRead = now;
+                gameDay.read();
+                break;
+            }
+        }
+        RaceWeekend.State f1 = raceCalendar.isEmpty() ? null : RaceWeekend.at(raceCalendar, java.time.Instant.ofEpochMilli(now));
+        List<GameDay.Turn> turns = GameDay.merge(games, f1, now);
+        if (turns.isEmpty()) {
+            racePanel.setVisibility(View.GONE);
+            return;
+        }
+        int seconds = gameDay.turnSeconds();
+        long since = SystemClock.elapsedRealtime() - rotationStart;
+        int on = GameDay.current(turns.size(), since, seconds);
+        GameDay.Turn t = turns.get(on);
+        if (t.f1) {
+            raceBar.setBackgroundResource(R.drawable.race_bar);
+            raceSessions.setVisibility(View.VISIBLE);
+            updateRace();
+        } else {
+            GradientDrawable bar = new GradientDrawable();
+            bar.setCornerRadius(1.5f * density);
+            bar.setColor(t.colour);
+            raceBar.setBackground(bar);
+            raceKicker.setText(t.topLine);
+            if (GameDay.live(t, now)) {
+                SpannableString live = new SpannableString("\u25CF  " + getString(R.string.game_live));
+                live.setSpan(new ForegroundColorSpan(RACE_RED), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                raceHeadline.setText(live);
+            } else {
+                String in = RaceWeekend.countdown(getResources(), GameDay.until(t, now));
+                raceHeadline.setText(t.word.isEmpty() ? in : getString(R.string.race_next, t.word, in));
+            }
+            // No session times for a game: the line takes no room, so the dots sit under the countdown.
+            raceSessions.setVisibility(View.GONE);
+            racePanel.setVisibility(View.VISIBLE);
+        }
+        showPager(turns.size(), on);
+        if (turns.size() > 1 && !stopped) handler.postDelayed(turnTick, GameDay.delayToNextTurn(since, seconds));
+    }
+
+    /** One dot per turn, the one on screen bright; none for a single turn. */
+    private void showPager(int count, int on) {
+        if (count < 2) {
+            racePager.setVisibility(View.GONE);
+            return;
+        }
+        if (racePager.getChildCount() != count) {
+            racePager.removeAllViews();
+            int size = Math.round(5 * density);
+            for (int k = 0; k < count; k++) {
+                View dot = new View(this);
+                GradientDrawable d = new GradientDrawable();
+                d.setShape(GradientDrawable.OVAL);
+                d.setColor(0xFFFFFFFF);
+                dot.setBackground(d);
+                LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(size, size);
+                lp.setMarginEnd(size);
+                racePager.addView(dot, lp);
+            }
+        }
+        for (int k = 0; k < count; k++) racePager.getChildAt(k).setAlpha(k == on ? 0.9f : 0.3f);
+        racePager.setVisibility(View.VISIBLE);
+    }
+
+    private void updateRace() {        // an empty calendar (a theme without race_calendar, or a reset) hides a panel the last theme showed
         RaceWeekend.State s = raceCalendar.isEmpty() ? null : RaceWeekend.at(raceCalendar, java.time.Instant.now());
         if (s == null) {
             racePanel.setVisibility(View.GONE);
