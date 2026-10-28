@@ -2318,6 +2318,14 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
             ((LinearLayout.LayoutParams) clockRow.getLayoutParams()).gravity = Gravity.RIGHT;
         }
         clockColumn.addView(column, clockColumn.indexOfChild(clockRow) + 1, lp);
+        // The column now wraps its texts, so they must wrap too: a match_parent TextView does not ask for a new
+        // layout when its text gets longer, and the column kept the width of the day before ("TUESDAY 27 OCTOB…").
+        ViewGroup texts = (ViewGroup) column;
+        for (int i = 0; i < texts.getChildCount(); i++) {
+            View text = texts.getChildAt(i);
+            text.getLayoutParams().width = ViewGroup.LayoutParams.WRAP_CONTENT;
+            text.setLayoutParams(text.getLayoutParams());
+        }
     }
 
     /** The first top-bar button after Inputs that is shown, in bar order (top_bar_apps, the network pill, ...); Settings is always there. */
