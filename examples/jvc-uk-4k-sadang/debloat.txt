@@ -24,8 +24,6 @@
 # Status: disabled in five batches on one TV on 2026-10-21, with a reboot the same evening, then three
 # days of daily use and about 30 reboots. Home, the remote's app buttons, HDMI inputs and Live TV all work.
 #
-# Initial Home-switch report (Clean Your TV 0.4.5, 2026-10-27) returned WIZARD_STAYS_ON.
-# The later resolver retest passed; details are under Second unit below.
 # First launcher handoff: owner confirmed it was working and in use.
 # Current dock order (displayed and tested OK by the owner): YouTube -> Netflix -> Prime Video -> BBC iPlayer.
 # Second unit: build JVC/MTCMSD6886UK/sadang:11/RTO8.250915.001/14107831:user/release-keys.
