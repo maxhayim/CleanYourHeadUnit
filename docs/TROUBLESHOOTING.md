@@ -19,6 +19,11 @@ Things that bit us or contributors, so they don't bite you. Commands use `tools/
   shows the TV's MAC and `dns-sd -B _androidtvremote2._tcp` still finds it by name while no port on
   it can be opened. Seen on macOS 26 (Darwin 25.6) against a Hisense `hengshan` set, Google TV 12,
   where the stock `adb` and `tools/tv.py` failed identically.
+  The closing check is denied the same way, and it is the one the procedure accepts: `tools/adb-closed.py
+  <tv ip>` answers `could not check <ip>:5555 ([Errno 65] No route to host). Is the TV on and on this
+  network?` followed by the Local Network note, exit 2, so a machine without the permission can neither
+  confirm nor deny that the port is closed. Grant it to the terminal, reopen it, and check again: only a
+  "closed" from a granted terminal counts.
 - **No "wireless debugging" toggle** on some TVs, Xiaomi among them. USB debugging alone opens
   network ADB on port 5555.
 - **USB debugging is greyed out and there is no Wireless debugging entry either**, seen on a carrier
@@ -429,7 +434,11 @@ Things that bit us or contributors, so they don't bite you. Commands use `tools/
   itself, not bloat. `tools/disable.sh`, `disable.ps1` and `check.py --fix` now refuse any list that
   names them (or `com.android.providers.*` other than calendar, contacts, user dictionary and
   blocked numbers, `com.android.systemui`, `com.android.shell`, `com.android.phone`,
-  `com.android.settings`, `com.android.tv.settings` or `android`), with no switch to override it.
+  `com.android.settings`, `com.android.tv.settings` or `android`), with no switch to override it, and
+  since [#1578](https://github.com/Gathin23/cleanyourtv/issues/1578) the same refusal covers the TV
+  middleware: `com.cltv.mal`, `com.mediatek.tis`, `com.mediatek.tv.service` and
+  `com.mediatek.tv.agent` (the bullet below). The three tools say "core Android or TV middleware
+  packages" in that message, so a run that refuses one of the four reads the same way as this one.
   If a set is already stuck and still answers ADB, `pm enable` each of those packages and reboot;
   if ADB is gone too, a factory reset from the recovery menu is usually the only way back.
 - **The TV restarts in a loop after a debloat**, seen once, on a Haier H50H5F (Google TV 14,
@@ -446,7 +455,9 @@ Things that bit us or contributors, so they don't bite you. Commands use `tools/
   Wireless debugging usually goes off at every restart and gets a new port each time it is switched
   on, so read the port from its screen or `adb mdns services`. This set never stayed up long enough
   to switch it back on, and then restarted into the recovery menu, where a factory reset turns every
-  disabled package back on (nothing was uninstalled).
+  disabled package back on (nothing was uninstalled). One of those eight, `com.cltv.mal`, is on the
+  list `tools/disable.sh`, `disable.ps1` and `check.py --fix` refuse (the bullet above), so a debloat
+  cannot take it out again; the other seven are not guarded.
 - **The TV stays on the boot logo after a list, and disabling the only Home app is enough to do
   it**, seen on a KitKat-era set ([COOP COTV-0001](https://github.com/Gathin23/cleanyourtv/issues/795):
   Realtek `rtd298x`, Android 4.4.2, SDK 19). 17 packages were disabled over Ethernet ADB, each
@@ -1444,3 +1455,36 @@ tools/tv.py 'settings put global private_dns_mode opportunistic'
 
 or keep Private DNS and accept that the router's domain rules no longer cover the TV. Write down which one
 you chose, so the next "this one service is slow on the TV" does not start from scratch.
+
+## An app that runs a local VPN is on until the next boot, then gone
+
+A DNS filter, an ad blocker or a VPN client you keep, set to start with the TV, works once switched on, and
+after every reboot the TV comes up without it: no `tun0`, no process. Seen with the AdGuard app (4.6.207,
+local VPN mode) on an Anker Nebula D2426 projector (Android TV 14, `UKNV.260603.001`, 1.7 GB), and the
+mechanism is Android's, not the app's. Its boot receiver did run: the TV's log shows
+`ActivityManager: Start proc <pid>:<package> ... for broadcast {.../BootUpReceiver}`, then 12 s later
+`Process <package> (pid <pid>) has died: cch+95 CEM`, while the app's own lines still say it is loading. The
+receiver had returned and handed the loading to a thread, no foreground service was up yet, so to Android
+the process was an empty cached one, and this firmware keeps very few of those:
+`tools/tv.py 'dumpsys activity settings' | grep CUR_MAX` prints `CUR_MAX_CACHED_PROCESSES=8` and
+`CUR_MAX_EMPTY_PROCESSES=4`. The first boot services push it out before it reaches the VPN. Any such app that
+loads slowly on a small TV can hit this; Private DNS (the README's option) is not affected, since the system
+resolver does the work.
+
+What does not help: the background exemptions (`cmd appops set <package> RUN_ANY_IN_BACKGROUND allow`,
+`dumpsys deviceidle whitelist +<package>`, `am set-standby-bucket <package> active`), because the app
+was never restricted, only evicted; and `device_config put activity_manager max_cached_processes 32`,
+which leaves `CUR_MAX_CACHED_PROCESSES` at the maker's 8. What does: make the system itself bring the VPN
+up at boot, by declaring the app as the always-on VPN. The app must have had its VPN consent dialog
+accepted once before (it has, if its protection was ever switched on by hand):
+
+```sh
+tools/tv.py 'settings put secure always_on_vpn_app <package>; settings put secure always_on_vpn_lockdown 0'
+```
+
+At the next boot the log shows `Background started FGS: Allowed [callingPackage: <package>` about 25 s
+after the process start, and `tools/tv.py 'ip addr show tun0'` has an address, before the firmware's own
+boot-time calls go out (about two minutes in, here). Keep `always_on_vpn_lockdown` at 0: with 1 Android
+drops every packet until the VPN is up, and a TV whose app fails to start stays offline, with no screen
+that says why. Undo:
+`tools/tv.py 'settings delete secure always_on_vpn_app; settings delete secure always_on_vpn_lockdown'`.

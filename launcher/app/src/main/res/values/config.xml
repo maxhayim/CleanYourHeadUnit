@@ -47,6 +47,13 @@
          Off by default; a theme can set "open_on_start_choice": true. -->
     <bool name="open_on_start_choice">false</bool>
 
+    <!-- Seconds the first Home after the TV starts waits for a working internet connection before it opens the
+         boot_to_live_tv or Open on start app. A streaming app opened before the network is back shows an error,
+         and after a power cut Wi-Fi can take minutes, as the router starts again too. Home stays on screen
+         meanwhile, and leaving Home cancels the opening. 0, the default: open at once. Up to 600; a theme can
+         set "open_on_start_network_wait": 180. -->
+    <integer name="open_on_start_network_wait">0</integer>
+
     <!-- Some TVs give their Live TV app no leanback entry point at all, so `live_tv_package` above
          resolves to nothing (TCL Android TV 9 on China-market sets is one). This action is then sent
          to that package instead, and the app starts normally. Leave empty to omit. -->
@@ -65,7 +72,9 @@
          A tile whose action no longer resolves opens the app normally. MagentaTV's program guide:
          com.telekom.onetv.tv.pl=com.telekom.onetv.tv.pl.action.PROGRAM_GUIDE. "package=input:<input id>" makes
          the tile switch to that TV input instead (ids from dumpsys tv_input), e.g. a Live TV tile straight to
-         HDMI 1: com.mediatek.wwtv.tvcenter=input:com.mediatek.tvinput/.hdmi.HDMIInputService/HW5. -->
+         HDMI 1: com.mediatek.wwtv.tvcenter=input:com.mediatek.tvinput/.hdmi.HDMIInputService/HW5. "package=view:uri"
+         opens that URI in the package instead (ACTION_VIEW): Bbox TV's live channels are
+         fr.bouyguestelecom.tv.bbui=view:bbox://live. -->
     <string-array name="launch_actions">
     </string-array>
 
@@ -423,6 +432,12 @@
     <!-- One line under the clock: CPU, free memory and free storage. Off by default; a theme can set
          "show_stats": true. Nothing is read, and the clock does not move, while this is false. -->
     <bool name="show_stats">false</bool>
+
+    <!-- Each team's next game in the F1 panel's place under the clock, rotating with the theme's F1 weekend: the package
+         of an add-on that publishes them (the Game Day add-on: io.github.justinnewman.gameday; contract in docs/modules.md).
+         Empty = off: nothing is read or watched. The launcher only reads what the add-on publishes and never goes
+         online. A theme can set "game_day". -->
+    <string name="game_day" translatable="false"></string>
 
     <!-- Time-of-day backdrop behind everything: a dark gradient that follows the clock, with a warm
          horizon glow around sunrise and sunset. 0 keeps the plain background (the default); 1 to 100
