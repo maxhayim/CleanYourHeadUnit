@@ -250,6 +250,26 @@ Things that bit us or contributors, so they don't bite you. Commands use `tools/
   device-owner app that hid it, or leave it, as the
   [Chromecast with Google TV 4K list](../examples/google-chromecast-gtv-4k/debloat.txt) does with
   `cast2class` (`hidden=true` and `enabled=2` there).
+- **A second Google TV profile keeps the listed packages enabled for itself.** The lists,
+  `tools/disable.sh`, `tools/restore.sh` and `tools/check.py` act on user 0, the TV's main profile. A
+  profile added on Google TV is a user of its own (type `com.android.tv.profile` in `dumpsys user`), with
+  its own enabled state for every package, so the list never reaches it. On a Chromecast with Google TV
+  4K (`sabrina`, Google TV 14, `UTTC.250917.004`) with one such profile, six packages the list had
+  disabled for user 0 were still enabled for that profile, user 10: `com.google.android.videos`,
+  `com.android.tv.feedbackconsent`, `com.google.android.adservices.api`,
+  `com.google.android.ext.adservices.api`, `com.google.android.federatedcompute` and
+  `com.google.android.ondevicepersonalization.services`. They run only while that profile is in use; it
+  had not been since setup. See which profiles there are, and what each still has on:
+  ```sh
+  tools/tv.py 'pm list users'                    # UserInfo{10:...} after user 0 is a second profile
+  tools/tv.py 'pm list packages -e --user 10'    # what that profile has enabled
+  ```
+  To clean that profile as well, run the list's names for its user by hand (both lines below were run on
+  that Chromecast). The recovery record, `restore.sh` and `check.py` do not see it, so undo it the same way:
+  ```sh
+  tools/tv.py 'pm disable-user --user 10 com.google.android.videos'
+  tools/tv.py 'pm enable --user 10 com.google.android.videos'          # undo
+  ```
 - **The Input key and CEC die after the hidden factory menu is opened**, seen on a Haier/CVTE set
   (Durabrand `DURAT32ISDB`, `dupont`, Android TV 11 build `RTM6.230109.232`,
   [#470](https://github.com/Gathin23/cleanyourtv/issues/470)). `com.cvte.tv.hkcfac` is the
