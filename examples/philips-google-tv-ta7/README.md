@@ -28,6 +28,11 @@ Accept the "Allow USB debugging?" prompt on the TV the first time a command conn
 - **Gear button**: the remote's Settings button only worked through the stock launcher, so the
   launcher's HomeKeyService (an accessibility service) now handles it. If the button stops working,
   check Settings > Accessibility > "Botão Home" is on, or reinstall the launcher as below.
+- **Gear button or volume ramp**: on a third unit (50PUD7408/77, Argentina, same firmware), holding
+  volume up moved one step per press while HomeKeyService was on, and ramped normally again with it off.
+  It is the trade in [docs/devices/tcl-55p71b-g09-key-repeat.md](../../docs/devices/tcl-55p71b-g09-key-repeat.md):
+  pick one. To keep the ramp, install without `HOME_KEY_SERVICE=1`; Settings stays on the launcher's
+  Settings pill.
 
 ## Re-enable an app
 
