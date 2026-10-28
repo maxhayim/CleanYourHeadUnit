@@ -28,6 +28,7 @@
 # Owner-confirmed: after the first Clean Your TV launcher handoff, the launcher was working and in use.
 # A later dock-order update was installed, but its launch check timed out and the TV capture was black; that
 # revision is unconfirmed.
+# Second unit: the owner reported that the Clean Your TV launcher came up after reboot without issue (2026-10-28).
 #
 # Notes from this TV:
 # - The Freeview Play apps come back enabled at every boot (Freeview Play certification), so they are not
@@ -43,31 +44,3 @@
 # - Settings -> Channel -> Channels -> "Channel Scan" starts a scan as soon as OK is pressed, with no
 #   confirmation. Don't press OK there while exploring.
 # - Location can only be turned on together with Google Location Accuracy. Without Location, apps can't
-#   read the Wi-Fi network's name.
-
-# Batch 1: telemetry and background services
-com.google.android.feedback                      # Google feedback and crash reports
-com.google.android.apps.nbu.smartconnect.tv      # data meter and data-saver VPN service
-com.google.android.syncadapters.calendar         # Google Calendar sync
-com.android.printspooler                         # printing
-
-# Batch 2: preloaded apps
-com.google.android.play.games
-com.google.android.youtube.tvmusic               # YouTube Music
-com.google.android.videos                        # Google TV / Play Movies
-
-# Batch 3: casting, by choice (phones can no longer cast to the TV)
-com.google.android.apps.mediashell               # Chromecast built-in
-
-# Batch 4: the Freeview Play broadband guide. The aerial tuner and its own guide are separate and keep working
-com.mediatek.tv.freeviewplay                     # Freeview Play TV Guide
-
-# Batch 5: stock home and its rows, after the new launcher took Home
-com.google.android.tvlauncher
-com.google.android.tvrecommendations             # recommendation rows
-
-# Disabled on this TV too, but left out of the list: com.google.android.leanbacklauncher.partnercustomizer
-# (JVC rows and tiles on the stock home). examples/hitachi-65qledsm20, on the same board and build, and
-# examples/chiq-ai-pont keep it, because com.mediatek.tv.service can crash-loop after a reboot without its
-# tvlauncher.widget provider, and the Input key stops working. Nothing visible went wrong here, but nobody
-# checked logcat for it, so it stays enabled until someone does.
