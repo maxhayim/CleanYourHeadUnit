@@ -6,6 +6,7 @@ One-session report, cold-boot and reboot-checked.
 
 | Field | Value |
 |---|---|
+| Device type | Smart Set-Top Box (IPTV STB via WorldLink Nepal) |
 | Retail name | NetTV (`ro.product.model` `NETTV`) |
 | Maker | SEI Robotics (`ro.product.manufacturer`), device `SEI700NTV`, hardware `amlogic` |
 | Android | 14 (SDK 34), build `UKG3.250826.001.8426` |
@@ -84,6 +85,14 @@ Fixed by:
    ```
 2. Enabling `tile_menu: true` in `config.xml`, so intentional long-presses open the glass reorder menu
    rather than system settings.
+
+## Top bar and inputs
+
+As an IPTV Set-Top Box without physical HDMI input ports, the Android TV Input Framework only
+registers the operator Live TV stream (`np.com.geniussystems.android.atv.livetv`). In
+`launcher/app/src/main/res/values/config.xml`:
+- Set `<bool name="show_inputs_pill">false</bool>` to hide the redundant Inputs button.
+- Set `<bool name="date_below_clock">true</bool>` to stack the date neatly below the clock when using full button text.
 
 ## Private DNS
 
