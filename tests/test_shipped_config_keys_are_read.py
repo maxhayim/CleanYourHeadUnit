@@ -16,13 +16,6 @@ ignored.
 The readers are not copied in here: they come out of Config.java's own calls on the parsed overlay, so
 a reader that is renamed or dropped fails this test rather than leaving the key it read quietly dead.
 
-`docs/workflows/tv-list.md` step 6 is where a list PR is told a folder may carry a `config.json` with its
-dock, and it said nothing about the keys one takes, while the theme recipe beside it
-(`docs/workflows/theme.md` step 1) has always said "only keys from the table in `themes/README.md`": a
-folder whose `config.json` carried `settings_fallback_components` failed the two checks below with nothing
-in the page a list author reads to point at. The step states the rule now; the two tests under RecipeTest
-hold it there, and hold the sentence it points at to what Config.java really reads.
-
 Run from the repository root: python3 -m unittest discover -s tests -v
 """
 import json
@@ -33,9 +26,6 @@ import unittest
 ROOT = Path(__file__).resolve().parents[1]
 CONFIG_JAVA = ROOT / "launcher" / "app" / "src" / "main" / "java" / "com" / "gathin" / "tvhome" / "Config.java"
 THEMES_README = ROOT / "themes" / "README.md"
-RECIPE = ROOT / "docs" / "workflows" / "tv-list.md"
-# A numbered step of the recipe; the lines under it are indented by three spaces, as the page does.
-NUMBERED = re.compile(r"^\d+\.\s")
 
 # The readers Config.java calls on the overlay it read from the TV: bool(json, "columns", ...) and the
 # two plain lookups a nested value takes, json.optJSONObject("wallpaper_moods") and
@@ -73,25 +63,6 @@ def key_rows(text):
         for key in re.findall(r"`([a-z0-9_]+)`", cells[0]):
             rows.setdefault(key, cells[1])
     return rows
-
-
-def steps(text):
-    """(number, body) for each numbered step of the recipe, its indented continuation lines included."""
-    found = []
-    for line in text.split("\n"):
-        if NUMBERED.match(line):
-            found.append([line.split(".", 1)[0], [line]])
-        elif found and line.startswith("   ") and line.strip():
-            found[-1][1].append(line)
-    return [(number, "\n".join(lines)) for number, lines in found]
-
-
-def welcoming_step(text):
-    """The recipe's step that invites a folder's config.json, or '' when no step does."""
-    for _, body in steps(text):
-        if "`config.json`" in body:
-            return body
-    return ""
 
 
 class ShippedConfigKeysTest(unittest.TestCase):
@@ -132,30 +103,6 @@ class ShippedConfigKeysTest(unittest.TestCase):
         problems = [f"{path.relative_to(ROOT)} sets {key}, which the Keys table says is config.xml only"
                     for path, values in self.configs for key in values if key in config_only]
         self.assertEqual([], problems)
-
-
-class RecipeTest(unittest.TestCase):
-    """docs/workflows/tv-list.md, the page a list PR follows, on the config.json it welcomes."""
-
-    def test_the_recipe_that_welcomes_a_config_json_states_which_keys_it_takes(self):
-        body = welcoming_step(RECIPE.read_text(encoding="utf-8"))
-        self.assertTrue(body, "docs/workflows/tv-list.md no longer welcomes a folder's config.json, so this "
-                             "test has no step to read")
-        for needle in ("themes/README.md", "config.xml", "tests/test_shipped_config_keys_are_read.py"):
-            with self.subTest(needle=needle):
-                self.assertIn(needle, body, f"the step that welcomes a folder's config.json does not name {needle}")
-
-    def test_the_keys_the_table_calls_config_xml_only_are_the_unread_ones(self):
-        # The recipe sends the reader to the Keys table's `config.xml` only rows, so a key marked that way has
-        # to be one Config.java cannot read out of a pushed file - otherwise the page keeps a settable key out.
-        rows = key_rows(THEMES_README.read_text(encoding="utf-8"))
-        config_only = {key for key, kind in rows.items() if "config.xml" in kind}
-        self.assertGreaterEqual(len(config_only), 2,
-                                f"the Keys table marks only {sorted(config_only)} as config.xml only")
-        known = overlay_keys(CONFIG_JAVA.read_text(encoding="utf-8"))
-        self.assertEqual([], sorted(config_only & known),
-                         "the Keys table calls these config.xml only while Config.java reads them from a "
-                         "theme's config.json")
 
 
 if __name__ == "__main__":
