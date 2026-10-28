@@ -3,14 +3,6 @@
 # Firmware Sony/BRAVIA_ATV3_4K_EU/BRAVIA_ATV3_4K:9/PTT1.190515.001.S54/672201:user/release-keys,
 # security patch 2022-01-05. 2 GB RAM (about 200 MB available with the stock UI), 8.1 GB /data, 3.4 GB free.
 #
-# Second unit, 2026-10-28: a 65-inch EU set, locale en-GB, panel 3840x2160, the same product,
-# device and fingerprint. getprop still says model "BRAVIA 4K GB ATV3", so the inch size is not
-# in the software identity. The launcher from launcher/ is Home: dumpsys window | grep mFocusedApp
-# shows com.gathin.tvhome/.MainActivity, with hidden_apps com.sony.dtv.tvx and
-# com.sony.dtv.tvxlauncher.programguide and live_tv_package com.sony.dtv.tvx. On this unit the
-# disabled packages are a subset of the list below (a shorter clean-up, plus tvlauncher from the
-# launcher install). The "off by choice" packages stayed enabled. This unit was not reboot-checked.
-#
 # Apply:   TV_HOST=<tv ip> tools/disable.sh examples/sony-kd-55xf7596/debloat.txt
 # Undo:    TV_HOST=<tv ip> tools/restore.sh examples/sony-kd-55xf7596/debloat.txt
 # Everything is DISABLED, not uninstalled. Comment out any line you want to keep.

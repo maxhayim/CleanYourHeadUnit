@@ -35,14 +35,6 @@ and the three help apps. Still enabled, so not tested on this unit: Discover, bo
 packages, the Sony Select overlay, and every package under "Off by choice" and "Hotel / professional
 mode". This unit was not reboot-checked and has not been lived with for days. `com.sony.dtv.scrums.action`
 is installed and was left enabled.
-- A 65-inch EU set of the same fingerprint (locale en-GB, panel 3840x2160, product
-  `BRAVIA_ATV3_4K_EU`) on 2026-10-28. `ro.product.model` is still `BRAVIA 4K GB ATV3`, so the
-  marketing model is not in getprop. The launcher from `launcher/` is Home
-  (`com.gathin.tvhome/.MainActivity` in `dumpsys window | grep mFocusedApp`), with the same
-  `config.xml` Live TV entries as above. The packages disabled on that set are a subset of
-  [`debloat.txt`](debloat.txt): the shorter clean-up, plus `com.google.android.tvlauncher` from
-  the launcher install. The optional "off by choice" packages stayed enabled. That unit was not
-  reboot-checked.
 
 ## Kept on purpose
 
