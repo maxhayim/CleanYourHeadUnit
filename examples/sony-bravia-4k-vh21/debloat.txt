@@ -31,7 +31,7 @@
 #    preserves remote app hotkeys.
 #  - Home redirection: config.json sets stock_home_redirect to com.google.android.apps.tv.launcherx, handled
 #    by HomeKeyService (Settings > Accessibility). Home pressed anywhere bounces straight back to CleanYourTV.
-#  - Remote keys: Settings button sends scancode 646 (settings_key_scancodes in config.json). Remote app keys:
+#  - Remote keys: Settings button sends scancode 646 ("scan:646:settings" in app_keys). Remote app keys:
 #    scan:485 (YouTube) and scan:490 (Prime Video) in app_keys.
 #  - Additional bloat discovered and disabled: BRAVIA CAM services (camerafwupdate, settings, distancealert,
 #    livingfit), Sony seeds IoT auth and remotestart, Sony help and eco dashboard.
