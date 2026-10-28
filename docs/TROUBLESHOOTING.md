@@ -936,6 +936,23 @@ running back on the list the next time it starts; a helper turned off in Setting
   like `KEYCODE_BUTTON_4` (191) may be shared with other buttons on some remotes/key layouts, so mapping by keycode
   can unintentionally hijack other buttons.
   `scan:` checks match first and target only that specific physical button. See [the Mi Box S note](devices/xiaomi-mi-box-s.md).
+- **The Settings button opens Android TV Settings, not the TV's own menu** (Sony BRAVIA VU3, Google TV 14,
+  `BRAVIA_VU3`; the report records no build, [#2131](https://github.com/Gathin23/cleanyourtv/issues/2131)):
+  the Quick Settings ribbon that button used to open (Picture mode, Picture settings, Brightness) is Sony's
+  own app, and the helper takes `KEYCODE_SETTINGS` before any app is asked, so the press opens the standard
+  settings action - on this set `com.android.tv.settings/.MainSettings`, or the launcher's own panel with
+  `settings_key_panel`. With the helper off the press arrives and nothing opens: `WindowManager` logs
+  `mShortPressOnSettingsBehavior=SHORT_PRESS_SETTINGS_NOTHING`. The ribbon is still installed and opens when
+  it is asked directly: `tools/tv.py 'am start -n com.sony.dtv.smartui/.settings.SmartSettingsActivity'`.
+  `settings_key_keycodes` and `settings_key_scancodes` do not bring the ribbon back on their own: both end in
+  `Settings.ACTION_SETTINGS`, and `settings_fallback_components` is read only when that action resolves to
+  nothing, which it does not on this set. If the remote reports a scancode for that button, an `app_keys`
+  entry should put it back (read from the launcher's code, not yet tried on a set), because a `scan:` entry is
+  answered before the settings branch in
+  `HomeKeyService.onKeyEvent`: `"scan:<scancode>:com.sony.dtv.smartui/.settings.SmartSettingsActivity"` in
+  `config.xml`, or in a theme's `app_keys` (find `<scancode>` with `getevent -lt` while pressing the button,
+  as the `scan:` bullet above does for a Sony remote). A keycode entry cannot: `"176:..."` is
+  `KEYCODE_SETTINGS`, which the helper takes itself before it looks at any app key.
 - **The list still names the helper but `accessibility_enabled` is `0`**, so nothing is bound and the
   button does nothing (not the force stop below): on a TCL C6K Pro (`G08`, Android 14,
   [#1047](https://github.com/Gathin23/cleanyourtv/issues/1047)) a reboot left
