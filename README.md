@@ -208,7 +208,13 @@ else is needed:
 python -m venv tools\venv; tools\venv\Scripts\python.exe -m pip install -r tools\requirements.txt
 powershell -ExecutionPolicy Bypass -File launcher\build-and-install.ps1 -TvHost 192.168.1.50
 powershell -ExecutionPolicy Bypass -File tools\disable.ps1 -TvHost 192.168.1.50 examples\xiaomi-mi-tv-4a\debloat.txt
+powershell -ExecutionPolicy Bypass -File tools\restore.ps1 -TvHost 192.168.1.50 examples\xiaomi-mi-tv-4a\debloat.txt
+powershell -ExecutionPolicy Bypass -File tools\theme.ps1 -TvHost 192.168.1.50 themes\aurora
 ```
+
+The last two are the undo and a theme push, the `tools/restore.sh` and `tools/theme.sh` lines the
+sections above give in bash. On Google TV the undo takes the stock launcher as well:
+`-Stock com.google.android.apps.tv.launcherx`.
 
 </details>
 
