@@ -23,7 +23,7 @@ of these projects ask for far more than the reference launcher does:
 
 **Jump to:** [Home screens built as their own app](#home-screens-built-as-their-own-app) · [Forks of the launcher](#forks-of-the-launcher) · [Screensavers and add-ons](#screensavers-and-add-ons) · [Tools and companion apps](#tools-and-companion-apps) · [Other platforms: Fire TV and LG webOS](#other-platforms-fire-tv-and-lg-webos) · [Add-ons in this repo](addons/README.md) · [Guides and write-ups](#guides-and-write-ups) · [Find a project by TV brand](#find-a-project-by-tv-brand) · [Add yours](#add-yours)
 
-147 projects so far.
+148 projects so far.
 
 ## Home screens built as their own app
 
@@ -58,6 +58,7 @@ New launchers that live in their own repository. Some started from this repo's l
 | [WidgeTV](https://github.com/ashfaqhaq/widgetv) | A widget-first home screen started from this repo's prompt: a sky that moves from dawn to night, a big clock with weather and a second clock for someone far away, a thought of the day and a four-app dock, with prayer times and a timeline to the next prayer. Its own `PROMPT.md` debloats the TV and installs it | Sony BRAVIA (VU31 platform), Google TV 14 | [ashfaqhaq](https://github.com/ashfaqhaq) |
 | [XMB Home](https://github.com/amachador/xmb-home) ([screenshot](https://raw.githubusercontent.com/amachador/xmb-home/main/docs/screenshot.png)) | An XMB-inspired home screen built as its own app: the PS3's early cross bar (Settings, Inputs, Music, Video, Apps), the PSP's two drifting wave sheets over the PS3's colour rule (a colour per half month, brightness by hour, black at night), a breathing glow, a fade-and-zoom on wake and on opening apps, a dimming screensaver and a "Now Playing..." indicator. Made from this repo's prompt. No permissions at all: no internet, no notification access | Philips 55PUD7908, Google TV 14 | [amachador](https://github.com/amachador) |
 | [HabeshaTV](https://github.com/penealfa/HabeshaTV) ([screenshot](https://raw.githubusercontent.com/penealfa/HabeshaTV/5e9bf37ee38a00cb1d94d90773e0966a93372084/docs/screenshots/home-mesob.jpg)) | A home screen started from this repo's launcher, with the apps on a ring like a mesob (a woven basket table), Amharic first with English beneath, the Ethiopian calendar and an Ethiopian-hours clock; it has no network access | Xiaomi Mi Box S (MIBOX4), Android TV 9 | [penealfa](https://github.com/penealfa) |
+| [Chill for Realme TV](https://github.com/taarruunnnn/chill-tv-launcher) ([screenshot](https://raw.githubusercontent.com/taarruunnnn/chill-tv-launcher/8d4866ba9ee9e8ac7cb5d145725dba908f1eeb86/screenshots/home.png)) | A tvOS-style home screen built as its own app in Kotlin and Compose (about 800 KB) that shows only the apps you pick, with hold-OK to move or remove a tile and a USB-drive card. Its repo also writes up a partnercustomizer crash loop and low-memory black screens on a 1 GB Changhong set. Built separately; its restore and install scripts later borrowed this repo's safety checks. No internet permission; REQUEST_DELETE_PACKAGES for the Uninstall menu item | Realme 32" (Changhong DVB91RM, MediaTek), Android TV 11 | [taarruunnnn](https://github.com/taarruunnnn) |
 
 ## Forks of the launcher
 
@@ -248,6 +249,7 @@ By the TV each project was built and tested on. Most of them run on other Androi
 - **Philips:** [CleanYourTV Cinema & OLED Edition](https://github.com/RuckieOfficial/cleanyourtv), [CleanYourTV UI, themes edition](https://github.com/pokelvo/cleanyourtv-ui), [Cosy Home](https://github.com/oliverjwroberts/cosy-home-tv), [Liquid Glass Home for Philips TA1](https://github.com/Nefritor/cleanyourtv-liquid-glass/tree/liquid-glass), [Moving aurora behind Home](https://github.com/mrk1987/cleanyourtv/tree/aurora), [Forslag](https://github.com/modist/forslag), [XMB Home](https://github.com/amachador/xmb-home), [QuickVol TV](https://github.com/thenewnano/quickvol-google-tv)
 - **Polytron:** [Glass and day/night on a Polytron](https://github.com/andikatuluspangestu/cleanyourtv/tree/polytron-glass-launcher)
 - **RCA:** [ZenTV](https://github.com/hernanzini/zentv)
+- **Realme:** [Chill for Realme TV](https://github.com/taarruunnnn/chill-tv-launcher)
 - **Samsung:** [Skylight](https://github.com/SaudSatopay/skylight-tizen)
 - **Sber:** [Salute Home](https://github.com/qwe5n/salute-home)
 - **Sharp:** [Akhter & Ruby TV](https://github.com/arakaneserohingya/ahkter-tv-remake), [Engawa](https://github.com/TRGamer-tech/cleanyourtv/blob/engawa/ENGAWA.md), [Home Deck](https://github.com/glidiandev/home-deck), [KIDŌ](https://github.com/glidiandev/kido)
