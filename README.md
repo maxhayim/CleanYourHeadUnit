@@ -3,7 +3,7 @@
 </p>
 
 <p align="center">
-  🎃 <b>New: the Halloween pack.</b> A spooky Home and a Haunted screensaver for your TV, until 1 November. <a href="https://cleanyour.tv/halloween">cleanyour.tv/halloween</a>
+  🎃 <b>New: the Halloween pack</b> (until 1 Nov): <a href="https://cleanyour.tv/halloween">cleanyour.tv/halloween</a>
 </p>
 
 <p align="center">
