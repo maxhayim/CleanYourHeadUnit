@@ -23,7 +23,7 @@ The core takes a switch only if it changes nothing until a theme or `config.xml`
    `STATS` in `tools/readme_stats.py` - the number `docs/card.jpg` is drawn from, and what each page's alt
    text describes - and the `about N KB` in every `README*.md` that shows that card: its alt text, the
    `launcher/build-and-install.sh` Tools row and the Launcher section's first sentence, in each page's own
-   words. `tests/test_front_page_launcher_size.py` fails while one page still gives the old number.
+   words.
 8. Verify on a real TV with the switch on and off, D-pad from every edge, and attach screenshots.
 9. If you can, run the regression check in [`perf-ab.md`](perf-ab.md) with the
    switch on: a baseline before you start, your build after, and the numbers in the PR. It's optional, but welcome.
