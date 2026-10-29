@@ -96,14 +96,14 @@ com.sony.dtv.assistantadapter
 # unit did that (settings put secure screensaver_components com.gathin.tvhome/.ClockDream) and then disabled it.
 # com.google.android.apps.tv.dreamx # Ambient screensaver and background sync jobs
 
-# streaming apps (off by choice, third unit; the remote's Netflix and Prime Video buttons then open the
+# streaming apps (off on the third unit by choice; other owners can uncomment them; the remote's Netflix and Prime Video buttons then open the
 # app's Play Store page, which has an Enable button)
-com.netflix.ninja                 # Netflix
-com.amazon.amazonvideo.livingroom # Prime Video
-com.spotify.tv.android            # Spotify
+# com.netflix.ninja                 # Netflix
+# com.amazon.amazonvideo.livingroom # Prime Video
+# com.spotify.tv.android            # Spotify
 
-# features not used (off by choice, third unit)
-com.sony.dtv.hbbtvplayer          # HbbTV / red button on live TV
+# features not used (off on the third unit by choice; other owners can uncomment)
+# com.sony.dtv.hbbtvplayer          # HbbTV / red button on live TV
 
 # preloaded apps (off by choice)
 au.com.ninenow.ctv                # 9Now
