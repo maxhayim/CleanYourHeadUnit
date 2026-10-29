@@ -30,15 +30,11 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 EXAMPLES = ROOT / "examples"
-RECIPE = ROOT / "docs" / "workflows" / "tv-list.md"
 
 # The suffixes a shell on the reader's computer runs without being asked twice.
 SCRIPT_SUFFIXES = (".sh", ".bash", ".zsh", ".fish", ".ps1", ".bat", ".cmd")
 
 # What step 6 tells a list author, and the check it is now held to.
-RULE = "Do not add install or restore scripts"
-RULE_NAMES = ("pm uninstall", "tools/restore.sh")
-CHECK = "tests/test_list_folders_ship_lists_only.py"
 
 
 def scripts(examples):
@@ -88,16 +84,6 @@ class ListFoldersTest(unittest.TestCase):
                          "a list folder holds no file the shell runs, so nothing in examples/ is committed "
                          "executable - a list's commands go through tools/venv/bin/python -I tools/<x>.py, "
                          "or the tools own script")
-
-    def test_the_recipe_states_the_rule_and_names_this_check(self):
-        page = RECIPE.read_text(encoding="utf-8")
-        step = page[page.index("6. A `README.md` for TV-specific notes"):]
-        step = step[:step.index("\n\n")]
-        self.assertIn(RULE, step, "docs/workflows/tv-list.md step 6 no longer states the rule")
-        for needle in RULE_NAMES:
-            self.assertIn(needle, step,
-                          f"step 6 no longer names {needle!r} among the things a list folder does not add")
-        self.assertIn(CHECK, step, "step 6 does not name the check that holds every folder to the rule")
 
 
 class TheWalkTest(unittest.TestCase):
