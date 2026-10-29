@@ -28,9 +28,10 @@
    for a set whose row there should read shorter than the same set's row in `examples/README.md` - that table
    has room for `Google TV launcher on Android TV 11`, the short one for `Google TV 11`.
    `tests/test_examples.py` checks the file.
-5. Change nothing outside the folder. The tables in `examples/README.md` and `README.nl.md`, the brand grid and the
-   counts (the `TV models` number in the card's alt text) are generated from every `tv.json` by
-   `tools/gen_tables.py`, which a maintainer runs after merging; CI compares them only on `main`.
+5. Change nothing outside the folder. The tables in `examples/README.md` and `README.nl.md`, the brand grid in
+   `README.md`, `README.nl.md` and `README.de.md`, and the counts (the `TV models` number in the card's alt text)
+   are generated from every `tv.json` by `tools/gen_tables.py`, which a maintainer runs after merging; CI compares
+   them only on `main`.
 6. A `README.md` for TV-specific notes and a `config.json` with the dock are welcome in the folder. Do not add
    install or restore scripts, Private DNS or AdGuard setup, or `pm uninstall` steps: the folder only
    disables, and `tools/disable.sh` and `tools/restore.sh` do the rest.
