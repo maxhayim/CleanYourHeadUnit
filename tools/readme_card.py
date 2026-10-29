@@ -5,7 +5,7 @@ Run tools/readme_stats.py and tools/readme_featured.py first, then:
 python3 tools/readme_card.py Fredoka.ttf docs/card.jpg
 python3 tools/readme_card.py --halloween Fredoka.ttf docs/card-halloween.jpg   # the October variant
 The Halloween variant keeps the layout and the generated numbers: it recolours docs/stats.png's mint
-numbers and the headings to pumpkin orange, adds a dripping stripe, a few bats and pumpkins, and shows
+numbers and the headings to pumpkin orange, adds a thin dripping stripe and a few bats, and shows
 docs/new-home-halloween.jpg as AFTER. docs/card.jpg is not touched, so the README goes back with one line.
 Fredoka is the variable TTF from Google Fonts, and its file is not in this repo: pass the path of the
 copy you downloaded. The four pictures it stacks are this checkout's own - docs/stock-home.jpg,
@@ -193,36 +193,27 @@ def heading(img, box):
     img.paste(Image.composite(Image.new("RGB", part.size, ORANGE), part, light), box)
 
 
-def decorate(card, ys):
-    """A dripping stripe along the top, and a few bats and pumpkins at low opacity."""
+def decorate(card):
+    """A dripping stripe along the top, and a few bats at low opacity."""
     import math
     layer = Image.new("RGBA", card.size, (0, 0, 0, 0)); dl = ImageDraw.Draw(layer)
-    for x0, x1, drop in ((0, 90, 20), (150, 190, 46), (260, 300, 26), (410, 450, 52), (520, 570, 22),
-                         (640, 690, 38), (790, 830, 56), (900, 940, 24), (1010, 1060, 44), (1130, 1170, 28),
-                         (1250, 1290, 50), (1380, 1420, 24), (1490, 1530, 42), (1560, 1600, 20)):
-        dl.rounded_rectangle([x0, 0, x1, drop], radius=(x1 - x0) // 2, fill=ORANGE)
-    dl.rectangle([0, 0, W, 12], fill=ORANGE)
+    # as on the website header and the README banner: a thin stripe, a few thin drips ending in a drop
+    for x, drop in ((95, 34), (155, 20), (380, 42), (520, 24), (800, 40), (1100, 28), (1170, 36), (1335, 22),
+                    (1560, 30)):
+        dl.rectangle([x - 2, 0, x + 1, drop], fill=ORANGE)
+        dl.ellipse([x - 4, drop - 2, x + 3, drop + 5], fill=ORANGE)
+    dl.rectangle([0, 0, W, 5], fill=ORANGE)
     card.paste(Image.composite(Image.new("RGB", card.size, ORANGE), card, layer.split()[3].point(lambda v: v * 9 // 10)))
     deco = Image.new("RGBA", card.size, (0, 0, 0, 0)); dd = ImageDraw.Draw(deco)
 
     def bat(cx, cy, s):
         pts = [(0, -4), (3, -8), (5, -3), (16, -9), (30, -2), (22, 0), (26, 9), (14, 4), (6, 12), (0, 5)]
         pts = pts + [(-x, y) for x, y in reversed(pts)]
-        dd.polygon([(cx + x * s, cy + y * s) for x, y in pts], fill=(255, 154, 60, 70))
-
-    def pumpkin(cx, cy, r):
-        dd.ellipse([cx - r, cy - r * 0.8, cx + r, cy + r * 0.8], fill=(255, 154, 60, 95))
-        dd.ellipse([cx - r * 0.45, cy - r * 0.8, cx + r * 0.45, cy + r * 0.8], outline=(21, 24, 30, 120), width=2)
-        dd.rectangle([cx - 2, cy - r * 0.8 - 8, cx + 2, cy - r * 0.8 + 1], fill=(120, 200, 90, 110))
-        for ex in (-r * 0.4, r * 0.4):
-            dd.polygon([(cx + ex - 5, cy - 2), (cx + ex + 5, cy - 2), (cx + ex, cy - 11)], fill=(21, 24, 30, 200))
-        dd.arc([cx - r * 0.5, cy - 2, cx + r * 0.5, cy + r * 0.5], 15, 165, fill=(21, 24, 30, 200), width=3)
+        dd.polygon([(cx + x * s, cy + y * s) for x, y in pts], fill=(255, 154, 60, 45))
 
     for cx, cy, s in ((92, 70, 1.3), (1548, 150, 1.3), (565, 352, 1.1), (1090, 478, 1.0), (140, 585, 1.2),
                       (1480, 650, 1.1), (800, 760, 1.0)):
         bat(cx, cy, s)
-    for cx, cy in ((PAD + 40, ys[0] - 14), (W - PAD - 40, ys[1] - 14), (W - PAD - 60, ys[0] - 14)):
-        pumpkin(cx, cy, 20)
     card.alpha_composite(deco) if hasattr(card, "alpha_composite") and card.mode == "RGBA" else card.paste(deco, (0, 0), deco)
 
 
@@ -239,7 +230,7 @@ for i, p in enumerate(parts):
     if i: y += SEP; d.line([(PAD, y), (W - PAD, y)], fill=LINE, width=2); y += SEP
     card.paste(p, (0, y)); y += p.height
 if HALLOWEEN:
-    decorate(card, (parts[0].height + SEP, parts[0].height + parts[1].height + 3 * SEP))
+    decorate(card)
 try:
     card.save(OUT, quality=88, optimize=True)
 except (OSError, ValueError) as error:
