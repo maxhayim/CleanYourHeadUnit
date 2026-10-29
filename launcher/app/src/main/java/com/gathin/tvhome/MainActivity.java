@@ -3156,7 +3156,9 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
      *  answers com.xiaomi.mitv.tvplayer.EXTSRC_PLAY and nothing else). Otherwise the standard way is
      *  ACTION_VIEW on its channel URI, which the Live TV app handles; where nothing takes that, the
      *  configured `input_action` is sent with the same URI instead (XGIMI's HDMI player only answers
-     *  com.xgimi.action.hdmiPlayer). With `input_uri_scheme` set (YaOS: live-tv) the same URI goes out
+     *  com.xgimi.action.hdmiPlayer). An `input_action` written as "package/.Activity" starts that activity
+     *  itself, ahead of the standard way, for firmware that answers the channel URI with "unsupported"
+     *  (Redmi X65, MiTV-NSOP0: com.xiaomi.mitv.tvplayer/.ExternalSourceActivity). With `input_uri_scheme` set (YaOS: live-tv) the same URI goes out
      *  with that scheme and no MIME type. A player guarded by a permission this build does not declare
      *  throws SecurityException, which used to take Home down with it (YaOS before the manifest asked
      *  for ACCESS_TV_SOURCE). */
@@ -3175,8 +3177,18 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         Integer source = mappedSource(sourceId);
         if (source != null && source >= 0 && !inputAction.isEmpty()) {
             try {
-                startActivity(new Intent(inputAction).putExtra("input", source.intValue())
+                startActivity(inputActionIntent().putExtra("input", source.intValue())
                         .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+                return;
+            } catch (ActivityNotFoundException | SecurityException e) {
+                // fall through to the standard way
+            }
+        } else if (source == null && InputSources.isComponent(inputAction)) {
+            // An activity named in input_action is the vendor's own source picker (Xiaomi: tvplayer's
+            // ExternalSourceActivity). Its firmware answers the standard channel URI with "unsupported", so the
+            // row goes straight there; the picker is the overlay the remote's Source button opens.
+            try {
+                startActivity(inputActionIntent().addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
                 return;
             } catch (ActivityNotFoundException | SecurityException e) {
                 // fall through to the standard way
@@ -3205,7 +3217,14 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
                 return;
             }
         }
-        open(new Intent(inputAction).setDataAndType(uri, "vnd.android.cursor.item/channel"));
+        open(inputActionIntent().setDataAndType(uri, "vnd.android.cursor.item/channel"));
+    }
+
+    /** `input_action` as an intent: an explicit component when it reads "package/.Activity", else an action. */
+    private Intent inputActionIntent() {
+        ComponentName component = InputSources.isComponent(inputAction)
+                ? ComponentName.unflattenFromString(inputAction) : null;
+        return component != null ? new Intent().setComponent(component) : new Intent(inputAction);
     }
 
     /** Dropdown menu under the Inputs pill: HDMI ports (with connection state), AV and Live TV. */
