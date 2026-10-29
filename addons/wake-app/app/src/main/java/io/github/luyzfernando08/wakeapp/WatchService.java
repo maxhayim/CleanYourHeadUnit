@@ -34,10 +34,12 @@ public class WatchService extends Service {
     private final Runnable open = new Runnable() {
         @Override
         public void run() {
+            // The switch or the app may have changed while this waited out its delay.
+            if (!Prefs.enabled(WatchService.this) || Prefs.app(WatchService.this).isEmpty()) return;
             long now = SystemClock.elapsedRealtime();
             if (lastOpen != 0 && now - lastOpen < MIN_GAP_MS) return;
-            lastOpen = now;
-            Launch.open(WatchService.this);
+            // Only an open that happened starts the cooldown: a missing app must not block the next wake.
+            if (Launch.open(WatchService.this)) lastOpen = now;
         }
     };
 
