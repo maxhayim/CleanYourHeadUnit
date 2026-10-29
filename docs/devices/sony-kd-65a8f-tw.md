@@ -4,8 +4,9 @@ Initial cleanup and reference-launcher handover on one Taiwan-market 65-inch
 OLED TV on October 24, 2026, with owner follow-up and physical-remote checks on
 October 29. Home handover passed its original reboot check. The dedicated Apps
 button's regression was reproduced, then an input-layout workaround passed the
-owner's physical checks without breaking held-volume repeat. That workaround
-is not reboot-tested and does not change the launcher's underlying routing.
+owner's physical checks without breaking held-volume repeat. The owner later
+reported that the requested restart checks also passed. This does not change
+the launcher's underlying routing or establish every feature's reliability.
 The Google Play button's older, unrelated failure has an owner-verified native
 Play Store fallback.
 This remains a compatibility note, not a fully validated executable debloat
@@ -119,12 +120,14 @@ been tested. A later, separately backed-up batch disabled five more packages:
 | `com.sony.dtv.da.service` | APK label `Remote Support`; app-activity, power, and audio status collectors; loses Sony remote support |
 | `com.qterics.da.product` | Qterics Product Kit provider used by that remote-support agent |
 
-The later five package states were read back as disabled and the owner reported
-normal operation, but **that later batch was not reboot-tested**, including at
-the October 29 follow-up. The owner continued using the TV between the initial
-cleanup and that follow-up; this does not establish that every feature, standby
-path, or later change passed a long-duration test. This report does not claim
-that all telemetry embedded in streaming apps or Google services was blocked.
+The later five package states were read back as disabled before the owner's
+October 29 restart. The owner subsequently reported normal startup and the
+requested remote checks after that restart, but **the five package states were
+not re-read afterward**. Functional success does not prove each disablement
+persisted. Continued use since initial cleanup also does not establish that
+every feature, standby path, or later change passed a long-duration test. This
+report does not claim that all telemetry embedded in streaming apps or Google
+services was blocked.
 
 Two packages were already disabled before this work and were left alone:
 `com.sony.dtv.smarthomesettings` and `com.google.android.inputmethod.latin`.
@@ -172,11 +175,13 @@ claim:
 - The physical Google Play button's older failure predates cleanup. A native
   Play Store fallback was applied and the owner confirmed that it now works,
   with held-volume operation still working and key filtering disabled.
-- The later reporting/support batch, new Play Movies disablement, and accepted
-  Apps-key layout have
-  **not** been checked across another reboot. There was no new reboot during
-  this follow-up, and no new itemized validation of HDMI/ARC, casting, firmware
-  updates, long standby/wake, or OLED maintenance.
+- After the accepted mapping was saved, the owner performed the requested
+  restart test and reported all requested startup/remote checks normal. This
+  is owner-reported physical validation, not an instrumented boot-ID or
+  post-reboot package/layout-state capture; details are below.
+- Standby/wake, HDMI/ARC, casting, firmware updates, every remote key, and OLED
+  maintenance were not newly validated. Later reporting/support package states
+  were not individually re-read after the restart.
 
 ### Regression: the physical Apps button does nothing
 
@@ -281,10 +286,11 @@ This is an **owner-tested local workaround**, not a reference-launcher fix or a
 turnkey add-on supplied by this PR. Companion source, binaries, private device
 descriptors, raw captures, and local setup/recovery scripts are not included.
 The source-backed approach above is the reference, not a claim that its
-Bluetooth-specific setup can be used unchanged on this IR device. The layout
-has **not** been tested across reboot or standby/wake. Volume up, every other
-remote key, alternate remotes, and other firmware versions were not individually
-validated in this trial.
+Bluetooth-specific setup can be used unchanged on this IR device. The owner
+later reported successful Apps and volume-up/down operation after restart, as
+listed below. Standby/wake, every other remote key, alternate remotes, and
+other firmware versions remain unvalidated; no post-reboot layout API readback
+was made.
 
 ### Google Play button: native Store fallback, not a cleanup regression
 
@@ -315,8 +321,28 @@ This also disables the old movie app's own entry points and related previews;
 it is not a recommendation to disable an app another owner uses. The package
 was not removed and its data was not cleared. Restoring this TV's recorded
 original state would use `pm enable --user 0 com.google.android.videos`, not
-`default-state`. This follow-up change is **not reboot-tested**. No Sony APK,
+`default-state`. The owner subsequently confirmed the Store key worked after
+restart, but the package's enabled value was not re-read afterward. No Sony APK,
 decompiled vendor source, diagnostic app, or raw log is published here.
+
+### Owner-reported restart validation
+
+After the final Apps mapping had been saved, the owner was asked to disable
+USB/network debugging and use the TV's Restart command rather than a standby
+power toggle. The owner reported that all requested checks were normal:
+
+- The TV automatically entered the replacement Home after restart.
+- The physical Google Play key opened Play Store.
+- The physical Apps key opened the all-apps list from Home and from YouTube.
+- Holding volume up or down repeated adjustment and stopped on release.
+- Physical Home and Input operated normally.
+
+These are the owner's grouped physical results from the requested post-restart
+checklist. No ADB authentication, input injection, app launch, or configuration
+change was performed to obtain those results. There was no post-restart boot-ID,
+package-state, or selected-layout capture. The evidence supports functional
+survival of the two button workarounds through the reported restart, not an
+independent per-package persistence audit or a standby/wake test.
 
 ## Debugging closure and follow-up limits
 
@@ -325,19 +351,21 @@ The TV used its built-in Ethernet port, with no external USB accessories.
 the owner reported switching debugging off, three TCP-only checks of the previously
 reachable ADB port returned `ECONNREFUSED`, rather than timing out. No ADB
 authentication or TV interaction was attempted during those closure checks.
-Authorization revocation in the TV UI was not independently confirmed, and no
-additional reboot was performed after the later package batch or ADB shutdown.
+Authorization revocation in the TV UI was not independently confirmed. That
+historical closure record did not include another reboot after the later
+package batch; the newer owner-reported restart is documented separately above.
 
-The owner explicitly reopened debugging for the October 29 diagnostics and
-Play Store fallback test. The October 24 closure result is historical, not
-proof that debugging is closed after the follow-up. A new debugging shutdown,
-authorization revocation, and port-closure check remain pending; this is not a
-recommendation to leave network ADB enabled. The accepted layout does not
-require leaving debugging enabled.
+The owner reopened debugging for the October 29 diagnostics and trials. After
+the owner's restart report, three new TCP-only checks at 13:36 Taiwan time on
+October 29 each returned `ECONNREFUSED` at the TV's last known ADB address/port,
+rather than timing out. No ADB protocol or authentication was attempted. This
+is new port-closure evidence, not reuse of the October 24 result. UI-level
+authorization revocation was still not independently confirmed. Neither
+accepted button workaround requires leaving debugging enabled.
 
 This note deliberately omits IP addresses, device identifiers, account details,
 raw dumps, private keys, screenshots, APKs, and local recovery scripts. Per the
 TV-list workflow, an executable list should wait for explicit validation of the
-remaining limitations, including the accepted workaround's reboot and wake
-persistence. This PR changes documentation only; it does not claim to fix the
+remaining limitations, including standby/wake and the later packages' actual
+post-reboot states. This PR changes documentation only; it does not claim to fix the
 launcher's button handling or validate later upstream launcher versions.
