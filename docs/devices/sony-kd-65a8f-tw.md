@@ -1,9 +1,13 @@
 # Sony KD-65A8F (Taiwan firmware): compatibility report
 
-Successful initial cleanup and reference-launcher handover on one Taiwan-market
-65-inch OLED TV, tested on October 24, 2026. This is a same-day report, not a
-several-day tested debloat list. The retail model was supplied by the owner;
-Android reports a generic platform model.
+Initial cleanup and reference-launcher handover on one Taiwan-market 65-inch
+OLED TV on October 24, 2026, with owner follow-up and physical-remote checks on
+October 29. Home handover passed its original reboot check, but the dedicated
+Apps button has a confirmed, unresolved regression. The Google Play button's
+older, unrelated failure now has an owner-verified native Play Store fallback.
+This remains a compatibility note, not a fully validated executable debloat
+list. The retail model was supplied by the owner; Android reports a generic
+platform model.
 
 ## Original Sony firmware
 
@@ -68,7 +72,10 @@ After the owner approved handover:
 The optional Home/Input accessibility helpers were not enabled. The owner
 reported that the physical Home, Input, Settings, app shortcuts, and held-volume
 checks were normal before the final launcher reboot. These were grouped owner
-checks, not separate instrumented tests of every button.
+checks, not separate instrumented tests of every button. The October 29
+follow-up found that the dedicated Apps button does not work after handover;
+the earlier grouped report must not be read as individual validation of that
+button. See the regression and review results below.
 
 ## Sony inputs and OLED settings
 
@@ -110,16 +117,20 @@ been tested. A later, separately backed-up batch disabled five more packages:
 | `com.qterics.da.product` | Qterics Product Kit provider used by that remote-support agent |
 
 The later five package states were read back as disabled and the owner reported
-normal operation, but **that later batch was not reboot-tested**. There is no
-several-day stability claim for either batch, and this report does not claim
+normal operation, but **that later batch was not reboot-tested**, including at
+the October 29 follow-up. The owner continued using the TV between the initial
+cleanup and that follow-up; this does not establish that every feature, standby
+path, or later change passed a long-duration test. This report does not claim
 that all telemetry embedded in streaming apps or Google services was blocked.
 
 Two packages were already disabled before this work and were left alone:
 `com.sony.dtv.smarthomesettings` and `com.google.android.inputmethod.latin`.
-The original states of each changed package were recorded as enabled=0
-(manifest default), with per-component overrides left intact. Recovery plans
-preserve that distinction rather than blindly enabling every package. Actual
-restoration was not exercised.
+The original states of the initial cleanup packages, stock Home, and the later
+five reporting/support packages were recorded as enabled=0 (manifest default),
+with per-component overrides left intact. The separate October 29 Play Movies
+change below had an original state of enabled=1, not 0. Recovery plans preserve
+that distinction rather than blindly enabling every package or resetting all
+of them to manifest defaults. Actual package restoration was not exercised.
 
 ## Important retained components and observations
 
@@ -144,17 +155,125 @@ restoration was not exercised.
 - Screenshots confirmed that the replacement Home rendered and its configured
   app tiles were present. No measured performance or RAM-savings claim is made.
 
+## October 29 owner review and remote-button follow-up
+
+The owner reviewed the setup after continued use since October 24. The follow-up
+established the following results, rather than a blanket "everything works"
+claim:
+
+- The replacement Home remains in use. The original October 24 reboot evidence
+  still applies to the initial cleanup and Home handover only.
+- The physical Apps button has a reproducible regression after stock Home is
+  disabled. It remains unresolved in the final configuration.
+- The physical Google Play button's older failure predates cleanup. A native
+  Play Store fallback was applied and the owner confirmed that it now works,
+  with held-volume operation still working and key filtering disabled.
+- The later reporting/support batch and the new Play Movies disablement have
+  **not** been checked across another reboot. There was no new reboot during
+  this follow-up, and no new itemized validation of HDMI/ARC, casting, firmware
+  updates, long standby/wake, or OLED maintenance.
+
+### Regression: the physical Apps button does nothing
+
+On the recorded version 2.7 build and Sony firmware above, press Home to show
+`com.gathin.tvhome/.MainActivity`, then press the physical Apps button. No app
+list opens. The same failure was reproduced from Sony's network settings.
+The physical key was observed as Android keycode 284 (`KEYCODE_ALL_APPS`),
+scan code 580, during a temporary diagnostic experiment.
+
+The observed launch request in both contexts was:
+
+```text
+act=android.intent.action.ALL_APPS pkg=com.android.tv.settings
+```
+
+The replacement Home was focused, but the request still targeted Sony Settings;
+resolving that exact request found no activity. The disabled stock launcher had
+registered `com.google.android.tvlauncher/.appsview.AppsViewActivity` for
+`android.intent.action.ALL_APPS`. The installed replacement did not declare a
+handler for that action.
+
+[Android 9's `PhoneWindowManager.launchAllAppsAction()`](https://android.googlesource.com/platform/frameworks/base/+/android-9.0.0_r61/services/core/java/com/android/server/policy/PhoneWindowManager.java)
+resolves HOME with `MATCH_SYSTEM_ONLY` on Leanback devices and restricts the
+ALL_APPS request to the selected package. The live enabled HOME candidates were
+the user-installed replacement and Sony Settings' system `FallbackHome`, which
+matches the observed routing. This is an AOSP-source explanation corroborated
+by this TV's resolver and launch records, not a claim that the vendor framework
+was independently decompiled. Adding only a generic ALL_APPS intent filter to
+the replacement would not receive a request restricted to another package.
+
+There is **no accepted fix for the Apps button** in this report. Stock Home
+remains disabled; the owner's earlier grouped shortcut check did not establish
+that this dedicated button worked. These findings do not establish whether a
+newer upstream launcher release has the same behavior.
+
+### Rejected workaround: key filtering breaks held-volume repeat
+
+A separate, locally built accessibility key-filter experiment restored the two
+shortcuts, but the owner found that holding a volume button changed the volume
+by only one step. A subsequent timed-repeat compensation attempt did not help:
+the service received other keys but did not receive the physical volume events
+needed to start compensation; the audio event log attributed the adjustments
+to WindowManager instead.
+
+The filter service was disabled. Settings readback and the accessibility dump
+confirmed no enabled service, and the owner confirmed native held-volume repeat
+returned. The experiment is **not** a working fix and is not included in this
+PR; no reference-launcher code was changed. Do not treat key filtering as a
+validated repair for this firmware merely because an app shortcut opens.
+
+### Google Play button: native Store fallback, not a cleanup regression
+
+The owner clarified that this button had only flashed a screen for a long time
+before cleanup, around the retirement of the old Play Movies entry point. The
+service-transition timing is owner recollection, not an independently proven
+cause of the activity closing. Logs showed Sony's key handler starting
+`com.google.android.videos/.tv.presenter.activity.TvLauncherActivity`, followed
+by the activity finishing with `app-request`; that is not proof of a crash.
+
+Read-only inspection of this TV's original SonySystemService APK identified
+`GlobalKeyIntentService.getGooglePlayLaunchIntent()` choosing enabled
+`com.google.android.videos` first, then enabled `com.android.vending` as its
+fallback. With the owner's approval, only the unused old Play Movies package
+was disabled:
+
+```sh
+pm disable-user --user 0 com.google.android.videos
+```
+
+The original user-0 state was enabled=1; the new state was read back as
+3 (`disabled-user`). Enabled/disabled package sets changed only for that package.
+HOME, display, accessibility, screensaver, and timeout checks were unchanged.
+The owner then confirmed the physical Google Play button opened Play Store and
+held-volume operation still worked, without enabling key filtering.
+
+This also disables the old movie app's own entry points and related previews;
+it is not a recommendation to disable an app another owner uses. The package
+was not removed and its data was not cleared. Restoring this TV's recorded
+original state would use `pm enable --user 0 com.google.android.videos`, not
+`default-state`. This follow-up change is **not reboot-tested**. No Sony APK,
+decompiled vendor source, diagnostic app, or raw log is published here.
+
 ## Debugging closure and follow-up limits
 
 The TV used its built-in Ethernet port, with no external USB accessories.
-`ro.adb.secure` was 1, and the saved ADB identity was reused. After the owner
-reported switching debugging off, three TCP-only checks of the previously
+`ro.adb.secure` was 1, and the saved ADB identity was reused. On October 24, after
+the owner reported switching debugging off, three TCP-only checks of the previously
 reachable ADB port returned `ECONNREFUSED`, rather than timing out. No ADB
 authentication or TV interaction was attempted during those closure checks.
 Authorization revocation in the TV UI was not independently confirmed, and no
 additional reboot was performed after the later package batch or ADB shutdown.
 
+The owner explicitly reopened debugging for the October 29 diagnostics and
+Play Store fallback test. The October 24 closure result is historical, not
+proof that debugging is closed after the follow-up. A new debugging shutdown,
+authorization revocation, and port-closure check remain pending; this is not a
+recommendation to leave network ADB enabled. Preparing this documentation
+update did not itself connect to or change the TV.
+
 This note deliberately omits IP addresses, device identifiers, account details,
 raw dumps, private keys, screenshots, APKs, and local recovery scripts. Per the
-TV-list workflow, a several-day list can be contributed later after additional
-owner observation and explicit validation of the remaining limitations.
+TV-list workflow, an executable list should wait for explicit validation of the
+remaining limitations and clear treatment of the unresolved Apps-button
+regression. This PR changes documentation only; it does not claim to fix the
+launcher's button handling or validate later upstream launcher versions.
