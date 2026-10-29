@@ -95,6 +95,27 @@
 # - With HomeKeyService bound, one tap of volume moved two steps (#1100); consume_volume_keys true made it one step,
 #   and a held button kept ramping, a little slower than without the helper.
 #
+# Latin America firmware unit, 2026-10-28: same G03_4K_GB / AR09 / V8-R51MT05-LF1V620 build, client
+# TCL-LA-RTD51M-S1, security patch 2024-03-05. Applied groups 1-3, group 4 minus Netflix, Prime Video and
+# com.google.android.videos, group 5 minus voice (katniss, tv.assistant, tcl.assistant, smartalexa, micmanager) and
+# Chromecast, then groups 6 and 7 and launcherx, in batches with a screenshot after each and three reboots: every
+# package stayed disabled, Wi-Fi stayed up, the TV powered on to the new Home (FallbackHome, then the launcher; no
+# Live TV, no RecoveryActivity), and HDMI 1 opened from the launcher's Inputs menu. One day so far.
+# - tools/disable.sh skipped android.autoinstalls.config.google.gtvpai in group 2: its dumpsys has no permission
+#   block. After a reboot with all five com.tcl.tvinput inputs still listed it was disabled with TVINPUT_ALLOW=1
+#   (the package is a stub with one DummyReceiver).
+# - setupwraith owned an older saved network, not the one in use. Forgetting that one let disable.sh through.
+# - Remote: Bluetooth "TCL_RC902V_M2", with the same HID usages as the M1 above: Netflix 0x0c0051, YouTube
+#   0x0c0057, Prime Video 0x0c005f, gear 0x0c0055 (keycode 4077), Home 0x0c0223. Input is 0x0c0049 (KEY_GAMES,
+#   keycode 178) and opens com.tcl.suspension's source panel with no helper. HOME_KEY_SERVICE=1 with the app_keys
+#   and settings_key_keycodes of config.json brought back the gear and the three app buttons (real remote).
+# - With HomeKeyService bound, a held Volume Up stepped once per press instead of ramping, the trade described in
+#   docs/devices/tcl-55p71b-g09-key-repeat.md. "consume_volume_keys": true (config.xml or a theme) brought the
+#   ramp back with one step per tap, checked on the real remote, and the helper rebound by itself after a reboot.
+#   It is not in this folder's config.json because the other two units were not measured.
+# - Voice stayed on with launcherx disabled. The first mic press afterwards answered that the Assistant had trouble
+#   processing; later presses, and presses after a reboot, worked.
+#
 # DO NOT DISABLE: com.tcl.tv, com.tcl.tvinput (Live TV, tuner, HDMI/AV), com.tcl.suspension (Quick panel and the
 # Input key's source panel), com.tcl.settings, com.tcl.system.server, com.tcl.providers.config, com.tcl.initsetup,
 # com.tcl.factory.view, com.tcl.tcl_bt_rcu_service, com.tcl.autopair (remote), com.tcl.inputmethod.international
