@@ -73,7 +73,10 @@ Then press Home and answer **Show card** if you want the card; Keep hidden leave
   once then. On TCL sets the install script also allows the `APP_AUTO_START` app-op.
 - **Display over other apps** (`SYSTEM_ALERT_WINDOW`), granted by the install script with `appops`: Android 10
   and later only let an app start another app's screen from the background when it holds this. The app draws no
-  overlay window.
+  overlay window. On Android 9 it is not needed. On Android 10 and later, without it nothing opens: on a Philco
+  (Android 14) with the grant revoked the screen woke and the app stayed shut, and with it granted the app opened.
+  The install script grants it; if you install the APK another way, run
+  `adb shell appops set io.github.luyzfernando08.wakeapp SYSTEM_ALERT_WINDOW allow`.
 - **App list**: a `<queries>` entry for launcher apps, so the picker can list them. No `QUERY_ALL_PACKAGES`.
 - No network, no storage permission, nothing collected. Settings stay in the app's private preferences.
 - **`WatchService`** is exported only to callers holding `WRITE_SECURE_SETTINGS`, which the adb shell has and
@@ -85,5 +88,7 @@ Then press Home and answer **Show card** if you want the card; Keep hidden leave
 - Xiaomi Mi Box S (MIBOX4, Android TV 9), with the reference launcher 3.1: the picker and the settings card
   with the real remote; opening the chosen app by itself after the screen went off and on again (standby, woken
   with the remote); a link: the YouTube app opened straight on a video screen, not on its home page. A launcher
-  chosen from the install script is refused. Not tried: a TCL set, a boot (the 8-second delay) or a link to
-  a live TV channel.
+  chosen from the install script is refused. Not tried: a boot (the 8-second delay) or a link to a live TV
+  channel.
+- Philco Smart TV by Skyworth (sunnyvale, MediaTek, Android TV 14), launcher 3.1: opening tinyCam by itself on
+  waking from standby, and not opening it with the overlay grant revoked (see Permissions). Not tried on a TCL set.
