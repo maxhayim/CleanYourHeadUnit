@@ -1213,6 +1213,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
     protected void onPause() {
         super.onPause();
         resumed = false;
+        cancelHoldOk();
         root.removeCallbacks(showIdleClock);
         endReorder();   // Home or another app while reordering keeps the order so far
         wallpaperPlayer.stop();
@@ -1273,12 +1274,15 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
             startPendingSettingsReorder();
             if (libraryFocusPending && appLibrary == null) focusLibrary();
             showCardPrompt();
+        } else {
+            cancelHoldOk();   // a dialog or another window took the remote while OK was held
         }
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        cancelHoldOk();
         if (gameDay != null) gameDay.shutdown();
         unregisterReceiver(packageReceiver);
         wallpaperPlayer.close();
@@ -3549,6 +3553,19 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
             return true;
         }
         return false;
+    }
+
+    /**
+     * Stops timing a held OK when the launcher is paused, loses its window or goes away, so the menu can't open
+     * behind another screen. An interrupted press still counts as handled: its UP, if it comes back here, is eaten
+     * rather than opening the tile.
+     */
+    private void cancelHoldOk() {
+        handler.removeCallbacks(holdOkTimer);
+        if (holdOkDown >= 0) holdOkFired = true;
+        holdOkDown = -1;
+        holdOkPosition = -1;
+        holdOkKey = null;
     }
 
     private void fireHoldOk() {
