@@ -64,16 +64,17 @@ com.android.adservices.api            # Android ad services
 com.android.ondevicepersonalization.services
 com.android.federatedcompute.services
 com.android.tv.feedbackconsent
-com.google.android.apps.mediashell    # Chromecast built-in, by choice
-com.google.android.katniss            # Google Assistant and voice search, by choice (~230 MB resident)
-com.mediatek.dialservice              # DIAL, casting from phone apps
+# Off on the TA5 set by choice / no tuner in use; uncomment only if that fits your TV.
+# com.google.android.apps.mediashell    # Chromecast built-in, by choice
+# com.google.android.katniss            # Google Assistant and voice search, by choice (~230 MB resident)
+# com.mediatek.dialservice              # DIAL, casting from phone apps
 com.mediatek.AirplayAPK               # AirPlay TV input, with the two AirPlay packages above
 org.droidtv.matter                    # Matter smart-home
 com.tpv.screenshotshare
 com.android.printspooler
 com.google.android.apps.tv.dreamx     # ambient mode / smart-home dashboard (~190 MB)
-org.droidtv.contentexplorer           # USB media player, by choice
-org.droidtv.dlna                      # DLNA / UPnP, by choice
+# org.droidtv.contentexplorer           # USB media player, by choice
+# org.droidtv.dlna                      # DLNA / UPnP, by choice
 org.droidtv.multiview                 # Multi View (~80 MB)
 org.droidtv.hidwizard                 # keyboard/mouse setup wizard (~75 MB)
 org.droidtv.sunrise                   # wake-up light alarm
@@ -81,17 +82,17 @@ org.droidtv.calmancalibrator          # Calman calibration service
 org.droidtv.personalisedsound         # Mimi personalised sound (~73 MB)
 io.mimi.sdk.service
 # Broadcast TV, only on a set that never uses the tuner. The last three need TVINPUT_ALLOW=1 (see the header).
-com.mediatek.browservice              # HbbTV and operator-app browser (~100 MB)
-org.droidtv.astrahdplus               # HD+ satellite operator app
-org.obs.mhegservice                   # UK MHEG interactive TV
-tv.mopa.ginga                         # Brazilian interactive TV
-org.droidtv.teletext
-org.droidtv.epgdata                   # EPG / Freeview Play
-org.droidtv.ci                        # CI+ module
-org.droidtv.euinstallersat            # satellite channel installer (~77 MB)
-org.droidtv.euinstallertc             # cable/antenna channel installer
-com.mediatek.dtv.tvinput.dvbtuner     # the DVB tuner input itself (~82 MB)
-org.droidtv.m7opapp                   # Canal Digitaal / M7 operator app
+# com.mediatek.browservice              # HbbTV and operator-app browser (~100 MB)
+# org.droidtv.astrahdplus               # HD+ satellite operator app
+# org.obs.mhegservice                   # UK MHEG interactive TV
+# tv.mopa.ginga                         # Brazilian interactive TV
+# org.droidtv.teletext
+# org.droidtv.epgdata                   # EPG / Freeview Play
+# org.droidtv.ci                        # CI+ module
+# org.droidtv.euinstallersat            # satellite channel installer (~77 MB)
+# org.droidtv.euinstallertc             # cable/antenna channel installer
+# com.mediatek.dtv.tvinput.dvbtuner     # the DVB tuner input itself (~82 MB)
+# org.droidtv.m7opapp                   # Canal Digitaal / M7 operator app
 #
 # Stock home last, after the new launcher is installed. The Wi-Fi network was forgotten and added again first,
 # so setupwraith no longer owns it (disabling it while it did would have taken the TV off Wi-Fi and ADB).
