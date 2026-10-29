@@ -75,8 +75,7 @@
 #   HomeKeyService or InputKeyService). This remote has no mic button, so the mic-button check on
 #   com.google.android.tv.remote.service (it runs AtvSearchAssistantService) could not be made; it is kept
 #   anyway, with the Assistant, Chromecast (mediashell) and the other streaming apps.
-# - Private DNS (dns.adguard-dns.com, mode hostname) validated, and YouTube loaded and played through it.
-#   The README's optional DNS extra has the undo; nothing here depends on it.
+# - Private DNS works on this set (see the README's optional DNS extra).
 
 # --- Batch 1: Google attribution/feedback, a print spooler, and Skyworth's partner rows / "Shop" tab
 com.google.android.feedback                   # Google feedback uploader
