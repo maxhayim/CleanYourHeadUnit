@@ -36,7 +36,8 @@ The native Android Settings are hidden behind the factory menu on this set, the 
    **Developer options → USB debugging**.
 4. When the work is done, set ToFac back from M to U and reboot. M mode is what the E5Q Pro notes name
    as blocking the OTA check, and leaving the TV in it serves no purpose; the authorised ADB key
-   survives the switch back.
+   survives the switch back. Switch USB debugging off as well: on this firmware it also leaves ADB
+   open on port 5555 over Wi-Fi.
 
 `service.adb.tcp.port` is already 5555, so switching USB debugging on opens the port over Wi-Fi;
 there is no separate network-debugging toggle and no cable is needed.

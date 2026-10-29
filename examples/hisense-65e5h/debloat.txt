@@ -8,7 +8,8 @@
 # the key. service.adb.tcp.port=5555, so USB debugging alone opens the port over Wi-Fi, no cable and
 # no separate network-debugging toggle. Reaching USB debugging needs the factory menu on this set
 # (ToFac U->M, then the Menu key on the version page opens native Settings); README.md in this folder
-# has the steps, including the prompt problems and the ToFac switch back to U.
+# has the steps, including the prompt problems and the ToFac switch back to U. Switch USB debugging
+# off when done: on this firmware it also leaves ADB open on port 5555 over Wi-Fi.
 #
 # Apply:   TV_HOST=<tv ip> tools/disable.sh examples/hisense-65e5h/debloat.txt
 # Undo:    TV_HOST=<tv ip> tools/restore.sh examples/hisense-65e5h/debloat.txt
