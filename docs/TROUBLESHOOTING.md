@@ -1171,8 +1171,9 @@ installed for. A Xiaomi Mi TV 4A (`MiTV-MOOQ1`, `tarzan`, MediaTek, Android TV 1
 does the same with `InputKeyService` alone, and the empty list was run there: holding Volume Up ramped again with
 `accessibility_enabled 0`, and the helper written back stepped it once more. On that set the helper is also what
 answers Input, because the firmware's `GlobalKey` starts `VIEW_INPUTS` with the component
-`com.google.android.tvlauncher/.inputs.InputsPanelActivity` written into it, so `handle_view_inputs` with
-`INPUT_KEY_SERVICE=1` is the route once launcherx is gone. An onn 4K Streaming Box (`YOC`, Google TV 14, `URO4.260304.011.B1.15051976`) does the same with
+`com.google.android.tvlauncher/.inputs.InputsPanelActivity` written into it, so once launcherx is gone that
+press is dead; `INPUT_KEY_SERVICE=1` with `handle_view_inputs` brings the button back by consuming the Input
+key and starting a new component-free `VIEW_INPUTS` intent, not by answering the firmware's explicit one. An onn 4K Streaming Box (`YOC`, Google TV 14, `URO4.260304.011.B1.15051976`) does the same with
 `HomeKeyService` alone; there `key_filter` false (config.xml or a theme) brought the repeat back with the helper
 still bound, so a helper kept for something other than keys need not cost it. A Hisense 75U75N (`hengshan`,
 Google TV 12, `STT2.230310.002`) with `HomeKeyService` alone does it too, and its log shows where the repeat goes:

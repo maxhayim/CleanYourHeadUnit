@@ -223,8 +223,10 @@ owner wanted reach the stock launcher by name rather than through a vendor keyco
   `com.android.tv.action.VIEW_INPUTS` with an explicit component,
   `com.google.android.tvlauncher/.inputs.InputsPanelActivity`, so with tvlauncher disabled `logcat` ends
   `GlobalKey: ActivityNotFound` and the press does nothing at all. `INPUT_KEY_SERVICE=1` with
-  `handle_view_inputs` true answers that intent with the launcher's Inputs menu, which is what the switch is
-  for.
+  `handle_view_inputs` true brings the button back, but not by answering that intent:
+  `InputKeyService.onKeyEvent` consumes the Input key and starts a **new** `VIEW_INPUTS` intent with no
+  component, and `handle_view_inputs` lets the launcher open its Inputs menu for that new intent. It cannot
+  redirect the firmware's explicit intent, which is addressed to tvlauncher.
 - **PatchWall** (`KEY_WWW`; `getevent -lt` prints `MSC_SCAN 000c0196` and then `KEY_WWW DOWN`): nothing once
   `com.mitv.tvhome.atv` is disabled. `scan:150:com.spotify.tv.android` in `app_keys` opens Spotify instead -
   the remap the [redmi-mitv-mooq3 list](../../examples/redmi-mitv-mooq3/debloat.txt) records as not yet tried
