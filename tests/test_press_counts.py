@@ -163,7 +163,7 @@ def video_problems(text=None):
     if as_of is None:
         problems.append("the Videos section no longer says when the views were read "
                         "('views as of <date>')")
-    elif newest is not None and as_of[1] in MONTHS and newest != (MONTHS[as_of[1]], as_of[0]):
+    elif newest is not None and as_of[1] in MONTHS and newest > (MONTHS[as_of[1]], as_of[0]):
         problems.append(f"the views are 'as of {as_of[0]} {as_of[1]}' and the newest video is dated "
                         f"{rows[0][2].replace('&nbsp;', ' ')}")
     seen = {}

@@ -21,7 +21,7 @@
    `| Channel | [Title](<url>) | Date | Views |`, in the table's date form (`27&nbsp;Oct`), newest first.
    Two numbers above that table are read from the rows by `tests/test_press_counts.py` and move with it:
    the `[N videos]` count at the end of the intro line (its link points at the section itself), and the day
-   in `views as of <date>` - the newest row's date, so a video posted after the last read leaves the line
+   in `views as of <date>` - no earlier than the newest row's date, so a video posted after the last read leaves the line
    stale ("the views are 'as of 27 Oct' and the newest video is dated 28 Oct"). A row added without moving
    the count fails as "the intro says 147 videos and the Videos section holds 148 rows".
 
