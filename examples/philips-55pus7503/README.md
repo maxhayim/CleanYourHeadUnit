@@ -46,10 +46,24 @@ menu, confirmed with the physical remote.
 After some launcher reinstalls, `HomeKeyService` was configured but unbound; one reboot restored it.
 Later reinstalls connected successfully, so this does not establish that a reboot is always required.
 
+## Remote button scancodes
+
+These Linux input scancodes were observed on the remote used with this 50PUS7303/12. They are not
+Android keycodes and have not been verified on other remotes or TPM171E models.
+
+| Button | Scancode |
+|---|---|
+| Red | `398` |
+| Green | `399` |
+| Yellow | `400` |
+| Blue | `401` |
+| Input | `610` |
+
+The Input button's default target is the Philips Sources drawer described above; keep
+`org.droidtv.eum` enabled for it. Custom app assignments and tap/hold mappings are not included here.
+
 ## Package and testing limits
 
-- The original backup already showed `com.google.android.music`, `com.google.android.videos` and
-  `com.google.android.play.games` disabled. They are baseline state, not packages tested in this setup.
 - Keep the tuner/HDMI stack, Philips Sources, remote and Bluetooth services, keyboard, Play Store and
   Play Services, Chromecast, Assistant, firmware updates and Ambilight enabled.
 - The owner confirmed HDMI playback, tuner reception and USB media playback through the built-in app.
