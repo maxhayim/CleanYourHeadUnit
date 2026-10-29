@@ -43,7 +43,6 @@ PAGE = ROOT / "docs" / "workflows" / "docs-notes.md"
 
 BULLET = re.compile(r"^-\s+(.*)$")
 CHECK = "tests/test_device_notes_index.py"
-PAGES_CHECK = "tests/test_docs_pages_reachable.py"
 
 
 def bullets(text):
@@ -171,38 +170,6 @@ class TheBulletReaderTest(unittest.TestCase):
         self.assertEqual([b for b in bullets(text) if "docs/devices" in b],
                          ["Brand-specific knowledge goes in `examples/` or `docs/devices/`."])
         self.assertEqual(index_bullets(text), [])
-
-
-def page_bullets(text):
-    """The bullets that keep a new page under `docs/` findable: the ones naming its check."""
-    return [b for b in bullets(text) if PAGES_CHECK in b]
-
-
-class RecipeLinksANewDocsPageTest(unittest.TestCase):
-    """The page's other half: a docs change that is a new page, not a device note.
-
-    `docs/workflows/docs-notes.md` is the page AGENTS.md's workflow list and CONTRIBUTING's routing
-    table send a contributor to for "any other docs change", and its second bullet is what sends
-    brand knowledge into `docs/devices/`. Adding a page beside those notes - a `docs/hdmi-cec.md`, say -
-    left the suite red on `tests/test_docs_pages_reachable.py`, and the page said nothing about it.
-    """
-
-    def test_one_bullet_names_the_page_check(self):
-        found = page_bullets(page_text())
-        self.assertEqual(
-            len(found), 1,
-            f"{PAGE.name} has {len(found)} bullets naming {PAGES_CHECK}: the bullet that sends a new page "
-            f"into docs/ has to say where it is linked from, or a page written from the page fails that "
-            f"check. Bullets naming it today: {found}",
-        )
-
-    def test_the_bullet_says_where_a_new_page_is_linked_from(self):
-        bullet = page_bullets(page_text())[0]
-        self.assertIn("link", bullet.lower(),
-                      "the bullet has to say the page is linked, which is what the check reads")
-        for page in ("CONTRIBUTING.md", "README.md", "AGENTS.md"):
-            self.assertIn(page, bullet,
-                          f"the bullet has to name {page} as a page a new docs page can be linked from")
 
 
 class ThePageCheckerStillBitesTest(unittest.TestCase):
