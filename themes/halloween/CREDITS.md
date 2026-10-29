@@ -24,8 +24,8 @@ the top-left corner so the dock and the clock stay readable. Adaptations of the 
 Licences: CC0 1.0 https://creativecommons.org/publicdomain/zero/1.0/ · CC BY 4.0
 https://creativecommons.org/licenses/by/4.0/ · CC BY-SA 4.0 https://creativecommons.org/licenses/by-sa/4.0/
 
-With `wallpaper_captions` on (this theme turns it on) each picture's name, author and licence shows under the
-top-right buttons while it is on screen.
+The pictures' names, authors and licences are listed here and in `wallpapers/captions.txt`; this theme keeps
+`wallpaper_captions` off, so nothing is written over the picture.
 
 The launcher's Halloween icons (the jack-o'-lantern on the network pill, lit and dark, the bat on Inputs and in the
 first-Home flight, the ghost on Settings) are from Microsoft's Fluent Emoji 3D, MIT licence, Copyright (c)

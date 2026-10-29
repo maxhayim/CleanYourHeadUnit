@@ -6,7 +6,7 @@
   "wallpaper": true,
   "wallpaper_rotation_minutes": 30,
   "wallpaper_order": "sequential",
-  "wallpaper_captions": true,
+  "wallpaper_captions": false,
   "wallpaper_dim": 12,
   "dock_glass": true,
   "dock_opacity": 40,

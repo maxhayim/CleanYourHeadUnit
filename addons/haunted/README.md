@@ -57,8 +57,8 @@ crossfades, `FRAME_MS` for the frame rate, and the numbers in `drawBats` and `dr
 
 The photos are the Halloween theme's wallpapers (`themes/halloween/`), cropped, colour-graded toward night and
 darkened toward the edges (see the theme's [CREDITS.md](../../themes/halloween/CREDITS.md)), here scaled to 1280x720.
-Each keeps its own licence, not the repository's MIT licence, and its name, author and licence show at the bottom left
-while it is on screen. Adaptations of the CC BY-SA pictures stay under CC BY-SA.
+Each keeps its own licence, not the repository's MIT licence; the screensaver shows no credit text, so the credits
+below are the attribution. Adaptations of the CC BY-SA pictures stay under CC BY-SA.
 
 - "Jack-O-Lantern at night.jpg" by Alabama Extension, CC0 1.0
   https://commons.wikimedia.org/wiki/File:Jack-O-Lantern_at_night.jpg

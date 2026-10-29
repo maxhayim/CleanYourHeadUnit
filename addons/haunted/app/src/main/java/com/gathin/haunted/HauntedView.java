@@ -15,9 +15,7 @@ import android.graphics.Typeface;
 import android.text.format.DateFormat;
 import android.view.View;
 
-import java.io.BufferedReader;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -37,7 +35,6 @@ public class HauntedView extends View {
 
     private final Random rng = new Random();
     private final List<String> files = new ArrayList<>();
-    private final List<String> credits = new ArrayList<>();
     private final Paint photoPaint = new Paint(Paint.FILTER_BITMAP_FLAG);
     private final Paint fill = new Paint(Paint.ANTI_ALIAS_FLAG);
     private final Paint text = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -84,11 +81,8 @@ public class HauntedView extends View {
             String[] names = c.getAssets().list("photos");
             if (names != null) for (String n : names) if (n.endsWith(".jpg")) files.add(n);
             java.util.Collections.sort(files);
-            try (BufferedReader r = new BufferedReader(new InputStreamReader(c.getAssets().open("photos/captions.txt"), "UTF-8"))) {
-                for (String line; (line = r.readLine()) != null; ) credits.add(line);
-            }
         } catch (Exception ignored) {
-            // No photos or captions: the screen stays night-black with the bats and the ghost.
+            // No photos: the screen stays night-black with the bats and the ghost.
         }
         for (int i = 0; i < bats.length; i++) bats[i] = new Bat();
     }
@@ -140,7 +134,7 @@ public class HauntedView extends View {
         drawGlow(canvas, now, w, h);
         drawGhost(canvas, now, dt, w, h);
         drawBats(canvas, now, dt, w, h);
-        drawClockAndCredit(canvas, now, w, h);
+        drawClock(canvas, now, w, h);
     }
 
     private void drawPhotos(Canvas c, long now, int w, int h) {
@@ -261,7 +255,7 @@ public class HauntedView extends View {
         }
     }
 
-    private void drawClockAndCredit(Canvas c, long now, int w, int h) {
+    private void drawClock(Canvas c, long now, int w, int h) {
         long minute = now / 60_000;
         if (minute != clockMinute) {
             clockMinute = minute;
@@ -271,14 +265,5 @@ public class HauntedView extends View {
         text.setTextAlign(Paint.Align.RIGHT);
         text.setTextSize(30 * dp);
         c.drawText(clockText, w - 36 * dp, 56 * dp, text);
-        if (index >= 0 && index < credits.size()) {
-            String line = credits.get(index);
-            int tab = line.indexOf('\t');
-            if (tab >= 0) line = line.substring(tab + 1);
-            text.setColor(0x99FFFFFF);
-            text.setTextAlign(Paint.Align.LEFT);
-            text.setTextSize(13 * dp);
-            c.drawText(line, 36 * dp, h - 30 * dp, text);
-        }
     }
 }
