@@ -314,10 +314,10 @@ ARITY = {"--probe": 1, "--push": 3, "--pull": 3, "--batch": 1, "--reboot": 1}
 # PNG on some MediaTek sets (docs/TROUBLESHOOTING.md). /data/local/tmp is writable from shell.
 SHOT_REMOTE = "/data/local/tmp/cleanyourtv-shot.png"
 PNG = b"\x89PNG\r\n\x1a\n"
-# The last 12 bytes of every PNG: the IEND chunk (length 0, type, CRC). `screencap -p` writes one, so a
-# file that starts with the signature and does not end with this is a picture the pull stopped in the
-# middle of - not a screen. The signature alone let that through: the file was announced with its size
-# and exit 0, and the reader got half a screenshot that GitHub draws as a picture cut off at the bottom.
+# The last 8 bytes of every PNG: the IEND chunk's type and CRC. `screencap -p` writes one, so a file
+# that starts with the signature and does not end with this is a picture the pull stopped in the middle
+# of - not a screen. The signature alone let that through: the file was announced with its size and
+# exit 0, and the reader got half a screenshot that GitHub draws as a picture cut off at the bottom.
 PNG_END = b"IEND\xaeB`\x82"
 # Key names go into a shell command on the TV, so only plain key names and numeric keycodes get through.
 KEY_NAME = re.compile(r"^[A-Z0-9_]+$")
