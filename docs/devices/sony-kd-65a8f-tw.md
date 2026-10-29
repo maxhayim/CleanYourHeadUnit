@@ -2,9 +2,12 @@
 
 Initial cleanup and reference-launcher handover on one Taiwan-market 65-inch
 OLED TV on October 24, 2026, with owner follow-up and physical-remote checks on
-October 29. Home handover passed its original reboot check, but the dedicated
-Apps button has a confirmed, unresolved regression. The Google Play button's
-older, unrelated failure now has an owner-verified native Play Store fallback.
+October 29. Home handover passed its original reboot check. The dedicated Apps
+button's regression was reproduced, then an input-layout workaround passed the
+owner's physical checks without breaking held-volume repeat. That workaround
+is not reboot-tested and does not change the launcher's underlying routing.
+The Google Play button's older, unrelated failure has an owner-verified native
+Play Store fallback.
 This remains a compatibility note, not a fully validated executable debloat
 list. The retail model was supplied by the owner; Android reports a generic
 platform model.
@@ -91,7 +94,7 @@ Home-idle clock remained off.
 
 ## Recorded package changes, not a recommended list
 
-All changes used `pm disable-user --user 0`; nothing was uninstalled and no app
+Package disablement used `pm disable-user --user 0`; nothing was uninstalled and no app
 data was cleared. The following seven packages were the initial cleanup batch
 and were checked across reboot:
 
@@ -164,11 +167,13 @@ claim:
 - The replacement Home remains in use. The original October 24 reboot evidence
   still applies to the initial cleanup and Home handover only.
 - The physical Apps button has a reproducible regression after stock Home is
-  disabled. It remains unresolved in the final configuration.
+  disabled. A later per-device keyboard-layout workaround passed the owner's
+  physical checks and was retained; the underlying ALL_APPS route is unchanged.
 - The physical Google Play button's older failure predates cleanup. A native
   Play Store fallback was applied and the owner confirmed that it now works,
   with held-volume operation still working and key filtering disabled.
-- The later reporting/support batch and the new Play Movies disablement have
+- The later reporting/support batch, new Play Movies disablement, and accepted
+  Apps-key layout have
   **not** been checked across another reboot. There was no new reboot during
   this follow-up, and no new itemized validation of HDMI/ARC, casting, firmware
   updates, long standby/wake, or OLED maintenance.
@@ -202,10 +207,11 @@ by this TV's resolver and launch records, not a claim that the vendor framework
 was independently decompiled. Adding only a generic ALL_APPS intent filter to
 the replacement would not receive a request restricted to another package.
 
-There is **no accepted fix for the Apps button** in this report. Stock Home
-remains disabled; the owner's earlier grouped shortcut check did not establish
-that this dedicated button worked. These findings do not establish whether a
-newer upstream launcher release has the same behavior.
+This remains a regression in the unmodified launcher/firmware route. The
+separate input-layout workaround below was accepted after physical testing;
+stock Home remains disabled. The owner's earlier grouped shortcut check did
+not establish that this dedicated button worked. These findings do not establish
+whether a newer upstream launcher release has the same behavior.
 
 ### Rejected workaround: key filtering breaks held-volume repeat
 
@@ -221,6 +227,64 @@ confirmed no enabled service, and the owner confirmed native held-volume repeat
 returned. The experiment is **not** a working fix and is not included in this
 PR; no reference-launcher code was changed. Do not treat key filtering as a
 validated repair for this firmware merely because an app shortcut opens.
+
+### Accepted workaround: an IR-device KCM overlay, without key filtering
+
+After reviewing the [Sony X9000H Apps-layout companion source](https://github.com/Lzchyi/cleanyourtv/tree/ad1c9badcf745acbd86332c40004e53d54fc09a6/companions/sony-apps-layout)
+and the [VH22 layout reports](https://github.com/Gathin23/cleanyourtv/issues/1680),
+the owner approved a bounded local trial of that approach on this Android 9 TV.
+The reference Bluetooth device identifiers and HID usage were **not** copied.
+A fresh physical capture attributed both Apps and volume down to this TV's
+`mtkinp_ir_events` device. Its original key-layout file maps scan code 580 to
+`ALL_APPS`.
+
+A separate local metadata-only provider registered this minimal key character
+map (KCM), selected for that measured input device using the shell-side
+InputManager interface:
+
+```text
+type OVERLAY
+map key 580 CALCULATOR
+```
+
+Android's `android.intent.category.APP_CALCULATOR` launch entry was handled by
+a small no-display activity that directly opened the existing local all-apps
+grid, without going through Home. A resolver check found no existing handler
+before installation and only the intended handler afterward. This repurposes
+the application-launch category; it does not open a calculator. It may conflict
+with a future calculator app or a real calculator key, so it is device-specific.
+
+- The provider adds no accessibility service, background watcher, network, or
+  storage permission. The earlier helper remains installed for its app grid,
+  but its accessibility service stays disabled. No launcher code or permissions
+  were changed, and stock Home was not restored.
+- Only Apps scan code 580 was mapped. Volume, Home, Input, media, and other keys
+  were not remapped. Original vendor key-layout and key-character-map files
+  remained byte-for-byte unchanged; no root or system-file modification was used.
+- The original current layout was null and its enabled-layout list was empty.
+  Before owner testing, a five-second trial was allowed to restore automatically
+  after ADB disconnected. An explicit reverse overlay (`580` to `ALL_APPS`) was
+  applied before restoring that exact original selection and enabled list;
+  API readback confirmed both were restored. Clearing a selection alone was
+  not assumed to undo a merged live input map.
+- In a three-minute trial, the owner confirmed that physical Apps opened the
+  app grid from Home and again from YouTube, holding volume down continued to
+  lower volume and stopped on release, and physical Home and Input were normal.
+  The first trial expired and restored before its result could be committed;
+  the identical accepted mapping was reapplied and saved, then read back.
+- The short-lived setup/rollback process does not need to remain running after
+  acceptance. The mapping does not require continuous ADB or a computer
+  connection. The disabled-package set, HOME resolver, display values, and
+  disabled accessibility state were unchanged in the final comparisons.
+
+This is an **owner-tested local workaround**, not a reference-launcher fix or a
+turnkey add-on supplied by this PR. Companion source, binaries, private device
+descriptors, raw captures, and local setup/recovery scripts are not included.
+The source-backed approach above is the reference, not a claim that its
+Bluetooth-specific setup can be used unchanged on this IR device. The layout
+has **not** been tested across reboot or standby/wake. Volume up, every other
+remote key, alternate remotes, and other firmware versions were not individually
+validated in this trial.
 
 ### Google Play button: native Store fallback, not a cleanup regression
 
@@ -268,12 +332,12 @@ The owner explicitly reopened debugging for the October 29 diagnostics and
 Play Store fallback test. The October 24 closure result is historical, not
 proof that debugging is closed after the follow-up. A new debugging shutdown,
 authorization revocation, and port-closure check remain pending; this is not a
-recommendation to leave network ADB enabled. Preparing this documentation
-update did not itself connect to or change the TV.
+recommendation to leave network ADB enabled. The accepted layout does not
+require leaving debugging enabled.
 
 This note deliberately omits IP addresses, device identifiers, account details,
 raw dumps, private keys, screenshots, APKs, and local recovery scripts. Per the
 TV-list workflow, an executable list should wait for explicit validation of the
-remaining limitations and clear treatment of the unresolved Apps-button
-regression. This PR changes documentation only; it does not claim to fix the
+remaining limitations, including the accepted workaround's reboot and wake
+persistence. This PR changes documentation only; it does not claim to fix the
 launcher's button handling or validate later upstream launcher versions.
