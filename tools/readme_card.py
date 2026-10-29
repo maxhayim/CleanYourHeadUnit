@@ -4,9 +4,10 @@ the file the front page displays.
 Run tools/readme_stats.py and tools/readme_featured.py first, then:
 python3 tools/readme_card.py Fredoka.ttf docs/card.jpg
 python3 tools/readme_card.py --halloween Fredoka.ttf docs/card-halloween.jpg   # the October variant
-The Halloween variant keeps the layout and the generated numbers: it recolours docs/stats.png's mint
-numbers and the headings to pumpkin orange, adds a thin dripping stripe and a few bats, and shows
-docs/new-home-halloween.jpg as AFTER. docs/card.jpg is not touched, so the README goes back with one line.
+The Halloween variant keeps the layout and the generated numbers: it shows docs/stats-halloween.png
+(python3 tools/readme_stats.py --halloween Fredoka.ttf docs/stats-halloween.png: the same numbers in pumpkin
+orange, each 0 a pumpkin), recolours the headings to orange, adds a thin dripping stripe and a few bats, and
+shows docs/new-home-halloween.jpg as AFTER. docs/card.jpg is not touched, so the README goes back with one line.
 Fredoka is the variable TTF from Google Fonts, and its file is not in this repo: pass the path of the
 copy you downloaded. The four pictures it stacks are this checkout's own - docs/stock-home.jpg,
 docs/new-home.jpg and the two its siblings draw - so run it from the repository root.
@@ -81,7 +82,8 @@ INPUTS = (
     ("docs/stats.png", "tools/readme_stats.py draws it"),
     ("docs/featured.png", "tools/readme_featured.py draws it"),
 )
-HALLOWEEN_INPUTS = (("docs/new-home-halloween.jpg", None),)
+HALLOWEEN_INPUTS = (("docs/new-home-halloween.jpg", None),
+                    ("docs/stats-halloween.png", "tools/readme_stats.py --halloween draws it"))
 
 
 def inputs_problem():
@@ -217,9 +219,8 @@ def decorate(card):
     card.alpha_composite(deco) if hasattr(card, "alpha_composite") and card.mode == "RGBA" else card.paste(deco, (0, 0), deco)
 
 
-stats, featured = load("docs/stats.png"), load("docs/featured.png")
+stats, featured = load("docs/stats-halloween.png" if HALLOWEEN else "docs/stats.png"), load("docs/featured.png")
 if HALLOWEEN:
-    tint(stats, (0, 0, W, 130))               # the generated numbers, mint to orange
     heading(featured, (650, 50, 950, 85))     # "FEATURED IN"
     tint(featured, (1090, 315, 1135, 352))    # the arrow after "314 articles"
 parts = [stats, featured, tv]
