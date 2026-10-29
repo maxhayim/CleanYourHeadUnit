@@ -23,26 +23,6 @@ Tested on **Xiaomi MiTV-AXFR1** (codename `rango`, product `dune`, Amlogic/droid
 
 The debloat list in [`examples/xiaomi-mitv-axfr1/debloat.txt`](../../examples/xiaomi-mitv-axfr1/debloat.txt) safely disables 16 packages across 4 categories:
 
-1. **Xiaomi & Google Telemetry**:
-   - `com.miui.tv.analytics`
-   - `com.xiaomi.statistic`
-   - `com.google.android.feedback`
-2. **PatchWall, Content & Sponsored Rows**:
-   - `com.mitv.tvhome.atv` (PatchWall)
-   - `com.xm.webcontent`
-   - `com.google.android.tvrecommendations`
-   - `android.autoinstalls.config.xioami.dangal`
-   - `com.mitv.tvhome.mitvplus`
-3. **Xiaomi Background Services**:
-   - `com.xiaomi.mitv.tvmanager` (Cleaner)
-   - `com.xiaomi.mitv.handbook`
-   - `com.xiaomo.tv.milegal`
-4. **Preloaded Media**:
-   - `com.xiaomi.mimusic2`
-   - `com.google.android.play.games`
-   - `com.google.android.videos`
-   - `com.mitv.dream`
-
 ### Critical Safety Notes:
 - Keep `com.droidlogic.tvinput`, `com.android.tv`, and Bluetooth/remote services enabled.
 - Settings and Inputs menu (`com.android.tv.selectinput.SelectInputActivity`) remain fully functional.
@@ -64,14 +44,3 @@ The debloat list in [`examples/xiaomi-mitv-axfr1/debloat.txt`](../../examples/xi
 
 ### The HDMI ARC Volume Problem
 When an external soundbar (e.g. JBL Cinema SB510) is active on HDMI ARC (`mArcEstablished: true`, `mSystemAudioActivated: true`), Android's `AudioService` suppresses the native TV volume UI dialog (`flags: 0x0`) to prevent duplicate on-screen indicators.
-
-### The Solution: Accessibility Volume Overlay
-- An accessibility overlay window (`TYPE_ACCESSIBILITY_OVERLAY`) hooked into `HomeKeyService`.
-- Listens to both `onKeyEvent` (for immediate hardware remote response) and `android.media.VOLUME_CHANGED_ACTION`.
-- Renders a vertical frosted-glass pill on the right side of the screen (`Gravity.CENTER_VERTICAL | Gravity.END`):
-  - `🔊` `VOL` `+` (Volume Up)
-  - `🔉` `VOL` `−` (Volume Down)
-  - `🔇` `MUTE` `✕` (Mute)
-- Directional indicator avoids the de-synchronization issue where Android's software stream caps at 100 while the soundbar amplifier can still step up.
-- Does not consume the key event, allowing CEC commands (`<User Control Pressed 44>`) to pass uninterrupted to the soundbar.
-- Full fork implementation available in [sayonsur/cleanyourtv (feature/mitv-axfr1-arc-volume)](https://github.com/sayonsur/cleanyourtv/tree/feature/mitv-axfr1-arc-volume).
