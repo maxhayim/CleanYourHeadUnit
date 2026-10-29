@@ -31,7 +31,7 @@
     <string name="sky_clear">Despejado</string>
     <string name="sky_sunny">Soleado</string>
     <string name="sky_mostly_clear">Casi despejado</string>
-    <string name="sky_mostly_sunny">Mayormente soleado</string>
+    <string name="sky_mostly_sunny">Casi soleado</string>
     <string name="sky_partly_cloudy">Parcialmente nublado</string>
     <string name="sky_cloudy">Nublado</string>
     <string name="sky_fog">Niebla</string>
