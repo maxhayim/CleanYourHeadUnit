@@ -47,5 +47,4 @@ telemetry over Firebase/Kinesis).
 ## Notes
 
 - Reboot-checked: nothing re-enabled itself across a reboot.
-- AdGuard Private DNS (`dns.adguard-dns.com`) works on this box for network-wide ad/tracker blocking (it does
-  not block YouTube ads). Set it under Settings, or undo with `private_dns_mode` back to `opportunistic`.
+- AdGuard Private DNS works on this box.

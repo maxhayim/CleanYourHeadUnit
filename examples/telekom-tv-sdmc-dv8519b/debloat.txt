@@ -19,8 +19,8 @@ com.google.android.feedback
 com.google.android.tvrecommendations
 com.google.android.play.games
 com.android.printspooler
-com.google.android.youtube.tvmusic         # YouTube Music, off by choice
-com.google.android.katniss                 # Assistant / voice search, off by choice
+# com.google.android.youtube.tvmusic       # off on this set by choice
+# com.google.android.katniss               # off on this set by choice
 
 # Screensavers
 com.google.android.backdrop
