@@ -1262,6 +1262,39 @@ the ramp and the new Home together ([the VU3 notes](../examples/sony-bravia-vu3/
 
 A [Sony KD-55X9000H PA-firmware follow-up](devices/sony-kd-55x9000h.md#later-remote-key-follow-up-24-october-2026) on Android 12 reproduced the same filter/repeat conflict with a personal fork. Its simultaneous kernel/callback capture saw held Volume in hardware but neither Volume direction in the helper. A separate saved-layout experiment retained Apps and native Volume without key filtering; it requires that fork's companion and Library entry, reserves an application-launch category, and has not been tested across restart/sleep/reconnect. It is not a stock upstream option.
 
+The same setup works on a Google TV Streamer (YouTube is a global key to launcherx there) and on a Philips Google
+TV TA5, with one more step on the Philips: see the next entry.
+
+## App buttons stopped working after launcherx was re-enabled for the redirect
+
+- **Netflix, YouTube and Prime Video did nothing once launcherx was enabled again**, while they worked with it
+  disabled. Seen on a Philips Google TV TA5 (`PH1M_WW_9972`, Google TV 14, `UKN2.241117.001`): with launcherx
+  enabled, `org.droidtv.GlobalKey` hands those launches to launcherx, and Android blocks them as background
+  activity starts while this launcher is in front. `logcat` shows `START u0 ... com.netflix.ninja ... from uid
+  <launcherx> (BAL_BLOCK) result code=102`. Allowing launcherx to draw over apps exempts it:
+  `appops set com.google.android.apps.tv.launcherx SYSTEM_ALERT_WINDOW allow` brought all three back, and it
+  stays after a reboot. Undo with `appops set ... SYSTEM_ALERT_WINDOW default`.
+- **A button that sends `android.intent.action.ALL_APPS` now shows a chooser**, because launcherx answers the
+  action too. Pick the one you want with "Always" once.
+
+## A toast at every power-on, and the system will not let you block it
+
+- **"Switching to audio system. We recommend using an Ultra High Speed HDMI cable."** for two seconds at every
+  power-on, with a soundbar on HDMI eARC, whatever the cable. Seen on a Philips Google TV TA5 (`PH1M_WW_9972`,
+  Google TV 14, `UKN2.241117.001`). It comes from `org.droidtv.tv.tpvaudiomanager`, whose notification importance
+  is fixed (`fixedImportance=true` in `dumpsys notification`), so its channel cannot be turned off;
+  `appops set <pkg> POST_NOTIFICATION ignore` and Do Not Disturb did not stop it either. On Google TV launcherx
+  draws such toasts. Taking it out of `android.app.role.SYSTEM_TELEVISION_NOTIFICATION_HANDLER`
+  (`cmd role remove-role-holder`) hid the toast until the next boot, when the role came back. Revoking
+  launcherx's notification listener stayed across reboots:
+
+  ```bash
+  TV_HOST=<tv ip> tools/venv/bin/python -I tools/tv.py 'cmd notification disallow_listener com.google.android.apps.tv.launcherx/com.google.android.apps.tv.launcherx.coreservices.notificationlistener.TvNotificationListenerService'
+  ```
+
+  Every other on-screen notification from Google TV goes with it. Undo with `allow_listener` and the same
+  component. With launcherx disabled for this launcher, check first whether the toast appears at all.
+
 ## The power key does not wake the TV while the key helper is bound
 
 A remote's power button does nothing while the TV is in standby, and only the set's own button wakes it.
