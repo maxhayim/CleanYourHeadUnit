@@ -14,7 +14,7 @@
 
 # Tracking and ads
 tv.anoki.acr.controller                # Anoki ACR: watches what you watch, for ads
-com.cltv.fast                          # ad-supported FAST channels
+# com.cltv.fast                        # ad-supported FAST channels (middleware; keep unless you never use them)
 fusion.android.tv.demo                 # store demo mode
 com.google.android.feedback            # Google crash/telemetry reporting
 
@@ -22,13 +22,13 @@ com.google.android.feedback            # Google crash/telemetry reporting
 com.mediatek.dmp.mediaplayer           # DLNA/USB "Digitalmedia Player"
 umc.com.emanual                        # Sharp on-screen manual
 
-# Unused streaming apps (owner's choice)
-com.netflix.ninja
-com.mediatek.partner.netflix           # Netflix partner service; the remote's Netflix
+# Unused streaming apps - this set has these off (owner's choice)
+# com.netflix.ninja
+# com.mediatek.partner.netflix         # Netflix partner service; the remote's Netflix
                                        # button (KEYCODE_STEM_1) can be remapped, see README.md
-com.google.android.videos              # Google TV / Play Movies
-com.google.android.youtube.tvmusic
-com.google.android.play.games
+# com.google.android.videos            # Google TV / Play Movies
+# com.google.android.youtube.tvmusic
+# com.google.android.play.games
 
 # Google services (owner's choice; Chromecast built-in was kept)
 com.google.android.katniss             # Assistant / voice search

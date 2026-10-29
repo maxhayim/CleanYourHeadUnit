@@ -1,6 +1,6 @@
 # Sharp AQUOS-TVE19C
 
-First Sharp in the list: a European Sharp (UMC) set on a CVTE board with an MStar/MediaTek
+A European Sharp (UMC) set on a CVTE board with an MStar/MediaTek
 SoC, Android TV 11 (firmware RTOB.250721.001), stock Google-TV-style home on
 `com.google.android.tvlauncher`. The list ran for over a week before this PR, with the
 launcher from `launcher/` as Home.
