@@ -768,7 +768,12 @@ Things that bit us or contributors, so they don't bite you. Commands use `tools/
   themed before and did nothing on a fresh install or right after a reinstall. `theme.sh` now removes the
   shell's copy and writes through the `ThemeProvider` first (the provider cannot truncate a file the shell
   owns); on an older checkout, pushing the theme again after `launcher/build-and-install.sh` has written
-  the files once also fixes the ownership.
+  the files once also fixes the ownership. The `wallpapers/` folder went the same way, seen on a Vestel
+  BODRUM (Android 14, `UKNV.260428.001`): `theme.sh` made it with `mkdir`, so it belonged to the shell
+  (`drwxrws--- shell ext_data_rw`) and the provider got EACCES writing the pictures into it, while the
+  config still landed. `theme.sh` now leaves that folder to the provider. A set that already has one from an
+  older checkout needs it removed once (it is empty), then push the theme again:
+  `tools/tv.py 'rmdir /sdcard/Android/data/com.gathin.tvhome/files/wallpapers'`.
 - **Google TV comes back after a few remote presses**, seen on XGIMI (MoGo 3 Pro, Google TV 14). The
   remote's app buttons (YouTube, Netflix, Prime Video), the programmable button, the profile button and power
   all send F keys that the system hands to `com.xgimi.xrmservice/.XgimiGlobalKeyBroadcast` as global keys
