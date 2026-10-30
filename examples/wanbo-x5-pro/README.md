@@ -1,4 +1,4 @@
-# Wanbo X5 Pro Projector (Skyworth HP4609 platform, Amlogic/Amlogic, Google TV 14)
+# Wanbo X5 Pro Projector (Skyworth HP4609 platform, Amlogic, Google TV 14)
 
 Notes for the Google TV stick built into the Wanbo X5 Pro. The stick is a **Skyworth HP4609** reference
 design (`HP4609-Skyworth`), also sold on its own as a "4K Google TV Stick", so a set from another badge
@@ -78,7 +78,7 @@ on the CEC bus as a device named `Wanbo` at physical address `0x2000`.
 
 ## Screensaver
 
-Ambient Mode (`com.google.android.apps.tv.dreamx`) is in the list and is replaced by a sideloaded dream:
+Ambient Mode (`com.google.android.apps.tv.dreamx`) is disabled outside the list (see Undo) and replaced by a sideloaded dream:
 
 ```
 $ adb shell settings get secure screensaver_components
