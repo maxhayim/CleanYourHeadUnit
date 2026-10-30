@@ -119,13 +119,16 @@ class WindowsGuidanceTest(unittest.TestCase):
                 self.assertNotIn("tools/venv/bin/python", text)
 
     def test_a_missing_venv_names_the_windows_setup_commands(self):
+        err = io.StringIO()
         with tempfile.TemporaryDirectory() as tmp, \
                 mock.patch.object(manage, "TOOLS", Path(tmp)), \
                 mock.patch.object(sys, "platform", "win32"), \
+                contextlib.redirect_stderr(err), \
                 self.assertRaises(SystemExit) as stop:
             manage.tv_python()
-        self.assertIn(r"tools\venv\Scripts\python.exe", str(stop.exception.code))
-        self.assertNotIn("bin/pip", str(stop.exception.code))
+        self.assertEqual(stop.exception.code, 2)
+        self.assertIn(r"tools\venv\Scripts\python.exe", err.getvalue())
+        self.assertNotIn("bin/pip", err.getvalue())
 
 
 @unittest.skipUnless(os.name == "nt", "real Windows PowerShell subprocesses")
