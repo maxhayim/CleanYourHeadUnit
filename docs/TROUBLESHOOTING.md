@@ -1583,3 +1583,67 @@ boot-time calls go out (about two minutes in, here). Keep `always_on_vpn_lockdow
 drops every packet until the VPN is up, and a TV whose app fails to start stays offline, with no screen
 that says why. Undo:
 `tools/tv.py 'settings delete secure always_on_vpn_app; settings delete secure always_on_vpn_lockdown'`.
+## The home screen reads about 40 ms and every tuning change lands inside the noise
+
+**Seen on:** the Wanbo X5 Pro's built-in stick (`4K Google TV Stick`, Skyworth `HP4609-Skyworth`,
+Amlogic, Google TV 14, `UKG3.260128.001.C3.3.5_20260723`), 1920×1080 at 60 Hz, with a third-party
+launcher as Home.
+
+`dumpsys gfxinfo` reported a 50th-percentile frame of 42 ms and roughly 14% janky frames, and it stayed
+within a couple of milliseconds across changes that should each have helped: a release build with R8, a
+decode sampled to the panel size, hardware bitmaps, a pre-rendered glow and a hardware layer on the
+backdrop. Read the phases before changing anything.
+
+**The app is probably idle and innocent.** Two numbers settle it:
+
+```
+$ adb shell dumpsys gfxinfo <pkg> reset; sleep 3; adb shell dumpsys gfxinfo <pkg> | grep "Total frames"
+Total frames rendered: 0
+```
+
+and in `dumpsys gfxinfo <pkg> framestats`, the UI thread span (`DrawStart - PerformTraversalsStart`) was
+0.1 ms. If the app draws nothing when idle and its UI thread is near zero, the remaining time is the
+render and present path, and no Java change reaches it.
+
+**Frames slip in whole vsync intervals.** At 60 Hz a frame that misses its deadline does not land at
+17 ms, it lands at 33 ms. A p50 around 40 ms means "usually two ticks, sometimes three", not "slow by
+40 ms". Shaving a third off anything does nothing; the frame has to cross back under 16.7 ms.
+
+**Check whether the device is the ceiling before touching the app:**
+
+```
+$ adb shell dumpsys SurfaceFlinger | grep -E "HWC missed|GPU missed"
+HWC missed frame count: 3494
+GPU missed frame count: 9
+```
+
+`HWC missed` counts frames the hardware composer failed to present. When it dwarfs `GPU missed`, the
+display pipeline is dropping the frames, and app-side work is spent. Confirm the panel really is 60 Hz
+first, because a 24 Hz mode with a 42 ms frame looks identical to jank:
+
+```
+$ adb shell dumpsys display | grep mUserPreferredMode
+ mUserPreferredMode={id=-1, width=1920, height=1080, fps=60.000004, ...}
+```
+
+**If `GPU missed` is the larger number,** the cost is pixels, not code. A smaller source texture does not
+help: the budget is destination pixels, so 4K artwork decoded to 720p still writes 1920×1080. Count the
+full-screen layers instead, and look for two of them stacked — a wallpaper plus a scrim, or two bitmaps
+crossfading — because pre-compositing them into one bitmap on a worker thread is the only change of that
+kind that moved anything here.
+
+**The one lever that moved it** was the Skia backend:
+
+```
+$ adb shell setprop debug.hwui.renderer skiavk
+$ adb shell am force-stop <pkg>      # then press Home
+```
+
+42 ms → 34 ms p50 and 13.7% → 10.5% janky on this stick. It is a **debug property**: it resets on every
+reboot, so it is something to re-apply, not to ship. Confirm with
+`dumpsys gfxinfo <pkg> | grep Pipeline` (`Pipeline=Skia (Vulkan)`); revert with
+`setprop debug.hwui.renderer opengl`.
+
+Three changes that did **nothing** here, so they are not worth an evening: decoding the backdrop at 720p,
+a hardware layer on a view that invalidates every frame (the layer is re-recorded each frame and costs
+more), and shortening a 1.5 s backdrop crossfade to 0.6 s.
