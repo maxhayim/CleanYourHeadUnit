@@ -26,7 +26,7 @@ powershell -ExecutionPolicy Bypass -File .\build-and-install.ps1 -TvHost $env:TV
 
 Remote mapping for this build is in [`launcher-config.example.json`](launcher-config.example.json). Push the same
 `app_keys` in **your own** theme folder (copy a theme from `themes/` first — `manage.py` refuses writing into
-`examples/`), or bake the keys into `launcher/.../config.xml` before `build-and-install`.
+`examples/`), or bake the keys into `launcher/app/src/main/res/values/config.xml` before `build-and-install`.
 
 ### Remote (`app_keys` — build 683, `Vendor_2717_Product_32b9.kl`)
 
