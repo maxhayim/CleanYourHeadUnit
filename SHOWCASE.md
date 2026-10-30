@@ -23,7 +23,7 @@ of these projects ask for far more than the reference launcher does:
 
 **Jump to:** [Home screens built as their own app](#home-screens-built-as-their-own-app) · [Forks of the launcher](#forks-of-the-launcher) · [Screensavers and add-ons](#screensavers-and-add-ons) · [Tools and companion apps](#tools-and-companion-apps) · [Other platforms: Fire TV and LG webOS](#other-platforms-fire-tv-and-lg-webos) · [Add-ons in this repo](addons/README.md) · [Guides and write-ups](#guides-and-write-ups) · [Find a project by TV brand](#find-a-project-by-tv-brand) · [Add yours](#add-yours)
 
-163 projects so far.
+164 projects so far.
 
 ## Home screens built as their own app
 
@@ -156,6 +156,7 @@ This repo's launcher with new looks or features, often tuned for one TV. Good pl
 | [Tamil calendar](https://github.com/gitkkarthik/kkcleanyourtv/blob/tamil-calendar/FORK.md) ([screenshot](https://raw.githubusercontent.com/gitkkarthik/kkcleanyourtv/3182c47326a55d01527fef34322e9daa164c3253/docs/switches/tamil_panchangam.jpg)) | A Tamil daily calendar sheet under the clock, in Tamil script and worked out offline for Chennai: the Tamil date with the year's name, the Hijri date, thithi and nakshatram with their end times in nazhigai and by the clock (thirukanitham), sunrise, Rahu, Kuligai, Emagandam, soolam with its remedy and the good horas; checked against a printed daily sheet and Prokerala. Two switches, `tamil_panchangam` and `tamil_date`. No network | Hisense HiSmartTV A4, Android TV 9 | [gitkkarthik](https://github.com/gitkkarthik) |
 | [Time-of-day home and weather screensaver](https://github.com/ssssahuuu/cleanyourtv/blob/time-of-day-home/docs/time-of-day/README.md) ([screenshot](https://raw.githubusercontent.com/ssssahuuu/cleanyourtv/51b0b0639b66e53478efb7a2ad88f8dc38b4979d/docs/time-of-day/home-night.jpg), [issues](https://github.com/ssssahuuu/cleanyourtv/issues)) | Four built-in photos behind Home that cross-fade with the time of day (or one picked all day), round icon-only top-bar buttons, a Bluetooth button and a clock, date and weather screensaver. Adds INTERNET for the weather (Open-Meteo, off until a town is set in config.xml); the photos make the APK about 1.3 MB | Xiaomi MiTV-AXSO0, Android TV 9 | [ssssahuuu](https://github.com/ssssahuuu) |
 | [CleanYourTV Blocky Cabin](https://github.com/CsPS0/cleanyourtv-blocky) ([screenshot](https://raw.githubusercontent.com/CsPS0/cleanyourtv-blocky/main/docs/blocky-day.png)) | A pixel-art blocky cabin home screen and matching screensaver whose window follows the real sun, with day and night scenes. No internet permission | Magyar Telekom SDMC DV8519B (Amlogic), Android TV 12 | [CsPS0](https://github.com/CsPS0) |
+| [Weather and night on Home](https://github.com/javierfn/cleanyourtv/blob/tv-extras/FORK.md) ([screenshot](https://raw.githubusercontent.com/javierfn/cleanyourtv/f69937e6/docs/fork-tv-extras.jpg), [issues](https://github.com/javierfn/cleanyourtv/issues)) | Two offline Home switches fed by this repo's add-ons: `weather_now`, the weather now under the clock from Weather (which refreshes it when Home asks), and `night_mode`, a sun and moon button that flips Brightness for the rest of its schedule, with the night wallpapers following it. The launcher adds no permission | Panasonic Google TV LCD (kowloon), Android 14 | [javierfn](https://github.com/javierfn) |
 
 ## Screensavers and add-ons
 
@@ -262,6 +263,7 @@ By the TV each project was built and tested on. Most of them run on other Androi
 - **MYO:** [MYO Launcher](https://github.com/faustinoaq/myo-launcher)
 - **NVIDIA Shield:** [Vibe Launcher](https://github.com/maydings/vibe-launcher)
 - **OnePlus:** [Apple TV Frosted Glass for OnePlus TV](https://github.com/sireesh0204-stack/cleanyourtv/tree/backup/oneplus-apple-frosted-glass), [KinoDock](https://github.com/vedraj360/kinodock)
+- **Panasonic:** [Weather and night on Home](https://github.com/javierfn/cleanyourtv/blob/tv-extras/FORK.md)
 - **Philips:** [CleanYourTV Cinema & OLED Edition](https://github.com/RuckieOfficial/cleanyourtv), [CleanYourTV UI, themes edition](https://github.com/pokelvo/cleanyourtv-ui), [Cosy Home](https://github.com/oliverjwroberts/cosy-home-tv), [Liquid Glass Home for Philips TA1](https://github.com/Nefritor/cleanyourtv-liquid-glass/tree/liquid-glass), [Moving aurora behind Home](https://github.com/mrk1987/cleanyourtv/tree/aurora), [Forslag](https://github.com/modist/forslag), [XMB Home](https://github.com/amachador/xmb-home), [QuickVol TV](https://github.com/thenewnano/quickvol-google-tv), [Provider banner behind the dock](https://github.com/misterzed83/cleanyourtv)
 - **Polytron:** [Glass and day/night on a Polytron](https://github.com/andikatuluspangestu/cleanyourtv/tree/polytron-glass-launcher)
 - **RCA:** [ZenTV](https://github.com/hernanzini/zentv)
