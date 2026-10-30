@@ -4,6 +4,20 @@
 #
 # Also confirmed on a TCL 55P6K (Spain retail name for the same G10 platform), product
 # G10_4K_GB_NF_32BIT, identical firmware build STT2.230203.001 — this list applies unchanged.
+# On a 55P6K set to the RU region (same G10_4K_GB_NF_32BIT, STT2.230203.001), with launcherx
+# off and no key helper bound, the firmware answers the remote's gear (83), TV (4001) and
+# Input (178) buttons itself through
+# com.android.server.policy.TclShortCutKeyManager: 83 opens TV Settings, 4001 opens Live TV
+# (com.tcl.tv) at its EPG, and 178 opens the input switcher (com.tcl.suspension), so app_keys
+# and settings_key_keycodes are redundant there. The framework's synthetic KEYCODE_GUIDE (172)
+# for the TV button goes to the disabled launcherx and does nothing. TCL Live
+# (com.tcl.channelplus) is kept enabled on this 55P6K: with no antenna channels it is Live TV's
+# only source, and its own Channel Up/Down keys (166/167) change channels only while its
+# PlayActivity is on screen. On Home or an HDMI input they do nothing, because the RU region
+# config has Enable_ChannelUpDownSwitchSource=false and the TV does not switch to TCL Live on a
+# channel key. Some TCL Live channels show "no signal" even with working internet: the streams
+# are region/content limited. Checked by injecting 83, 172, 4001, 178 and 166/167 over ADB with
+# no helper bound.
 #
 # Also tested on a TCL 43P69K, Netherlands (G10_4K_GB_NF_32BIT, Android 12 / SDK 31,
 # build STT2.230203.001, ro.adb.secure=1). Unlike the original US unit, logkit, Samba TV ACR
