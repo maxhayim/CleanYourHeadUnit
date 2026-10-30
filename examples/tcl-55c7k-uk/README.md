@@ -211,7 +211,7 @@ Notes from this unit:
 - **setupwraith and Ethernet**: as on the 65P89L, `disable.sh` skipped setupwraith because `dumpsys wifi` printed
   no `cname=`. `cmd wifi list-networks` said "No networks" and the TV was on `eth0`, so `FORCE_SETUPWRAITH=1`
   disabled it and ADB stayed up.
-- **Network ADB**: switching on USB debugging alone opened port 5555; Wireless debugging was off throughout.
+- **Network ADB**: on this firmware, switching on USB debugging alone opens port 5555 (Wireless debugging stayed off). Switch USB debugging off again when you are done.
 - **Remote buttons with `HomeKeyService`**: the Settings (83), Netflix (4062) and YouTube (190) keys from
   `config.json` worked on the real remote, and so did Input and the mic. The helper was bound after the reboot
   with no `TclAppBoot` refusal. The owner sets volume on an optical-connected sound system's own remote, so the
