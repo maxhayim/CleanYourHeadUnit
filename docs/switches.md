@@ -18,7 +18,9 @@ repo that shows the key at work also counts) and add a row below:
 - Blur anything personal: Wi-Fi names, people, addresses.
 
 `tests/test_switches.py` checks that every new key has a row here with an image that exists and
-fits the rules; keys from before the rule sit on its wanted list until a screenshot arrives.
+fits the rules. A row may show more than one picture - `vpn_pill` carries the pill up and the pill at
+rest - and every picture in a row is held to those rules, not only the last one. Keys from before the
+rule sit on its wanted list until a screenshot arrives.
 
 ## Screenshots
 
