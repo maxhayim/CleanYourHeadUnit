@@ -42,12 +42,12 @@ com.google.android.videos
 com.google.android.backdrop             # Ambient screensaver, replaced by the launcher's Clock
 com.google.android.syncadapters.calendar
 
-# Personal choice: comment out what you use
-com.google.android.apps.mediashell      # Chromecast built-in
+# Personal choice: the streaming apps and Chromecast stay on; uncomment the ones you never use
+# com.google.android.apps.mediashell    # Chromecast built-in
 com.homwee.alexacontrol                 # Alexa
-com.google.android.youtube.tv
-com.netflix.ninja
-com.amazon.amazonvideo.livingroom
+# com.google.android.youtube.tv
+# com.netflix.ninja
+# com.amazon.amazonvideo.livingroom
 # com.google.android.katniss            # Google Assistant (the mic button stops working); kept on the tested set
 # com.homwee.multiscreenshare           # Multi-Screen Share; kept on the tested set
 # com.homwee.mmp.screenshare
