@@ -383,6 +383,8 @@ on that firmware, grouped and commented. These are starting points: comment out 
 
 [OPPO K9 55 (OPPOCNM632)](../docs/devices/oppo-k9-55-oppocnm632.md): ColorOS Home allowlist; stock home stays enabled.
 
+[XGIMI Horizon 20 (XR13A)](../docs/devices/xgimi-xr13a.md): the several-day list is [`xgimi-horizon-20/`](xgimi-horizon-20/debloat.txt).
+
 Notes for models that have no tested list yet live in [`docs/devices/`](../docs/devices/):
 
 - [Dangbei DBOX02 (Mars Pro 2)](../docs/devices/dangbei-dbox02.md), Android TV 11 `RTM9.241015.060`: single-session Home handover and ten package changes, the saved Wi-Fi check before disabling setupwraith, physical-remote and reboot checks, and closed debugging; no several-day debloat list.
