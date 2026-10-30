@@ -1600,6 +1600,7 @@ boot-time calls go out (about two minutes in, here). Keep `always_on_vpn_lockdow
 drops every packet until the VPN is up, and a TV whose app fails to start stays offline, with no screen
 that says why. Undo:
 `tools/tv.py 'settings delete secure always_on_vpn_app; settings delete secure always_on_vpn_lockdown'`.
+
 ## The home screen reads about 40 ms and every tuning change lands inside the noise
 
 **Seen on:** the Wanbo X5 Pro's built-in stick (`4K Google TV Stick`, Skyworth `HP4609-Skyworth`,
