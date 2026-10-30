@@ -694,7 +694,7 @@ public class AppAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
      * The colour covering most of an icon, for a card that should read as that app: a small saturated badge
      * (a red "new" corner on a blue icon) must not win, as it can with {@link #vividColor}. Grey if none.
      */
-    static int dominantColor(Drawable live) {
+    private static int dominantColor(Drawable live) {
         if (live == null) return 0xFF6E6E73;
         Drawable d = live.getConstantState() != null ? live.getConstantState().newDrawable().mutate() : live;
         Rect saved = new Rect(d.getBounds());
@@ -757,7 +757,7 @@ public class AppAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
      * card's top and bottom edges so the mark reads as filling the tile; null when the icon has no
      * opaque plate (a bare mark on transparency).
      */
-    static int[] iconPlate(Drawable live) {
+    private static int[] iconPlate(Drawable live) {
         if (live == null) return null;
         Drawable d = live.getConstantState() != null ? live.getConstantState().newDrawable().mutate() : live;
         Rect saved = new Rect(d.getBounds());
