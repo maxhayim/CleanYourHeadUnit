@@ -29,8 +29,7 @@ Everything is disabled, never uninstalled.
 
 ## What it disables
 
-Google feedback and recommendation rows, Play Games, YouTube Music and the Assistant (the last two off by
-choice), the Ambient and basic screensavers, calendar sync and its provider, the SDMC partner auto-installer,
+Google feedback and recommendation rows, Play Games, the print spooler, the Ambient and basic screensavers, calendar sync and its provider, the SDMC partner auto-installer,
 and the Telekom extras: the TV tester, the self-care app, and `com.tataelxsi.icx` (iCX device management and
 telemetry over Firebase/Kinesis).
 
@@ -40,6 +39,7 @@ telemetry over Firebase/Kinesis).
 - `com.dt.onetv.hook`, the first-time setup hook.
 - The firmware and Telekom app updaters (`com.dt.dmsapps.updater` can re-enable a disabled Telekom app).
 - Chromecast.
+- YouTube Music and the Assistant: left commented out in the list (the author has them off by choice).
 - `com.telekom.onetv.tv` — this is both the Live TV app (live TV, guide, recordings) and the stock launcher.
   The list leaves it commented out: disable it only on a streaming-only box, since turning it off leaves no
   live TV and no stock home screen to fall back to.
