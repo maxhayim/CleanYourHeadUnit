@@ -92,11 +92,8 @@ resolved to Xiaomi; the owner also saw the physical Home key return to Xiaomi.
 No allowlisted application-ID build was tested on this box.
 
 The stock Google ADB transport was offline while the box's ADB TCP port was
-reachable; the project's Python client connected successfully. After the full
-reboot it connected again without an on-TV toggle. This is one reboot's
-observation, not a guarantee that debugging remains enabled on every boot.
-The owner explicitly chose to keep debugging enabled for follow-up checks;
-no Aerial KEEP_ADB option was enabled during this session.
+reachable; the project's Python client connected successfully. Turn network
+debugging off on the box when you are done.
 
 Backups and the recovery record are private. Future changes should continue to
 use the same recorded list with `tools/disable.sh` and `tools/restore.sh`, not a
