@@ -8,7 +8,7 @@
 # To keep phone casting and the stock home (no new launcher), use debloat-keep-cast.txt in this folder instead.
 #
 # Stock launcher: com.google.android.apps.tv.launcherx. No Live TV app and no HDMI inputs (it's a dongle):
-# leave live_tv_package empty in config.json.
+# leave live_tv_package empty in config.xml.
 #
 # Known quirks on this firmware:
 # - ADB on port 5555 is closed (connection refused) until you pair once through Wireless debugging with
