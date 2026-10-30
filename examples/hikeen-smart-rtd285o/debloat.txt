@@ -57,20 +57,20 @@ com.android.wallpaper.livepicker
 com.android.dreams.basic
 com.android.dreams.phototable
 
-# Preloaded apps the owner does not use
-com.android.chrome
-com.farsitel.bazaar
-deezer.android.tv
-com.aparat.kids
-tv.telewebion
-ir.tamashakhonehtv
-com.euronews.express
-com.github.shadowsocks.tv
-com.mm.android.DMSS
+# Preloaded apps: off on this set by the owner's choice; uncomment the ones you want disabled on yours.
+# com.android.chrome
+# com.farsitel.bazaar
+# deezer.android.tv
+# com.aparat.kids
+# tv.telewebion
+# ir.tamashakhonehtv
+# com.euronews.express
+# com.github.shadowsocks.tv
+# com.mm.android.DMSS
 
-# Casting and voice (owner does not use them; this also closes EShare's ports 1046 and 8000)
-com.ecloud.eairplay
-com.ecloud.emedia
-com.ecloud.eshare.server
-com.rtk.android.miracast
-com.google.android.katniss
+# Casting and voice, off on this set by the owner's choice (uncomment to disable; this also closes EShare's ports 1046 and 8000)
+# com.ecloud.eairplay
+# com.ecloud.emedia
+# com.ecloud.eshare.server
+# com.rtk.android.miracast
+# com.google.android.katniss
