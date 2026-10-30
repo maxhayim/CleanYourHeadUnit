@@ -42,7 +42,7 @@ com.sdmc.leakbackcustomer                        # tvlauncher partner configurat
 com.android.adservices.api                       # Android ad services (Topics, attribution)
 
 # Preloaded apps
-com.jio.media.stb.ondemand                       # JioCinema; off by choice
+# com.jio.media.stb.ondemand                     # JioCinema; this set has it off, uncomment if you don't use it
 com.benq.appsmanager                             # BenQ Apps Manager (app store)
 com.benq.dashboard                               # BenQ Dashboard (notification sender with a tile)
 
