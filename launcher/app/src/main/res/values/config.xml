@@ -108,7 +108,10 @@
 
     <!-- Inputs menu: HDMI and AV rows normally open with ACTION_VIEW on the input's channel URI, which the
          Live TV app handles. Where nothing answers that, this action is sent with the same URI instead
-         (XGIMI projectors: com.xgimi.action.hdmiPlayer). Leave empty to omit. -->
+         (XGIMI projectors: com.xgimi.action.hdmiPlayer). Written as "package/.Activity" it names the vendor's
+         own source picker instead, started by itself for every row, ahead of the standard way: for firmware that
+         answers the channel URI with "unsupported" (Redmi X65, MiTV-NSOP0:
+         com.xiaomi.mitv.tvplayer/.ExternalSourceActivity opens its HDMI 1 / HDMI 2 / AV overlay). Leave empty to omit. -->
     <string name="input_action" translatable="false"></string>
     <!-- Inputs menu: a scheme to send the input's passthrough URI with instead of content:// (and no channel MIME
          type). YaOS: live-tv. Its source player answers live-tv://android.media.tv/passthrough/<input>, while the
