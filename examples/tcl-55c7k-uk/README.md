@@ -109,6 +109,28 @@ YouTube (190) and Settings (83), at the cost of held-volume repeat; the owner ac
 Network ADB was confirmed closed after the final restart. This is a single-session compatibility
 report, not confirmation that the full debloat list above was applied or tested for several days.
 
+## Compatibility report: TCL 55P8K, Ethernet
+
+Confirmed on 29 October 2026: TCL 55P8K, device `G08`, model `Smart TV Pro`, MediaTek `tcl9618`,
+Google TV 14 (SDK 34), firmware `UTT2.250416.001 AU02`, on its built-in Ethernet port. The reference
+launcher installed successfully, took Home from `launcherx` after `setupwraith` was disabled, and
+remained Home after a reboot and a final restart with debugging disabled. Its six-column dock and
+D-pad navigation were checked from the dock into the app grid and up to the top bar.
+
+Thirty packages remained disabled after reboot. Choices different from the first unit: `com.tcl.ttvs`
+and `com.tcl.channelplus` were kept for firmware updates and TCL Live's TV input; Chromecast and
+AirPlay were kept; Assistant, Miracast/T-Cast, Game Bar, the USB media apps, Play Movies, Play Games,
+YouTube Music and Spotify were disabled. `dreamx` stayed enabled. AdGuard Private DNS validated and
+YouTube opened with it active.
+
+`dumpsys wifi` showed no saved-network owner, and Ethernet remained up when `FORCE_SETUPWRAITH=1`
+disabled setupwraith. The real remote's Input button kept opening TCL's source list. Netflix, YouTube
+and Settings shortcut buttons stopped working with `launcherx` off; the owner left the key helper
+disabled because it costs held-volume repeat on this firmware, so holding Volume still ramps normally.
+Network ADB port 5555 was confirmed closed both before and after the final restart. This is a
+single-session compatibility report, not confirmation that the full list above was applied unchanged
+or tested for several days.
+
 ## Fourth unit: 65P89L, EU, Ethernet
 
 TCL 65P89L, product `G08_4K_GB`, MediaTek `tcl9618` / `mt5896`, SoC MT9689, same `UTT2.250416.001 AU02`
