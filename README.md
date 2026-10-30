@@ -378,6 +378,15 @@ The launcher just lists what is installed and launches it with intents that have
 </details>
 
 <details>
+<summary><b>How do I rearrange my apps?</b></summary>
+
+Hold OK on **Settings** (top right) and choose **Reorder apps**. OK picks an app up, the arrows move it,
+Back places it, and Back again finishes. With `tile_menu` on, holding OK on a tile offers **Move**, which
+picks that app up straight away. More: [docs/launcher.md](docs/launcher.md#launcher-settings-and-the-default-home)
+
+</details>
+
+<details>
 <summary><b>Can I do this for someone in another home?</b></summary>
 
 Yes, over a private [Tailscale](https://tailscale.com)
