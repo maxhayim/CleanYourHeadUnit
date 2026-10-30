@@ -458,10 +458,14 @@ control what goes on your TV. That needs the JDK and Android SDK named there. No
 ## The story
 
 On 17 October 2026 I posted [a before and after](https://x.com/gathint/status/2111379569030939102) of my
-parents' TV, cleaned up by Claude Code over Wi-Fi. It reached 7.4M views, people started doing the same to
-their own TVs, and their replies turned into the lists here: 170+ TV models from 200+ contributors in four
-days. The repo was called tv-vibehack until the 19th; old links work. The coverage since is in
-[docs/PRESS.md](docs/PRESS.md).
+parents' TV, cleaned up by Claude Code over Wi-Fi. It reached 8.6M views, people started doing the same to
+their own TVs, and their replies turned into the lists here: 170+ TV models from 200+ contributors in the
+first four days. The repo was called tv-vibehack until the 19th; old links work.
+
+Two weeks on, it was the #1 trending repository on GitHub for the week of 19–25 October, with over 46K stars
+and 5.7K forks, and 1.4M views and 260K clones in 14 days. The lists now cover 380 TV models from 101 brands.
+The coverage: 351 articles from 46 countries and 188 YouTube videos, all in [docs/PRESS.md](docs/PRESS.md)
+(numbers as of 30 October 2026).
 
 ## Contributing
 

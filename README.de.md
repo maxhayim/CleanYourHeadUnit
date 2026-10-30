@@ -427,10 +427,13 @@ bestimmst, was auf deinen Fernseher kommt. Keine vorgebauten Binärdateien.
 ## Die Geschichte
 
 Am 17. Oktober 2026 habe ich [ein Vorher und Nachher](https://x.com/gathint/status/2111379569030939102) des
-Fernsehers meiner Eltern gepostet, aufgeräumt von Claude Code über WLAN. Es erreichte 7,4 Millionen Aufrufe, Leute haben dasselbe mit
-ihren eigenen Fernsehern gemacht, und ihre Antworten wurden zu den Listen hier: über 170 TV-Modelle von über 200 Mitwirkenden in vier
-Tagen. Das Repo hieß bis zum 19. tv-vibehack; alte Links funktionieren. Die Berichterstattung seither steht in
-[docs/PRESS.md](docs/PRESS.md).
+Fernsehers meiner Eltern gepostet, aufgeräumt von Claude Code über WLAN. Es erreichte 8,6 Millionen Aufrufe, Leute haben dasselbe mit
+ihren eigenen Fernsehern gemacht, und ihre Antworten wurden zu den Listen hier: über 170 TV-Modelle von über 200 Mitwirkenden in den
+ersten vier Tagen. Das Repo hieß bis zum 19. tv-vibehack; alte Links funktionieren.
+
+Zwei Wochen später war es das Repository auf Platz 1 der GitHub-Trends in der Woche vom 19. bis 25. Oktober, mit über 46.000 Sternen
+und 5.700 Forks sowie 1,4 Millionen Aufrufen und 260.000 Klonen in 14 Tagen. Die Listen umfassen jetzt 380 TV-Modelle von 101 Marken.
+Die Berichterstattung: 351 Artikel aus 46 Ländern und 188 YouTube-Videos, alle in [docs/PRESS.md](docs/PRESS.md) (Stand: 30. Oktober 2026).
 
 ## Mitmachen
 
