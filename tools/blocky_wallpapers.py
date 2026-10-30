@@ -6,7 +6,7 @@ from code, so the collection is this repo's own work and can be changed or exten
 
 Needs Pillow (tools/requirements-perf.txt). Every block is 40 px with a 4x4 shaded texture. The sky things (sun,
 moon, clouds, stars) are drawn before the terrain, so hills and trees stand in front of them; nothing is drawn in
-the top five block rows, where the clock and the top bar's pills sit, and the lower part of each scene fades to
+the top six block rows, where the clock and the top bar's pills sit, and the lower part of each scene fades to
 near black so the dock, its name and the grid stay readable. The random seeds are fixed, so the same code always
 draws the same pictures.
 
