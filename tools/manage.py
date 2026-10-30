@@ -25,7 +25,10 @@ of the TV.
 
 Exit status: 0 the command ran, 1 a command on the TV or a script this checkout runs failed, 2 the command line
 asked for something this script does not do - a command it does not have, or a word the command would drop - which
-is answered before the READMEs are read or the TV is asked anything.
+is answered before the READMEs are read or the TV is asked anything. 2 is also a run that ends with nothing asked of
+the TV: no TV_HOST, a checkout with no tools/venv, and a TV tools/tv.py answered 2 for because it never reached it
+(a refused port, a Wireless debugging port that answers TLS, an address with no route to it). check.py answers the
+first two of those with 2 as well, and b64push.py the second.
 """
 import json
 import math
@@ -297,16 +300,37 @@ def tv_python():
     for p in (TOOLS / "venv" / "bin" / "python", TOOLS / "venv" / "Scripts" / "python.exe"):
         if p.is_file():
             return str(p)
-    sys.exit("run: python3 -m venv tools/venv && tools/venv/bin/pip install -r tools/requirements.txt")
+    # Nothing reached the TV: this checkout has no tools/venv, so tools/tv.py cannot even be imported by a
+    # Python that has adb_shell. sys.exit(str) answers 1, which the docstring keeps for a command on the TV
+    # or a script of this checkout that failed, so a clone with no venv read as an install or a removal that
+    # ran and failed - and status/install/remove would have changed nothing either way. b64push.py answers
+    # this shape, and check.py the same and the one below, with 2.
+    sys.stderr.write("cannot load tools/tv.py (tools/venv is not there).\n"
+                     "run: python3 -m venv tools/venv && tools/venv/bin/pip install -r tools/requirements.txt\n"
+                     "Nothing was asked of the TV.\n")
+    raise SystemExit(2)
 
 
 def tv(command):
     if not os.environ.get("TV_HOST"):
-        sys.exit("set TV_HOST to the TV IP address")
+        # The same two lines tools/tv.py prints for this, and the status check.py answers it with: without
+        # TV_HOST there is no TV to ask anything, which is not the same as a command that failed on one.
+        sys.stderr.write("set TV_HOST to the TV IP address, e.g.  TV_HOST=192.168.1.50 tools/tv.py --probe\n"
+                         "(find it under Settings → Network, or look for the TV in `arp -a`)\n"
+                         "Nothing was asked of the TV.\n")
+        raise SystemExit(2)
     r = subprocess.run([tv_python(), "-I", str(TOOLS / "tv.py"), command], capture_output=True, text=True)
     # A failed read is unknown, not empty: never report "not installed" for a TV that didn't answer.
     if r.returncode:
-        sys.exit(r.stderr.strip() or r.stdout.strip() or f"tv.py exited with status {r.returncode}")
+        sys.stderr.write((r.stderr.strip() or r.stdout.strip()
+                          or f"tv.py exited with status {r.returncode}") + "\n")
+        # tools/tv.py answers 2 for a TV it never reached (a refused port, a Wireless debugging port that answers
+        # TLS, an address with no route to it, a Mac that was never granted Local Network) and 1 for a command the
+        # TV ran and failed; a status it does not document, from a crash of its own, is a command that failed too.
+        # Flattened to 1, a set that was asleep read as a status/install/remove that ran and failed, which is the
+        # one thing the reader of this status has to tell apart: install and remove change the TV, so "nothing was
+        # asked of it" cannot look like "the TV refused it".
+        raise SystemExit(2 if r.returncode == 2 else 1)
     return r.stdout
 
 
