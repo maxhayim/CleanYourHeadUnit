@@ -9,8 +9,8 @@
 # Stock launcher: com.google.android.tvlauncher (the scripts' default). Live TV: com.mediatek.wwtv.tvcenter.
 # The firmware opens Live TV by itself at every power-on.
 #
-# Re-enabled by the firmware at every boot: com.cltv.fast (listed anyway; it has nowhere to show once the
-# stock launcher is off).
+# Left enabled: com.cltv.fast, TV middleware the firmware re-enables at every boot anyway (the tested set had
+# it off).
 # tools/disable.sh skips android.autoinstalls.config.homwee on this firmware (no permission block in dumpsys).
 #
 # KEEP, even though the names look like bloat:
@@ -23,7 +23,7 @@
 #   (it does not claim Home on this Android TV build).
 
 # Telemetry, ads and recommendation rows
-com.cltv.fast                           # FAST channel app
+# com.cltv.fast                         # TV middleware, re-enabled by the firmware at boot; this set has it off
 tv.anoki.acr.anokiacroptin              # Anoki automatic content recognition opt-in
 com.homwee.aipont                       # AI PONT brand portal
 com.google.android.tvrecommendations
