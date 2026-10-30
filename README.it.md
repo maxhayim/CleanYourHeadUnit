@@ -4,10 +4,6 @@
 </p>
 
 <p align="center">
-  🎃 <b>Novità: il pacchetto Halloween.</b> Una Home da brividi e il salvaschermo Haunted per la tua TV, fino al 1° novembre. <a href="https://cleanyour.tv/halloween">cleanyour.tv/halloween</a>
-</p>
-
-<p align="center">
   <a href="README.md">English</a> · <a href="README.zh-CN.md">简体中文</a> · <a href="README.zh-TW.md">正體中文</a> · <a href="README.vi.md">Tiếng Việt</a> · <a href="README.ja.md">日本語</a> · Italiano · <a href="README.nl.md">Nederlands</a> · <a href="README.de.md">Deutsch</a>
 </p>
 
