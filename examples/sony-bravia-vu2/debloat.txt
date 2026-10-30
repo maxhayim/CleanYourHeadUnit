@@ -56,7 +56,8 @@ com.android.wallpaper.livepicker         # live wallpaper picker
 
 # Off by choice
 com.google.android.tts                   # Google text-to-speech (large; the TalkBack screen reader has no voice without it)
-com.graymatrix.did                       # ZEE5
+# Off on this set by the owner's choice; uncomment to disable.
+# com.graymatrix.did                     # ZEE5
 com.google.android.backdrop              # Ambient screensaver; set the launcher's clock first:
                                          # settings put secure screensaver_components com.gathin.tvhome/.ClockDream
 
