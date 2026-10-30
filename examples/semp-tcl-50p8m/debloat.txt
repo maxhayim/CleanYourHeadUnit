@@ -92,8 +92,9 @@ com.tcl.android.webview                     # unused, Google WebView is the acti
 com.tcl.keyhelp                             # remote-key help overlays
 
 # 4. Off by choice on this unit
-com.tcl.miracast                            # Miracast screen mirroring
-com.tcl.MultiScreenInteraction_TV           # TCL T-Cast phone app link
+# Off on this set by choice; uncomment to drop mirroring / the T-Cast phone remote.
+# com.tcl.miracast                          # Miracast screen mirroring
+# com.tcl.MultiScreenInteraction_TV         # TCL T-Cast phone app link
 # com.tcl.versionUpdateApp                  # TCL firmware updater, kept
 
 # 5. After the launcher is installed
