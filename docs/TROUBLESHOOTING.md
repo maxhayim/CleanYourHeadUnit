@@ -53,6 +53,15 @@ Things that bit us or contributors, so they don't bite you. Commands use `tools/
   as `_adb-tls-connect._tcp` while it is open: note it before switching Wireless debugging off, and
   run `tools/adb-closed.py <tv ip> <port>` straight after, before the reboot. After the reboot the old
   number reads closed either way, because Wireless debugging takes a new port each time it starts.
+- **After `adb_enabled` was switched off from the shell, the menu says USB debugging is on and port 5555
+  stays closed.** On an [Aurzen BOOM Air projector (BOOMAIR, Android 11, `RTMA.250416.043`)](https://github.com/Gathin23/cleanyourtv/issues/2632)
+  `settings put global adb_enabled 0` had closed the port as it should, and when ADB was wanted again
+  Developer options showed USB debugging as on, through a restart, while `tools/adb-closed.py <tv ip>`
+  kept answering closed. The port came back only after USB debugging was switched off and on again in
+  that menu and the projector was restarted once more. A menu that reads on after the flag was cleared
+  from the shell is therefore no evidence that the port is open: check with `tools/adb-closed.py <tv ip>`
+  before and after cycling the toggle, and trust what the TV answers rather than the screen. Do that
+  first; the bullet below is for a set whose firmware opens no port at all.
 - **Port 5555 stays closed and there is no Wireless debugging entry either**, so the pair-once recipe
   above has nothing to pair with: a [Philips 58PUS8505/62 The One, Android TV 12,
   `STT2.230526.001`](https://github.com/Gathin23/cleanyourtv/issues/1489) reported USB debugging on, no
