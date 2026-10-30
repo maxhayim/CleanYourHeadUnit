@@ -1,16 +1,4 @@
 {
-  "_comment": "Example overlay for tools/theme.ps1 or merge into your own theme folder. Visual keys (wallpaper, colours) are up to you — see themes/README.md.",
-  "dock_apps": [
-    "org.smarttube.stable",
-    "com.disney.disneyplus",
-    "com.crunchyroll.crunchyroid",
-    "com.wbd.stream"
-  ],
-  "hidden_apps": [
-    "com.netflix.ninja",
-    "com.google.android.youtube.tv",
-    "com.amazon.amazonvideo.livingroom"
-  ],
   "app_keys": [
     "scan:240:com.crunchyroll.crunchyroid",
     "scan:416:com.crunchyroll.crunchyroid",

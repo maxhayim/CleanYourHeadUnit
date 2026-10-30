@@ -24,19 +24,15 @@ cd launcher
 powershell -ExecutionPolicy Bypass -File .\build-and-install.ps1 -TvHost $env:TV_HOST -InputKeyService -HomeKeyService
 ```
 
-Look and wallpaper are personal: use any folder under [`themes/`](../../themes/README.md) with `tools/theme.ps1`, or
-change **Wallpaper** in **Launcher settings** (hold OK on **Settings** → **Launcher settings**) after a theme with
-pictures is on the TV.
-
-Remote mapping for this build is in [`launcher-config.example.json`](launcher-config.example.json). Push it in a
-**your own** theme folder (copy a theme from `themes/` first — `manage.py` refuses writing into `examples/`), or bake
-the same keys into `launcher/.../config.xml` before `build-and-install`.
+Remote mapping for this build is in [`launcher-config.example.json`](launcher-config.example.json). Push the same
+`app_keys` in **your own** theme folder (copy a theme from `themes/` first — `manage.py` refuses writing into
+`examples/`), or bake the keys into `launcher/.../config.xml` before `build-and-install`.
 
 ### Remote (`app_keys` — build 683, `Vendor_2717_Product_32b9.kl`)
 
-| Button | Scancode(s) | Typical target |
+| Button | Scancode(s) | Example target |
 | --- | --- | --- |
-| Netflix | 240, 416 | Your streaming app (example: Crunchyroll) |
+| Netflix | 240, 416 | Crunchyroll (`com.crunchyroll.crunchyroid`) |
 | YouTube | 425, 426 | SmartTube stable (`org.smarttube.stable`) |
 | Prime | 207 | Max (`com.wbd.stream`) |
 
@@ -46,33 +42,8 @@ Install order: **launcher first**, then disable `com.google.android.apps.tv.laun
 `com.google.android.tungsten.setupwraith` (see `debloat.txt`). If `disable.sh` skips setupwraith because Wi‑Fi was saved
 during setup, re-join the network in Settings or use `FORCE_SETUPWRAITH=1` knowing the password may be asked again.
 
-### Private DNS (optional, set once)
-
-In this project the most documented **set-and-forget** choice is **[AdGuard public DNS](https://adguard-dns.io/en/public-dns.html)** filter (`dns.adguard-dns.com`). It appears throughout `docs/faq.md`, device notes, and `PROMPT.md`. It **persists across reboots**; you should not need to toggle it unless something stops playing.
-
-```powershell
-adb -s <box-ip>:5555 shell settings put global private_dns_specifier dns.adguard-dns.com
-adb -s <box-ip>:5555 shell settings put global private_dns_mode hostname
-```
-
-Check: `settings get global private_dns_mode` → `hostname`. Undo only if an app or provider breaks:
-`settings put global private_dns_mode opportunistic`.
-
-**Limits:** does not remove YouTube ads (use SmartTube) or all in-app promos on Disney+/Max. **[NextDNS](https://nextdns.io)** is the usual alternative if you want your own blocklists (needs an account and a personal hostname); cleanyourtv documents it less often than AdGuard.
-
-Many Google TV boxes have **no Settings UI** for Private DNS; ADB (or the prompt’s `tools/tv.py` lines) is normal.
-
-### Animation scale (optional)
-
-```powershell
-adb shell settings put global window_animation_scale 0.5
-adb shell settings put global transition_animation_scale 0.5
-adb shell settings put global animator_duration_scale 0.5
-```
-
-### Apply debloat
-
-[`debloat-phase1.txt`](debloat-phase1.txt) then launcher install, then [`debloat-phase2-setupwraith.txt`](debloat-phase2-setupwraith.txt), or the full [`debloat.txt`](debloat.txt) with the same ordering rules.
+Apply the list with `TV_HOST=<box-ip> tools/disable.sh examples/xiaomi-mi-box-s-2nd-gen/debloat.txt` (same ordering
+rules as in the file header).
 
 ### Still working after soak (683)
 
