@@ -21,7 +21,9 @@ JSON object is named before the key is written, and a write it cannot make says 
 set's own arguments are read first: a switch without a value, a --theme without the folder behind it, and a word
 left over are answered with the usage line and exit 2 before a theme folder is read or written. list, status,
 show, install and remove read their own words the same way, before anything is read from this checkout or asked
-of the TV.
+of the TV. A --theme folder that is not there is refused by name, not made: set starts a config.json in a folder
+of your own that exists, and the push it ends with replaces the theme on the TV and empties that theme's
+wallpapers, so a mistyped path would leave a one-key theme behind.
 
 Exit status: 0 the command ran, 1 a command on the TV or a script this checkout runs failed, 2 the command line
 asked for something this script does not do - a command it does not have, or a word the command would drop - which
@@ -254,7 +256,8 @@ def json_kind(value):
 
 
 def own_folder_problem(folder):
-    """Why set may not write into `folder`, or None: it is one of the folders this checkout ships, or a file."""
+    """Why set may not write into `folder`, or None: it is one of the folders this checkout ships, a file, or
+    not there at all."""
     for name in PROJECT_FOLDERS:
         project = ROOT / name
         if folder == project or project in folder.parents:
@@ -262,6 +265,21 @@ def own_folder_problem(folder):
                     f"so copy one somewhere else first. Nothing was written or pushed.")
     if folder.exists() and not folder.is_dir():
         return f"{folder} is a file, not a folder: --theme takes a theme folder of your own."
+    if not folder.exists():
+        # A path with a file in the middle of it cannot be made at all, which is not a typo to point at the
+        # folder for: name the file that is in the way, as the write used to.
+        for parent in folder.parents:
+            if parent.exists() and not parent.is_dir():
+                return f"cannot write {folder / 'config.json'}: {parent} is a file, not a folder. Nothing was pushed."
+        # mkdir(parents=True) used to make whatever a typo named, write one key into it and push it: the push
+        # replaces the theme on the TV and empties the wallpapers/ collection it pushed last time, so a
+        # mistyped path left a one-key theme on a TV whose theme and pictures were gone. A folder of their own
+        # that exists is still started (no config.json yet is fine); a path that is not there is not.
+        return (f"{folder} is not there: --theme takes a theme folder of your own, and set writes into one that "
+                f"exists - an empty folder is fine, it starts the config.json. A path that is not there is "
+                f"usually a typo, and the push set ends with replaces the theme on the TV and empties its "
+                f"wallpapers, so a mistyped path would leave a one-key theme there. "
+                f"Nothing was written or pushed.")
     return None
 
 
