@@ -39,17 +39,17 @@ com.google.android.leanbacklauncher.recommendations
 android.autoinstalls.config.xioami.dangal   # Play auto-install of partner apps (sic, "xioami")
 com.mitv.tvhome.mitvplus            # Mi TV+ sponsored live channels
 
-# Personal choice: preloaded apps not used
-com.sonyliv
-com.graymatrix.did                  # ZEE5
-com.lionsgateplay.videoapp
-com.tv9news
-com.google.android.youtube.tvmusic
-com.google.android.videos           # Play Movies & TV
-com.google.android.play.games
-com.xiaomi.mimusic2
-com.mitv.gallery                    # Mi Gallery
-com.xiaomi.smarthome.tv.global4     # Mi Home
+# Personal choice: preloaded apps. Disabled on this set by the owner's choice; uncomment to disable.
+# com.sonyliv
+# com.graymatrix.did                  # ZEE5
+# com.lionsgateplay.videoapp
+# com.tv9news
+# com.google.android.youtube.tvmusic
+# com.google.android.videos           # Play Movies & TV
+# com.google.android.play.games
+# com.xiaomi.mimusic2
+# com.mitv.gallery                    # Mi Gallery
+# com.xiaomi.smarthome.tv.global4     # Mi Home
 
 # Xiaomi background services
 com.xiaomi.mitv.tvmanager           # "TV Manager" cleaner
@@ -69,8 +69,8 @@ com.google.android.leanbacklauncher          # old Android TV launcher; stays di
 # com.google.android.speech.pumpkin
 # com.google.android.apps.mediashell
 
-# Personal choice: screen mirroring
-com.mitv.milinkservice              # Mi Cast
-com.xiaomi.mitv.smartshare
-com.xiaomi.wfdsinkhelperservice     # Miracast sink
+# Personal choice: screen mirroring. Disabled on this set by the owner's choice; uncomment to disable.
+# com.mitv.milinkservice              # Mi Cast
+# com.xiaomi.mitv.smartshare
+# com.xiaomi.wfdsinkhelperservice     # Miracast sink
 
