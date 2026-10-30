@@ -29,7 +29,3 @@ remapped in a theme's `config.json`:
 - `com.mediatek.tv.service` and `com.cvte.hotkey.dispatcher` - vendor key handling
 - `com.airoha.android.btd` - the BLE remote
 
-## Standby
-
-The set keeps its network up in standby and wakes on `KEYCODE_WAKEUP` over ADB, which makes
-Home Assistant power-on work without Wake-on-LAN.
