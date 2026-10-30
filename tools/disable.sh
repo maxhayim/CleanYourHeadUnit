@@ -375,10 +375,19 @@ fi
 # and a retry must not overwrite the one taken before the first change (#239).
 "$PY" -I tools/recovery.py --save "$LIST"
 
+# A batch that dies halfway (the TV reset the connection between two commands, #2663) still gets the
+# read-back and the ro.adb.secure note below, so the run ends by saying where it stopped; its status
+# is the batch's.
+BATCH_RC=0
 {
   [ -n "$PKGS" ] && printf '%s\n' "$PKGS" | sed 's/^/pm disable-user --user 0 /'
   echo "pm list packages -d"
-} | "$PY" -I tools/tv.py --batch
+} | "$PY" -I tools/tv.py --batch || BATCH_RC=$?
+if [ "$BATCH_RC" -ne 0 ]; then
+  echo "tv.py --batch stopped before the end of the list (exit code $BATCH_RC): the TV dropped the" \
+    "connection or stopped answering. The command it was on may or may not have reached the TV, and" \
+    "the ones after it were not sent. What is still enabled is read back below." >&2
+fi
 
 # Read the TV back instead of trusting the batch's silence (#1376). A `pm disable-user` the firmware
 # refuses is a stack trace scrolling past in the output above, one that does not take says nothing at
@@ -405,12 +414,18 @@ if [ -n "$PKGS" ]; then
     if [ -n "$STILL_ON" ]; then
       { echo "Still enabled after this run, although the list disables them:"
         printf '%s\n' "$STILL_ON" | sed 's/^/  /'
-        echo "The TV did not take pm disable-user for these: it refused (its answer is in the output"
-        echo "above), or the change did not hold. Do not run the list again in a loop. Run"
-        echo "tools/tv.py 'pm disable-user --user 0 <package>' once by hand for each, or the list once"
-        echo "more after a reboot. If every listed package stays enabled, this firmware refuses"
-        echo "pm disable-user: stop there and say so (docs/TROUBLESHOOTING.md,"
-        echo "\"Every way of disabling a package is refused\")."; } >&2
+        if [ "$BATCH_RC" -ne 0 ]; then
+          echo "The batch stopped early (above), so these were not sent, or their answer was lost. Once"
+          echo "the TV answers again (tools/tv.py --probe), run the list once more. Do not run it again"
+          echo "in a loop."
+        else
+          echo "The TV did not take pm disable-user for these: it refused (its answer is in the output"
+          echo "above), or the change did not hold. Do not run the list again in a loop. Run"
+          echo "tools/tv.py 'pm disable-user --user 0 <package>' once by hand for each, or the list once"
+          echo "more after a reboot. If every listed package stays enabled, this firmware refuses"
+          echo "pm disable-user: stop there and say so (docs/TROUBLESHOOTING.md,"
+          echo "\"Every way of disabling a package is refused\")."
+        fi; } >&2
     fi
   fi
 fi
@@ -428,6 +443,8 @@ if [ "$ADB_SECURE" = "0" ] || [ -z "$ADB_SECURE" ]; then
   echo "TV and reboot it (README: \"Isn't ADB access a security hole?\")." >&2
 fi
 
-# Last, so the warning above is printed either way: a listed package the TV left enabled fails the
-# run, as it does in check.py --fix, and a script or agent that goes on after this one stops here.
+# Last, so the warning above is printed either way: a batch that died, or a listed package the TV
+# left enabled, fails the run, as it does in check.py --fix, and a script or agent that goes on after
+# this one stops here.
+[ "$BATCH_RC" -eq 0 ] || exit "$BATCH_RC"
 [ -z "$STILL_ON" ] || exit 1
