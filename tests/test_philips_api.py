@@ -62,6 +62,31 @@ class PhilipsApi(unittest.TestCase):
         self.assertEqual(code, 1)
         self.assertIn("org.droidtv.xtv", out)
 
+    def test_a_page_that_is_not_the_api_falls_back_to_1925(self):
+        base = "http://192.168.1.50:1925/6/"
+        answers = {"https://192.168.1.50:1926/6/system": (200, "<html>login</html>"),
+                   base + "system": (200, SYSTEM)}
+        answers.update({base + p: (401, "") for p in philips_api.PROBE})
+        code, out, _ = run(answers)
+        self.assertEqual(code, 0)
+        self.assertIn("API on http://192.168.1.50:1925", out)
+        self.assertIn("(not the API)", out)
+
+    def test_json_that_is_not_a_system_object_is_no_api(self):
+        for body in ("{}", "null", "[]", '{"api_version": "6"}', "{broken"):
+            with self.subTest(body=body):
+                code, out, _ = run({"https://192.168.1.50:1926/6/system": (200, body)})
+                self.assertEqual(code, 1)
+                self.assertIn("org.droidtv.xtv", out)
+
+    def test_wrong_typed_feature_metadata_counts_as_unknown(self):
+        system = json.dumps({"api_version": {"Major": 6, "Minor": 1, "Patch": 0},
+                             "featuring": {"systemfeatures": [], "jsonfeatures": {"ambilight": 5}}})
+        code, out, _ = run({"https://192.168.1.50:1926/6/system": (200, system)})
+        self.assertEqual(code, 0)
+        self.assertIn("6.1.0", out)
+        self.assertNotIn("LoungeLight", out)
+
     def test_no_address_is_a_usage_error(self):
         with mock.patch.dict("os.environ", {"TV_HOST": ""}):
             code, _, asked = run({}, argv=("philips-api.py",))

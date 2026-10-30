@@ -47,15 +47,35 @@ def get(url, timeout=8):
         return None, str(failure)
 
 
+def system_info(body):
+    """The decoded /6/system object, or None when the body is not one (an HTML page, broken JSON, {})."""
+    try:
+        info = json.loads(body)
+    except ValueError:
+        return None
+    if isinstance(info, dict) and isinstance(info.get("api_version"), dict):
+        return info
+    return None
+
+
+def section(parent, key):
+    """parent[key] when it is an object, else {}: optional metadata of the wrong type counts as unknown."""
+    value = parent.get(key)
+    return value if isinstance(value, dict) else {}
+
+
 def find_api(host):
-    """The base URL whose /6/system answers with a body, or None. Prints each port it tried."""
+    """The base URL and decoded /6/system of the first port that answers as the API, or (None, None).
+    Prints each port it tried."""
     for port, scheme in PORTS:
         base = f"{scheme}://{host}:{port}"
         status, body = get(f"{base}/6/system")
-        if status == 200 and body.strip():
-            return base, body
-        print(f"  {base}/6/system -> {status if status is not None else body}")
-    return None, ""
+        info = system_info(body) if status == 200 else None
+        if info is not None:
+            return base, info
+        why = status if status is not None else body
+        print(f"  {base}/6/system -> {why}{' (not the API)' if status == 200 else ''}")
+    return None, None
 
 
 def main(argv):
@@ -65,7 +85,7 @@ def main(argv):
         print(__doc__.split("\n\n")[1], file=sys.stderr)
         return 2
 
-    base, body = find_api(host)
+    base, info = find_api(host)
     if not base:
         print("\nNo JointSpace API. If this TV used to work with Home Assistant, check that\n"
               "org.droidtv.xtv is still enabled:\n"
@@ -73,19 +93,14 @@ def main(argv):
         return 1
 
     print(f"API on {base}")
-    try:
-        info = json.loads(body)
-    except ValueError:
-        print("  /6/system answered, but not with JSON")
-        return 0
-    api = info.get("api_version", {})
-    feat = info.get("featuring", {})
-    ambilight = feat.get("jsonfeatures", {}).get("ambilight")
+    api = info["api_version"]
+    feat = section(info, "featuring")
+    ambilight = section(feat, "jsonfeatures").get("ambilight")
     print(f"  name           {info.get('name')}")
     print(f"  api_version    {api.get('Major')}.{api.get('Minor')}.{api.get('Patch')}")
-    print(f"  pairing        {feat.get('systemfeatures', {}).get('pairing_type')}")
+    print(f"  pairing        {section(feat, 'systemfeatures').get('pairing_type')}")
     print(f"  ambilight      {ambilight}")
-    if ambilight and "LoungeLight" in ambilight:
+    if isinstance(ambilight, list) and "LoungeLight" in ambilight:
         print("                 (LoungeLight is Ambilight with the panel off. For it to answer while\n"
               "                  the TV is off, turn on Eco settings > Quick start.)")
 
