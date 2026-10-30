@@ -14,8 +14,9 @@ Set TV_HOST to the TV's IP (or IP:port). Usage:
 
 Exit status: 0 the command ran (the TV's own answer is in its output), 1 the screenshot came back
 empty or failed, or a command's answer was lost when the TV dropped the connection,
-2 it was refused before anything ran on the TV - a flag it does not have, a local path that cannot be
-used, a port it could not open.
+2 it was refused before anything ran on the TV - a flag it does not have, one of its own with the wrong
+number of words, a local path that cannot be used, a port it could not open. A flag and its count are
+judged before TV_HOST is read, so a typo names the usage instead of the TV's address.
 
 Set TV_ADB_BINARY to the Google adb executable to use an already connected, paired transport
 (including encrypted Wireless debugging). See tools/native-adb.md.
@@ -33,6 +34,55 @@ import time
 if sys.argv[1:2] and sys.argv[1] in ("-h", "--help"):
     print((__doc__ or "").strip())
     sys.exit(0)
+
+USAGE = """usage:
+    tv.py --probe
+    tv.py --screenshot <local.png> [KEY ...] [--wait SECONDS]
+    tv.py --push <local> <remote>
+    tv.py --pull <remote> <local>
+    tv.py --batch < commands.txt
+    tv.py --reboot
+    tv.py --help
+    tv.py <shell command...>
+"""
+# Arguments each known flag takes, the flag included. The shell branch takes anything, so a flag
+# with the wrong count listed here is a typo, not a command for the TV.
+# --screenshot takes its file and then any number of keys, so it is checked by screenshot_args instead.
+ARITY = {"--probe": 1, "--push": 3, "--pull": 3, "--batch": 1, "--reboot": 1}
+
+
+def usage_error(message):
+    sys.stderr.write(f"{message}\n{USAGE}")
+    sys.exit(2)
+
+
+def check_flags(args):
+    """A flag tv.py does not have, or one of its own with the wrong number of words, before TV_HOST.
+
+    The TV_HOST check below exits at import time, so a command line that is wrong could only ever be
+    answered with the TV's address: `--proob` and `--push only-two.apk` both printed "Set TV_HOST to
+    your TV's IP address" and exited 1 - the status this client keeps for a command the TV ran and
+    failed, while the docstring's 2 is "refused before anything ran on the TV" - and the reader who
+    set the address they were told to set then got the usage. A typo in a flag is answered from the
+    usage, which needs neither the venv nor a TV, so it is judged here beside -h/--help.
+    """
+    if args and args[0] in ARITY and len(args) != ARITY[args[0]]:
+        sys.stderr.write(USAGE)
+        sys.exit(2)
+    if not args or not args[0].startswith("-"):
+        return                      # a shell command, or the bare run that is a probe
+    if args[0] == "--screenshot":
+        if len(args) == 1:
+            usage_error("--screenshot needs the file to save to")
+        return
+    if args[0] not in ARITY:
+        usage_error(f"not a flag of tv.py: {args[0]!r}")
+
+
+if __name__ == "__main__":
+    # Only tv.py's own command line: recovery.py, privacy.py, bench.py and the tests import this file,
+    # and the words their commands take are not this script's flags.
+    check_flags(sys.argv[1:])
 
 # The docs type `tools/tv.py ...`, which starts the first python3 on PATH, and that one seldom has
 # adb_shell: the README installs it into tools/venv only. Run that way, tv.py starts again under the
@@ -325,21 +375,6 @@ def lost_connection(e, command, position=None):
             f"packages a debloat batch disabled). See docs/TROUBLESHOOTING.md#connecting.")
 
 
-USAGE = """usage:
-    tv.py --probe
-    tv.py --screenshot <local.png> [KEY ...] [--wait SECONDS]
-    tv.py --push <local> <remote>
-    tv.py --pull <remote> <local>
-    tv.py --batch < commands.txt
-    tv.py --reboot
-    tv.py --help
-    tv.py <shell command...>
-"""
-# Arguments each known flag takes, the flag included. The shell branch takes anything, so a flag
-# with the wrong count listed here is a typo, not a command for the TV.
-# --screenshot takes its file and then any number of keys, so it is checked by screenshot_args instead.
-ARITY = {"--probe": 1, "--push": 3, "--pull": 3, "--batch": 1, "--reboot": 1}
-
 # screencap writes the PNG on the TV and we pull the file afterwards: adb_shell's shell() decodes
 # what comes back as text, which corrupts an image, and `exec-out screencap -p` returns a broken
 # PNG on some MediaTek sets (docs/TROUBLESHOOTING.md). /data/local/tmp is writable from shell.
@@ -360,21 +395,17 @@ WAIT_MAX_S = 300.0
 
 
 def check_arity(args):
-    """Reject a known flag with the wrong argument count before connecting.
+    """Judge --screenshot's arguments and the two paths of --push/--pull before the TV is opened.
 
-    Without this, `--screenshot` with a destination missing falls through to the shell branch and
-    the TV tries to run `--screenshot` as a command. The same goes for a flag this script does not
-    have at all: `--proob` used to be sent to the TV, whose shell answered "inaccessible or not
-    found" while tv.py exited 0, so a mistyped flag looked like a command that ran."""
-    if args and args[0] in ARITY and len(args) != ARITY[args[0]]:
-        sys.stderr.write(USAGE)
-        sys.exit(2)
+    The flag itself, and how many words it takes, is check_flags() above, which runs before TV_HOST is
+    read. What is left here is the file a flag takes: `--screenshot` with its destination missing would
+    otherwise fall through to the shell branch and the TV would try to run `--screenshot` as a command.
+    """
+    check_flags(args)
     if args and args[0] == "--screenshot":
         screenshot_args(args[1:])
     elif args and args[0] in ("--push", "--pull"):
         transfer_args(args)
-    elif args and args[0].startswith("-") and args[0] not in ARITY:
-        usage_error(f"not a flag of tv.py: {args[0]!r}")
 
 
 def transfer_args(args):
@@ -506,11 +537,6 @@ def screenshot_args(rest):
     if wait is None:
         wait = 1.0 if keys else 0.0
     return local, keys, wait
-
-
-def usage_error(message):
-    sys.stderr.write(f"{message}\n{USAGE}")
-    sys.exit(2)
 
 
 def path_error(message):
