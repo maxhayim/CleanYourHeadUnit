@@ -101,11 +101,13 @@ com.seraphic.hbbtv.app                       # HbbTV app; India has no HbbTV
 
 # Preloaded apps and casting (personal choice: comment out any you use)
 com.google.android.marvin.talkback           # TalkBack screen reader: keep it if anyone uses it
-com.google.android.youtube.tv                # see the firmware quirk note above re: the remote's YouTube button
-com.google.android.youtube.tvmusic
 com.apps.scast                               # a second casting receiver alongside FastCast (kept above)
 # com.google.android.videos                  # Google Play Movies; not installed on the tested unit
-com.netflix.ninja                            # Netflix
-com.netflix.tokenmanager                     # Netflix helper; disable alongside com.netflix.ninja
-com.google.android.play.games                # Google Play Games
-com.amazon.amazonvideo.livingroom            # Prime Video
+
+# this set has these off; uncomment if you don't use them
+# com.google.android.youtube.tv              # see the firmware quirk note above re: the remote's YouTube button
+# com.google.android.youtube.tvmusic
+# com.netflix.ninja                          # Netflix
+# com.netflix.tokenmanager                   # Netflix helper; disable alongside com.netflix.ninja
+# com.google.android.play.games              # Google Play Games
+# com.amazon.amazonvideo.livingroom          # Prime Video

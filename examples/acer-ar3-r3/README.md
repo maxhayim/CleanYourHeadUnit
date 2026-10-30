@@ -17,23 +17,21 @@ there, `rtd2841a` here).
 export TV_HOST=<tv ip>
 ```
 
-Port 5555 was already open (Developer options > Network/ADB debugging) and stayed open with no
-separate Wireless-debugging pairing step.
-
 ## Debloat
 
 ```bash
 TV_HOST=<tv ip> tools/disable.sh examples/acer-ar3-r3/debloat.txt
 ```
 
-(Windows: `tools\disable.ps1 examples\acer-ar3-r3\debloat.txt`.) 32 packages, all disabled, none
+(Windows: `tools\disable.ps1 examples\acer-ar3-r3\debloat.txt`.) 26 packages disabled by default, none
 uninstalled. The header of [`debloat.txt`](debloat.txt) says what each group is, what is kept on
-purpose, and a firmware quirk with the remote's YouTube button (below). Everything under "Preloaded
-apps and casting" is personal choice: comment out whatever you use.
+purpose, and a firmware quirk with the remote's YouTube button (below). Netflix, Prime Video,
+YouTube, YouTube Music and Play Games are commented out by default (personal choice: this set has
+them off; uncomment any you use).
 
 Applied and checked on one unit, in one batch with a screenshot before and after, then one cold boot
 (power cable out): Home, the Inputs menu's HDMI1/HDMI2/AV listing (`cmd package query-activities`)
-and the dock all still worked afterwards. All 28 newly-disabled packages were still disabled
+and the dock all still worked afterwards. All newly-disabled packages were still disabled
 (`pm list packages -d`) after the reboot, confirming this Android TV variant does not re-enable
 packages at boot the way the Google TV R4G note describes for a related platform.
 
@@ -94,14 +92,13 @@ TV_HOST=<tv ip> addons/bluetooth-connect/install.sh
 The remote's dedicated YouTube button sends keycode 2030, intercepted below Android's input layer by
 the persistent system service `com.realtek.keyinterceptserver`, which starts
 `com.google.android.youtube.tv` by a package name hardcoded in its own compiled code
-(`RtkKeyInterceptService.java`). With YouTube disabled by this list, every press throws
-`ActivityNotFoundException` inside that persistent process, which Android then restarts in place:
-harmless, but the button does nothing, and `logcat` shows a crash/restart on every press.
-`RtkInput`'s own log line ("`ap decide result is 1`") shows the vendor driver already claimed and
-handled the key before Android's normal dispatch, let alone an accessibility service, ever sees it,
-so the launcher's `app_keys`/`InputKeyService` remapping cannot reach it at all. Comment out the
-YouTube line in `debloat.txt` if you want the button to open the real YouTube app without crashing
-anything; it cannot be remapped to a different app (such as SmartTube) on this firmware. Same
+(`RtkKeyInterceptService.java`). `RtkInput`'s own log line ("`ap decide result is 1`") shows the
+vendor driver already claimed and handled the key before Android's normal dispatch, let alone an
+accessibility service, ever sees it, so the launcher's `app_keys`/`InputKeyService` remapping cannot
+reach it at all. If you uncomment the YouTube line in `debloat.txt` to disable the app, every press of
+this button then throws `ActivityNotFoundException` inside that persistent process, which Android
+restarts in place: harmless, but the button does nothing, and `logcat` shows a crash/restart on every
+press. It cannot be remapped to a different app (such as SmartTube) on this firmware either way. Same
 limitation as the sibling `examples/acer-ar55ar2851udpro` list.
 
 ## Remote
