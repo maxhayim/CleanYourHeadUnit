@@ -13,8 +13,9 @@ Set TV_HOST to the TV's IP (or IP:port). Usage:
     tv.py --help                       this text; needs neither the venv nor a TV
 
 Exit status: 0 the command ran (the TV's own answer is in its output), 1 the screenshot came back
-empty or failed, 2 it was refused before anything ran on the TV - a flag it does not have, a local
-path that cannot be used, a port it could not open.
+empty or failed, or a command's answer was lost when the TV dropped the connection,
+2 it was refused before anything ran on the TV - a flag it does not have, a local path that cannot be
+used, a port it could not open.
 
 Set TV_ADB_BINARY to the Google adb executable to use an already connected, paired transport
 (including encrypted Wireless debugging). See tools/native-adb.md.
@@ -292,6 +293,36 @@ def connect_error(e):
                     f"the subnet gives this error, it is the permission and not the TV. {see}")
         return f"could not reach {target} ({e}). Is the TV on and on this network? {see}"
     return None
+
+
+def lost_connection(e, command, position=None):
+    """What to print when a shell command failed because the TV dropped the connection, or None.
+
+    A TV that resets the TCP connection between two commands of a batch ended tv.py with adb_shell's
+    ConnectionResetError traceback (#2663). Under `set -euo pipefail` tools/disable.sh stopped there, and
+    the traceback named neither the command that was running nor whether the TV had run it: on the
+    SHIELD in that report it had, and only its answer was lost. So the drop is answered in words, with
+    the command and, in a batch, its place among the commands sent - comments and blank lines are not
+    commands, so the count lines up with the `$ command` headings printed above it.
+
+    The exit status stays 1, which is what a run that reached the TV and failed already answered (the
+    traceback exited 1 too). Anything that is not a lost connection keeps its traceback: that is a bug
+    in this script or in adb_shell, and a traceback is where it shows.
+    """
+    # Imported here rather than with the client above, as connect_error does, so a stub adb_shell that
+    # answers only adb_device and auth still loads this file.
+    from adb_shell.exceptions import AdbConnectionError, AdbTimeoutError, TcpTimeoutException
+    if not isinstance(e, (OSError, NativeAdbError, AdbConnectionError, AdbTimeoutError,
+                          TcpTimeoutException)):
+        return None
+    where = f" (command {position} of this batch)" if position else ""
+    rest = ("and the commands after it were not sent: look at the TV before running the batch again"
+            if position else
+            "look at the TV before running it again")
+    return (f'the connection to the TV dropped while running "{command}"{where}: '
+            f"{type(e).__name__}: {e}\n"
+            f"The TV may or may not have run it, {rest} (`tv.py \"pm list packages -d\"` names the "
+            f"packages a debloat batch disabled). See docs/TROUBLESHOOTING.md#connecting.")
 
 
 USAGE = """usage:
@@ -584,17 +615,34 @@ def main():
         # one shell command per stdin line, each run separately on the same connection.
         # utf-8-sig drops the BOM Windows PowerShell may prepend to piped stdin.
         sys.stdin.reconfigure(encoding="utf-8-sig")
+        sent = 0
         for line in sys.stdin:
             line = line.strip()
             if not line or line.startswith("#"):
                 continue
-            out = dev.shell(line, read_timeout_s=120.0)
+            sent += 1
+            try:
+                out = dev.shell(line, read_timeout_s=120.0)
+            except Exception as e:
+                why = lost_connection(e, line, sent)
+                if why is None:
+                    raise
+                print(why, file=sys.stderr)
+                return 1
             sys.stdout.write(f"$ {line}\n{out}")
             if out and not out.endswith("\n"):
                 sys.stdout.write("\n")
             sys.stdout.flush()
     else:
-        out = dev.shell(" ".join(args), read_timeout_s=120.0)
+        line = " ".join(args)
+        try:
+            out = dev.shell(line, read_timeout_s=120.0)
+        except Exception as e:
+            why = lost_connection(e, line)
+            if why is None:
+                raise
+            print(why, file=sys.stderr)
+            return 1
         sys.stdout.write(out)
     dev.close()
     return status
