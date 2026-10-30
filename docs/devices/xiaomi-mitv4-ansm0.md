@@ -117,7 +117,7 @@ From @Cerega23rus's report in #2562: a Xiaomi Mi TV 4S 32", `MiTV4S` / `vforvend
 Android 6.0 (API 23), build `9.1.23.757`, `persist.sys.locale=en-US`. A fourth identity for the generation-wide
 refusals above: `pm disable-user --user 0 com.xiaomi.devicereport` answers
 `SecurityException: Permission Denial: attempt to change component state` for the shell user, `pm list packages -d`
-stays empty, `pm hide` is expected to fail the same way (`MANAGE_USERS`), and `adb root` answers
+stays empty, `pm hide` was not tried on this set, and `adb root` answers
 "adbd cannot run as root". So there is no debloat route on this set either. Network ADB closes on every reboot;
 re-enable in Settings -> Account & security -> ADB debugging (设置 -> 账号与安全 -> ADB调试).
 
