@@ -19,7 +19,7 @@
 # preloading from the source.
 # Leaving all packages enabled (zero debloat) is the safest approach, ensuring 100% firmware
 # stability, OTA upgrade safety, and eliminating any risk of boot hangs.
-# All packages below are commented out by default. Uncomment only if you explicitly wish to disable them.
+# Only com.skyworth.device is active by default; the rest are commented out. Uncomment only what you want to disable.
 # For replacing the home screen safely, see docs/devices/skyworth-7t861-a23.md.
 
 # Telemetry (optional)
