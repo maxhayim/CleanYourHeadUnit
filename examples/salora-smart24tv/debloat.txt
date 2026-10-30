@@ -55,12 +55,13 @@ com.google.android.play.games                   # Play Games
 com.mediatek.tv.freeviewplay                    # UK Freeview Play integration, dead weight in Italy
 
 # --- Owner's checklist choices: keep any you use ---
-com.netflix.ninja                               # Netflix
-com.amazon.amazonvideo.livingroom               # Prime Video
-com.google.android.youtube.tvmusic              # YouTube Music
-com.google.android.katniss                      # Google Assistant / voice search (remote mic button)
-com.google.android.apps.mediashell              # Chromecast built-in
-com.mediatek.wwtv.mediaplayer                   # USB media player
+# Off on the tested set by the owner's choice; uncomment the ones you don't use.
+# com.netflix.ninja                               # Netflix
+# com.amazon.amazonvideo.livingroom               # Prime Video
+# com.google.android.youtube.tvmusic              # YouTube Music
+# com.google.android.katniss                      # Google Assistant / voice search (remote mic button)
+# com.google.android.apps.mediashell              # Chromecast built-in
+# com.mediatek.wwtv.mediaplayer                   # USB media player
 
 # --- Stock launcher content, disabled after launcher/build-and-install.sh took Home ---
 com.google.android.tvrecommendations            # recommendation rows for the stock launcher
