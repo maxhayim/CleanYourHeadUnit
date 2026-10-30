@@ -424,6 +424,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
     private java.util.Map<Integer, String> homeAppKeys = java.util.Collections.emptyMap();
     /** clock_format, for the race panel's session times (the TextClocks take it in onCreate). */
     private String clockFormat = "system";
+    private java.util.Map<Integer, String> homeHoldAppKeys = java.util.Collections.emptyMap();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -435,6 +436,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         homeAppKeys = RemoteKeys.parseAppKeys(cfg.appKeys);
         clockFormat = cfg.clockFormat;
         ClockFormat.apply(getWindow().getDecorView(), clockFormat);
+        homeHoldAppKeys = RemoteKeys.parseHoldAppKeys(cfg.appKeys);
         appLibrarySelection = cfg.appLibrarySelection;
         libraryOkOpens = cfg.libraryOkOpens;
         // restore_key_services: after a force stop, put back the remote's accessibility helpers that Android took
@@ -1229,6 +1231,9 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
     protected void onPause() {
         super.onPause();
         resumed = false;
+        // No UP reaches a paused Home, so a vendor-key hold it saw go down would still open its app later.
+        // Only Home's own share is dropped: a key service that saw the same DOWN keeps its hold.
+        RemoteKeys.release(this);
         root.removeCallbacks(showIdleClock);
         endReorder();   // Home or another app while reordering keeps the order so far
         wallpaperPlayer.stop();
@@ -1295,6 +1300,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        RemoteKeys.release(this);
         if (gameDay != null) gameDay.shutdown();
         unregisterReceiver(packageReceiver);
         wallpaperPlayer.close();
@@ -1339,8 +1345,11 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
      */
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
-        // Vendor keys (TCL Netflix button, 4062) never reach the key services, only the focused window.
-        if (event.getKeyCode() >= 1000 && RemoteKeys.handle(this, event, homeAppKeys.get(event.getKeyCode()), null)) return true;
+        // Vendor keys (TCL Netflix button, 4062) never reach the key services, only the focused window, so their
+        // "hold:" entries run here too or nowhere. Only while resumed: onPause releases Home's holds, and a DOWN
+        // taken after that would arm one nothing releases.
+        if (resumed && event.getKeyCode() >= 1000 && RemoteKeys.handle(this, event, homeAppKeys.get(event.getKeyCode()),
+                homeHoldAppKeys.get(event.getKeyCode()))) return true;
         if (handleSettingsKey(event)) return true;
         if (tileMenuEnabled && !reordering && openPopup == null && cardPrompt == null
                 && event.getKeyCode() == KeyEvent.KEYCODE_MENU) {
