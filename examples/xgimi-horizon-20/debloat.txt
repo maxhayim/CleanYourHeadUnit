@@ -20,6 +20,7 @@
 # A held volume key was not rechecked. On other XGIMI boards key_filter false is what keeps
 # that hold repeating.
 #
+# Disabling com.google.android.tungsten.setupwraith costs casting on Google TV; keep it enabled if you cast.
 # setupwraith owns a Wi-Fi network saved during first setup. Forget that network and join it
 # again before disabling setupwraith, and confirm dumpsys wifi shows cname=android.uid.system
 # on the connected entry. On this unit that check was done, setupwraith stayed off, and Wi-Fi held.
@@ -55,19 +56,19 @@ com.mediatek.tv.oneworld.tvcenter
 # Home handover. launcherx stays enabled: see the header.
 com.google.android.tungsten.setupwraith
 
-# Off by this owner's choice. Comment out a line to keep that app.
-com.apple.atve.androidtv.appletv
-fr.francetv.pluzz
-tv.arte.plus7
-com.spotify.tv.android
-fr.m6.m6replay
-com.google.android.youtube.tvmusic
-com.google.android.play.games
-com.esaba.downloader
-info.kodono.pop_files
-info.kodono.popvideoplayer
-org.videolan.vlc
-com.mediatek.wwtv.mediaplayer
-com.tcl.browser                    # BrowseHere
-com.canal.android.canal
-fr.tf1.mytf1
+# Off on this unit, owner's choice. Uncomment a line to disable that app on yours.
+# com.apple.atve.androidtv.appletv
+# fr.francetv.pluzz
+# tv.arte.plus7
+# com.spotify.tv.android
+# fr.m6.m6replay
+# com.google.android.youtube.tvmusic
+# com.google.android.play.games
+# com.esaba.downloader
+# info.kodono.pop_files
+# info.kodono.popvideoplayer
+# org.videolan.vlc
+# com.mediatek.wwtv.mediaplayer
+# com.tcl.browser                    # BrowseHere
+# com.canal.android.canal
+# fr.tf1.mytf1
