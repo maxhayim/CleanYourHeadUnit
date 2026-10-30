@@ -46,8 +46,8 @@
 # - Not installed on PI.1241: android.autoinstalls.config.xiaomi.mibox3 (only the "xioami" one is), com.dazn, Red Bull TV,
 #   Duo, the TCL browser, com.mitv.tvhome.atv, com.mitv.download.service, com.mitv.videoplayer, com.xm.webcontent and
 #   Alphonso. tools/disable.sh reports those lines and goes on.
-# - After the last batch, `sync` and a 15 s wait were not enough: the reboot brought back the last eight packages
-#   disabled. Disabling them again and waiting about 40 s before the reboot kept all of them.
+# - After the last batch, `sync` and a 15 s wait were not enough: after the reboot the last eight packages
+#   were enabled again. Disabling them again and waiting about 40 s before the reboot kept all of them.
 # - The real Home button returned to the launcher with HOME_KEY_SERVICE=1.
 # - Closing ADB: revoking the USB debugging authorisations, switching off the Developer options master switch and
 #   rebooting closed 5555 (tools/adb-closed.py: refused), as on the third set.
