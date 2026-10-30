@@ -265,13 +265,36 @@ if [ -n "$PKGS" ] && [ -z "${TVINPUT_ALLOW:-}" ]; then
   # then on a dump with no such block at all — Lollipop prints only "grantedPermissions:" — the
   # package's own granted block, then its Service Resolver Table, which Lollipop's per-package dump
   # prints and which names what serves android.media.tv.TvInputService. "Unable to find" is a package
-  # that is not on this TV, not a check that failed. A dump with neither block nor error (NOCHK) is
-  # one the guard cannot read: the package is kept off the batch below instead of passing silently.
+  # that is not on this TV, not a check that failed. From Android 6.0 (SDK 23) the dump prints the
+  # requested block whenever the package asks for anything, so there a readable dump (its own
+  # "Package [name]" section) with no block at all is a package that asks for nothing, which cannot
+  # include TV_INPUT_HARDWARE: it passes (#2398, a Mi TV 4A and a SHIELD on Android 11). Below SDK 23,
+  # or with an SDK the TV does not report, the same dump stays NOCHK, since Lollipop prints neither
+  # block for packages that do ask (#1753). "Service dumps disabled due to hung system process" is
+  # Android's watchdog switching every dump off (HUNG). A dump with neither block nor error (NOCHK) is
+  # one the guard cannot read: either way the package is kept off the batch below instead of passing
+  # silently.
   if TV_HW="$("$PY" -I tools/tv.py \
-      "for p in $NAMES; do d=\$(dumpsys package \$p 2>/dev/null); case \$d in *'requested permissions:'*) printf '%s\n' \"\$d\" | sed -n -E '/requested permissions:/,/(install|runtime) permissions:|User [0-9]+:/p' | grep -q TV_INPUT_HARDWARE && echo \$p;; *'grantedPermissions:'*) printf '%s\n' \"\$d\" | sed -n -E '/grantedPermissions:/,/(install|runtime) permissions:|User [0-9]+:/p' | grep -q TV_INPUT_HARDWARE && echo \$p;; *'Service Resolver Table:'*) printf '%s\n' \"\$d\" | grep -q 'android.media.tv.TvInputService' && echo \$p;; *'Unable to find'*) :;; *) echo \"NOCHK \$p\";; esac; done; true" \
+      "s=\$(getprop ro.build.version.sdk); for p in $NAMES; do d=\$(dumpsys package \$p 2>/dev/null); case \$d in *'requested permissions:'*) printf '%s\n' \"\$d\" | sed -n -E '/requested permissions:/,/(install|runtime) permissions:|User [0-9]+:/p' | grep -q TV_INPUT_HARDWARE && echo \$p;; *'grantedPermissions:'*) printf '%s\n' \"\$d\" | sed -n -E '/grantedPermissions:/,/(install|runtime) permissions:|User [0-9]+:/p' | grep -q TV_INPUT_HARDWARE && echo \$p;; *'Service Resolver Table:'*) printf '%s\n' \"\$d\" | grep -q 'android.media.tv.TvInputService' && echo \$p;; *'Unable to find'*) :;; *'hung system process'*) echo \"HUNG \$p\";; *\"Package [\$p]\"*) [ \"\${s:-0}\" -ge 23 ] 2>/dev/null || echo \"NOCHK \$p\";; *) echo \"NOCHK \$p\";; esac; done; true" \
       </dev/null 2>/dev/null | tr -d '\r')"; then
     # Packages whose dump shows neither block: keep them enabled (a black input is easy to blame on
     # the cable, and the ports are the one thing the owner cannot test from here) and say why.
+    # Dumps switched off by the watchdog: every package answers the same, and the cure is a reboot,
+    # not TVINPUT_ALLOW=1 (the check did not run, which is not the same as passing).
+    HUNG="$(printf '%s\n' "$TV_HW" | sed -n -E 's/^HUNG ([^[:space:]]+)$/\1/p')"
+    HUNG_SKIPPED=""
+    for p in $HUNG; do
+      printf '%s\n' "$PKGS" | grep -xF "$p" >/dev/null || continue
+      HUNG_SKIPPED="$HUNG_SKIPPED $p"
+      PKGS="$(printf '%s\n' "$PKGS" | grep -vxF "$p" || true)"
+    done
+    if [ -n "$HUNG_SKIPPED" ]; then
+      echo "Skipping$HUNG_SKIPPED: the TV answers dumpsys with \"Service dumps disabled due to hung" >&2
+      echo "system process\", so the input-driver check cannot read them. Android's watchdog turns every" >&2
+      echo "dump off after system_server hangs, and only a restart turns them back on. Reboot the TV" >&2
+      echo "first (tools/tv.py --reboot), then run the list again. TVINPUT_ALLOW=1 is not the way past" >&2
+      echo "this: the check did not run, which is not the same as passing (docs/TROUBLESHOOTING.md)." >&2
+    fi
     UNCHECKED="$(printf '%s\n' "$TV_HW" | sed -n -E 's/^NOCHK ([^[:space:]]+)$/\1/p')"
     for p in $UNCHECKED; do
       printf '%s\n' "$PKGS" | grep -xF "$p" >/dev/null || continue
@@ -281,7 +304,7 @@ if [ -n "$PKGS" ] && [ -z "${TVINPUT_ALLOW:-}" ]; then
       echo "TVINPUT_ALLOW=1 to disable it (#321)." >&2
       PKGS="$(printf '%s\n' "$PKGS" | grep -vxF "$p" || true)"
     done
-    TV_HW="$(printf '%s\n' "$TV_HW" | grep -v '^NOCHK ' || true)"
+    TV_HW="$(printf '%s\n' "$TV_HW" | grep -vE '^(NOCHK|HUNG) ' || true)"
     for p in $TV_HW; do
       # grep without -q: with pipefail an early exit could SIGPIPE printf and fail the run (see above).
       printf '%s\n' "$PKGS" | grep -xF "$p" >/dev/null || continue

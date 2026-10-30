@@ -194,9 +194,12 @@ if (-not $tvinputAllow -and $pkgs.Count -gt 0) {
     # Per package: the "requested permissions" block (Android 6.0+); on a dump with no such block —
     # Lollipop prints only "grantedPermissions:" — the package's own granted block; then its Service
     # Resolver Table, which Lollipop's per-package dump prints and which names what serves
-    # android.media.tv.TvInputService. "Unable to find" is a package not on this TV. A dump with
+    # android.media.tv.TvInputService. "Unable to find" is a package not on this TV. From Android 6.0
+    # (SDK 23) a readable dump (its own "Package [name]" section) with no block is a package that asks
+    # for nothing, so it passes (#2398); below SDK 23, or with no SDK reported, it stays NOCHK. "Service
+    # dumps disabled due to hung system process" is the watchdog switching dumps off (HUNG). A dump with
     # neither block nor error (NOCHK) is one the guard cannot read: the package is kept on (#1753).
-    $loop = 'for p in ' + ($pkgs -join ' ') + '; do d=$(dumpsys package $p 2>/dev/null); case $d in *"requested permissions:"*) printf ''%s\n'' "$d" | sed -n -E ''/requested permissions:/,/(install|runtime) permissions:|User [0-9]+:/p'' | grep -q TV_INPUT_HARDWARE && echo $p;; *"grantedPermissions:"*) printf ''%s\n'' "$d" | sed -n -E ''/grantedPermissions:/,/(install|runtime) permissions:|User [0-9]+:/p'' | grep -q TV_INPUT_HARDWARE && echo $p;; *"Service Resolver Table:"*) printf ''%s\n'' "$d" | grep -q ''android.media.tv.TvInputService'' && echo $p;; *"Unable to find"*) :;; *) echo "NOCHK $p";; esac; done; true'
+    $loop = 's=$(getprop ro.build.version.sdk); for p in ' + ($pkgs -join ' ') + '; do d=$(dumpsys package $p 2>/dev/null); case $d in *"requested permissions:"*) printf ''%s\n'' "$d" | sed -n -E ''/requested permissions:/,/(install|runtime) permissions:|User [0-9]+:/p'' | grep -q TV_INPUT_HARDWARE && echo $p;; *"grantedPermissions:"*) printf ''%s\n'' "$d" | sed -n -E ''/grantedPermissions:/,/(install|runtime) permissions:|User [0-9]+:/p'' | grep -q TV_INPUT_HARDWARE && echo $p;; *"Service Resolver Table:"*) printf ''%s\n'' "$d" | grep -q ''android.media.tv.TvInputService'' && echo $p;; *"Unable to find"*) :;; *"hung system process"*) echo "HUNG $p";; *"Package [$p]"*) [ "${s:-0}" -ge 23 ] 2>/dev/null || echo "NOCHK $p";; *) echo "NOCHK $p";; esac; done; true'
     # Windows PowerShell turns redirected stderr into an error that 'Stop' would throw (see getprop).
     $ErrorActionPreference = 'Continue'
     $tvhw = @(& $py -I (Join-Path $repo 'tools\tv.py') $loop 2>$null)
@@ -205,6 +208,18 @@ if (-not $tvinputAllow -and $pkgs.Count -gt 0) {
     if (-not $checked) {
         Write-Warning 'Could not check which listed packages drive the HDMI/AV inputs (tv.py failed). Check every input after this run: a port that notices the cable and stays black means one of them was disabled, and only a full restore and a cold boot bring it back (#321).'
     } else {
+        # Dumps switched off by the watchdog: the cure is a reboot, not TVINPUT_ALLOW (disable.sh).
+        $hung = @()
+        foreach ($p in ($tvhw | Where-Object { $_ -match '^HUNG ' })) {
+            $p = ($p -replace '^HUNG ', '').Trim()
+            if ($pkgs -contains $p) {
+                $hung += $p
+                $pkgs = @($pkgs | Where-Object { $_ -ne $p })
+            }
+        }
+        if ($hung.Count -gt 0) {
+            Write-Warning "Skipping $($hung -join ' '): the TV answers dumpsys with `"Service dumps disabled due to hung system process`", so the input-driver check cannot read them. Android's watchdog turns every dump off after system_server hangs, and only a restart turns them back on. Reboot the TV first (tools\tv.py --reboot), then run the list again. `$env:TVINPUT_ALLOW=1 is not the way past this: the check did not run, which is not the same as passing (docs/TROUBLESHOOTING.md)."
+        }
         foreach ($p in ($tvhw | Where-Object { $_ -match '^NOCHK ' })) {
             $p = ($p -replace '^NOCHK ', '').Trim()
             if ($pkgs -contains $p) {
@@ -212,7 +227,7 @@ if (-not $tvinputAllow -and $pkgs.Count -gt 0) {
                 $pkgs = @($pkgs | Where-Object { $_ -ne $p })
             }
         }
-        foreach ($p in ($tvhw | ForEach-Object { $_.Trim() } | Where-Object { $_ -and $_ -notmatch '^NOCHK ' })) {
+        foreach ($p in ($tvhw | ForEach-Object { $_.Trim() } | Where-Object { $_ -and $_ -notmatch '^(NOCHK|HUNG) ' })) {
             if ($pkgs -contains $p) {
                 Write-Warning "Skipping ${p}: it asks for android.permission.TV_INPUT_HARDWARE, so it is the software layer under the HDMI/AV/tuner inputs. With it disabled those inputs still notice the cable but stay black (No Signal), and re-enabling the pieces in batches does not restore the picture: a full restore plus a cold boot does (#321). Set `$env:TVINPUT_ALLOW=1 to disable it."
                 $pkgs = @($pkgs | Where-Object { $_ -ne $p })

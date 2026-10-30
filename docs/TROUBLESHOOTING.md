@@ -169,9 +169,9 @@ Things that bit us or contributors, so they don't bite you. Commands use `tools/
   and returns once the request is accepted. The TV is still restarting at that point, so let it
   answer again (`tools/tv.py --probe`) before the next command.
 - **Every `dumpsys` answers `Service dumps disabled due to hung system process.`**, and `tools/disable.sh`
-  skips every package in the list with "the TV's dumpsys shows neither a requested nor a granted permission
-  block". That message names Android 5.x, but the cause here is another one: Android's watchdog turns service
-  dumps off once it has seen `system_server` hang, and they stay off until `system_server` restarts.
+  skips every package in the list and says to reboot first (older copies of the script said "the TV's dumpsys
+  shows neither a requested nor a granted permission block" and named Android 5.x instead). Android's watchdog
+  turns service dumps off once it has seen `system_server` hang, and they stay off until `system_server` restarts.
   `dumpsys activity` and `dumpsys connectivity` print nothing useful either, so the Home check cannot read the
   focused app. On a Xiaomi Mi TV 4A (MiTV-MOOQ1, Android TV 11, `RTM4.220307.164.8277`) that had been up for
   almost eight days, the load average was around 62 and `logcat` held repeated watchdog lines from
