@@ -64,7 +64,7 @@ com.google.android.sss.authbridge         # set-up-from-phone helper
 com.google.android.syncadapters.calendar  # Google Calendar sync; no calendar app is installed
 
 # Philips features this owner does not use. Check each against your own setup.
-org.droidtv.amazonalexa                   # Alexa bridge (no channels tuned here, so zapping and the guide were not tested)
+# org.droidtv.amazonalexa                 # Alexa bridge: untested here, no channels tuned so zapping and the guide were not checked
 com.phorus.playfi.softap                  # Play-Fi soft access point helper; stayed disabled
 # com.phorus.playfi.tv                    # Play-Fi app: off on this set, but it re-enables itself at every boot
 org.droidtv.dlna                          # DLNA/UPnP server and renderer (on PH1M_WW_9972 Google TV sets the Media app binds it)
