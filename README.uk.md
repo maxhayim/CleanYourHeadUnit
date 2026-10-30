@@ -1,9 +1,5 @@
 <p align="center">
-  <a href="https://cleanyour.tv/halloween"><img src="https://raw.githubusercontent.com/Gathin23/cleanyourtv/main/docs/banner-halloween.png" alt="CleanYourTV, видання на Хелловін. Ваш телевізор без реклами. Приберіть зайве з будь-якого Android TV чи Google TV через Wi-Fi і замініть заповнений рекламою головний екран на чистий лончер у стилі Apple TV. Без root, без кабелю, нічого не видаляється, а відкат — один рядок. Тепер із гарбузом." width="800"></a>
-</p>
-
-<p align="center">
-  🎃 <b>Нове: набір на Хелловін</b> (до 1 листопада): <a href="https://cleanyour.tv/halloween">cleanyour.tv/halloween</a>
+  <a href="https://cleanyour.tv"><img src="docs/banner-halloween.png" alt="CleanYourTV, видання на Хелловін. Ваш телевізор без реклами. Приберіть зайве з будь-якого Android TV чи Google TV через Wi-Fi і замініть заповнений рекламою головний екран на чистий лончер у стилі Apple TV. Без root, без кабелю, нічого не видаляється, а відкат — один рядок. Тепер із гарбузом." width="800"></a>
 </p>
 
 <p align="center">
@@ -24,7 +20,7 @@
 </p>
 
 <p align="center">
-  <a href="docs/PRESS.md"><img src="docs/card-halloween.jpg" alt="371 модель телевізорів · 100 брендів · 31 мова · лончер на 572 КБ. Про нас писали TechCrunch, TechRadar, Tom's Guide, Mashable, Android Authority, XDA, FlatpanelsHD, It's FOSS, Phandroid, GIGAZINE, Xataka, WinFuture, Frandroid, Macitynet, Techaeris, TechPP та ще 298 видань: 314 статей із 44 країн. Було: стандартний головний екран Google TV зі спонсорською рекламою. Стало: лончер Clean Your TV." width="800"></a>
+  <a href="docs/PRESS.md"><img src="docs/card-halloween.jpg" alt="371 модель телевізорів · 100 брендів · 31 мова · лончер на 572 КБ. Про нас писали TechCrunch, TechRadar, Tom's Guide, Mashable, Android Authority, XDA, FlatpanelsHD, It's FOSS, Phandroid, GIGAZINE, Xataka, WinFuture, Frandroid, Macitynet, Techaeris, TechPP та ще 330 видань: 346 статей із 46 країн. Було: стандартний головний екран Google TV зі спонсорською рекламою. Стало: лончер Clean Your TV." width="800"></a>
 </p>
 
 ## З чого почати
