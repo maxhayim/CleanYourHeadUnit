@@ -133,3 +133,33 @@ Notes from this unit:
   `/dev/input` for the key sequence that opens `com.tcl.logkit/.MainActivity`. `logkit.sh` has no network
   code (it copies to USB or `/data/tcl_log`), `persist.sys.normallog`, `persist.sys.usblog` and
   `persist.sys.perfettolog` are unset, and `ro.feature.user_logkit` is `false`.
+
+## Compatibility report: TCL 55C61K, Portugal, Wi-Fi
+
+TCL 55C61K, model "Smart TV Pro", device `G08`, product `G08_4K_GB`, Google TV 14 (SDK 34), firmware
+`UTT2.250416.001 AU02`, on 5 GHz Wi-Fi. Set up on 29 October 2026 in one session: this list and the 65C6K list
+as the starting point, applied in five batches with screenshots between them, then the launcher with
+`build-and-install.sh`. Rebooted twice: all 38 packages stayed disabled, nothing re-enabled itself, and Home and
+Wi-Fi came back. `tools/check.py` reported no drift afterwards. This is a single-session report, not several
+days of use.
+
+**Different choices from the UK unit:** every preloaded streaming app off (Netflix, Prime Video, YouTube, YouTube
+Music and the partner apps the set ships with), Assistant (`katniss`), Miracast and T-Cast off; Chromecast,
+AirPlay, the game bar, the USB media player and gallery, T-Solo and the soundbar updater kept. `com.tcl.ttvs`
+disabled, as on the UK unit, and `com.tcl.dashboard` left enabled.
+
+Notes from this unit:
+
+- **Network ADB**: switching on USB debugging alone opened port 5555 on Wi-Fi, as on the C6K.
+- **setupwraith owned the saved Wi-Fi network** (`cname=com.google.android.tungsten.setupwraith`). Forgetting
+  the network and joining it again in Settings moved it to `com.android.tv.settings`; setupwraith was then
+  disabled without `FORCE_SETUPWRAITH` and the TV stayed on Wi-Fi.
+- **32-bit only**: `ro.product.cpu.abilist` is `armeabi-v7a,armeabi`, so sideloaded apps need their
+  `armeabi-v7a` (or universal) APK; an `arm64-v8a` build does not install.
+- **Settings button**: keycode 83 on scancode 561 here, read from `InputReader` (`TIDD:` lines at the default log
+  level). With launcherx off it did nothing inside apps; `HomeKeyService` with `settings_key_keycodes: [83]` and
+  `settings_key_panel: true` brought it back. The Netflix (4062) and YouTube (190) buttons were remapped with
+  `app_keys` to other apps and worked on the real remote.
+- **`com.tcl.dashboard/.MainActivity`** started (`topResumedActivity`) but showed nothing on screen, and its window
+  blocks `screencap`.
+- `wm size` shows the same factory override of 1920x1080, density 320.
