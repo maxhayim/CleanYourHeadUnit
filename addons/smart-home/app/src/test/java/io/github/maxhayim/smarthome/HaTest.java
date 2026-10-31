@@ -145,6 +145,74 @@ public class HaTest {
         assertEquals(Ha.MAX_ENTITIES, Ha.parse(b.append(']').toString()).size());
     }
 
+    /** n entities of one shape: switch.s0…, sensor.p0… (a price) or weather.w0…. */
+    private static void add(StringBuilder b, String kind, int n) {
+        for (int i = 0; i < n; i++) {
+            if (b.length() > 1) b.append(',');
+            if (kind.equals("switch")) {
+                b.append("{\"entity_id\":\"switch.s").append(i).append("\",\"state\":\"off\",\"attributes\":{}}");
+            } else if (kind.equals("price")) {
+                b.append("{\"entity_id\":\"sensor.p").append(i)
+                        .append("\",\"state\":\"1.5\",\"attributes\":{\"unit_of_measurement\":\"€/L\"}}");
+            } else {
+                b.append("{\"entity_id\":\"weather.w").append(i)
+                        .append("\",\"state\":\"sunny\",\"attributes\":{\"temperature\":20}}");
+            }
+        }
+    }
+
+    private static long listRows(List<Ha.Entity> all) {
+        return all.stream().filter(Ha::inList).count();
+    }
+
+    @Test
+    public void manyPricesDontPushTheSwitchesOut() throws Exception {
+        StringBuilder b = new StringBuilder("[");
+        add(b, "price", 80);
+        add(b, "switch", 1);
+        List<Ha.Entity> all = Ha.parse(b.append(']').toString());
+        assertEquals(1, listRows(all));
+        assertEquals(Ha.MAX_PRICES, Ha.glance(all, Collections.emptyList()).prices.size());
+        assertEquals(1 + Ha.MAX_PRICES, all.size());
+    }
+
+    @Test
+    public void manyWeathersDontPushTheSwitchesOut() throws Exception {
+        StringBuilder b = new StringBuilder("[");
+        add(b, "weather", 80);
+        add(b, "switch", 1);
+        List<Ha.Entity> all = Ha.parse(b.append(']').toString());
+        assertEquals(1, listRows(all));
+        assertEquals("weather.w0", Ha.glance(all, Collections.emptyList()).weather.id);
+    }
+
+    @Test
+    public void theHeaderDoesntCountAgainstTheRowCap() throws Exception {
+        StringBuilder b = new StringBuilder("[");
+        add(b, "price", 6);
+        add(b, "weather", 1);
+        add(b, "switch", 200);
+        List<Ha.Entity> all = Ha.parse(b.append(']').toString());
+        assertEquals(Ha.MAX_ENTITIES, listRows(all));
+        Ha.Glance g = Ha.glance(all, Collections.emptyList());
+        assertEquals(6, g.prices.size());
+        assertEquals("weather.w0", g.weather.id);
+    }
+
+    @Test
+    public void aChosenPriceBeyondTheOldCutoffIsKept() throws Exception {
+        StringBuilder b = new StringBuilder("[");
+        add(b, "price", 90);
+        add(b, "switch", 3);
+        List<String> ids = Arrays.asList("sensor.p89", "sensor.p88");
+        List<Ha.Entity> all = Ha.parse(b.append(']').toString(), ids);
+        Ha.Glance g = Ha.glance(all, ids);
+        assertEquals(2, g.prices.size());
+        assertEquals("sensor.p89", g.prices.get(0).id);
+        assertEquals(3, listRows(all));
+    }
+
+
     @Test
     public void addresses() {
         assertEquals("http://192.168.1.10:8123", Ha.normalizeUrl(" 192.168.1.10:8123/ "));
