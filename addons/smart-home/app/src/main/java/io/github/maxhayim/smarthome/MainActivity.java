@@ -100,7 +100,7 @@ public class MainActivity extends Activity {
             String why = null;
             if (r.ok()) {
                 try {
-                    found = Ha.parse(r.body);
+                    found = Ha.parse(r.body, c.glance);
                 } catch (JSONException e) {
                     why = "Home Assistant's answer couldn't be read.";
                 }

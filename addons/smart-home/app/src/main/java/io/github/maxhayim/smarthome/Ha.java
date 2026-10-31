@@ -15,7 +15,7 @@ import java.util.Locale;
  * so the JVM tests cover it against the documented responses.
  */
 final class Ha {
-    /** At most this many rows, so a large installation can't make the screen slow. */
+    /** At most this many rows in the list, so a large installation can't make the screen slow. */
     static final int MAX_ENTITIES = 80;
     /** At most this many fuel-price sensors in the glance header. */
     static final int MAX_PRICES = 6;
@@ -157,6 +157,15 @@ final class Ha {
 
     /** The rows, sorted into sections (scenes, lights and switches, climate, sensors, doors and windows, locks). */
     static List<Entity> parse(String json) throws JSONException {
+        return parse(json, Collections.emptyList());
+    }
+
+    /**
+     * The same, with the glance header's entities (picked by {@code glanceIds} as in {@link #glance}) kept ahead of
+     * the cap: one weather, up to {@link #MAX_PRICES} prices, then up to {@link #MAX_ENTITIES} list rows. Many price
+     * or weather entities can't push the switches out.
+     */
+    static List<Entity> parse(String json, List<String> glanceIds) throws JSONException {
         JSONArray all = new JSONArray(json);
         List<Entity> out = new ArrayList<>();
         for (int i = 0; i < all.length(); i++) {
@@ -166,7 +175,17 @@ final class Ha {
             if (e != null) out.add(e);
         }
         out.sort((a, b) -> a.kind != b.kind ? a.kind.compareTo(b.kind) : a.name.compareToIgnoreCase(b.name));
-        return out.size() > MAX_ENTITIES ? new ArrayList<>(out.subList(0, MAX_ENTITIES)) : out;
+        Glance header = glance(out, glanceIds);
+        List<Entity> kept = new ArrayList<>();
+        if (header.weather != null) kept.add(header.weather);
+        kept.addAll(header.prices);
+        int rows = 0;
+        for (Entity e : out) {
+            if (!inList(e)) continue;
+            if (rows++ == MAX_ENTITIES) break;
+            kept.add(e);
+        }
+        return kept;
     }
 
     /**
