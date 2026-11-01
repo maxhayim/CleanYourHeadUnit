@@ -94,12 +94,46 @@ public final class Theme {
         return null;
     }
 
+    private static String currentAccent;
+
+    /** The theme in use, with the owner's accent colour on top when one is chosen. */
     public static synchronized Theme get(Context c) {
-        if (current == null || !current.id.equals(Prefs.theme(c))) {
-            current = load(c, Prefs.theme(c));
-            if (current == null) current = load(c, "midnight");
+        String accent = Prefs.accent(c);
+        if (current == null || !current.id.equals(Prefs.theme(c)) || !eq(accent, currentAccent)) {
+            Theme t = load(c, Prefs.theme(c));
+            if (t == null) t = load(c, "midnight");
+            current = accent == null ? t : new Theme(t, Color.parseColor(accent));
+            currentAccent = accent;
         }
         return current;
+    }
+
+    private static boolean eq(String a, String b) {
+        return a == null ? b == null : a.equals(b);
+    }
+
+    /** A copy with another accent. */
+    Theme(Theme t, int accent) {
+        id = t.id;
+        name = t.name;
+        author = t.author;
+        dock = t.dock;
+        dark = t.dark;
+        bg = t.bg;
+        surface = t.surface;
+        text = t.text;
+        dim = t.dim;
+        this.accent = accent;
+        warn = t.warn;
+        ok = t.ok;
+        colsLandscape = t.colsLandscape;
+        colsPortrait = t.colsPortrait;
+    }
+
+    /** Black or white, whichever reads better on this colour. */
+    public static int onColor(int color) {
+        double l = 0.2126 * Color.red(color) + 0.7152 * Color.green(color) + 0.0722 * Color.blue(color);
+        return l > 150 ? Color.BLACK : Color.WHITE;
     }
 
     public static synchronized void reset() {

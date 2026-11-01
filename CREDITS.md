@@ -30,7 +30,7 @@ What came from CleanYourTV, and what was changed, is listed file by file in [doc
 
 ## Assets
 
-- **Outfit** typeface: The Outfit Project Authors, SIL Open Font License 1.1 ([app/FONT-LICENSE-OFL.txt](app/FONT-LICENSE-OFL.txt))
+- **Outfit** typeface (static Regular and SemiBold from [Outfitio/Outfit-Fonts](https://github.com/Outfitio/Outfit-Fonts)): The Outfit Project Authors, SIL Open Font License 1.1 ([app/FONT-LICENSE-OFL.txt](app/FONT-LICENSE-OFL.txt))
 - Icons and logo: drawn for this project (MIT)
 - Block lists, downloaded only when you choose one: [StevenBlack/hosts](https://github.com/StevenBlack/hosts) (MIT), [AdGuard DNS filter](https://github.com/AdguardTeam/AdGuardSDNSFilter) (GPL-3.0)
 

@@ -30,12 +30,14 @@ public final class Ui {
 
     static Typeface font(Context c, boolean bold) {
         if (font == null) {
+            // Static weights: Android before 8.0 can't pick a weight from a variable font.
             try {
-                font = Typeface.createFromAsset(c.getAssets(), "fonts/outfit.ttf");
+                font = Typeface.createFromAsset(c.getAssets(), "fonts/outfit-regular.ttf");
+                fontBold = Typeface.createFromAsset(c.getAssets(), "fonts/outfit-semibold.ttf");
             } catch (RuntimeException e) {
                 font = Typeface.SANS_SERIF;
+                fontBold = Typeface.create(Typeface.SANS_SERIF, Typeface.BOLD);
             }
-            fontBold = Typeface.create(font, Typeface.BOLD);
         }
         return bold ? fontBold : font;
     }
@@ -174,7 +176,7 @@ public final class Ui {
 
     public static TextView button(Context c, String label, boolean primary, View.OnClickListener l) {
         Theme th = t(c);
-        TextView b = text(c, label, 15, primary ? (th.dark ? Color.BLACK : Color.WHITE) : th.text, true);
+        TextView b = text(c, label, 15, primary ? Theme.onColor(th.accent) : th.text, true);
         b.setGravity(Gravity.CENTER);
         b.setMinHeight(dp(c, 52));
         b.setPadding(dp(c, 18), 0, dp(c, 18), 0);
@@ -297,7 +299,9 @@ public final class Ui {
             for (int i = 0; i < getChildCount(); i++) {
                 View v = getChildAt(i);
                 if (v.getVisibility() == GONE) continue;
-                v.measure(MeasureSpec.makeMeasureSpec(w, MeasureSpec.AT_MOST), MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED));
+                ViewGroup.LayoutParams lp = v.getLayoutParams();
+                v.measure(getChildMeasureSpec(MeasureSpec.makeMeasureSpec(w, MeasureSpec.AT_MOST), 0, lp == null ? ViewGroup.LayoutParams.WRAP_CONTENT : lp.width),
+                        getChildMeasureSpec(MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED), 0, lp == null ? ViewGroup.LayoutParams.WRAP_CONTENT : lp.height));
                 if (x > 0 && x + v.getMeasuredWidth() > w) {
                     x = 0;
                     y += rowH + gap;

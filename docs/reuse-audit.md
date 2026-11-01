@@ -11,7 +11,7 @@ Upstream: [Gathin23/cleanyourtv](https://github.com/Gathin23/cleanyourtv) at `f4
 | `tools/disable.sh` "disable-user, never uninstall; `pm enable` to undo" (#165) | `tools/cyhu/adb.py`, `debloat.py`, `restore.py` | Same mechanism, rewritten in Python with recording and verification. Credited in `adb.py`. |
 | `tools/privacy.py` catalogue approach (finding + evidence + sources), and the `com.google.android.feedback` entry | `data/telemetry.json` | Approach and that one entry reused. All head-unit entries are new, with their own sources. |
 | Launcher module cards (`com.gathin.tvhome.category.DOCK_CARD`) | `Screens.Modules` | Category recognised, so existing CleanYourTV cards appear. Nothing from the TV launcher's code is used. |
-| `addons/photo-prints/.../font/outfit.ttf` and `FONT-LICENSE-OFL.txt` | `app/src/main/assets/fonts/outfit.ttf`, `app/FONT-LICENSE-OFL.txt` | Same files (OFL 1.1). |
+| `addons/photo-prints/.../FONT-LICENSE-OFL.txt` | `app/FONT-LICENSE-OFL.txt` | Same file (OFL 1.1). The variable `outfit.ttf` was used at first and replaced by the static Regular and SemiBold files from the Outfit project's repository, because Android before 8.0 renders a variable font at its default weight (Thin). |
 | `addons/*` Gradle wrapper, `gradle.properties`, `settings.gradle` | repository root | Build scaffolding, edited for this project. |
 | `addons/photo-prints/.../values/themes.xml` | `app/src/main/res/values/styles.xml` | Reduced to a no-action-bar theme. |
 | `.gitignore` | `.gitignore` | Extended (signing files). |
