@@ -1,0 +1,64 @@
+name: Launcher submission
+description: List a launcher in the Community Hub.
+labels: ["catalog", "launcher"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Listings link to the developer's official releases only; APKs are never mirrored. Listing is not an endorsement.
+        If you're not the developer, please say so; we'll only list projects whose developer is credited by their real GitHub username.
+  - type: input
+    id: name
+    attributes:
+      label: Launcher name
+    validations:
+      required: true
+  - type: input
+    id: github
+    attributes:
+      label: Developer's GitHub username
+    validations:
+      required: true
+  - type: input
+    id: repo
+    attributes:
+      label: Official repository with releases (owner/name)
+    validations:
+      required: true
+  - type: input
+    id: package
+    attributes:
+      label: Package name and signing certificate SHA-256
+      description: "`apksigner verify --print-certs app.apk` shows the certificate SHA-256."
+    validations:
+      required: true
+  - type: input
+    id: license
+    attributes:
+      label: Licence
+      description: Closed source is fine; say so plainly.
+    validations:
+      required: true
+  - type: checkboxes
+    id: orientation
+    attributes:
+      label: Orientation
+      options:
+        - label: Landscape
+        - label: Portrait
+  - type: input
+    id: android
+    attributes:
+      label: Minimum Android version and screen sizes
+  - type: textarea
+    id: tested
+    attributes:
+      label: Head units it has been tested on
+      description: Leave empty if none; it will be listed as untested.
+  - type: textarea
+    id: screenshots
+    attributes:
+      label: Screenshots
+      description: Real screenshots (no personal info). Label mockups as mockups.
+    validations:
+      required: true

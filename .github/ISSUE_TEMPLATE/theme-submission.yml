@@ -1,0 +1,46 @@
+name: Theme submission
+description: Share a theme for CleanYourHeadUnit Home (or for another launcher, in that launcher's format).
+labels: ["catalog", "theme"]
+body:
+  - type: markdown
+    attributes:
+      value: Themes are data only (THEMES.md). Run `python3 tools/cyhu.py catalog validate` after adding it under themes/<id>/.
+  - type: input
+    id: name
+    attributes:
+      label: Theme name
+    validations:
+      required: true
+  - type: input
+    id: target
+    attributes:
+      label: Launcher and minimum version it's for
+      description: e.g. cyhu-home 0.1.0
+    validations:
+      required: true
+  - type: input
+    id: github
+    attributes:
+      label: Your GitHub username
+    validations:
+      required: true
+  - type: input
+    id: license
+    attributes:
+      label: Licence
+    validations:
+      required: true
+  - type: textarea
+    id: json
+    attributes:
+      label: theme.json
+      render: json
+    validations:
+      required: true
+  - type: textarea
+    id: preview
+    attributes:
+      label: Preview
+      description: A screenshot on a unit, or a render/mockup labelled as such.
+    validations:
+      required: true

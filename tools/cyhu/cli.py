@@ -192,7 +192,7 @@ def cmd_privacy(args, dev, info, rec):
         print("\nPermissions granted (what apps may do, not what they did):")
         for g, names in perms.items():
             print(f"  {g:10} {len(names):3}  {', '.join(names[:8])}{' ...' if len(names) > 8 else ''}")
-        print(f"\nPrivate DNS: {dns if dns is not None else 'not available below Android 9'}")
+        print(f"\nPrivate DNS: {privacy.dns_label(dns)}")
         print("Network activity per app is not observable over ADB without root; see PRIVACY.md.")
         return 0
     if args.action == "profile":

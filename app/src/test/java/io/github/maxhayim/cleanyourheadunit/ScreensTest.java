@@ -207,6 +207,28 @@ public class ScreensTest {
         Prefs.setTheme(a, "midnight");
     }
 
+    /** assets/logo.png for the README, drawn from the app's own launcher icon. */
+    @Test
+    public void logo() throws Exception {
+        String dir = System.getProperty("screenshots");
+        android.graphics.drawable.Drawable d = RuntimeEnvironment.getApplication().getResources().getDrawable(R.drawable.ic_launcher, null);
+        Bitmap b = Bitmap.createBitmap(512, 512, Bitmap.Config.ARGB_8888);
+        d.setBounds(0, 0, 512, 512);
+        d.draw(new Canvas(b));
+        assertTrue(b.getPixel(256, 256) != 0 || b.getPixel(256, 200) != 0);
+        if (dir == null) return;
+        File out = new File(System.getProperty("repo.root"), "assets/logo.png");
+        out.getParentFile().mkdirs();
+        try (FileOutputStream o = new FileOutputStream(out)) {
+            b.compress(Bitmap.CompressFormat.PNG, 100, o);
+        }
+        for (String id : Theme.BUILTIN) {
+            File src = new File(dir, "theme-" + id + ".png");
+            if (src.exists()) java.nio.file.Files.copy(src.toPath(), new File(System.getProperty("repo.root"), "themes/" + id + "/preview.png").toPath(),
+                    java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+        }
+    }
+
     @Test
     public void homeLauncherRenders() throws Exception {
         RuntimeEnvironment.setQualifiers("w1280dp-h720dp-land-mdpi");

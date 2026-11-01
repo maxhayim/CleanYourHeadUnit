@@ -70,6 +70,12 @@ public final class Theme {
         if (l != null) {
             String dock = l.optString("dock", "bottom");
             if (!dock.equals("bottom") && !dock.equals("left")) e.add("layout.dock must be bottom or left");
+            String icon = l.optString("icon_size", "large");
+            if (!icon.equals("small") && !icon.equals("medium") && !icon.equals("large")) e.add("layout.icon_size must be small, medium or large");
+            for (String k : new String[]{"columns_landscape", "columns_portrait"}) {
+                if (l.has(k) && !(l.opt(k) instanceof Integer && l.optInt(k) >= 2 && l.optInt(k) <= 10)) e.add("layout." + k + " must be 2 to 10");
+            }
+            if (l.has("clock") && !(l.opt("clock") instanceof Boolean)) e.add("layout.clock must be true or false");
         }
         return e;
     }
@@ -121,6 +127,7 @@ public final class Theme {
 
     /** Saves a validated theme JSON; returns its id or throws with the reasons. */
     public static String importTheme(Context c, String json) throws JSONException, java.io.IOException {
+        if (json.length() > 64 * 1024) throw new JSONException("a theme file is at most 64 KB");
         JSONObject j = new JSONObject(json);
         List<String> e = validate(j);
         if (!"cyhu-home".equals(j.getJSONObject("target").optString("launcher"))) e.add("this theme is for " + j.getJSONObject("target").optString("launcher") + ", not CleanYourHeadUnit Home");

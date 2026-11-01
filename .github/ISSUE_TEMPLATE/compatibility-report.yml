@@ -1,0 +1,51 @@
+name: Compatibility report
+description: Tell us how CleanYourHeadUnit behaved on a real head unit (works, partly works, or broke something).
+labels: ["compatibility"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you! Reports from real units are what make profiles "tested". Please follow docs/hardware-checklist.md while **parked**.
+        Remove anything personal (VIN, phone numbers, Wi-Fi names) before posting; `cyhu diagnostics` already strips serials and MAC addresses.
+  - type: input
+    id: unit
+    attributes:
+      label: Unit as sold
+      description: Brand/seller and model as listed, e.g. "Seller X 9-inch 2-DIN, Android 10".
+    validations:
+      required: true
+  - type: input
+    id: firmware
+    attributes:
+      label: Firmware
+      description: Android version, build (Settings → About), MCU version, and custom firmware if any (e.g. Sergey Kozlov).
+    validations:
+      required: true
+  - type: dropdown
+    id: result
+    attributes:
+      label: Overall result
+      options:
+        - Everything I tested worked
+        - Mostly worked (details below)
+        - Something stopped working (details below)
+    validations:
+      required: true
+  - type: textarea
+    id: checklist
+    attributes:
+      label: Checklist results
+      description: Which steps of docs/hardware-checklist.md you ran, and pass/fail for each.
+    validations:
+      required: true
+  - type: textarea
+    id: problems
+    attributes:
+      label: What didn't work
+      description: Especially any vehicle function (camera, radio, Bluetooth calls, steering-wheel keys, climate) and the package involved.
+  - type: textarea
+    id: diagnostics
+    attributes:
+      label: Diagnostics
+      description: Paste `python3 tools/cyhu.py diagnostics` output (read it first).
+      render: json

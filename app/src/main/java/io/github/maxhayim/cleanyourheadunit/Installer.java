@@ -121,8 +121,7 @@ public final class Installer {
             i = new Intent(Intent.ACTION_INSTALL_PACKAGE, ApkProvider.uri(a));
             i.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         } else {
-            //noinspection ResultOfMethodCallIgnored
-            apk.setReadable(true, false);
+            // Below Android 7 the APK sits in external cache, which the system installer can read.
             i = new Intent(Intent.ACTION_VIEW).setDataAndType(Uri.fromFile(apk), "application/vnd.android.package-archive");
         }
         a.startActivity(i);

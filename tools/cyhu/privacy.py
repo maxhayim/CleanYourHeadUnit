@@ -89,6 +89,18 @@ def get_private_dns(dev: Device, sdk: int) -> dict | None:
     return {"mode": None if mode in ("", "null") else mode, "specifier": None if spec in ("", "null") else spec}
 
 
+def dns_label(dns):
+    """The same wording as the app: Automatic, Off, or the hostname."""
+    if dns is None:
+        return "not available below Android 9"
+    mode = dns.get("mode")
+    if mode == "hostname" and dns.get("specifier"):
+        return dns["specifier"]
+    if mode == "off":
+        return "Off"
+    return "Automatic (Android default)"
+
+
 def set_private_dns(dev: Device, info: DeviceInfo, rec: Records, hostname: str | None) -> tuple[bool, str]:
     """hostname None turns Private DNS back to Android's default (automatic)."""
     if info.sdk < 28:
