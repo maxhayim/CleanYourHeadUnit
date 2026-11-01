@@ -8,11 +8,13 @@ There's no universal theme format across Android launchers, so every theme names
 
 | Theme | Look | Preview |
 |---|---|---|
-| Midnight | dark, teal accent (default) | [themes/midnight/preview.png](themes/midnight/preview.png) |
+| Midnight | dark, soft blue accent (default) | [themes/midnight/preview.png](themes/midnight/preview.png) |
 | Amber Dash | dark, amber instrument-cluster colours | [themes/amber-dash/preview.png](themes/amber-dash/preview.png) |
 | Daylight | light, for bright cabins | [themes/daylight/preview.png](themes/daylight/preview.png) |
 
 Previews are renders by the test suite (simulated unit), not photos.
+
+**Accent colour.** Under Themes (and in Settings) you can pick an accent colour that replaces the theme's own: one of ten presets or any `#RRGGBB`. It applies to every theme, and "Theme's own colour" goes back. Button text switches between black and white to stay readable on the colour you pick. The choice stays on the unit; nothing about it is sent anywhere.
 
 ## Format (schema 1)
 
@@ -26,7 +28,7 @@ Previews are renders by the test suite (simulated unit), not photos.
   "target": {"launcher": "cyhu-home", "min_version": "0.1.0"},
   "dark": true,
   "colors": {"background": "#0B0E11", "surface": "#161B21", "text": "#E8EDF2", "text_dim": "#8A96A3",
-             "accent": "#2EC4B6", "warn": "#F2A93B", "ok": "#4CC38A"},
+             "accent": "#8FA8FF", "warn": "#F2A93B", "ok": "#4CC38A"},
   "layout": {"dock": "bottom", "columns_landscape": 6, "columns_portrait": 4, "icon_size": "large", "clock": true},
   "description": "One sentence."
 }

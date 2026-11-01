@@ -126,6 +126,64 @@ final class Screens {
         }
     }
 
+    /** Presets for the accent colour; any #RRGGBB can also be typed. */
+    static final String[][] ACCENTS = {
+            {"Blue", "#8FA8FF"}, {"Sky", "#4FC3F7"}, {"Teal", "#2EC4B6"}, {"Lime", "#C5E15A"}, {"Amber", "#FFB74D"},
+            {"Coral", "#FF8A65"}, {"Red", "#EF5350"}, {"Pink", "#FF7EB6"}, {"Violet", "#B39DFF"}, {"White", "#E8EDF2"},
+    };
+
+    /** Pick the accent colour: a swatch, the theme's own, or any hex colour. */
+    static View accentCard(final MainActivity a) {
+        Theme th = Ui.t(a);
+        final String chosen = Prefs.accent(a);
+        LinearLayout c = Ui.card(a);
+        c.addView(Ui.text(a, "Accent colour", 17, th.text, true));
+        Ui.add(c, Ui.dim(a, "Used for buttons, highlights and the navigation. Works with every theme."), 4);
+        Ui.Flow sw = new Ui.Flow(a);
+        for (final String[] p : ACCENTS) {
+            int col = android.graphics.Color.parseColor(p[1]);
+            boolean on = p[1].equalsIgnoreCase(chosen);
+            View dot = new View(a);
+            android.graphics.drawable.GradientDrawable g = new android.graphics.drawable.GradientDrawable();
+            g.setShape(android.graphics.drawable.GradientDrawable.OVAL);
+            g.setColor(col);
+            if (on) g.setStroke(Ui.dp(a, 3), th.text);
+            dot.setBackground(g);
+            dot.setLayoutParams(new android.view.ViewGroup.LayoutParams(Ui.dp(a, 44), Ui.dp(a, 44)));
+            dot.setContentDescription(p[0] + (on ? " (in use)" : ""));
+            dot.setFocusable(true);
+            dot.setClickable(true);
+            dot.setOnClickListener(v -> { Prefs.setAccent(a, p[1]); a.refresh(); });
+            sw.addView(dot);
+        }
+        Ui.add(c, sw, 12);
+        Ui.Flow row = new Ui.Flow(a);
+        final android.widget.EditText hex = new android.widget.EditText(a);
+        hex.setHint("#RRGGBB");
+        hex.setText(chosen == null ? "" : chosen);
+        hex.setSingleLine(true);
+        hex.setTextColor(th.text);
+        hex.setHintTextColor(th.dim);
+        hex.setMinWidth(Ui.dp(a, 140));
+        row.addView(hex);
+        row.addView(Ui.button(a, "Use colour", false, v -> {
+            String h = hex.getText().toString().trim();
+            if (!h.startsWith("#")) h = "#" + h;
+            if (!Theme.COLOR.matcher(h).matches()) {
+                a.info("Not a colour", "Type six hex digits, like #8FA8FF.");
+                return;
+            }
+            Prefs.setAccent(a, h);
+            a.refresh();
+        }));
+        row.addView(Ui.button(a, chosen == null ? "Theme's own colour (in use)" : "Theme's own colour", chosen == null, v -> {
+            Prefs.setAccent(a, null);
+            a.refresh();
+        }));
+        Ui.add(c, row, 10);
+        return c;
+    }
+
     static String cap(String s) {
         return s == null || s.isEmpty() ? s : Character.toUpperCase(s.charAt(0)) + s.substring(1);
     }
@@ -366,6 +424,7 @@ final class Screens {
                 if (t != null) g.addView(themeCard(a, t));
             }
             Ui.add(l, g, 10);
+            Ui.add(l, accentCard(a), 14);
             Ui.Flow b = new Ui.Flow(a);
             b.addView(Ui.button(a, "Import theme file", false, v -> {
                 Intent i = new Intent(Intent.ACTION_OPEN_DOCUMENT).addCategory(Intent.CATEGORY_OPENABLE).setType("*/*");
@@ -710,6 +769,7 @@ final class Screens {
             Ui.add(mo, Ui.button(a, low ? "Reduced motion: On" : "Reduced motion: Off", low, v -> { Prefs.setLowMotion(a, !low); a.show("settings"); }), 10);
             Ui.add(mo, Ui.dim(a, "On by default on units with less than 2 GB of memory."), 6);
             Ui.add(l, mo, 12);
+            Ui.add(l, accentCard(a), 12);
 
             LinearLayout ab = Ui.card(a);
             ab.addView(Ui.text(a, "About", 17, th.text, true));

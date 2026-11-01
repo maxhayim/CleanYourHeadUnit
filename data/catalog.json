@@ -147,7 +147,7 @@
       "kind": "theme",
       "name": "Midnight",
       "developer": "maxhayim",
-      "description": "Default dark theme: near-black, teal accent.",
+      "description": "Default dark theme: near-black, soft blue accent.",
       "target": {"launcher": "cyhu-home", "min_version": "0.1.0"},
       "path": "themes/midnight",
       "open_source": true,

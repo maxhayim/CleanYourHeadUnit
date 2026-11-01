@@ -27,6 +27,7 @@ CleanYourHeadUnit is derived from CleanYourTV (https://github.com/Gathin23/clean
 by @Gathin23, which is under the MIT license above. The repository keeps CleanYourTV's
 commit history. CleanYourTV's author has not endorsed this project.
 
-The Outfit typeface in app/src/main/assets/fonts/outfit.ttf is copyright
-The Outfit Project Authors and licensed under the SIL Open Font License 1.1,
-see app/FONT-LICENSE-OFL.txt. It was taken from CleanYourTV's launcher.
+The Outfit typeface in app/src/main/assets/fonts/ (outfit-regular.ttf and
+outfit-semibold.ttf, the static Regular and SemiBold files from the Outfit
+project's own repository, unmodified) is copyright The Outfit Project Authors
+and licensed under the SIL Open Font License 1.1, see app/FONT-LICENSE-OFL.txt.

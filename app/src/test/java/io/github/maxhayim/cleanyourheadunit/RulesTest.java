@@ -109,4 +109,33 @@ public class RulesTest {
         assertTrue(Report.SENSITIVE_KEY.matcher("ro.boot.wifimacaddr").find());
         assertFalse(Report.SENSITIVE_KEY.matcher("ro.product.model").find());
     }
+
+    @Test
+    public void accentOverridesEveryThemeAndClears() {
+        Context c = RuntimeEnvironment.getApplication();
+        Prefs.setAccent(c, null);
+        Theme.reset();
+        int own = Theme.get(c).accent;
+        Prefs.setAccent(c, "#ff7eb6");
+        assertEquals(android.graphics.Color.parseColor("#FF7EB6"), Theme.get(c).accent);
+        assertEquals("#FF7EB6", Prefs.accent(c));
+        Prefs.setTheme(c, "daylight");
+        assertEquals(android.graphics.Color.parseColor("#FF7EB6"), Theme.get(c).accent);
+        Prefs.setAccent(c, null);
+        Prefs.setTheme(c, "midnight");
+        assertEquals(own, Theme.get(c).accent);
+        // a stored value that isn't a colour is ignored
+        Prefs.sp(c).edit().putString("accent", "red; DROP").apply();
+        assertEquals(null, Prefs.accent(c));
+        assertEquals(own, Theme.get(c).accent);
+        Prefs.setAccent(c, null);
+    }
+
+    @Test
+    public void buttonTextReadsOnAnyAccent() {
+        assertEquals(android.graphics.Color.BLACK, Theme.onColor(android.graphics.Color.parseColor("#8FA8FF")));
+        assertEquals(android.graphics.Color.BLACK, Theme.onColor(android.graphics.Color.parseColor("#E8EDF2")));
+        assertEquals(android.graphics.Color.WHITE, Theme.onColor(android.graphics.Color.parseColor("#0A66C2")));
+        assertEquals(android.graphics.Color.WHITE, Theme.onColor(android.graphics.Color.parseColor("#B91C1C")));
+    }
 }

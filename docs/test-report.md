@@ -38,7 +38,7 @@ Date: 2026-11-01. Machine: macOS (Apple silicon), JDK 17, Android Gradle Plugin 
 **Java**
 
 - `DnsTest`: DNS query parsing (including malformed packets), NXDOMAIN answers, IPv4/UDP packet building with checksums verified, hosts and adblock list parsing, parent-domain matching, allowlist precedence, and refusal of bare top-level domains.
-- `RulesTest`: the same 30 shared vectors as Python, profile matching, Protected and Unknown never offered, theme validation, report scrubbing.
+- `RulesTest`: the same 30 shared vectors as Python, profile matching, Protected and Unknown never offered, theme validation, report scrubbing, the accent colour override (applies to every theme, clears, ignores a stored value that is not a colour) and readable button text on any accent.
 - `ScreensTest`: opens the real `MainActivity` on simulated FYT (1280×720), ALPS (1024×600), Android 4.4 (800×480), DoFun portrait (1080×1920) and 1920×720 units, visits every section, and checks:
   - the model and Android version are shown
   - no serial or MAC address is shown or exported

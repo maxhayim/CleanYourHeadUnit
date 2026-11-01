@@ -6,6 +6,6 @@
   "license": "MIT",
   "target": {"launcher": "cyhu-home", "min_version": "0.1.0"},
   "dark": true,
-  "colors": {"background": "#0B0E11", "surface": "#161B21", "text": "#E8EDF2", "text_dim": "#8A96A3", "accent": "#2EC4B6", "warn": "#F2A93B", "ok": "#4CC38A"},
+  "colors": {"background": "#0B0E11", "surface": "#161B21", "text": "#E8EDF2", "text_dim": "#8A96A3", "accent": "#8FA8FF", "warn": "#F2A93B", "ok": "#4CC38A"},
   "layout": {"dock": "bottom", "columns_landscape": 6, "columns_portrait": 4, "icon_size": "large", "clock": true}
 }

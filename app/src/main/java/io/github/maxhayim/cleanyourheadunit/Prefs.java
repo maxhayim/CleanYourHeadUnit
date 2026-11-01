@@ -41,6 +41,17 @@ public final class Prefs {
         sp(c).edit().putString("theme", id).apply();
     }
 
+    /** The owner's accent colour (#RRGGBB) over the theme's, or null for the theme's own. */
+    public static String accent(Context c) {
+        String v = sp(c).getString("accent", null);
+        return v != null && Theme.COLOR.matcher(v).matches() ? v : null;
+    }
+
+    public static void setAccent(Context c, String hex) {
+        if (hex == null) sp(c).edit().remove("accent").apply();
+        else sp(c).edit().putString("accent", hex.toUpperCase(java.util.Locale.ROOT)).apply();
+    }
+
     /** No animation by default on units with under 2 GB of RAM. */
     public static boolean lowMotion(Context c, long ramTotal) {
         return sp(c).getBoolean("lowMotion", ramTotal > 0 && ramTotal < (2L << 30) - (128L << 20));
