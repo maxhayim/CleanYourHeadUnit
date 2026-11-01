@@ -5,7 +5,7 @@
     {"id": "gathin23", "github": "Gathin23", "name": null, "projects": ["CleanYourTV"], "note": "Author of CleanYourTV, the project CleanYourHeadUnit is derived from."},
     {"id": "maxhayim", "github": "maxhayim", "name": null, "projects": ["CleanYourHeadUnit", "RetroDeck", "Webmote"]},
     {"id": "tdater", "github": "tdater", "name": null, "projects": ["KITT Launcher", "KITT Launcher.2"]},
-    {"id": "sergey-kozlov", "github": null, "name": "Sergey Kozlov", "projects": ["Custom firmware for Tesla-style head units"], "note": "No GitHub username could be verified."}
+    {"id": "sergey-kozlov", "github": null, "name": "Sergey Kozlov", "website": "https://boosty.to/teslafw", "projects": ["Custom firmware for Tesla-style head units"], "note": "Official page on Boosty. No GitHub username could be verified."}
   ],
   "items": [
     {
@@ -29,7 +29,7 @@
       },
       "install": "github_release",
       "compatibility": {
-        "status": "community",
+        "status": "untested",
         "verified": [],
         "reports": ["Tested by its developer on an Android TV (Android 14) at 1920x1080 and 1920x720; no car head unit report yet."]
       },

@@ -37,6 +37,6 @@ Everything else: `tools/cyhu/` (the computer tool), `app/` (the Android app), `d
 |---|---|---|
 | KITT Launcher, KITT Launcher.2 (@tdater) | Proprietary, all rights reserved | Linked; downloaded from @tdater's official GitHub releases at the user's request; never mirrored |
 | RetroDeck, Webmote (@maxhayim) | MIT | Linked; downloaded from official releases |
-| Sergey Kozlov firmware | Not published under an open licence | Described only. Not linked for download, never redistributed |
+| Sergey Kozlov firmware | Not published under an open licence | Described; his official Boosty page is linked. Never downloaded or redistributed |
 | StevenBlack hosts | MIT | Downloaded on the user's request |
 | AdGuard DNS filter | GPL-3.0 | Downloaded on the user's request; not bundled |

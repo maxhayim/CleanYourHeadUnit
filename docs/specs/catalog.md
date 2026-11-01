@@ -17,6 +17,7 @@
 | `id` | lowercase id used by items |
 | `github` | the verified GitHub username, or `null` if none could be verified. **Never guessed.** |
 | `name` | only when `github` is `null` (or the developer asks to be named) |
+| `website` | optional official page (https), for developers without a verified GitHub username or with a main page elsewhere |
 | `projects`, `note` | display only |
 
 The credit shown is `@github` when there is one, otherwise `name`.

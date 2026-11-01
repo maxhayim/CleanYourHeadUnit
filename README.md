@@ -173,7 +173,7 @@ com.adups.fota  [advanced]
 <ul>
   <li><a href="https://github.com/Gathin23">@Gathin23</a> for CleanYourTV, its protected-package rules and its privacy catalogue approach.</li>
   <li><a href="https://github.com/tdater">@tdater</a> for KITT Launcher and KITT Launcher.2.</li>
-  <li>Sergey Kozlov for custom firmware for Tesla-style head units (no GitHub username could be verified).</li>
+  <li><a href="https://boosty.to/teslafw">Sergey Kozlov</a> for custom firmware for Tesla-style head units (official page on Boosty; no GitHub username could be verified).</li>
   <li>The researchers whose published work the telemetry catalogue cites: Kryptowire, Malwarebytes and Kaspersky.</li>
   <li><a href="https://github.com/PimpinPumpkin/fyt7862-mods">@PimpinPumpkin</a> and the XDA head-unit community, whose public notes the FYT and MTC profiles cite.</li>
 </ul>

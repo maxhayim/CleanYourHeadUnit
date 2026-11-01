@@ -11,7 +11,7 @@ People are credited by **GitHub username** wherever one is verified. A real name
 | [@Gathin23](https://github.com/Gathin23) | CleanYourTV (the project this one is derived from) |
 | [@maxhayim](https://github.com/maxhayim) | CleanYourHeadUnit, RetroDeck, Webmote |
 | [@tdater](https://github.com/tdater) | KITT Launcher, KITT Launcher.2 |
-| Sergey Kozlov (no GitHub username verified) | custom firmware for Tesla-style head units |
+| [Sergey Kozlov](https://boosty.to/teslafw) (Boosty; no GitHub username verified) | custom firmware for Tesla-style head units |
 
 ## Labels
 

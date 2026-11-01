@@ -500,10 +500,16 @@ final class Screens {
                 c.addView(Ui.text(a, Catalog.credit(a, d.optString("id")), 17, th.text, true));
                 c.addView(Ui.dim(a, android.text.TextUtils.join(", ", Data.strings(d.optJSONArray("projects")))));
                 if (d.has("note")) Ui.add(c, Ui.text(a, d.optString("note"), 13, th.dim, false), 6);
+                Ui.Flow links = new Ui.Flow(a);
                 if (!d.isNull("github")) {
                     final String url = "https://github.com/" + d.optString("github");
-                    Ui.add(c, Ui.button(a, "GitHub profile", false, v -> a.openUrl(url)), 10);
+                    links.addView(Ui.button(a, "GitHub profile", false, v -> a.openUrl(url)));
                 }
+                if (d.optString("website").startsWith("https://")) {
+                    final String site = d.optString("website");
+                    links.addView(Ui.button(a, "Website", false, v -> a.openUrl(site)));
+                }
+                if (links.getChildCount() > 0) Ui.add(c, links, 10);
                 devs.addView(c);
             }
             Ui.add(l, devs, 10);
