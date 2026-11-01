@@ -1,0 +1,85 @@
+plugins {
+    id 'com.android.application'
+}
+
+// data/ and themes/ at the repo root are the single source of truth: the Python tool reads them
+// there, and the app gets the same files copied into its assets.
+def sharedAssets = layout.buildDirectory.dir('generated/sharedAssets')
+tasks.register('copySharedAssets', Sync) {
+    from(rootProject.file('data')) { into 'data' }
+    from(rootProject.file('themes')) { into 'themes'; exclude '**/*.md' }
+    into sharedAssets
+}
+
+android {
+    namespace 'io.github.maxhayim.cleanyourheadunit'
+    compileSdk rootProject.ext.compileSdk
+
+    defaultConfig {
+        applicationId 'io.github.maxhayim.cleanyourheadunit'
+        minSdk rootProject.ext.minSdk
+        targetSdk rootProject.ext.targetSdk
+        versionCode 1
+        versionName '0.1.0'
+    }
+
+    sourceSets {
+        main.assets.srcDirs += sharedAssets
+        test.resources.srcDirs += rootProject.file('tests/vectors')
+    }
+
+    // Release APKs must always carry the same key, or an update won't install over the old one.
+    // The key lives outside the repo; SIGNING_PROPERTIES points at its properties file. Without it
+    // the debug key is used, which is fine for a personal build.
+    def signingFile = System.getenv('SIGNING_PROPERTIES')
+    signingConfigs {
+        if (signingFile && file(signingFile).exists()) {
+            release {
+                def p = new Properties()
+                file(signingFile).withInputStream { p.load(it) }
+                storeFile file(p.storeFile)
+                storePassword p.storePassword
+                keyAlias p.keyAlias
+                keyPassword p.keyPassword
+            }
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.findByName('release') ?: signingConfigs.debug
+        }
+    }
+
+    testOptions {
+        unitTests.includeAndroidResources = true
+        // ./gradlew :app:testDebugUnitTest -Pscreenshots writes docs/screenshots/*.png
+        unitTests.all {
+            if (project.hasProperty('screenshots')) systemProperty 'screenshots', rootProject.file('docs/screenshots').absolutePath
+            systemProperty 'repo.root', rootProject.projectDir.absolutePath
+            maxHeapSize = '2g'
+        }
+    }
+
+    lint {
+        lintConfig file('lint.xml')
+        abortOnError true
+        warningsAsErrors false
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+}
+
+tasks.named('preBuild') { dependsOn 'copySharedAssets' }
+
+dependencies {
+    testImplementation 'junit:junit:4.13.2'
+    // Runs the real app on the JVM, including Android's own graphics for the screenshots.
+    testImplementation 'org.robolectric:robolectric:4.14.1'
+}

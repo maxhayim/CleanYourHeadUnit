@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<lint>
+    <!-- Calls newer than minSdk 19 must be guarded; fail the build if one isn't. -->
+    <issue id="NewApi" severity="fatal" />
+    <!-- English only for now; strings live in code next to what they describe. -->
+    <issue id="SetTextI18n" severity="ignore" />
+    <issue id="HardcodedText" severity="ignore" />
+    <!-- Package visibility: a debloater must see every installed package (see AndroidManifest). -->
+    <issue id="QueryAllPackagesPermission" severity="ignore" />
+    <issue id="ExpiredTargetSdkVersion" severity="ignore" />
+</lint>
