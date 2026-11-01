@@ -173,6 +173,8 @@ def check_theme(t: dict) -> list[str]:
     for k, allowed in THEME_LAYOUT.items():
         if k in lay and lay[k] not in allowed:
             e.append(f"layout.{k} must be one of {allowed}")
+    if "clock" in lay and not isinstance(lay["clock"], bool):
+        e.append("layout.clock must be true or false")
     for k in ("columns_landscape", "columns_portrait"):
         if k in lay and not (isinstance(lay[k], int) and 2 <= lay[k] <= 10):
             e.append(f"layout.{k} must be 2 to 10")

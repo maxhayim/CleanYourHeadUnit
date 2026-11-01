@@ -1,0 +1,40 @@
+name: Device profile
+description: Propose or improve a firmware profile (which packages are vehicle functions, which are optional).
+labels: ["profile"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        See CONTRIBUTING.md → Device profiles. Profiles match on what the unit runs (packages, build properties), never on a brand name.
+        Never post firmware files, firmware download links or factory codes.
+  - type: input
+    id: family
+    attributes:
+      label: Firmware family
+      description: e.g. FYT UIS7862, MTCE PX5, DoFun, YT9216, Sergey Kozlov.
+    validations:
+      required: true
+  - type: textarea
+    id: signal
+    attributes:
+      label: How to recognise it
+      description: A package only this firmware has, or a build property value.
+    validations:
+      required: true
+  - type: textarea
+    id: protected
+    attributes:
+      label: Packages that must be protected
+      description: One per line, with what each does in the car.
+  - type: textarea
+    id: optional
+    attributes:
+      label: Packages that are safe to disable
+      description: One per line, with what it does, what stops working, and how you know (your unit, after a cold start? a public source?).
+  - type: textarea
+    id: sources
+    attributes:
+      label: Sources
+      description: Your unit (attach diagnostics) and/or public links.
+    validations:
+      required: true

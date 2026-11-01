@@ -1,0 +1,66 @@
+name: Module submission
+description: List an app that works well on head units.
+labels: ["catalog", "module"]
+body:
+  - type: markdown
+    attributes:
+      value: Modules stay independent projects. Downloads come only from the developer's official releases.
+  - type: input
+    id: name
+    attributes:
+      label: App name
+    validations:
+      required: true
+  - type: textarea
+    id: what
+    attributes:
+      label: What it does in a car
+    validations:
+      required: true
+  - type: input
+    id: github
+    attributes:
+      label: Developer's GitHub username
+    validations:
+      required: true
+  - type: input
+    id: repo
+    attributes:
+      label: Official repository with releases (owner/name)
+    validations:
+      required: true
+  - type: input
+    id: package
+    attributes:
+      label: Package name and signing certificate SHA-256
+    validations:
+      required: true
+  - type: input
+    id: license
+    attributes:
+      label: Licence
+    validations:
+      required: true
+  - type: input
+    id: android
+    attributes:
+      label: Minimum Android version, orientations and screen sizes
+  - type: dropdown
+    id: card
+    attributes:
+      label: Module card
+      options:
+        - No
+        - Yes, CleanYourHeadUnit MODULE_CARD category
+        - Yes, CleanYourTV DOCK_CARD category
+  - type: textarea
+    id: tested
+    attributes:
+      label: Head units it has been tested on
+  - type: textarea
+    id: screenshots
+    attributes:
+      label: Screenshots
+      description: Real screenshots (no personal info), or clearly labelled mockups.
+    validations:
+      required: true
