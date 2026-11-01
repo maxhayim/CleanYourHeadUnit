@@ -1,0 +1,109 @@
+{
+ "about": "SIMULATED unit for tests and --demo. Only these names come from public sources: com.syu.ms, com.syu.air, com.android.launcher6 (FYT), com.adups.fota (Adups), com.redstone.ota.ui (Redstone), com.tw.core/com.tw.jar1 (DoFun, Kaspersky). Every com.example.* name is invented.",
+ "props": {
+  "ro.build.version.sdk": "27",
+  "ro.build.version.release": "8.1.0",
+  "ro.product.manufacturer": "alps",
+  "ro.product.brand": "alps",
+  "ro.product.model": "YT9216BJ (simulated)",
+  "ro.product.device": "ac8227l_demo",
+  "ro.board.platform": "ac8227l",
+  "ro.build.display.id": "yt9216bj-00012-v001-SIMULATED",
+  "ro.serialno": "FAKE0000",
+  "ro.product.cpu.abi": "armeabi-v7a"
+ },
+ "packages": {
+  "android": {
+   "system": true,
+   "enabled": true,
+   "version": "1.0"
+  },
+  "com.android.systemui": {
+   "system": true,
+   "enabled": true,
+   "version": "1.0"
+  },
+  "com.android.settings": {
+   "system": true,
+   "enabled": true,
+   "version": "1.0"
+  },
+  "com.android.phone": {
+   "system": true,
+   "enabled": true,
+   "version": "1.0"
+  },
+  "com.android.bluetooth": {
+   "system": true,
+   "enabled": true,
+   "version": "1.0"
+  },
+  "com.android.providers.settings": {
+   "system": true,
+   "enabled": true,
+   "version": "1.0"
+  },
+  "com.android.shell": {
+   "system": true,
+   "enabled": true,
+   "version": "1.0"
+  },
+  "com.android.packageinstaller": {
+   "system": true,
+   "enabled": true,
+   "version": "1.0"
+  },
+  "com.google.android.webview": {
+   "system": true,
+   "enabled": true,
+   "version": "1.0"
+  },
+  "com.android.inputmethod.latin": {
+   "system": true,
+   "enabled": true,
+   "version": "1.0"
+  },
+  "com.redstone.ota.ui": {
+   "system": true,
+   "enabled": true,
+   "version": "1.0",
+   "perms": {
+    "android.permission.INTERNET": true
+   }
+  },
+  "com.example.vendor.carsettings": {
+   "system": true,
+   "enabled": true,
+   "version": "1.0"
+  },
+  "com.example.vendor.gallery": {
+   "system": true,
+   "enabled": true,
+   "version": "1.0"
+  },
+  "com.android.launcher3": {
+   "system": true,
+   "enabled": true,
+   "version": "1.0",
+   "home": "com.android.launcher3/com.android.launcher3.Launcher"
+  },
+  "com.android.calendar": {
+   "system": true,
+   "enabled": true,
+   "version": "1.0"
+  },
+  "com.android.quicksearchbox": {
+   "system": true,
+   "enabled": true,
+   "version": "1.0"
+  }
+ },
+ "home": "com.android.launcher3/com.android.launcher3.Launcher",
+ "settings": {
+  "global": {},
+  "secure": {},
+  "system": {}
+ },
+ "wm_size": "1024x600",
+ "wm_density": "160"
+}

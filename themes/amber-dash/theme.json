@@ -1,0 +1,11 @@
+{
+  "schema": 1,
+  "id": "amber-dash",
+  "name": "Amber Dash",
+  "author": {"github": "maxhayim"},
+  "license": "MIT",
+  "target": {"launcher": "cyhu-home", "min_version": "0.1.0"},
+  "dark": true,
+  "colors": {"background": "#000000", "surface": "#140D02", "text": "#FFB000", "text_dim": "#A87400", "accent": "#FF8A00", "warn": "#FF5A36", "ok": "#FFC24A"},
+  "layout": {"dock": "left", "columns_landscape": 6, "columns_portrait": 4, "icon_size": "large", "clock": true}
+}

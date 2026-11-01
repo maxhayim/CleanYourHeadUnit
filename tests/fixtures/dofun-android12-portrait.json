@@ -1,0 +1,108 @@
+{
+ "about": "SIMULATED unit for tests and --demo. Only these names come from public sources: com.syu.ms, com.syu.air, com.android.launcher6 (FYT), com.adups.fota (Adups), com.redstone.ota.ui (Redstone), com.tw.core/com.tw.jar1 (DoFun, Kaspersky). Every com.example.* name is invented.",
+ "props": {
+  "ro.build.version.sdk": "31",
+  "ro.build.version.release": "12",
+  "ro.product.manufacturer": "Example",
+  "ro.product.model": "Vertical 12.1 (simulated)",
+  "ro.product.device": "demo_portrait",
+  "ro.board.platform": "demo",
+  "ro.serialno": "FAKE9999"
+ },
+ "packages": {
+  "android": {
+   "system": true,
+   "enabled": true,
+   "version": "1.0"
+  },
+  "com.android.systemui": {
+   "system": true,
+   "enabled": true,
+   "version": "1.0"
+  },
+  "com.android.settings": {
+   "system": true,
+   "enabled": true,
+   "version": "1.0"
+  },
+  "com.android.phone": {
+   "system": true,
+   "enabled": true,
+   "version": "1.0"
+  },
+  "com.android.bluetooth": {
+   "system": true,
+   "enabled": true,
+   "version": "1.0"
+  },
+  "com.android.providers.settings": {
+   "system": true,
+   "enabled": true,
+   "version": "1.0"
+  },
+  "com.android.shell": {
+   "system": true,
+   "enabled": true,
+   "version": "1.0"
+  },
+  "com.android.packageinstaller": {
+   "system": true,
+   "enabled": true,
+   "version": "1.0"
+  },
+  "com.google.android.webview": {
+   "system": true,
+   "enabled": true,
+   "version": "1.0"
+  },
+  "com.android.inputmethod.latin": {
+   "system": true,
+   "enabled": true,
+   "version": "1.0"
+  },
+  "com.tw.core": {
+   "system": true,
+   "enabled": true,
+   "version": "1.0",
+   "perms": {
+    "android.permission.INTERNET": true
+   }
+  },
+  "com.tw.jar1": {
+   "system": true,
+   "enabled": true,
+   "version": "1.0",
+   "perms": {
+    "android.permission.INTERNET": true
+   }
+  },
+  "com.tw.example.bt": {
+   "system": true,
+   "enabled": true,
+   "version": "1.0"
+  },
+  "com.android.launcher3": {
+   "system": true,
+   "enabled": true,
+   "version": "1.0",
+   "home": "com.android.launcher3/com.android.launcher3.Launcher"
+  },
+  "com.aiconsole.knightriderlauncher": {
+   "system": false,
+   "enabled": true,
+   "version": "2.2.0",
+   "home": "com.aiconsole.knightriderlauncher/com.aiconsole.knightriderlauncher.MainActivity"
+  }
+ },
+ "home": "com.android.launcher3/com.android.launcher3.Launcher",
+ "settings": {
+  "global": {
+   "private_dns_mode": "hostname",
+   "private_dns_specifier": "dns.quad9.net"
+  },
+  "secure": {},
+  "system": {}
+ },
+ "wm_size": "1080x1920",
+ "wm_density": "240"
+}

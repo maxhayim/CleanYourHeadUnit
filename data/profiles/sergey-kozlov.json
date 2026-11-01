@@ -1,0 +1,27 @@
+{
+  "schema": 1,
+  "id": "sergey-kozlov",
+  "name": "Sergey Kozlov custom firmware (Tesla-style units)",
+  "status": "experimental",
+  "firmware_family": "sergey-kozlov",
+  "about": "Paid custom firmware by Sergey Kozlov for Tesla-style vertical head units. A seller lists PX3/PX6 units (Phoenix, Rhino, Linkswell, AuCar MK5, MK3 and others) on Android 7.1, 8.1 and 9. CleanYourHeadUnit has no verified way to recognise it, so the owner declares it.",
+  "match": {"declared": true},
+  "developer": {"name": "Sergey Kozlov", "github": null, "note": "No GitHub username could be verified."},
+  "chipsets": ["Rockchip PX3", "Rockchip PX6"],
+  "android": ["7.1", "8.1", "9"],
+  "packages": [],
+  "protected": [],
+  "strict": true,
+  "policy": {
+    "launcher_changes": "warn",
+    "themes": "The firmware has its own themes; CleanYourHeadUnit themes are not applied to it.",
+    "recommended": "none"
+  },
+  "limitations": [
+    "Detection is by declaration only (cyhu --firmware sergey-kozlov, or the switch in the app's Settings).",
+    "With this profile, every vendor package not on the generic list stays Unknown, and nothing is Recommended.",
+    "CleanYourHeadUnit never flashes, downloads or redistributes this firmware."
+  ],
+  "sources": ["https://buymeacoffee.com/teslafw", "https://squarewheelsauto.com/products/sergey-firmware-request"],
+  "restore_notes": "Only pm disable-user is used; pm enable brings every package back. The firmware itself is never touched."
+}

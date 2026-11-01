@@ -1,6 +1,7 @@
 MIT License
 
 Copyright (c) 2026 Gathin
+Copyright (c) 2026 maxhayim (CleanYourHeadUnit changes and additions)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -22,6 +23,10 @@ SOFTWARE.
 
 ---
 
-The Outfit typeface in launcher/app/src/main/res/font/outfit.ttf is copyright
+CleanYourHeadUnit is derived from CleanYourTV (https://github.com/Gathin23/cleanyourtv)
+by @Gathin23, which is under the MIT license above. The repository keeps CleanYourTV's
+commit history. CleanYourTV's author has not endorsed this project.
+
+The Outfit typeface in app/src/main/assets/fonts/outfit.ttf is copyright
 The Outfit Project Authors and licensed under the SIL Open Font License 1.1,
-see launcher/FONT-LICENSE-OFL.txt.
+see app/FONT-LICENSE-OFL.txt. It was taken from CleanYourTV's launcher.

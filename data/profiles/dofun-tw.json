@@ -1,0 +1,16 @@
+{
+  "schema": 1,
+  "id": "dofun-tw",
+  "name": "DoFun head units (TWCore)",
+  "status": "unverified",
+  "firmware_family": "dofun",
+  "about": "Units carrying DoFun's TWCore system app. Kaspersky's 2026 report found TWCore used to install the JarService malware (com.tw.jar1).",
+  "match": {"packages_all": ["com.tw.core"]},
+  "chipsets": [],
+  "packages": [],
+  "protected": [],
+  "privacy_checks": ["com.tw.jar1"],
+  "limitations": ["Which other com.tw apps carry vehicle functions is not known, so all of them stay Protected (data/protected.json)."],
+  "sources": ["https://securelist.com/android-head-unit-malware/121106/"],
+  "restore_notes": "pm enable com.tw.core brings the updater back."
+}

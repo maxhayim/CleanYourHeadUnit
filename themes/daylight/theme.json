@@ -1,0 +1,11 @@
+{
+  "schema": 1,
+  "id": "daylight",
+  "name": "Daylight",
+  "author": {"github": "maxhayim"},
+  "license": "MIT",
+  "target": {"launcher": "cyhu-home", "min_version": "0.1.0"},
+  "dark": false,
+  "colors": {"background": "#F3F5F7", "surface": "#FFFFFF", "text": "#0D1117", "text_dim": "#4B5563", "accent": "#0A66C2", "warn": "#B45309", "ok": "#15803D"},
+  "layout": {"dock": "bottom", "columns_landscape": 6, "columns_portrait": 4, "icon_size": "large", "clock": true}
+}

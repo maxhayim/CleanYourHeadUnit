@@ -1,0 +1,22 @@
+{
+  "schema": 1,
+  "id": "fyt",
+  "name": "FYT firmware (UIS7862, UIS8581, SC9853i and others)",
+  "status": "unverified",
+  "firmware_family": "fyt",
+  "about": "Units sold by many brands that run FYT's firmware. Recognised by FYT's own system service com.syu.ms, not by brand or screen size.",
+  "match": {"packages_all": ["com.syu.ms"]},
+  "chipsets": ["UIS7862 (ums512)", "UIS8581A (sc9863a)", "SC9853i", "Sofia 3GR"],
+  "packages": [],
+  "protected": ["^com\\.syu\\..*", "^com\\.android\\.launcher6$"],
+  "known_launcher": "com.android.launcher6 is the factory launcher on UIS7862 units (PimpinPumpkin/fyt7862-mods). FYT's service keeps some apps alive in deep sleep and kills others, so a third-party launcher may need to be on FYT's keep-alive list.",
+  "limitations": [
+    "No FYT unit has been tested with CleanYourHeadUnit yet, so no package here is Recommended.",
+    "FYT's Bluetooth stack is tied to its kernel driver: disabling Bluetooth apps does not turn Bluetooth off (XDA)."
+  ],
+  "sources": [
+    "https://github.com/PimpinPumpkin/fyt7862-mods",
+    "https://xdaforums.com/t/general-fyt-based-spreadtrum-uis7862-s-unisoc-ums512-uis8581a-sc9863-q-a-mods-tips-firmware.4396339/"
+  ],
+  "restore_notes": "Only pm disable-user is used. A disabled FYT app comes back with pm enable, and the factory launcher is never disabled."
+}

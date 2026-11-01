@@ -1,0 +1,310 @@
+{
+ "about": "Shared classification vectors: tools/cyhu (Python) and the Android app (Java) must both give these answers.",
+ "vectors": [
+  {
+   "package": "android",
+   "system": true,
+   "profiles": [
+    "generic-android"
+   ],
+   "extra_protected": {},
+   "expect": "protected",
+   "note": "core"
+  },
+  {
+   "package": "com.android.systemui",
+   "system": true,
+   "profiles": [
+    "generic-android"
+   ],
+   "extra_protected": {},
+   "expect": "protected",
+   "note": ""
+  },
+  {
+   "package": "com.android.providers.media",
+   "system": true,
+   "profiles": [
+    "generic-android"
+   ],
+   "extra_protected": {},
+   "expect": "protected",
+   "note": ""
+  },
+  {
+   "package": "com.google.android.gms",
+   "system": true,
+   "profiles": [
+    "generic-android"
+   ],
+   "extra_protected": {},
+   "expect": "protected",
+   "note": ""
+  },
+  {
+   "package": "com.android.bluetooth",
+   "system": true,
+   "profiles": [
+    "generic-android"
+   ],
+   "extra_protected": {},
+   "expect": "protected",
+   "note": ""
+  },
+  {
+   "package": "com.android.location.fused",
+   "system": true,
+   "profiles": [
+    "generic-android"
+   ],
+   "extra_protected": {},
+   "expect": "protected",
+   "note": ""
+  },
+  {
+   "package": "com.android.email",
+   "system": true,
+   "profiles": [
+    "generic-android"
+   ],
+   "extra_protected": {},
+   "expect": "optional",
+   "note": ""
+  },
+  {
+   "package": "com.android.stk",
+   "system": true,
+   "profiles": [
+    "generic-android"
+   ],
+   "extra_protected": {},
+   "expect": "advanced",
+   "note": ""
+  },
+  {
+   "package": "com.android.camera2",
+   "system": true,
+   "profiles": [
+    "generic-android"
+   ],
+   "extra_protected": {},
+   "expect": "unknown",
+   "note": "AOSP namespace: no keyword rule, not on generic list"
+  },
+  {
+   "package": "com.syu.ms",
+   "system": true,
+   "profiles": [
+    "fyt",
+    "generic-android"
+   ],
+   "extra_protected": {},
+   "expect": "protected",
+   "note": ""
+  },
+  {
+   "package": "com.syu.ms",
+   "system": true,
+   "profiles": [
+    "generic-android"
+   ],
+   "extra_protected": {},
+   "expect": "protected",
+   "note": "vehicle namespace protects even with no FYT profile"
+  },
+  {
+   "package": "com.android.launcher6",
+   "system": true,
+   "profiles": [
+    "fyt",
+    "generic-android"
+   ],
+   "extra_protected": {},
+   "expect": "protected",
+   "note": ""
+  },
+  {
+   "package": "com.microntek.radio",
+   "system": true,
+   "profiles": [
+    "generic-android"
+   ],
+   "extra_protected": {},
+   "expect": "protected",
+   "note": ""
+  },
+  {
+   "package": "com.tw.core",
+   "system": true,
+   "profiles": [
+    "generic-android"
+   ],
+   "extra_protected": {},
+   "expect": "advanced",
+   "note": "telemetry entry overrides vehicle namespace"
+  },
+  {
+   "package": "com.tw.jar1",
+   "system": true,
+   "profiles": [
+    "generic-android"
+   ],
+   "extra_protected": {},
+   "expect": "advanced",
+   "note": ""
+  },
+  {
+   "package": "com.tw.example.bt",
+   "system": true,
+   "profiles": [
+    "generic-android"
+   ],
+   "extra_protected": {},
+   "expect": "protected",
+   "note": ""
+  },
+  {
+   "package": "com.adups.fota",
+   "system": true,
+   "profiles": [
+    "generic-android"
+   ],
+   "extra_protected": {},
+   "expect": "advanced",
+   "note": "fota keyword overridden by evidence"
+  },
+  {
+   "package": "com.redstone.ota.ui",
+   "system": true,
+   "profiles": [
+    "generic-android"
+   ],
+   "extra_protected": {},
+   "expect": "advanced",
+   "note": ""
+  },
+  {
+   "package": "com.google.android.feedback",
+   "system": true,
+   "profiles": [
+    "generic-android"
+   ],
+   "extra_protected": {},
+   "expect": "optional",
+   "note": ""
+  },
+  {
+   "package": "com.example.vendor.canbus",
+   "system": true,
+   "profiles": [
+    "generic-android"
+   ],
+   "extra_protected": {},
+   "expect": "protected",
+   "note": "keyword can"
+  },
+  {
+   "package": "com.example.vendor.carsettings",
+   "system": true,
+   "profiles": [
+    "generic-android"
+   ],
+   "extra_protected": {},
+   "expect": "protected",
+   "note": "keyword car prefix"
+  },
+  {
+   "package": "com.example.vendor.backcar2",
+   "system": true,
+   "profiles": [
+    "generic-android"
+   ],
+   "extra_protected": {},
+   "expect": "protected",
+   "note": "digit split"
+  },
+  {
+   "package": "com.example.vendor.promo",
+   "system": true,
+   "profiles": [
+    "generic-android"
+   ],
+   "extra_protected": {},
+   "expect": "unknown",
+   "note": ""
+  },
+  {
+   "package": "com.example.vendor.weather",
+   "system": true,
+   "profiles": [
+    "generic-android"
+   ],
+   "extra_protected": {},
+   "expect": "unknown",
+   "note": ""
+  },
+  {
+   "package": "com.example.vendor.ac",
+   "system": true,
+   "profiles": [
+    "generic-android"
+   ],
+   "extra_protected": {},
+   "expect": "protected",
+   "note": "2-letter word exact"
+  },
+  {
+   "package": "com.example.vendor.account",
+   "system": true,
+   "profiles": [
+    "generic-android"
+   ],
+   "extra_protected": {},
+   "expect": "unknown",
+   "note": "2-letter word ac must not prefix-match... but acc does"
+  },
+  {
+   "package": "com.spotify.music",
+   "system": false,
+   "profiles": [
+    "generic-android"
+   ],
+   "extra_protected": {},
+   "expect": "user",
+   "note": ""
+  },
+  {
+   "package": "com.example.radioapp",
+   "system": false,
+   "profiles": [
+    "generic-android"
+   ],
+   "extra_protected": {},
+   "expect": "protected",
+   "note": "keyword beats user flag"
+  },
+  {
+   "package": "com.android.email",
+   "system": true,
+   "profiles": [
+    "generic-android"
+   ],
+   "extra_protected": {
+    "com.android.email": "The current Home app."
+   },
+   "expect": "protected",
+   "note": "device-found Home"
+  },
+  {
+   "package": "com.android.email",
+   "system": true,
+   "profiles": [
+    "sergey-kozlov",
+    "generic-android"
+   ],
+   "extra_protected": {},
+   "expect": "optional",
+   "note": ""
+  }
+ ]
+}

@@ -1,0 +1,56 @@
+{
+  "schema": 1,
+  "about": "Private DNS (DNS over TLS) hostnames for Android 9 and newer. Each one resolved on 2026-11-01; what each provider filters is as the provider describes it. CleanYourHeadUnit never chooses one for you.",
+  "providers": [
+    {
+      "id": "adguard",
+      "name": "AdGuard DNS (default)",
+      "hostname": "dns.adguard-dns.com",
+      "blocks": "Ads and trackers",
+      "website": "https://adguard-dns.io/kb/general/dns-providers/",
+      "privacy_policy": "https://adguard-dns.io/privacy.html"
+    },
+    {
+      "id": "mullvad-adblock",
+      "name": "Mullvad DNS (adblock)",
+      "hostname": "adblock.dns.mullvad.net",
+      "blocks": "Ads and trackers",
+      "website": "https://mullvad.net/en/help/dns-over-https-and-dns-over-tls",
+      "privacy_policy": "https://mullvad.net/en/help/privacy-policy"
+    },
+    {
+      "id": "mullvad-base",
+      "name": "Mullvad DNS (base)",
+      "hostname": "base.dns.mullvad.net",
+      "blocks": "Ads, trackers and malware",
+      "website": "https://mullvad.net/en/help/dns-over-https-and-dns-over-tls",
+      "privacy_policy": "https://mullvad.net/en/help/privacy-policy"
+    },
+    {
+      "id": "quad9",
+      "name": "Quad9",
+      "hostname": "dns.quad9.net",
+      "blocks": "Malware domains only (no ad or tracker blocking)",
+      "website": "https://www.quad9.net/service/service-addresses-and-features/",
+      "privacy_policy": "https://www.quad9.net/privacy/policy/"
+    }
+  ],
+  "blocklists": [
+    {
+      "id": "stevenblack",
+      "name": "StevenBlack unified hosts (adware + malware)",
+      "format": "hosts",
+      "url": "https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts",
+      "license": "MIT",
+      "homepage": "https://github.com/StevenBlack/hosts"
+    },
+    {
+      "id": "adguard-dns-filter",
+      "name": "AdGuard DNS filter",
+      "format": "adblock",
+      "url": "https://adguardteam.github.io/HostlistsRegistry/assets/filter_1.txt",
+      "license": "GPL-3.0",
+      "homepage": "https://github.com/AdguardTeam/AdGuardSDNSFilter"
+    }
+  ]
+}
