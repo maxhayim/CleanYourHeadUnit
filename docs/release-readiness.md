@@ -44,12 +44,11 @@ Nothing here is tested on hardware.
 | | Wallpapers, third-party launcher themes | Planned |
 | Diagnostics | Sanitised report (CLI and app) | Implemented, tested |
 | UI | Landscape rail, compact rail, portrait bottom bar, 800×480 → 1920×720 | Implemented, tested (renders) |
-| Docs | All required documents, specs, templates, CI | Done; CI not yet run |
+| Docs | All required documents, specs, templates, CI | Done; CI passing |
 
 ## Before a first pre-release
 
 1. Run the hardware checklist on at least one unit, ideally one FYT and one other family. Fix what it finds.
-2. Push to GitHub and get both CI workflows green (including Windows).
 3. Create a release signing key for the app (own key, no paid certificate) and build a signed release APK.
 4. Decide the version (suggested `0.1.0`) and update CHANGELOG.
 5. Re-render screenshots, and add real photos of a unit if the owner agrees. Check them for personal information.
