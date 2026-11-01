@@ -15,7 +15,7 @@ Date: 2026-11-01. Machine: macOS (Apple silicon), JDK 17, Android Gradle Plugin 
 | App build | `./gradlew :app:assembleDebug` | OK (debug APK, unsigned release not built) |
 | App unit and UI tests | `./gradlew :app:testDebugUnitTest` | 16 passed (DnsTest 4, RulesTest 5, ScreensTest 7) |
 | Android lint | `./gradlew :app:lintDebug` | 0 errors, 3 warnings (below). Calls above minSdk 19 are errors. |
-| GitHub Actions | `.github/workflows/*.yml` | **not run yet**: the repository isn't on GitHub |
+| GitHub Actions | `.github/workflows/*.yml` | Passing: `cyhu` on Linux (3.10, 3.13), macOS and Windows (3.9, 3.13); the app's build, tests and lint on Linux |
 
 ## What the tests cover
 
@@ -67,4 +67,3 @@ Date: 2026-11-01. Machine: macOS (Apple silicon), JDK 17, Android Gradle Plugin 
 - real ADB: tested against `FakeDevice`, which simulates `pm`, `cmd package`, `settings`, `getprop`, `dumpsys` and `wm`
 - the GitHub API call and a real download: asset choice and the digest and certificate checks are tested on local data, but no download from GitHub was run or installed
 - Android versions other than 14 for the app UI (the Robolectric runtime used). Lint checks API use down to 19.
-- Windows (CI is configured for it but hasn't run)
