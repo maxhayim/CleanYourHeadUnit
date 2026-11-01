@@ -9,7 +9,7 @@
 
 <p align="center">
   <a href="https://developer.android.com/about/versions"><img src="https://img.shields.io/badge/Android-4.4%2B-3DDC84" alt="Android 4.4+"></a>
-  <a href="https://www.python.org/"><img src="https://img.shields.io/badge/Python-3.8%2B-blue" alt="Python 3.8+"></a>
+  <a href="https://www.python.org/"><img src="https://img.shields.io/badge/Python-3.9%2B-blue" alt="Python 3.9+"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-green" alt="License"></a>
   <img src="https://img.shields.io/badge/Root-not%20required-lightgrey" alt="No root">
 </p>
@@ -78,7 +78,7 @@
 
 <ul>
   <li><strong>App:</strong> Android 4.4 (API 19) or newer, any screen from 800×480 to 1920×720, in landscape or portrait. The local firewall's App block mode needs Android 5.0, and Private DNS needs Android 9.</li>
-  <li><strong>Computer tool:</strong> Python 3.8+ and <a href="https://developer.android.com/tools/releases/platform-tools">Android platform-tools</a> (<code>adb</code>). It runs on Windows, macOS and Linux.</li>
+  <li><strong>Computer tool:</strong> Python 3.9+ and <a href="https://developer.android.com/tools/releases/platform-tools">Android platform-tools</a> (<code>adb</code>). It runs on Windows, macOS and Linux.</li>
   <li>The head unit's Developer options with USB debugging (or ADB over Wi-Fi) turned on. Where to find it varies by firmware: see <a href="INSTALL.md">INSTALL.md</a>.</li>
 </ul>
 

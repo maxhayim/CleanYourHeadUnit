@@ -43,7 +43,7 @@ See [MODULES.md](MODULES.md), [THEMES.md](THEMES.md) and [COMMUNITY.md](COMMUNIT
 
 ## Code
 
-- `tools/cyhu/`: Python 3.8+, standard library only. Run `python3 -m unittest tests.test_cyhu`.
+- `tools/cyhu/`: Python 3.9+, standard library only. Run `python3 -m unittest tests.test_cyhu`.
 - `app/`: plain Java, Android 4.4+ (minSdk 19), no AndroidX. Lint treats a call above minSdk as an error. Build with JDK 17: `./gradlew :app:assembleDebug :app:testDebugUnitTest :app:lintDebug`.
 - `./gradlew :app:testDebugUnitTest -Pscreenshots` re-renders `docs/screenshots`, `assets/logo.png` and the theme previews.
 - No analytics, ads, tracking, accounts or network calls the user didn't ask for.
