@@ -1,0 +1,93 @@
+{
+ "about": "SIMULATED unit for tests and --demo. Only these names come from public sources: com.syu.ms, com.syu.air, com.android.launcher6 (FYT), com.adups.fota (Adups), com.redstone.ota.ui (Redstone), com.tw.core/com.tw.jar1 (DoFun, Kaspersky). Every com.example.* name is invented.",
+ "props": {
+  "ro.build.version.sdk": "19",
+  "ro.build.version.release": "4.4.4",
+  "ro.product.manufacturer": "Example",
+  "ro.product.model": "KitKat unit (simulated)",
+  "ro.board.platform": "rk3188",
+  "ro.serialno": "FAKE4444"
+ },
+ "packages": {
+  "android": {
+   "system": true,
+   "enabled": true,
+   "version": "1.0"
+  },
+  "com.android.systemui": {
+   "system": true,
+   "enabled": true,
+   "version": "1.0"
+  },
+  "com.android.settings": {
+   "system": true,
+   "enabled": true,
+   "version": "1.0"
+  },
+  "com.android.phone": {
+   "system": true,
+   "enabled": true,
+   "version": "1.0"
+  },
+  "com.android.bluetooth": {
+   "system": true,
+   "enabled": true,
+   "version": "1.0"
+  },
+  "com.android.providers.settings": {
+   "system": true,
+   "enabled": true,
+   "version": "1.0"
+  },
+  "com.android.shell": {
+   "system": true,
+   "enabled": true,
+   "version": "1.0"
+  },
+  "com.android.packageinstaller": {
+   "system": true,
+   "enabled": true,
+   "version": "1.0"
+  },
+  "com.google.android.webview": {
+   "system": true,
+   "enabled": true,
+   "version": "1.0"
+  },
+  "com.android.inputmethod.latin": {
+   "system": true,
+   "enabled": true,
+   "version": "1.0"
+  },
+  "com.android.launcher3": {
+   "system": true,
+   "enabled": true,
+   "version": "1.0",
+   "home": "com.android.launcher3/com.android.launcher3.Launcher"
+  },
+  "com.android.browser": {
+   "system": true,
+   "enabled": true,
+   "version": "1.0"
+  },
+  "com.android.galaxy4": {
+   "system": true,
+   "enabled": true,
+   "version": "1.0"
+  },
+  "com.example.vendor.dvr": {
+   "system": true,
+   "enabled": true,
+   "version": "1.0"
+  }
+ },
+ "home": "com.android.launcher3/com.android.launcher3.Launcher",
+ "settings": {
+  "global": {},
+  "secure": {},
+  "system": {}
+ },
+ "wm_size": "800x480",
+ "wm_density": "120",
+ "df": "Filesystem Size Used Free Blksize\n/data 5.8G 1.2G 4.6G 4096\n"
+}

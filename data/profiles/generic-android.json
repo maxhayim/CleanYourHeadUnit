@@ -1,0 +1,28 @@
+{
+  "schema": 1,
+  "id": "generic-android",
+  "name": "Any Android head unit (generic rules)",
+  "status": "generic",
+  "firmware_family": "unknown",
+  "about": "Applied to every unit, under any matching device profile. Lists only AOSP apps whose job is known on every Android build. Nothing here is Recommended: Recommended needs a tested device profile.",
+  "match": {"always": true},
+  "packages": [
+    {"package": "com.android.email", "category": "optional", "purpose": "AOSP Email app.", "risk": "No email on the unit."},
+    {"package": "com.android.calendar", "category": "optional", "purpose": "AOSP Calendar app.", "risk": "No calendar app. The calendar storage provider stays."},
+    {"package": "com.android.browser", "category": "optional", "purpose": "AOSP Browser (old builds).", "risk": "Links that open a browser may have nowhere to go if no other browser is installed."},
+    {"package": "com.android.quicksearchbox", "category": "optional", "purpose": "AOSP search widget.", "risk": "The search bar widget on some factory launchers stops working."},
+    {"package": "com.android.printspooler", "category": "optional", "purpose": "Printing service.", "risk": "No printing (rare on a head unit)."},
+    {"package": "com.android.bips", "category": "optional", "purpose": "Default print service plugin.", "risk": "No printing."},
+    {"package": "com.android.egg", "category": "optional", "purpose": "Android version easter egg.", "risk": "None known."},
+    {"package": "com.android.dreams.basic", "category": "optional", "purpose": "Colour screensaver.", "risk": "That screensaver is gone."},
+    {"package": "com.android.dreams.phototable", "category": "optional", "purpose": "Photo screensaver.", "risk": "That screensaver is gone."},
+    {"package": "com.android.wallpaper.livepicker", "category": "optional", "purpose": "Live wallpaper picker.", "risk": "Live wallpapers can't be chosen."},
+    {"package": "com.android.galaxy4", "category": "optional", "purpose": "AOSP live wallpaper.", "risk": "That wallpaper is gone."},
+    {"package": "com.android.soundrecorder", "category": "optional", "purpose": "AOSP voice recorder app.", "risk": "No voice recorder app. Calls and the microphone are not affected."},
+    {"package": "com.android.calculator2", "category": "optional", "purpose": "AOSP Calculator.", "risk": "No calculator."},
+    {"package": "com.android.stk", "category": "advanced", "purpose": "SIM Toolkit.", "risk": "Units with a 4G modem may need it for carrier menus and SIM setup."}
+  ],
+  "protected": [],
+  "limitations": ["Generic rules can't know vendor apps. Everything not listed here or in a device profile stays Unknown."],
+  "restore_notes": "Every entry here is disabled with pm disable-user and comes back with pm enable."
+}

@@ -1,0 +1,198 @@
+{
+ "about": "SIMULATED unit for tests and --demo. Only these names come from public sources: com.syu.ms, com.syu.air, com.android.launcher6 (FYT), com.adups.fota (Adups), com.redstone.ota.ui (Redstone), com.tw.core/com.tw.jar1 (DoFun, Kaspersky). Every com.example.* name is invented.",
+ "props": {
+  "ro.build.version.sdk": "29",
+  "ro.build.version.release": "10",
+  "ro.product.manufacturer": "Example",
+  "ro.product.brand": "Example",
+  "ro.product.model": "HU-7862 (simulated)",
+  "ro.product.device": "ums512_1h10",
+  "ro.board.platform": "ums512",
+  "ro.product.cpu.abi": "arm64-v8a",
+  "ro.build.display.id": "SIMULATED-FYT-10",
+  "ro.serialno": "FAKE1234567890",
+  "ro.boot.serialno": "FAKE1234567890",
+  "persist.sys.fyt.mcu.version": "SIM-MCU-1.0",
+  "ro.wifi.mac": "02:00:00:aa:bb:cc",
+  "ro.build.fingerprint": "Example/ums512/ums512:10/QP1A/1:user/release-keys"
+ },
+ "packages": {
+  "android": {
+   "system": true,
+   "enabled": true,
+   "version": "1.0"
+  },
+  "com.android.systemui": {
+   "system": true,
+   "enabled": true,
+   "version": "1.0"
+  },
+  "com.android.settings": {
+   "system": true,
+   "enabled": true,
+   "version": "1.0"
+  },
+  "com.android.phone": {
+   "system": true,
+   "enabled": true,
+   "version": "1.0"
+  },
+  "com.android.bluetooth": {
+   "system": true,
+   "enabled": true,
+   "version": "1.0"
+  },
+  "com.android.providers.settings": {
+   "system": true,
+   "enabled": true,
+   "version": "1.0"
+  },
+  "com.android.shell": {
+   "system": true,
+   "enabled": true,
+   "version": "1.0"
+  },
+  "com.android.packageinstaller": {
+   "system": true,
+   "enabled": true,
+   "version": "1.0"
+  },
+  "com.google.android.webview": {
+   "system": true,
+   "enabled": true,
+   "version": "1.0"
+  },
+  "com.android.inputmethod.latin": {
+   "system": true,
+   "enabled": true,
+   "version": "1.0"
+  },
+  "com.syu.ms": {
+   "system": true,
+   "enabled": true,
+   "version": "1.0",
+   "perms": {
+    "android.permission.INTERNET": true,
+    "android.permission.ACCESS_FINE_LOCATION": true,
+    "android.permission.RECORD_AUDIO": true
+   }
+  },
+  "com.syu.air": {
+   "system": true,
+   "enabled": true,
+   "version": "1.0"
+  },
+  "com.syu.example.radio": {
+   "system": true,
+   "enabled": true,
+   "version": "1.0"
+  },
+  "com.android.launcher6": {
+   "system": true,
+   "enabled": true,
+   "version": "1.0",
+   "home": "com.android.launcher6/com.android.launcher3.Launcher"
+  },
+  "com.adups.fota": {
+   "system": true,
+   "enabled": true,
+   "version": "1.0",
+   "perms": {
+    "android.permission.INTERNET": true,
+    "android.permission.READ_SMS": true
+   }
+  },
+  "com.android.email": {
+   "system": true,
+   "enabled": true,
+   "version": "1.0"
+  },
+  "com.android.calculator2": {
+   "system": true,
+   "enabled": true,
+   "version": "1.0"
+  },
+  "com.android.egg": {
+   "system": true,
+   "enabled": true,
+   "version": "1.0"
+  },
+  "com.android.printspooler": {
+   "system": true,
+   "enabled": true,
+   "version": "1.0"
+  },
+  "com.android.stk": {
+   "system": true,
+   "enabled": true,
+   "version": "1.0"
+  },
+  "com.example.vendor.promo": {
+   "system": true,
+   "enabled": true,
+   "version": "1.0",
+   "perms": {
+    "android.permission.INTERNET": true
+   }
+  },
+  "com.example.vendor.canbus": {
+   "system": true,
+   "enabled": true,
+   "version": "1.0"
+  },
+  "com.example.vendor.weather": {
+   "system": true,
+   "enabled": true,
+   "version": "1.0",
+   "perms": {
+    "android.permission.INTERNET": true,
+    "android.permission.ACCESS_FINE_LOCATION": true
+   }
+  },
+  "com.google.android.feedback": {
+   "system": true,
+   "enabled": true,
+   "version": "1.0"
+  },
+  "com.spotify.music": {
+   "system": false,
+   "enabled": true,
+   "version": "1.0",
+   "perms": {
+    "android.permission.INTERNET": true
+   }
+  },
+  "com.aiconsole.kittlauncher2": {
+   "system": false,
+   "enabled": true,
+   "version": "2.2.0",
+   "home": "com.aiconsole.kittlauncher2/com.aiconsole.kittlauncher2.MainActivity",
+   "perms": {
+    "android.permission.INTERNET": true,
+    "android.permission.ACCESS_FINE_LOCATION": true,
+    "android.permission.RECORD_AUDIO": true
+   }
+  },
+  "com.maxhayim.retrodeck": {
+   "system": false,
+   "enabled": true,
+   "version": "0.15.0",
+   "perms": {
+    "android.permission.RECORD_AUDIO": true
+   }
+  }
+ },
+ "home": "com.android.launcher6/com.android.launcher3.Launcher",
+ "settings": {
+  "global": {
+   "private_dns_mode": "opportunistic"
+  },
+  "secure": {},
+  "system": {}
+ },
+ "wm_size": "1280x720",
+ "wm_density": "160",
+ "fail_disable": [
+  "com.android.stk"
+ ]
+}

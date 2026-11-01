@@ -1,0 +1,15 @@
+{
+  "schema": 1,
+  "id": "mtc",
+  "name": "MTCD / MTCE firmware (Rockchip PX5, PX6, PX30)",
+  "status": "unverified",
+  "firmware_family": "mtc",
+  "about": "HCT-based units (MTCD, MTCE) sold under many brands. Recognised by the microntek system packages, not by brand.",
+  "match": {"packages_regex_any": ["^(com|android)\\.microntek\\..*"]},
+  "chipsets": ["Rockchip PX5 (RK3368)", "Rockchip PX6 (RK3399)", "Rockchip PX30 (RK3326)"],
+  "packages": [],
+  "protected": ["^(com|android)\\.microntek\\..*", "^com\\.hct\\..*"],
+  "limitations": ["Package names come from community threads; no MTC unit has been tested yet."],
+  "sources": ["XDA MTCD/MTCE head unit firmware threads"],
+  "restore_notes": "Only pm disable-user is used; pm enable brings every package back."
+}

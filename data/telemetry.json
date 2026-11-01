@@ -1,0 +1,95 @@
+{
+  "schema": 1,
+  "about": "Packages and domains with published evidence. 'finding' is one of: confirmed_telemetry, advertising, malware_indicator, suspected_tracking, connected_service, unknown_traffic. Nothing is listed on a name match alone. 'category' is the debloater category this entry gets on any device; a device profile can only make it stricter.",
+  "packages": [
+    {
+      "package": "com.adups.fota",
+      "name": "Adups FOTA (firmware updater)",
+      "finding": "confirmed_telemetry",
+      "category": "advanced",
+      "purpose": "Over-the-air firmware updates on many low-cost MediaTek devices.",
+      "evidence": "Kryptowire (Nov 2016) found versions of this app sending the content of text messages, call logs, contacts and device identifiers to bigdata.adups.com. Adups later shipped versions without that collection; Malwarebytes reports newer versions do not contain the backdoor code.",
+      "risk": "It is also the firmware updater: with it disabled, the unit gets no OTA updates from the seller. Which version a head unit carries is not known until it is checked.",
+      "sources": [
+        "https://www.kryptowire.com/ (report 'Kryptowire Discovers Mobile Phone Firmware that Transmitted Personally Identifiable Information', Nov 2016)",
+        "https://www.malwarebytes.com/blog/news/2016/11/mobile-menace-monday-adups-old-and-new"
+      ],
+      "domains": ["bigdata.adups.com", "rebootv5.adsunflower.com"]
+    },
+    {
+      "package": "com.adups.fota.sysoper",
+      "name": "Adups FOTA system operator",
+      "finding": "confirmed_telemetry",
+      "category": "advanced",
+      "purpose": "Privileged helper of Adups FOTA that installs updates.",
+      "evidence": "Named alongside com.adups.fota in the Kryptowire 2016 report as one of the two system apps involved.",
+      "risk": "Same as com.adups.fota: OTA updates stop while it is disabled.",
+      "sources": ["https://www.malwarebytes.com/blog/news/2016/11/mobile-menace-monday-adups-old-and-new"],
+      "domains": []
+    },
+    {
+      "package": "com.redstone.ota.ui",
+      "name": "Redstone FOTA (firmware updater)",
+      "finding": "suspected_tracking",
+      "category": "advanced",
+      "purpose": "Over-the-air firmware updates from the OTA supplier Redstone.",
+      "evidence": "Malwarebytes (Apr 2021) detects it as Android/PUP.Riskware.Autoins.Redstone after a compromised update environment pushed a trojan downloader to Gigaset phones through it. Redstone and Gigaset say the app itself contains no malware.",
+      "risk": "It is the firmware updater: OTA updates stop while it is disabled.",
+      "sources": ["https://www.malwarebytes.com/blog/news/2021/04/pre-installed-auto-installer-threat-found-on-android-mobile-devices-in-germany"],
+      "domains": []
+    },
+    {
+      "package": "com.tw.core",
+      "name": "TWCore (DoFun head units)",
+      "finding": "confirmed_telemetry",
+      "category": "advanced",
+      "purpose": "DoFun's system app that collects device telemetry and pushes OTA system updates.",
+      "evidence": "Kaspersky (2026) found TWCore downloading and installing APKs from a server; in every observed infection the malicious JarService (com.tw.jar1) was installed by com.tw.core. The vendor reported the issue fixed.",
+      "risk": "It is the unit's updater and may do more on DoFun firmware. Disabling it stops OTA updates; test vehicle functions afterwards. Blocking its network (Privacy Shield app block) is the gentler option.",
+      "sources": ["https://securelist.com/android-head-unit-malware/121106/"],
+      "domains": []
+    },
+    {
+      "package": "com.tw.jar1",
+      "name": "JarService",
+      "finding": "malware_indicator",
+      "category": "advanced",
+      "purpose": "No legitimate purpose known. Headless app with no launcher icon.",
+      "evidence": "Kaspersky (2026) identifies com.tw.jar1 'JarService' as the multi-stage downloader installed through TWCore, used for ad fraud and residential-proxy botnet enrolment.",
+      "risk": "Disabling it is not a clean-up: a unit that has it should be considered compromised. Ask the seller for fixed firmware.",
+      "sources": ["https://securelist.com/android-head-unit-malware/121106/"],
+      "domains": []
+    },
+    {
+      "package": "com.google.android.feedback",
+      "name": "Google Feedback",
+      "finding": "connected_service",
+      "category": "optional",
+      "purpose": "Sends a report when you choose 'Send feedback' or an app crash report is submitted.",
+      "evidence": "Google's feedback client. Reports are user-initiated; CleanYourTV lists it for the same reason.",
+      "risk": "Crash and feedback dialogs stop offering to send a report. Nothing else is known to depend on it.",
+      "sources": ["CleanYourTV tools/privacy.py catalogue by @Gathin23"],
+      "domains": []
+    }
+  ],
+  "domains": [
+    {
+      "domain": "bigdata.adups.com",
+      "finding": "confirmed_telemetry",
+      "source": "Kryptowire 2016 (via Malwarebytes and press coverage)",
+      "note": "Received the personal data collected by old Adups FOTA versions."
+    },
+    {
+      "domain": "rebootv5.adsunflower.com",
+      "finding": "confirmed_telemetry",
+      "source": "Kryptowire 2016 (via press coverage)",
+      "note": "Could issue remote commands to Adups FOTA."
+    },
+    {
+      "domain": "cardoor.cn",
+      "finding": "malware_indicator",
+      "source": "Reported as the MQTT broker of the DoFun campaign in write-ups of Kaspersky's 2026 report; not confirmed here against the original IOC list.",
+      "note": "Check the Kaspersky report before relying on it."
+    }
+  ]
+}

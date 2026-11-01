@@ -1,0 +1,188 @@
+{
+  "schema": 1,
+  "about": "The Community Hub catalog: launchers, modules and themes. Every entry is reviewed by pull request and checked by tools/cyhu.py catalog validate. Listing an entry is not an endorsement, and no listed developer has endorsed or partnered with CleanYourHeadUnit.",
+  "developers": [
+    {"id": "gathin23", "github": "Gathin23", "name": null, "projects": ["CleanYourTV"], "note": "Author of CleanYourTV, the project CleanYourHeadUnit is derived from."},
+    {"id": "maxhayim", "github": "maxhayim", "name": null, "projects": ["CleanYourHeadUnit", "RetroDeck", "Webmote"]},
+    {"id": "tdater", "github": "tdater", "name": null, "projects": ["KITT Launcher", "KITT Launcher.2"]},
+    {"id": "sergey-kozlov", "github": null, "name": "Sergey Kozlov", "projects": ["Custom firmware for Tesla-style head units"], "note": "No GitHub username could be verified."}
+  ],
+  "items": [
+    {
+      "id": "retrodeck",
+      "kind": "module",
+      "name": "RetroDeck",
+      "featured": true,
+      "developer": "maxhayim",
+      "description": "A virtual car stereo for Android head units: 18 vintage and modern single-DIN and double-DIN faceplates, music playback, live visualizers, vehicle branding and badges, dash illumination, a start-up melody box, and every hardware and steering-wheel key mappable.",
+      "category": "Media",
+      "package": "com.maxhayim.retrodeck",
+      "signing_cert_sha256": "401336be7599ab2207fb86d76da8028cb7c25e2c7bbac7d54ed2e97b5cc1d674",
+      "open_source": true,
+      "license": "MIT",
+      "android": {"min_sdk": 19, "min_version": "4.4"},
+      "orientations": ["landscape"],
+      "source": {"type": "github_release", "repo": "maxhayim/RetroDeck", "asset_pattern": "^RetroDeck-[0-9.]+\\.apk$"},
+      "links": {
+        "repository": "https://github.com/maxhayim/RetroDeck",
+        "releases": "https://github.com/maxhayim/RetroDeck/releases/latest"
+      },
+      "install": "github_release",
+      "compatibility": {
+        "status": "community",
+        "verified": [],
+        "reports": ["Tested by its developer on an Android TV (Android 14) at 1920x1080 and 1920x720; no car head unit report yet."]
+      },
+      "screenshots": ["https://github.com/maxhayim/RetroDeck#screenshots"],
+      "warnings": ["Not yet reported on a car head unit."]
+    },
+    {
+      "id": "webmote",
+      "kind": "module",
+      "name": "Webmote",
+      "featured": true,
+      "developer": "maxhayim",
+      "description": "A remote control served by the device itself: open a page on your phone, pair with the PIN on screen, and use the D-pad, apps, keyboard and media keys. Local network only.",
+      "category": "Remote control",
+      "package": "io.github.maxhayim.webmote",
+      "signing_cert_sha256": "f585d363da4b0bc2c724d307f4b95c1cfd9fed87c3807d18b12e915831228af9",
+      "open_source": true,
+      "license": "MIT",
+      "android": {"min_sdk": 28, "min_version": "9"},
+      "orientations": ["landscape", "portrait"],
+      "source": {"type": "github_release", "repo": "maxhayim/webmote", "asset_pattern": "^Webmote-[0-9.]+\\.apk$"},
+      "links": {
+        "repository": "https://github.com/maxhayim/webmote",
+        "releases": "https://github.com/maxhayim/webmote/releases/latest"
+      },
+      "install": "none",
+      "status": "planned",
+      "automotive_status": "Automotive support planned",
+      "compatibility": {"status": "planned", "verified": [], "reports": ["The current release is for Android TV and Google TV."]},
+      "screenshots": ["https://github.com/maxhayim/webmote#screenshots"],
+      "warnings": [
+        "The current release is for Android TV and Google TV, not head units.",
+        "It works through an accessibility service; CleanYourHeadUnit never turns that on for you."
+      ]
+    },
+    {
+      "id": "kitt-launcher",
+      "kind": "launcher",
+      "name": "KITT Launcher",
+      "featured": true,
+      "developer": "tdater",
+      "description": "A Knight Rider-inspired car launcher with an OBD-II dashboard, an AI co-pilot (your own Gemini or Perplexity key), map search with spoken directions, a browser and the red scanner light. Portrait edition, built for 12.1-inch vertical head units.",
+      "category": "Launcher",
+      "package": "com.aiconsole.knightriderlauncher",
+      "signing_cert_sha256": "ef75363f7df882fc9bc57317e30b5b8874b79f0ef2c23c97207aba3c6f0cc55f",
+      "open_source": false,
+      "license": "Proprietary, free to download and use (all rights reserved, source not published)",
+      "android": {"min_sdk": 24, "min_version": "7.0"},
+      "orientations": ["portrait"],
+      "screens": ["12.1-inch portrait"],
+      "source": {"type": "github_release", "repo": "tdater/KITT-Launcher-releases", "asset_pattern": "^KITT-Launcher-v[0-9.]+\\.apk$"},
+      "links": {
+        "website": "https://tdater.github.io/KITT-Launcher-releases/",
+        "repository": "https://github.com/tdater/KITT-Launcher-releases",
+        "releases": "https://github.com/tdater/KITT-Launcher-releases/releases/latest"
+      },
+      "install": "github_release",
+      "compatibility": {"status": "untested", "verified": [], "reports": []},
+      "screenshots": ["https://tdater.github.io/KITT-Launcher-releases/"],
+      "warnings": [
+        "Closed source. CleanYourHeadUnit links to and downloads from the developer's own releases page only; it never mirrors or repackages the app.",
+        "Asks for location, microphone and Bluetooth permissions; it has its own updater."
+      ]
+    },
+    {
+      "id": "kitt-launcher-2",
+      "kind": "launcher",
+      "name": "KITT Launcher.2",
+      "featured": true,
+      "developer": "tdater",
+      "description": "The landscape edition of KITT Launcher for 7 to 10-inch head units (1024x600, 1280x720, 1280x800), with a lighter mode for budget hardware.",
+      "category": "Launcher",
+      "package": "com.aiconsole.kittlauncher2",
+      "signing_cert_sha256": "ef75363f7df882fc9bc57317e30b5b8874b79f0ef2c23c97207aba3c6f0cc55f",
+      "open_source": false,
+      "license": "Proprietary, free to download and use (all rights reserved, source not published)",
+      "android": {"min_sdk": 24, "min_version": "7.0"},
+      "orientations": ["landscape"],
+      "screens": ["1024x600", "1280x720", "1280x800"],
+      "source": {"type": "github_release", "repo": "tdater/KITT-Launcher.2-releases", "asset_pattern": "^KITT-Launcher\\.2-v[0-9.]+\\.apk$"},
+      "links": {
+        "repository": "https://github.com/tdater/KITT-Launcher.2-releases",
+        "releases": "https://github.com/tdater/KITT-Launcher.2-releases/releases/latest"
+      },
+      "install": "github_release",
+      "compatibility": {"status": "untested", "verified": [], "reports": []},
+      "screenshots": ["https://github.com/tdater/KITT-Launcher.2-releases"],
+      "warnings": [
+        "Closed source. CleanYourHeadUnit links to and downloads from the developer's own releases page only; it never mirrors or repackages the app.",
+        "Asks for location, microphone and Bluetooth permissions; it has its own updater."
+      ]
+    },
+    {
+      "id": "cyhu-home",
+      "kind": "launcher",
+      "name": "CleanYourHeadUnit Home",
+      "featured": false,
+      "developer": "maxhayim",
+      "description": "The optional launcher built into the CleanYourHeadUnit app: a dock, favourites, an app library, module shortcuts and themes. Off until you turn it on in Settings.",
+      "category": "Launcher",
+      "package": "io.github.maxhayim.cleanyourheadunit",
+      "open_source": true,
+      "license": "MIT",
+      "android": {"min_sdk": 19, "min_version": "4.4"},
+      "orientations": ["landscape", "portrait"],
+      "source": {"type": "builtin"},
+      "links": {"repository": "https://github.com/maxhayim/CleanYourHeadUnit"},
+      "install": "builtin",
+      "compatibility": {"status": "untested", "verified": [], "reports": []},
+      "screenshots": ["docs/screenshots/home-1024x600.png"],
+      "warnings": ["Not yet tested on a car head unit."]
+    },
+    {
+      "id": "theme-midnight",
+      "kind": "theme",
+      "name": "Midnight",
+      "developer": "maxhayim",
+      "description": "Default dark theme: near-black, teal accent.",
+      "target": {"launcher": "cyhu-home", "min_version": "0.1.0"},
+      "path": "themes/midnight",
+      "open_source": true,
+      "license": "MIT",
+      "install": "builtin",
+      "compatibility": {"status": "untested", "verified": [], "reports": []},
+      "screenshots": ["themes/midnight/preview.png"]
+    },
+    {
+      "id": "theme-amber-dash",
+      "kind": "theme",
+      "name": "Amber Dash",
+      "developer": "maxhayim",
+      "description": "Warm amber on black, after 1980s dashboard lighting; easy on the eyes at night.",
+      "target": {"launcher": "cyhu-home", "min_version": "0.1.0"},
+      "path": "themes/amber-dash",
+      "open_source": true,
+      "license": "MIT",
+      "install": "builtin",
+      "compatibility": {"status": "untested", "verified": [], "reports": []},
+      "screenshots": ["themes/amber-dash/preview.png"]
+    },
+    {
+      "id": "theme-daylight",
+      "kind": "theme",
+      "name": "Daylight",
+      "developer": "maxhayim",
+      "description": "Light theme with strong contrast for bright cabins.",
+      "target": {"launcher": "cyhu-home", "min_version": "0.1.0"},
+      "path": "themes/daylight",
+      "open_source": true,
+      "license": "MIT",
+      "install": "builtin",
+      "compatibility": {"status": "untested", "verified": [], "reports": []},
+      "screenshots": ["themes/daylight/preview.png"]
+    }
+  ]
+}

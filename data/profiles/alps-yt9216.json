@@ -1,0 +1,18 @@
+{
+  "schema": 1,
+  "id": "alps-yt9216",
+  "name": "ALPS YT9216 family (YT9216BJ and related)",
+  "status": "unverified",
+  "firmware_family": "alps-yt9216",
+  "about": "Budget units whose build strings name YT9216 (for example YT9216BJ). 'ALPS' is MediaTek's default brand string and says nothing about the board on its own. Hardware varies a lot between units sold under the same name.",
+  "match": {"props_any": {"ro.build.display.id": "(?i)yt9216", "ro.product.model": "(?i)yt9216", "ro.build.description": "(?i)yt9216", "ro.product.device": "(?i)yt9216"}},
+  "chipsets": [],
+  "packages": [],
+  "protected": [],
+  "limitations": [
+    "Chipset not confirmed: write-ups link the family to the Autochips/MediaTek 8227L platform, but this is not verified.",
+    "No YT9216 unit has been tested with CleanYourHeadUnit yet."
+  ],
+  "sources": ["https://android-headunits.com/tag/8227l/"],
+  "restore_notes": "Only pm disable-user is used; pm enable brings every package back."
+}
