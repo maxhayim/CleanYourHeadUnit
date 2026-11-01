@@ -2,7 +2,7 @@
 
 ## The computer tool (`cyhu`)
 
-1. Install Python 3.8 or newer and [Android platform-tools](https://developer.android.com/tools/releases/platform-tools) (for `adb`).
+1. Install Python 3.9 or newer and [Android platform-tools](https://developer.android.com/tools/releases/platform-tools) (for `adb`).
 2. Get CleanYourHeadUnit: `git clone https://github.com/maxhayim/CleanYourHeadUnit` (or download the ZIP).
 3. No `pip install` is needed: `cyhu` only uses the Python standard library.
 
