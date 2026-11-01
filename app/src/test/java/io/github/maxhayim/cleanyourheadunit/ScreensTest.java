@@ -139,6 +139,7 @@ public class ScreensTest {
         assertTrue(t, t.contains("@Gathin23") || t.contains("@gathin23"));
         assertTrue(t.contains("Sergey Kozlov"));
         assertFalse("invented username", t.contains("@sergey"));
+        assertTrue("official page button", t.contains("Website"));
         shot(a, "community-1280x720");
 
         a.show("modules");

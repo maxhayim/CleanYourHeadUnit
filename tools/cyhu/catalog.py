@@ -197,6 +197,9 @@ def validate(cat: dict | None = None, root: str | None = None) -> list[str]:
             errors.append(f"developer {d.get('id')}: github must be a GitHub username or null")
         if gh is None and not d.get("name"):
             errors.append(f"developer {d.get('id')}: needs a github username or a name")
+        site = d.get("website")
+        if site is not None and not re.match(r"^https://[^\s/@]+(/\S*)?$", str(site)):
+            errors.append(f"developer {d.get('id')}: website must be an https link without credentials")
         devs[d.get("id")] = d
     ids = [it.get("id") for it in cat.get("items", [])]
     for dup in {i for i in ids if ids.count(i) > 1}:
