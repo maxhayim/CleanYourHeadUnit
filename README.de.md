@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="https://cleanyour.tv"><img src="docs/banner-halloween.png" alt="CleanYourTV. Dein Fernseher, ohne Werbung. Entferne die vorinstallierte Software von jedem Android TV oder Google TV über WLAN und ersetze den werbelastigen Startbildschirm durch einen aufgeräumten Launcher, der wie ein Apple TV aussieht. Kein Root, kein Kabel, nichts wird deinstalliert, und die Wiederherstellung ist eine Zeile." width="800"></a>
+  <a href="https://cleanyour.tv"><img src="docs/banner.png" alt="CleanYourTV. Dein Fernseher, ohne Werbung. Entferne die vorinstallierte Software von jedem Android TV oder Google TV über WLAN und ersetze den werbelastigen Startbildschirm durch einen aufgeräumten Launcher, der wie ein Apple TV aussieht. Kein Root, kein Kabel, nichts wird deinstalliert, und die Wiederherstellung ist eine Zeile." width="800"></a>
 </p>
 
 <p align="center">
@@ -20,7 +20,7 @@
 </p>
 
 <p align="center">
-  <a href="docs/PRESS.md"><img src="docs/card-halloween.jpg" alt="398 TV-Modelle · 104 Marken · 31 Sprachen · Launcher mit 572 KB. Erwähnt in TechCrunch, TechRadar, Tom's Guide, Mashable, Android Authority, XDA, FlatpanelsHD, It's FOSS, Phandroid, GIGAZINE, Xataka, WinFuture, Frandroid, Macitynet, Techaeris, TechPP und 396 weitere: 412 Artikel aus 54 Ländern. Vorher: der Google-TV-Startbildschirm mit einer bezahlten Anzeige. Nachher: der Clean-Your-TV-Launcher." width="800"></a>
+  <a href="docs/PRESS.md"><img src="docs/card.jpg" alt="398 TV-Modelle · 104 Marken · 31 Sprachen · Launcher mit 572 KB. Erwähnt in TechCrunch, TechRadar, Tom's Guide, Mashable, Android Authority, XDA, FlatpanelsHD, It's FOSS, Phandroid, GIGAZINE, Xataka, WinFuture, Frandroid, Macitynet, Techaeris, TechPP und 396 weitere: 412 Artikel aus 54 Ländern. Vorher: der Google-TV-Startbildschirm mit einer bezahlten Anzeige. Nachher: der Clean-Your-TV-Launcher." width="800"></a>
 </p>
 
 ## Einstieg

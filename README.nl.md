@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="https://cleanyour.tv"><img src="https://raw.githubusercontent.com/Gathin23/cleanyourtv/main/docs/banner-halloween.png" alt="CleanYourTV. Je tv, zonder advertenties. Verwijder overbodige software van elke Android TV of Google TV via wifi en vervang het startscherm vol advertenties door een overzichtelijke launcher die eruitziet als Apple TV. Geen root, geen kabel, niets wordt verwijderd en herstellen kan met één opdracht." width="800"></a>
+  <a href="https://cleanyour.tv"><img src="https://raw.githubusercontent.com/Gathin23/cleanyourtv/main/docs/banner.png" alt="CleanYourTV. Je tv, zonder advertenties. Verwijder overbodige software van elke Android TV of Google TV via wifi en vervang het startscherm vol advertenties door een overzichtelijke launcher die eruitziet als Apple TV. Geen root, geen kabel, niets wordt verwijderd en herstellen kan met één opdracht." width="800"></a>
 </p>
 
 <p align="center">
@@ -27,7 +27,7 @@
 </p>
 
 <p align="center">
-  <a href="docs/PRESS.md"><img src="docs/card-halloween.jpg" alt="398 tv-modellen · 104 merken · 31 talen · launcher van 572 KB. Genoemd in TechCrunch, TechRadar, Tom's Guide, Mashable, Android Authority, XDA, FlatpanelsHD, It's FOSS, Phandroid, GIGAZINE, Xataka, WinFuture, Frandroid, Macitynet, Techaeris, TechPP en nog 396 media: 412 artikelen uit 54 landen. Voorheen: het standaard Google TV-startscherm met een gesponsorde advertentie. Daarna: de Clean Your TV-launcher." width="800"></a>
+  <a href="docs/PRESS.md"><img src="docs/card.jpg" alt="398 tv-modellen · 104 merken · 31 talen · launcher van 572 KB. Genoemd in TechCrunch, TechRadar, Tom's Guide, Mashable, Android Authority, XDA, FlatpanelsHD, It's FOSS, Phandroid, GIGAZINE, Xataka, WinFuture, Frandroid, Macitynet, Techaeris, TechPP en nog 396 media: 412 artikelen uit 54 landen. Voorheen: het standaard Google TV-startscherm met een gesponsorde advertentie. Daarna: de Clean Your TV-launcher." width="800"></a>
 </p>
 
 **De virale tweet:** [x.com/gathint/status/2111379569030939102](https://x.com/gathint/status/2111379569030939102)
