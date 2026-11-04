@@ -114,6 +114,15 @@ class TestClassifyVectors(unittest.TestCase):
                 "packages": [{"package": "com.android.systemui", "category": "recommended"}]}
         self.assertEqual(Classifier([prof]).classify("com.android.systemui").category, "protected")
 
+    def test_profile_cannot_unprotect_doors_or_vehicle(self):
+        # Even a "tested" profile that lists them can't make the door display or CAN bus apps removable.
+        pkgs = ["com.syu.canbus", "com.microntek.canbus", "com.vendor.doorstatus", "com.vendor.carinfo",
+                "com.vendor.canbox", "com.vendor.instrumentcluster"]
+        prof = {"id": "t", "name": "t", "status": "tested",
+                "packages": [{"package": p, "category": "recommended"} for p in pkgs]}
+        for p in pkgs:
+            self.assertEqual(Classifier([prof]).classify(p).category, "protected", p)
+
 
 class TestDebloat(Base):
     def test_plan_refuses_protected_unknown_user_advanced(self):

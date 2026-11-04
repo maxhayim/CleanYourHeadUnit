@@ -4,10 +4,12 @@ Order, first match wins:
   1. core Android rule              -> protected (nothing overrides it)
   2. found on the unit (Home apps)  -> protected
      a matched profile's protected  -> protected
-  3. telemetry catalogue entry      -> its category (evidence-backed; can override 4 and 5)
-  4. matched profile package entry  -> its category ('recommended' only on a 'tested' profile)
-  5. vehicle namespace rule         -> protected
-  6. vehicle keyword in the name    -> protected
+  3. telemetry catalogue entry      -> its category (evidence-backed, with published sources;
+                                       the only thing that can override 4 and 5)
+  4. vehicle namespace rule         -> protected
+  5. vehicle keyword in the name    -> protected
+  6. matched profile package entry  -> its category ('recommended' only on a 'tested' profile);
+                                       a profile can never make a vehicle app removable
   7. user-installed (not system)    -> user (the owner's own app: never proposed)
   8. anything else                  -> unknown
 
@@ -117,18 +119,18 @@ class Classifier:
             return Verdict(package, cat, t["evidence"], purpose=t["purpose"], risk=t["risk"],
                            finding=t["finding"], evidence=t["evidence"], sources=t.get("sources", []),
                            rule="telemetry")
-        prof = self.profile_pkgs.get(package)
-        if prof:
-            cat, entry, p = prof
-            return Verdict(package, cat, entry.get("purpose", ""), purpose=entry.get("purpose", ""),
-                           risk=entry.get("risk", ""), evidence=entry.get("evidence", ""),
-                           profile=p["id"], rule="profile")
         for rx, rule in self.vehicle:
             if rx.match(package):
                 return Verdict(package, "protected", rule["reason"], source=rule.get("source", ""), rule="vehicle")
         hit = _keyword_hit(package, self.words, self.prefix_short)
         if hit:
             return Verdict(package, "protected", f"{self.keyword_reason} (word: {hit})", rule="keyword")
+        prof = self.profile_pkgs.get(package)
+        if prof:
+            cat, entry, p = prof
+            return Verdict(package, cat, entry.get("purpose", ""), purpose=entry.get("purpose", ""),
+                           risk=entry.get("risk", ""), evidence=entry.get("evidence", ""),
+                           profile=p["id"], rule="profile")
         if not system:
             return Verdict(package, "user", "Installed by the owner, not part of the firmware.", rule="user")
         return Verdict(package, "unknown", "Purpose not verified on any device profile.", rule="unknown")

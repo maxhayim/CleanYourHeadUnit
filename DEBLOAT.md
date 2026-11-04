@@ -22,14 +22,16 @@ In this order. The first rule that matches wins:
 1. **Android core** (`android`, `com.android.systemui`, settings, providers, telephony, Bluetooth, input methods, WebView, and others). This can't be overridden by anything. The rules come from CleanYourTV's core list, minus its TV-specific middleware, plus radios, telephony, input and WebView.
 2. **Home apps found on this unit**: every app that can be Home, and the current Home.
 3. **Profile-protected**: for example, everything under `com.syu.*` on FYT.
-4. **The telemetry catalogue**: packages with published evidence get the category the catalogue gives them (usually Advanced) and a privacy finding.
-5. **Profile entries**: packages a profile documents.
-6. **Vehicle namespaces**: `com.syu.*`, `com.microntek.*` / `android.microntek.*`, `com.tw.*`.
-7. **Vehicle words in the package name**, outside the `com.android.*` / `com.google.android.*` / `android.*` namespaces: `mcu`, `canbus`, `can`, `avm`, `dvr`, `swc`, `obd`, `radio`, `tuner`, `bt`, `bluetooth`, `phone`, `hvac`, `climate`, `aircon`, `camera`, `reverse`, `parking`, `amp`, `dsp`, `eq`, `audio`, `factory`, `carsetting`, `update`, `ota` and others. The full list and how it matches are in `data/protected.json`.
+4. **The telemetry catalogue**: packages with published evidence get the category the catalogue gives them (usually Advanced) and a privacy finding. This is the only thing matched before the vehicle rules, and only with published sources (for example DoFun's `com.tw.core`, documented as malware).
+5. **Vehicle namespaces**: `com.syu.*`, `com.microntek.*` / `android.microntek.*`, `com.tw.*`.
+6. **Vehicle words in the package name**, outside the `com.android.*` / `com.google.android.*` / `android.*` namespaces: `mcu`, `canbus`, `can`, `canbox`, `car`, `carinfo`, `door`, `trunk`, `seatbelt`, `cluster`, `instrument`, `bcm`, `chime`, `avm`, `dvr`, `swc`, `obd`, `radio`, `tuner`, `bt`, `bluetooth`, `phone`, `hvac`, `climate`, `aircon`, `camera`, `reverse`, `parking`, `amp`, `dsp`, `eq`, `audio`, `factory`, `carsetting`, `update`, `ota` and others. `car`, `can` and `bcm` also match as the start of a word (`carstatus`, `canbox`, `bcmservice`). The full list and how it matches are in `data/protected.json`.
+7. **Profile entries**: packages a profile documents. They come after the vehicle rules, so a profile can never make a vehicle app removable.
 8. A package you installed is **Your app**.
 9. Anything else is **Unknown**.
 
-A profile can protect more and document more, but it can't make an Unknown or Protected package removable. Only a profile with `"status": "tested"` can make something Recommended.
+A profile can protect more and document more, but it can't make an Unknown or Protected package removable.
+
+**Door, trunk and car-status warnings.** The on-screen "door open" warnings, parking overlays and car information pages come from the unit's CAN bus app (`com.syu.canbus` on FYT, the `microntek` CAN apps on MTCD/MTCE, `com.tw.*` on DoFun) or a vendor app with a name like those above. They are all Protected: never offered, never selectable with `--allow-unknown` or `--advanced`, and never blockable by the firewall's App block mode. The shared tests check this for both the computer tool and the app, including a "tested" profile that tries to list them as removable. Only a profile with `"status": "tested"` can make something Recommended.
 
 ## Commands
 

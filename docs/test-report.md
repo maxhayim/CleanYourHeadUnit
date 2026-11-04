@@ -8,8 +8,8 @@ Date: 2026-11-01. Machine: macOS (Apple silicon), JDK 17, Android Gradle Plugin 
 
 | Suite | Command | Result |
 |---|---|---|
-| `cyhu` (Python 3.9.6) | `python3 -m unittest tests.test_cyhu` | 44 passed |
-| `cyhu` (Python 3.12.14) | same | 44 passed |
+| `cyhu` (Python 3.9.6) | `python3 -m unittest tests.test_cyhu` | 45 passed |
+| `cyhu` (Python 3.12.14) | same | 45 passed |
 | Python 3.8 syntax | `ast.parse(..., feature_version=(3, 8))` over `tools/` and `tests/` | no problems |
 | Catalog and themes | `python3 tools/cyhu.py catalog validate` | OK |
 | App build | `./gradlew :app:assembleDebug` | OK (debug APK, unsigned release not built) |
@@ -21,7 +21,7 @@ Date: 2026-11-01. Machine: macOS (Apple silicon), JDK 17, Android Gradle Plugin 
 
 **Python (`tests/test_cyhu.py`)**
 
-- the shared classification vectors (30)
+- the shared classification vectors (38, including door and CAN bus apps), and that even a tested profile cannot make a door or CAN bus app removable
 - vehicle keyword matching
 - profile matching on hardware signals only (names never match), including declared Sergey Kozlov firmware and its policy
 - plan refusals (Protected, Unknown, disabled, missing)
@@ -38,7 +38,7 @@ Date: 2026-11-01. Machine: macOS (Apple silicon), JDK 17, Android Gradle Plugin 
 **Java**
 
 - `DnsTest`: DNS query parsing (including malformed packets), NXDOMAIN answers, IPv4/UDP packet building with checksums verified, hosts and adblock list parsing, parent-domain matching, allowlist precedence, and refusal of bare top-level domains.
-- `RulesTest`: the same 30 shared vectors as Python, profile matching, Protected and Unknown never offered, theme validation, report scrubbing, the accent colour override (applies to every theme, clears, ignores a stored value that is not a colour) and readable button text on any accent.
+- `RulesTest`: the same 38 shared vectors as Python, profile matching, a tested profile that cannot unprotect door or CAN bus apps, the firewall skipping Protected apps, Protected and Unknown never offered, theme validation, report scrubbing, the accent colour override (applies to every theme, clears, ignores a stored value that is not a colour) and readable button text on any accent.
 - `ScreensTest`: opens the real `MainActivity` on simulated FYT (1280×720), ALPS (1024×600), Android 4.4 (800×480), DoFun portrait (1080×1920) and 1920×720 units, visits every section, and checks:
   - the model and Android version are shown
   - no serial or MAC address is shown or exported

@@ -91,6 +91,18 @@ public class RulesTest {
     }
 
     @Test
+    public void profileCannotUnprotectDoorsOrVehicle() throws Exception {
+        Context c = RuntimeEnvironment.getApplication();
+        String[] pkgs = {"com.syu.canbus", "com.microntek.canbus", "com.vendor.doorstatus", "com.vendor.carinfo",
+                "com.vendor.canbox", "com.vendor.instrumentcluster"};
+        org.json.JSONArray list = new org.json.JSONArray();
+        for (String p : pkgs) list.put(new org.json.JSONObject().put("package", p).put("category", "recommended"));
+        org.json.JSONObject prof = new org.json.JSONObject().put("id", "t").put("name", "t").put("status", "tested").put("packages", list);
+        Rules r = new Rules(Data.protectedRules(c), Data.telemetry(c), Collections.singletonList(prof), new HashMap<String, String>());
+        for (String p : pkgs) assertEquals(p, Rules.PROTECTED, r.classify(p, true).category);
+    }
+
+    @Test
     public void themesValidate() throws Exception {
         for (String id : Theme.BUILTIN) {
             JSONObject t = repoJson("themes/" + id + "/theme.json");
@@ -137,5 +149,18 @@ public class RulesTest {
         assertEquals(android.graphics.Color.BLACK, Theme.onColor(android.graphics.Color.parseColor("#E8EDF2")));
         assertEquals(android.graphics.Color.WHITE, Theme.onColor(android.graphics.Color.parseColor("#0A66C2")));
         assertEquals(android.graphics.Color.WHITE, Theme.onColor(android.graphics.Color.parseColor("#B91C1C")));
+    }
+
+    @Test
+    public void firewallNeverBlocksProtectedApps() {
+        Context c = RuntimeEnvironment.getApplication();
+        // e.g. from an imported config file, or chosen before a rule change
+        Firewall.setBlockedApp(c, "com.syu.canbus", true);
+        Firewall.setBlockedApp(c, "com.vendor.doorstatus", true);
+        Firewall.setBlockedApp(c, "com.android.systemui", true);
+        Firewall.setBlockedApp(c, "com.example.game", true);
+        assertEquals(new java.util.TreeSet<>(java.util.Collections.singleton("com.example.game")), Firewall.blockableApps(c));
+        for (String p : new String[]{"com.syu.canbus", "com.vendor.doorstatus", "com.android.systemui", "com.example.game"})
+            Firewall.setBlockedApp(c, p, false);
     }
 }

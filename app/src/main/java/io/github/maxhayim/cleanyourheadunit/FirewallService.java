@@ -108,7 +108,7 @@ public final class FirewallService extends VpnService implements Runnable {
         if (Firewall.MODE_APPS.equals(mode)) {
             if (Build.VERSION.SDK_INT < 21) return "App block needs Android 5.0 or newer.";
             int added = 0;
-            for (String pkg : Firewall.blockedApps(this)) {
+            for (String pkg : Firewall.blockableApps(this)) {
                 try {
                     allow(b, pkg);
                     added++;

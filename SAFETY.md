@@ -14,13 +14,14 @@ A head unit is part of a car. These rules come before every feature.
   - steering-wheel controls
   - factory radio, amplifiers, DSP/EQ and audio routing
   - Bluetooth hands-free calling and the microphone
-  - vehicle settings and car information displays
+  - vehicle settings and car information displays, including door, trunk, seatbelt and parking warnings drawn by the CAN bus app
   - manufacturer configuration utilities ("factory settings", "car settings")
   - startup and recovery services, emergency-related services
   - essential firmware update infrastructure, unless the telemetry catalogue documents a specific updater, and then it's **Advanced**, never automatic
   - every app that can be the Home app on this unit
 - **Unknown packages are never offered.** A vendor app without a documented purpose may be the one that talks to the car. The only way to touch one is `cyhu debloat apply --allow-unknown <package>`, one package at a time, typed by you, with a warning.
 - **Recommended needs a tested profile.** No profile is tested yet, so nothing is Recommended.
+- **The firewall never cuts off a Protected app.** App block mode skips Protected apps every time it starts, even if they were chosen earlier or came from an imported config file.
 - **The factory launcher is never disabled** to force another launcher. Switching Home uses Android's own Home setting, and the original is recorded for "back to original".
 - **Nothing talks to the MCU, CAN bus, ECUs or firmware.** No flashing, no `/dev` access, no MCU commands, no CAN messages.
 - **No Android security bypasses.** No root, no exploits, no hidden APIs used to change anything. The app reads one non-public property API (`SystemProperties`) only to show build information, and works without it. Setting Private DNS from the app needs `WRITE_SECURE_SETTINGS`, which only you can grant, from a computer.
