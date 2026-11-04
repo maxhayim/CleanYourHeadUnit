@@ -59,6 +59,26 @@ public final class Firewall {
         sp(c).edit().putString("mode", m).apply();
     }
 
+    /**
+     * The chosen apps minus any that are Protected now (vehicle, core Android, Home). Checked each
+     * time the firewall starts, because the list may predate a rule change or come from an imported
+     * config file. Protected apps are never cut off from the network.
+     */
+    public static Set<String> blockableApps(Context c) {
+        Set<String> out = new java.util.TreeSet<>();
+        Rules r;
+        try {
+            r = new Rules(Data.protectedRules(c), Data.telemetry(c), java.util.Collections.<org.json.JSONObject>emptyList(),
+                    new java.util.HashMap<String, String>());
+        } catch (Exception e) {
+            return out;   // rules unreadable: block nothing rather than risk a vehicle app
+        }
+        for (String pkg : blockedApps(c)) {
+            if (!Rules.PROTECTED.equals(r.classify(pkg, true).category)) out.add(pkg);
+        }
+        return out;
+    }
+
     public static Set<String> blockedApps(Context c) {
         return new HashSet<>(sp(c).getStringSet("apps", new HashSet<String>()));
     }

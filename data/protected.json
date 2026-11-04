@@ -34,7 +34,7 @@
     }
   ],
   "keyword": {
-    "about": "A package outside the com.android/com.google.android/android namespaces is treated as Protected when a part of its name (split on dots, digits and underscores) equals one of these words, or starts with one of them when the word has 4 or more letters or is listed in prefix_short. Example: com.vendor.canbus, com.vendor.carsettings, com.vendor.mcuservice.",
+    "about": "A package outside the com.android/com.google.android/android namespaces is treated as Protected when a part of its name (split on dots, digits and underscores) equals one of these words, or starts with one of them when the word has 4 or more letters or is listed in prefix_short. Example: com.vendor.canbus, com.vendor.carsettings, com.vendor.mcuservice, com.vendor.doorstatus. Over-protecting is the safe mistake: a protected package is only ever left alone.",
     "words": [
       "mcu",
       "can",
@@ -108,7 +108,21 @@
       "mcuupdate",
       "sleep",
       "acc",
-      "power"
+      "power",
+      "door",
+      "doors",
+      "canbox",
+      "carstatus",
+      "carstate",
+      "carservice",
+      "cardata",
+      "cluster",
+      "instrument",
+      "bcm",
+      "chime",
+      "warning",
+      "trunk",
+      "seatbelt"
     ],
     "reason": "The name suggests a vehicle or firmware function. Kept until a tested device profile proves it is not needed.",
     "prefix_short": [
@@ -122,7 +136,10 @@
       "amp",
       "bt",
       "eq",
-      "fm"
+      "fm",
+      "car",
+      "can",
+      "bcm"
     ]
   }
 }

@@ -305,6 +305,86 @@
    "extra_protected": {},
    "expect": "optional",
    "note": ""
+  },
+  {
+   "package": "com.syu.canbus",
+   "system": true,
+   "profiles": [
+    "generic-android"
+   ],
+   "extra_protected": {},
+   "expect": "protected",
+   "note": "doors and car status: FYT CAN bus app (draws the door, trunk and parking overlays)"
+  },
+  {
+   "package": "com.microntek.canbus",
+   "system": true,
+   "profiles": [
+    "generic-android"
+   ],
+   "extra_protected": {},
+   "expect": "protected",
+   "note": "doors and car status: MTC CAN bus app"
+  },
+  {
+   "package": "com.vendor.doorstatus",
+   "system": true,
+   "profiles": [
+    "generic-android"
+   ],
+   "extra_protected": {},
+   "expect": "protected",
+   "note": "doors and car status: door status, any vendor"
+  },
+  {
+   "package": "com.vendor.cardoor",
+   "system": true,
+   "profiles": [
+    "generic-android"
+   ],
+   "extra_protected": {},
+   "expect": "protected",
+   "note": "doors and car status: car-prefixed name"
+  },
+  {
+   "package": "com.vendor.canbox",
+   "system": true,
+   "profiles": [
+    "generic-android"
+   ],
+   "extra_protected": {},
+   "expect": "protected",
+   "note": "doors and car status: CAN box decoder app"
+  },
+  {
+   "package": "com.vendor.carstatusservice",
+   "system": true,
+   "profiles": [
+    "generic-android"
+   ],
+   "extra_protected": {},
+   "expect": "protected",
+   "note": "doors and car status: car status service"
+  },
+  {
+   "package": "com.vendor.instrumentcluster",
+   "system": true,
+   "profiles": [
+    "generic-android"
+   ],
+   "extra_protected": {},
+   "expect": "protected",
+   "note": "doors and car status: instrument cluster display"
+  },
+  {
+   "package": "com.vendor.bcmservice",
+   "system": true,
+   "profiles": [
+    "generic-android"
+   ],
+   "extra_protected": {},
+   "expect": "protected",
+   "note": "doors and car status: body control module"
   }
  ]
 }

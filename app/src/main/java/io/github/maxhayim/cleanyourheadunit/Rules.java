@@ -18,8 +18,9 @@ import java.util.regex.Pattern;
  * against both, so the app and the computer tool can't give different answers.
  *
  * Order, first match wins: core Android, Home apps found on the unit, profile-protected,
- * telemetry catalogue, profile entries, vehicle namespaces, vehicle words, the owner's own apps,
- * unknown. Recommended only comes from a profile whose status is "tested".
+ * telemetry catalogue, vehicle namespaces, vehicle words, profile entries, the owner's own apps,
+ * unknown. A profile entry can never make a vehicle app removable; only a telemetry entry with
+ * published sources is matched before the vehicle rules. Recommended only comes from a profile whose status is "tested".
  */
 public final class Rules {
 
@@ -153,6 +154,9 @@ public final class Rules {
             if (src != null) for (int i = 0; i < src.length(); i++) v.sources.add(src.optString(i));
             return v;
         }
+        for (Rule r : vehicle) if (r.pattern.matcher(pkg).matches()) return new Verdict(pkg, PROTECTED, r.reason, "vehicle");
+        String hit = keywordHit(pkg, words, prefixShort);
+        if (hit != null) return new Verdict(pkg, PROTECTED, keywordReason + " (word: " + hit + ")", "keyword");
         Object[] prof = profilePkgs.get(pkg);
         if (prof != null) {
             JSONObject e = (JSONObject) prof[1];
@@ -162,9 +166,6 @@ public final class Rules {
             v.profile = ((JSONObject) prof[2]).optString("id");
             return v;
         }
-        for (Rule r : vehicle) if (r.pattern.matcher(pkg).matches()) return new Verdict(pkg, PROTECTED, r.reason, "vehicle");
-        String hit = keywordHit(pkg, words, prefixShort);
-        if (hit != null) return new Verdict(pkg, PROTECTED, keywordReason + " (word: " + hit + ")", "keyword");
         if (!system) return new Verdict(pkg, USER, "Installed by the owner, not part of the firmware.", "user");
         return new Verdict(pkg, UNKNOWN, "Purpose not verified on any device profile.", "unknown");
     }
