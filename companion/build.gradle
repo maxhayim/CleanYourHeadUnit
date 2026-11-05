@@ -1,0 +1,79 @@
+plugins {
+    id 'com.android.application'
+}
+
+// The same data/ the Python tool and the head-unit app use.
+def sharedAssets = layout.buildDirectory.dir('generated/sharedAssets')
+tasks.register('copySharedAssets', Sync) {
+    from(rootProject.file('data')) { into 'data' }
+    into sharedAssets
+}
+
+android {
+    namespace 'io.github.maxhayim.cleanyourheadunit.companion'
+    compileSdk rootProject.ext.compileSdk
+
+    defaultConfig {
+        applicationId 'io.github.maxhayim.cleanyourheadunit.companion'
+        // Phones, not head units: Android 7.0 and newer.
+        minSdk 24
+        targetSdk rootProject.ext.targetSdk
+        versionCode 1
+        versionName '0.1.0'
+    }
+
+    sourceSets {
+        main.assets.srcDirs += sharedAssets
+        // The classifier and data loader, shared with the head-unit app.
+        main.java.srcDirs += rootProject.file('shared/java')
+        test.resources.srcDirs += rootProject.file('tests/vectors')
+    }
+
+    def signingFile = System.getenv('SIGNING_PROPERTIES')
+    signingConfigs {
+        if (signingFile && file(signingFile).exists()) {
+            release {
+                def p = new Properties()
+                file(signingFile).withInputStream { p.load(it) }
+                storeFile file(p.storeFile)
+                storePassword p.storePassword
+                keyAlias p.keyAlias
+                keyPassword p.keyPassword
+            }
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt')
+            signingConfig signingConfigs.findByName('release') ?: signingConfigs.debug
+        }
+    }
+
+    testOptions {
+        unitTests.includeAndroidResources = true
+        unitTests.all {
+            systemProperty 'repo.root', rootProject.projectDir.absolutePath
+        }
+    }
+
+    lint {
+        lintConfig rootProject.file('app/lint.xml')
+        abortOnError true
+        warningsAsErrors false
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+}
+
+tasks.named('preBuild') { dependsOn 'copySharedAssets' }
+
+dependencies {
+    testImplementation 'junit:junit:4.13.2'
+    testImplementation 'org.robolectric:robolectric:4.14.1'
+}

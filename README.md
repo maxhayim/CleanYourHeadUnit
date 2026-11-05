@@ -70,6 +70,7 @@
   <li><strong>CleanYourHeadUnit Home</strong>, an optional launcher with a dock, favourites, an app library and themes. It's off until you turn it on.</li>
   <li><strong>Themes</strong> are plain JSON (colours and layout, never code), validated on import. Three are built in: Midnight, Amber Dash and Daylight.</li>
   <li><strong>Modules and the Community Hub</strong> list independent projects that suit head units, with credit to each developer's GitHub. Installs come only from the developer's own GitHub release, and are checked against the release checksum and the developer's signing certificate before Android's installer asks you.</li>
+  <li><strong>Companion phone app</strong> (<a href="COMPANION.md">COMPANION.md</a>): does the computer tool's job from an Android phone, over USB (OTG) or Wi-Fi. It's also a <strong>bridge</strong>: plugged into a unit over USB, it switches the unit's ADB to Wi-Fi, so units with no Wireless debugging (many "Android 13" units really run 8.1 or 9) can then be reached without a cable. It shows the real Android version when the unit's settings claim a newer one.</li>
   <li><strong>Diagnostics</strong> with a sanitised export: serial numbers, MAC addresses, account names and network names are removed. Nothing is ever uploaded.</li>
   <li>No account, no analytics, no ads, no tracking.</li>
 </ul>
@@ -78,6 +79,7 @@
 
 <ul>
   <li><strong>App:</strong> Android 4.4 (API 19) or newer, any screen from 800×480 to 1920×720, in landscape or portrait. The local firewall's App block mode needs Android 5.0, and Private DNS needs Android 9.</li>
+  <li><strong>Companion phone app:</strong> an Android 7.0+ phone, and for USB an OTG cable or adapter. The head unit's USB port must be able to act as a device.</li>
   <li><strong>Computer tool:</strong> Python 3.9+ and <a href="https://developer.android.com/tools/releases/platform-tools">Android platform-tools</a> (<code>adb</code>). It runs on Windows, macOS and Linux.</li>
   <li>The head unit's Developer options with USB debugging (or ADB over Wi-Fi) turned on. Where to find it varies by firmware: see <a href="INSTALL.md">INSTALL.md</a>.</li>
 </ul>
@@ -94,7 +96,7 @@ python3 tools/cyhu.py status       # read-only: identifies the unit
 python3 tools/cyhu.py backup       # records the unit as it is now
 </pre>
 
-<p>For the app, build it (<code>./gradlew :app:assembleDebug</code>) and install it with <code>adb install</code>. There is no published release yet.</p>
+<p>For the app, build it (<code>./gradlew :app:assembleDebug</code>) and install it with <code>adb install</code>. The phone companion is <code>./gradlew :companion:assembleDebug</code>. There is no published release yet.</p>
 
 <h2>Usage</h2>
 
@@ -130,7 +132,7 @@ com.adups.fota  [advanced]
 <h2>How It Works</h2>
 
 <ul>
-  <li><code>data/</code> holds the rules both parts use: protected packages, the telemetry catalogue, device profiles, DNS providers and the module/launcher catalog. The app ships a copy of it. <code>tests/vectors/classify.json</code> is run by both the Python and the Java tests, so the two can't drift apart.</li>
+  <li><code>data/</code> holds the rules all three parts use (computer tool, head-unit app, phone companion): protected packages, the telemetry catalogue, device profiles, DNS providers and the module/launcher catalog. Both apps ship a copy of it, and share one Java classifier (<code>shared/java</code>). <code>tests/vectors/classify.json</code> is run by both the Python and the Java tests, so the two can't drift apart.</li>
   <li>Each package is classified in a fixed order: Android core first (this can never be overridden), then whichever apps can be Home on this unit, then the matched profile's protected list, then the telemetry catalogue, then vehicle namespaces (<code>com.syu.*</code>, <code>*.microntek.*</code>, <code>com.tw.*</code>) and vehicle words in the package name (<code>mcu</code>, <code>canbus</code>, <code>door</code>, <code>avm</code>, <code>radio</code>, <code>bt</code>…), then profile entries, so a profile can never make a vehicle app removable. Anything left over is <strong>Unknown</strong>.</li>
   <li>"Recommended" is only possible from a profile marked <em>tested</em> on real hardware. Today none is, so those entries show as Optional.</li>
   <li>The only commands used on the unit are <code>pm disable-user --user 0</code>, <code>pm enable --user 0</code>, <code>cmd package set-home-activity</code> and the <code>private_dns_*</code> settings. Nothing touches the MCU, the CAN bus, ECUs or firmware.</li>
@@ -143,6 +145,7 @@ com.adups.fota  [advanced]
   <li>Some firmware blocks <code>pm disable-user</code> for certain packages, or restores them on reboot. <code>cyhu</code> verifies every change and reports these.</li>
   <li>An empty telemetry list means none of the <em>catalogued</em> packages is installed. It doesn't mean nothing on the unit talks to the internet. Per-app network activity can't be observed over ADB without root.</li>
   <li>DNS filtering doesn't stop apps that use their own DNS or fixed IP addresses. The local firewall counts what it blocks; it can't see everything an app sends. Android allows only one VPN at a time.</li>
+  <li>The phone companion doesn't do Android 11+ wireless-debugging pairing yet, and it needs a head unit whose USB port can act as a device for the bridge.</li>
   <li>Sergey Kozlov firmware can't be recognised automatically, so you declare it (<code>--firmware sergey-kozlov</code>, or the switch in the app's Settings).</li>
   <li>Many cars have a separate telematics module outside Android. CleanYourHeadUnit can't see or control it.</li>
 </ul>

@@ -13,4 +13,4 @@ dependencyResolutionManagement {
     }
 }
 rootProject.name = "cleanyourheadunit"
-include ':app'
+include ':app', ':companion'

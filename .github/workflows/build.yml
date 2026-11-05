@@ -1,4 +1,4 @@
-name: Android app
+name: Android apps
 
 on:
   push:
@@ -17,7 +17,7 @@ jobs:
           java-version: "17"
       # The runner image already has the Android SDK (ANDROID_HOME).
       - name: Build, test, lint
-        run: ./gradlew --no-daemon :app:assembleDebug :app:testDebugUnitTest :app:lintDebug
+        run: ./gradlew --no-daemon :app:assembleDebug :app:testDebugUnitTest :app:lintDebug :companion:assembleDebug :companion:testDebugUnitTest :companion:lintDebug
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -25,3 +25,5 @@ jobs:
           path: |
             app/build/reports/
             app/build/outputs/apk/debug/app-debug.apk
+            companion/build/reports/
+            companion/build/outputs/apk/debug/companion-debug.apk

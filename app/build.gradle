@@ -25,6 +25,8 @@ android {
 
     sourceSets {
         main.assets.srcDirs += sharedAssets
+        // The classifier and data loader are shared with the phone companion (companion/).
+        main.java.srcDirs += rootProject.file('shared/java')
         test.resources.srcDirs += rootProject.file('tests/vectors')
     }
 

@@ -35,6 +35,24 @@ Date: 2026-11-01. Machine: macOS (Apple silicon), JDK 17, Android Gradle Plugin 
 - release asset choice, refusal of non-GitHub download origins, and refusal of a wrong digest or signing certificate
 - the APK inspector against a real APK (`CYHU_TEST_APK`; run with this app's own debug build. RetroDeck 0.15.0 was also inspected earlier and matched `apksigner`)
 
+**Companion (`companion/src/test`)**
+
+- `AdbTest` (11): the ADB client against a simulated adbd written separately from the client. The simulated adbd parses the phone's key from adbd's struct format (checking the length, `n0inv`, `rr` and the exponent) and verifies signatures with plain RSA. Covered:
+  - first connection asks the owner and later ones don't
+  - the owner saying no, and a TLS-only port (explained instead of hanging)
+  - shell output and exit codes, and long output arriving in pieces
+  - a refused service
+  - the bridge's `tcpip:5555` surviving adbd's restart
+  - header checksum and magic
+  - A deliberately broken signature prefix makes these tests fail (checked by hand).
+- `CompanionTest` (9): a simulated unit that claims Android 13 but runs 8.1. Covered:
+  - the real version is detected, and nothing is changed while reading
+  - vehicle, door, Home, Unknown and owner apps are never in a plan
+  - Advanced needs the tick
+  - apply saves a baseline once, disables, verifies and records; restore puts everything back and is idempotent; a hand-made change is left alone; a failed disable isn't recorded
+  - declared firmware is matched
+  - package names are checked before they reach a shell command
+
 **Java**
 
 - `DnsTest`: DNS query parsing (including malformed packets), NXDOMAIN answers, IPv4/UDP packet building with checksums verified, hosts and adblock list parsing, parent-domain matching, allowlist precedence, and refusal of bare top-level domains.
