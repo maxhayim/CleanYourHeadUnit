@@ -310,6 +310,18 @@ class TestCatalog(unittest.TestCase):
             if os.path.isdir(folder):
                 self.assertEqual(catalog.check_theme_folder(folder), [], name)
 
+    def test_recommended_apps(self):
+        rec = [r["id"] for r in data.catalog()["recommended"]]
+        self.assertEqual(rec, ["retrodeck", "webmote", "localsend"])
+        ls = catalog.item("localsend")
+        self.assertEqual(ls["install"], "none")          # one APK per processor: links only
+        self.assertEqual(ls["package"], "org.localsend.localsend_app")
+        bad = json.loads(json.dumps(data.catalog()))
+        bad["recommended"].append({"id": "nope", "why": ""})
+        errs = catalog.validate(bad)
+        self.assertTrue(any("nope: not an item" in e for e in errs))
+        self.assertTrue(any("needs a 'why'" in e for e in errs))
+
     def test_attribution_github_first(self):
         self.assertEqual(catalog.credit("tdater"), "@tdater")
         self.assertEqual(catalog.credit("maxhayim"), "@maxhayim")

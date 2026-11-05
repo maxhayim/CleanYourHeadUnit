@@ -162,6 +162,17 @@ com.adups.fota  [advanced]
 
 <p>The most useful contributions are <strong>device profiles and compatibility reports from real units</strong>. Launchers, modules and themes are welcome too. See <a href="CONTRIBUTING.md">CONTRIBUTING.md</a>, <a href="COMMUNITY.md">COMMUNITY.md</a> and the <a href="https://github.com/maxhayim/CleanYourHeadUnit/issues/new/choose">issue templates</a>. Please read <a href="SAFETY.md">SAFETY.md</a> first.</p>
 
+<h2>Recommended Apps</h2>
+
+<p>Independent apps that suit a head unit. Each is its own project, installed and updated on its own. They're also at the top of the app's Community Hub. None has been tested on a car head unit yet.</p>
+
+<table>
+  <tr><th>App</th><th>Developer</th><th>Why</th><th>Get it</th></tr>
+  <tr><td><a href="https://github.com/maxhayim/RetroDeck">RetroDeck</a></td><td><a href="https://github.com/maxhayim">@maxhayim</a></td><td>Turns the screen into a classic car stereo, with every hardware and steering-wheel key mappable.</td><td>Download and install in the app (signature-checked), or <a href="https://github.com/maxhayim/RetroDeck/releases/latest">GitHub releases</a></td></tr>
+  <tr><td><a href="https://github.com/maxhayim/webmote">Webmote</a></td><td><a href="https://github.com/maxhayim">@maxhayim</a></td><td>Control the unit from your phone's browser. Built for Android TV today; automotive support is planned.</td><td><a href="https://github.com/maxhayim/webmote/releases/latest">GitHub releases</a> (no install offered for head units yet)</td></tr>
+  <tr><td><a href="https://localsend.org">LocalSend</a></td><td><a href="https://github.com/localsend">@localsend</a></td><td>Send music, maps and APKs from a phone or computer to the head unit over Wi-Fi: no cable, account or internet, and transfers are encrypted. Needs Android 7.0+ (1.17.0 for Android 5 and 6).</td><td><a href="https://localsend.org">localsend.org</a> or <a href="https://github.com/localsend/localsend/releases/latest">GitHub releases</a>: pick the APK for the unit's processor</td></tr>
+</table>
+
 <h2>Related Projects</h2>
 
 <ul>

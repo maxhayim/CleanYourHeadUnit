@@ -547,9 +547,23 @@ final class Screens {
             Theme th = Ui.t(a);
             LinearLayout l = Ui.vbox(a);
             l.addView(Ui.header(a, "Community Hub", "Projects that work with head units, and the people who make them. Listing is not endorsement or certification."));
-            Ui.add(l, Ui.text(a, "Featured", 19, th.text, true), 18);
+            Ui.add(l, Ui.text(a, "Recommended apps", 19, th.text, true), 18);
+            Ui.add(l, Ui.dim(a, "Independent apps that suit a head unit. Each is installed and updated on its own."), 2);
+            Ui.Grid rg = new Ui.Grid(a, 280);
+            java.util.Set<String> shown = new java.util.HashSet<>();
+            for (Object[] r : Catalog.recommended(a)) {
+                JSONObject it = (JSONObject) r[0];
+                shown.add(it.optString("id"));
+                LinearLayout col = Ui.vbox(a);
+                col.addView(Listing.card(a, it));
+                Ui.add(col, Ui.text(a, (String) r[1], 13, th.dim, false), 6);
+                rg.addView(col);
+            }
+            Ui.add(l, rg, 10);
+
+            Ui.add(l, Ui.text(a, "Featured", 19, th.text, true), 22);
             Ui.Grid g = new Ui.Grid(a, 280);
-            for (JSONObject it : Catalog.items(a, null)) if (it.optBoolean("featured")) g.addView(Listing.card(a, it));
+            for (JSONObject it : Catalog.items(a, null)) if (it.optBoolean("featured") && !shown.contains(it.optString("id"))) g.addView(Listing.card(a, it));
             Ui.add(l, g, 10);
 
             Ui.add(l, Ui.text(a, "Developers", 19, th.text, true), 22);
