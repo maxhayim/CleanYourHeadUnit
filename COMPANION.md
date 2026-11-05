@@ -39,6 +39,18 @@ With wireless ADB on, the unit accepts ADB connections from the network. A norma
 - Android 11+ **Wireless debugging pairing** (pairing code, TLS). For those units, use the computer tool's `adb pair`, or the bridge over USB.
 - Launcher switching, Private DNS and the privacy audit (they're in the head-unit app and the computer tool).
 
+## Download
+
+Get `CleanYourHeadUnit-Companion-<version>.apk` from the [Companion releases](https://github.com/maxhayim/CleanYourHeadUnit/releases) (tags `companion-v*`) and install it on an Android 7.0+ phone. Android asks you to allow installs from your browser or file manager first.
+
+It's a pre-release: not yet tested on a real phone or head unit. Releases are signed with the Companion's own key, so later versions install over earlier ones. The signing certificate's SHA-256 is:
+
+```
+a8e531626c7e7b1f26115026de856a0541ceda02b7bdc1bade1f4b979b47a8c7
+```
+
+A different certificate means the APK didn't come from this project. If you installed a debug build you made yourself, uninstall it first.
+
 ## Building
 
 ```
@@ -46,4 +58,4 @@ With wireless ADB on, the unit accepts ADB connections from the network. A norma
 adb install companion/build/outputs/apk/debug/companion-debug.apk
 ```
 
-It needs Android 7.0 or newer on the phone. The ADB client is written for this project from AOSP's published protocol description (`packages/modules/adb/protocol.txt`), without third-party code.
+Maintainers build the signed release with `tools/release-companion.sh` (the key is kept outside the repo). It needs Android 7.0 or newer on the phone. The ADB client is written for this project from AOSP's published protocol description (`packages/modules/adb/protocol.txt`), without third-party code.

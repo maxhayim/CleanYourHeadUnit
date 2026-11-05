@@ -45,9 +45,8 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled true
-            shrinkResources true
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt')
+            // No shrinking: the app is small, and R8 could only be checked on a real phone.
+            minifyEnabled false
             signingConfig signingConfigs.findByName('release') ?: signingConfigs.debug
         }
     }
