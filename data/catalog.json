@@ -87,13 +87,15 @@
       "links": {
         "website": "https://localsend.org",
         "repository": "https://github.com/localsend/localsend",
-        "releases": "https://github.com/localsend/localsend/releases/latest"
+        "releases": "https://github.com/localsend/localsend/releases/latest",
+        "google play": "https://play.google.com/store/apps/details?id=org.localsend.localsend_app",
+        "f-droid": "https://f-droid.org/packages/org.localsend.localsend_app"
       },
       "install": "none",
       "compatibility": {"status": "untested", "verified": [], "reports": ["Not yet reported on a car head unit."]},
       "screenshots": ["https://localsend.org"],
       "warnings": [
-        "Install it from localsend.org or the official GitHub releases. The release has one APK per processor type: pick the one that matches the unit's processor (shown in Diagnostics), for example arm32v7 for a 32-bit unit and arm64v8 for a 64-bit one.",
+        "Official sources: Google Play or F-Droid (both pick the right build for the unit), or the GitHub releases. The GitHub release has one APK per processor type: pick the one that matches the unit's processor (shown in Diagnostics), for example arm32v7 for a 32-bit unit and arm64v8 for a 64-bit one.",
         "Needs Android 7.0 or newer; LocalSend 1.17.0 is the last version for Android 5 and 6. Check the real Android version: many units claim a newer one.",
         "The unit and the other device must be on the same Wi-Fi."
       ]
