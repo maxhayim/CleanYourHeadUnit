@@ -44,6 +44,12 @@ Nothing here is tested on hardware.
 | | Wallpapers, third-party launcher themes | Planned |
 | Diagnostics | Sanitised report (CLI and app) | Implemented, tested |
 | UI | Landscape rail, compact rail, portrait bottom bar, 800×480 → 1920×720 | Implemented, tested (renders) |
+| Companion (phone) | ADB client: key, approval, shell, USB and TCP transports | Implemented, tested against a simulated adbd; **untested on a real unit and phone** |
+| | Bridge (`tcpip 5555`) and "wireless ADB off" (`usb:`) | Implemented, tested (simulated); needs a unit with a device-mode USB port |
+| | Read unit, real-vs-claimed Android version | Implemented, tested (simulated unit) |
+| | Plan, apply, restore with shared rules and cyhu-format records | Implemented, tested (simulated unit) |
+| | Android 11+ wireless-debugging pairing | Planned |
+| | Phone UI | Implemented, not rendered or tested yet |
 | Docs | All required documents, specs, templates, CI | Done; CI passing |
 
 ## Before a first pre-release

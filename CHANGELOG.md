@@ -19,8 +19,10 @@ First version of CleanYourHeadUnit, derived from CleanYourTV `f47c893d` by @Gath
   - optional CleanYourHeadUnit Home launcher
 - Shared rules in `data/`: protected packages (core, vehicle namespaces, vehicle keywords), telemetry catalogue with sources, device profiles (FYT, MTCD/MTCE, DoFun/TW, ALPS/YT9216, Sergey Kozlov, generic), DNS providers, the module/launcher catalog
 - Door, trunk, seatbelt and car-status apps protected by name on any unit (`door`, `canbox`, `cluster`, `instrument`, `bcm`, and `car`/`can` as word starts); vehicle rules now come before device-profile entries, and the firewall skips Protected apps when it starts
+- CleanYourHeadUnit Companion, a phone app (Android 7.0+): connects over USB (OTG) or Wi-Fi with its own ADB client (written from AOSP's protocol description), reads the unit (including the real Android version when the settings claim another), plans, applies and restores with the shared rules and the same record files as `cyhu`, and works as a bridge (`tcpip 5555`) for units without Wireless debugging. It never offers Unknown apps. 20 tests against a simulated adbd and a simulated unit. Not yet tested on real hardware.
+- The classifier (`Rules.java`) and data loader moved to `shared/java`, used by both apps
 - Themes: Midnight, Amber Dash, Daylight, plus an accent colour you choose (ten presets or any #RRGGBB) that works with every theme
-- Tests: 45 Python tests and 20 Java tests (including shared classification vectors and screen renders at five resolutions)
+- Tests: 45 Python tests, 20 Java tests for the head-unit app and 20 for the companion (including shared classification vectors and screen renders at five resolutions)
 - Docs: README, INSTALL, COMPATIBILITY, DEBLOAT, PRIVACY, MODULES, THEMES, COMMUNITY, CONTRIBUTING, SAFETY, RESTORE, CREDITS, SECURITY, plus the hardware checklist, test report, release readiness and specs
 
 ### Removed (from CleanYourTV)
