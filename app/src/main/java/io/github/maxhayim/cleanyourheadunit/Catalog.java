@@ -30,6 +30,16 @@ public final class Catalog {
         return null;
     }
 
+    /** The recommended apps, in order: {item, why}. Entries whose item is missing are skipped. */
+    public static List<Object[]> recommended(Context c) {
+        List<Object[]> out = new ArrayList<>();
+        for (JSONObject r : Data.list(Data.catalog(c).optJSONArray("recommended"))) {
+            JSONObject it = item(c, r.optString("id"));
+            if (it != null) out.add(new Object[]{it, r.optString("why")});
+        }
+        return out;
+    }
+
     public static List<JSONObject> developers(Context c) {
         return Data.list(Data.catalog(c).optJSONArray("developers"));
     }

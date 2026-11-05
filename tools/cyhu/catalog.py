@@ -207,6 +207,16 @@ def validate(cat: dict | None = None, root: str | None = None) -> list[str]:
     launchers = {it["id"] for it in cat.get("items", []) if it.get("kind") == "launcher"}
     for it in cat.get("items", []):
         errors += check_item(it, devs, launchers, root)
+    seen = set()
+    for r in cat.get("recommended", []):
+        rid = r.get("id")
+        if rid not in ids:
+            errors.append(f"recommended {rid}: not an item in the catalog")
+        if rid in seen:
+            errors.append(f"recommended {rid}: listed twice")
+        seen.add(rid)
+        if not str(r.get("why", "")).strip():
+            errors.append(f"recommended {rid}: needs a 'why'")
     return errors
 
 

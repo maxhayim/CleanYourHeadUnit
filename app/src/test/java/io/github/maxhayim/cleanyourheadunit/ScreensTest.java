@@ -140,6 +140,8 @@ public class ScreensTest {
         assertTrue(t.contains("Sergey Kozlov"));
         assertFalse("invented username", t.contains("@sergey"));
         assertTrue("official page button", t.contains("Website"));
+        assertTrue(t, t.contains("Recommended apps"));
+        assertTrue(t.contains("RetroDeck") && t.contains("Webmote") && t.contains("LocalSend"));
         shot(a, "community-1280x720");
 
         a.show("modules");
