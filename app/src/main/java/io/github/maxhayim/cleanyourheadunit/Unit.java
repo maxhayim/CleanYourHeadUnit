@@ -173,9 +173,24 @@ public final class Unit {
         }
     }
 
+    /** The Android version the unit really runs (from its API level, which can't be faked). */
     public String android() {
+        return AndroidVersion.real(sdk(), claimedAndroid());
+    }
+
+    /** What the unit's Settings say. Budget units often show a bigger number than they run. */
+    public String claimedAndroid() {
         String v = props.get("ro.build.version.release");
         return v == null || v.isEmpty() ? Build.VERSION.RELEASE : v;
+    }
+
+    public boolean androidSpoofed() {
+        return AndroidVersion.spoofed(sdk(), claimedAndroid());
+    }
+
+    /** "8.1 (Settings say 13)" when they disagree, otherwise "8.1". */
+    public String androidLabel() {
+        return androidSpoofed() ? android() + " (Settings say " + claimedAndroid() + ")" : android();
     }
 
     public String chipset() {

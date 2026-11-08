@@ -302,6 +302,20 @@ class TestLauncher(Base):
         self.assertFalse(next(r for r in old if r["id"] == "kitt-launcher-2")["fits"])
 
 
+class TestAndroidVersion(unittest.TestCase):
+    def test_real_version_beats_settings(self):
+        # A real unit (2014 Camry, sp7731e): Settings say 13, the API level is 27, which is 8.1.
+        from cyhu.device import DeviceInfo
+        info = DeviceInfo(props={"ro.build.version.release": "13", "ro.build.version.sdk": "27"}, sdk=27, packages={})
+        self.assertEqual(info.android, "8.1")
+        self.assertEqual(info.android_claimed, "13")
+        self.assertTrue(info.android_spoofed)
+        self.assertEqual(info.summary()["android_claimed"], "13")
+        honest = DeviceInfo(props={"ro.build.version.release": "8.1.0"}, sdk=27, packages={})
+        self.assertFalse(honest.android_spoofed)
+        self.assertFalse(DeviceInfo(props={"ro.build.version.release": "12"}, sdk=32, packages={}).android_spoofed)
+
+
 class TestCatalog(unittest.TestCase):
     def test_shipped_catalog_is_valid(self):
         self.assertEqual(catalog.validate(), [])

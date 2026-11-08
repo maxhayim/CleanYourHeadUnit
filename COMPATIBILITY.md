@@ -18,7 +18,7 @@
 
 | Profile | Recognised by | Status | Simulated test unit |
 |---|---|---|---|
-| FYT | `com.syu.ms` installed | unverified | Android 10, 1280×720 |
+| FYT | `com.syu.ms` installed | unverified (recognised correctly on one real unit, read-only) | Android 10, 1280×720 |
 | MTCD/MTCE | a `microntek` package installed | unverified | none |
 | DoFun / TW | `com.tw.core` installed | unverified | Android 12, 1080×1920 portrait |
 | ALPS / YT9216 | `yt9216` in build properties | unverified | Android 8, 1024×600 |
@@ -40,6 +40,12 @@ The layout adapts between a side rail (landscape), an icon-only rail (under 900d
 | KITT Launcher.2 (landscape) | @tdater | untested on head units |
 | RetroDeck | @maxhayim | untested on head units (tested by its developer on an Android TV) |
 | Webmote | @maxhayim | automotive support planned |
+
+## Real units
+
+| Unit | Software | Real Android | What was checked | Result |
+|---|---|---|---|---|
+| Fortdows, Toyota Camry 2012–2014, 10.1" 1280×800 | FYT (`com.syu.ms`), SC7731E / UIS8141E, 2 GB | 8.1 (API 27); Settings say 13 | Head-unit app, read-only: Dashboard, Debloater, Launchers | Runs and fits the screen; FYT recognised; 166 packages: 65 Protected, 90 Unknown, 6 Optional, 1 Advanced. Its USB port is host-only (Android Auto), so ADB over USB from a computer or the phone companion isn't possible. No changes made. |
 
 ## Reporting a unit
 

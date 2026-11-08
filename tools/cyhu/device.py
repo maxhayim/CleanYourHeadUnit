@@ -67,7 +67,19 @@ class DeviceInfo:
 
     @property
     def android(self) -> str:
-        return self.props.get("ro.build.version.release") or ANDROID_NAMES.get(self.sdk, "?")
+        """The version the unit really runs, from its API level (Settings can show a bigger number)."""
+        return ANDROID_NAMES.get(self.sdk) or self.props.get("ro.build.version.release") or "?"
+
+    @property
+    def android_claimed(self) -> str:
+        return self.props.get("ro.build.version.release", "")
+
+    @property
+    def android_spoofed(self) -> bool:
+        real, claimed = ANDROID_NAMES.get(self.sdk), self.android_claimed.strip()
+        if not real or not claimed:
+            return False
+        return real.split(".")[0].rstrip("LW") != claimed.split(".")[0]
 
     @property
     def key(self) -> str:
@@ -109,6 +121,7 @@ class DeviceInfo:
             "model": p.get("ro.product.model") or None,
             "device": p.get("ro.product.device") or None,
             "android": self.android,
+            "android_claimed": self.android_claimed,
             "sdk": self.sdk,
             "build": p.get("ro.build.display.id") or None,
             "chipset": self.chipset,
