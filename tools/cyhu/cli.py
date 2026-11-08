@@ -66,6 +66,8 @@ def cmd_status(args, dev, info, rec):
     print(f"  {'mcu':18} {', '.join(f'{k}={v}' for k, v in info.mcu_props.items()) or 'not reported'}")
     print(f"  {'profiles':18} {', '.join(p['id'] + ' (' + p['status'] + ')' for p in info.profiles)}")
     print(f"  {'packages':18} {s['packages']} ({s['disabled']} disabled)")
+    if info.android_spoofed:
+        print(f"  note: Settings say Android {info.android_claimed}, but the unit runs {info.android} (API {info.sdk}).")
     if info.sdk and info.sdk < 19:
         print("  note: below Android 4.4 is not supported.")
     return 0

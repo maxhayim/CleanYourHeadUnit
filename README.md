@@ -152,7 +152,9 @@ com.adups.fota  [advanced]
 
 <h2>Tested On</h2>
 
-<p>No real head unit yet. The test suite runs against four simulated units (FYT Android 10 at 1280×720, ALPS Android 8 at 1024×600, DoFun Android 12 in portrait at 1080×1920, and Android 4.4 at 800×480), plus 1920×720. To report a real unit, use the <a href="https://github.com/maxhayim/CleanYourHeadUnit/issues/new/choose">compatibility report</a> template.</p>
+<p><strong>One real unit, read-only so far:</strong> a Fortdows unit for the 2012–2014 Toyota Camry (SC7731E / UIS8141E, 2 GB, 1280×800, FYT software). Its Settings say Android 13, but it runs 8.1 (API 27). The head-unit app installed and ran, recognised the FYT software, sorted 166 packages (65 Protected, 90 Unknown) and fitted the screen. Nothing was disabled, and the computer tool and the phone companion couldn't connect, because the unit's USB port only works as a host (it offers Android Auto to a phone). That first run found three bugs, fixed in the next commit: the dashboard showed the claimed Android version, the FYT profile name listed other chips, and launchers that share a name couldn't be told apart.</p>
+
+<p>The test suite runs against four simulated units (FYT Android 10 at 1280×720, ALPS Android 8 at 1024×600, DoFun Android 12 in portrait at 1080×1920, and Android 4.4 at 800×480), plus 1920×720. To report a real unit, use the <a href="https://github.com/maxhayim/CleanYourHeadUnit/issues/new/choose">compatibility report</a> template.</p>
 
 <h2>License</h2>
 

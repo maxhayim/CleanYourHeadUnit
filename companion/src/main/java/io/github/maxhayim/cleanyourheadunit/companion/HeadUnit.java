@@ -43,14 +43,6 @@ public final class HeadUnit {
         }
     }
 
-    static final Map<Integer, String> ANDROID_NAMES = new TreeMap<>();
-
-    static {
-        String[] v = {"19=4.4", "20=4.4W", "21=5.0", "22=5.1", "23=6.0", "24=7.0", "25=7.1", "26=8.0", "27=8.1",
-                "28=9", "29=10", "30=11", "31=12", "32=12L", "33=13", "34=14", "35=15", "36=16"};
-        for (String s : v) ANDROID_NAMES.put(Integer.parseInt(s.split("=")[0]), s.split("=")[1]);
-    }
-
     private static final Pattern PROP_LINE = Pattern.compile("^\\[([^\\]]+)\\]: \\[(.*)\\]$");
     private static final Pattern COMPONENT = Pattern.compile("^[\\w.]+/[\\w.$]+$");
 
@@ -170,8 +162,7 @@ public final class HeadUnit {
 
     /** The Android version from the API level, which a unit can't fake without breaking apps. */
     public String realAndroid() {
-        String n = ANDROID_NAMES.get(sdk);
-        return n != null ? n : props.getOrDefault("ro.build.version.release", "?");
+        return io.github.maxhayim.cleanyourheadunit.AndroidVersion.real(sdk, props.get("ro.build.version.release"));
     }
 
     /** What the unit's settings claim. Cheap units often show a bigger number than they run. */
@@ -181,10 +172,7 @@ public final class HeadUnit {
 
     /** True when the claimed version and the real one disagree (e.g. "13" on API 27, which is 8.1). */
     public boolean androidVersionSpoofed() {
-        String real = ANDROID_NAMES.get(sdk), claimed = claimedAndroid();
-        if (real == null || claimed.isEmpty()) return false;
-        String rm = real.split("\\.")[0].replace("L", "").replace("W", ""), cm = claimed.split("\\.")[0];
-        return !rm.equals(cm);
+        return io.github.maxhayim.cleanyourheadunit.AndroidVersion.spoofed(sdk, claimedAndroid());
     }
 
     public String chipset() {

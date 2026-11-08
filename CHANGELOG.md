@@ -22,8 +22,11 @@ First version of CleanYourHeadUnit, derived from CleanYourTV `f47c893d` by @Gath
 - CleanYourHeadUnit Companion, a phone app (Android 7.0+): connects over USB (OTG) or Wi-Fi with its own ADB client (written from AOSP's protocol description), reads the unit (including the real Android version when the settings claim another), plans, applies and restores with the shared rules and the same record files as `cyhu`, and works as a bridge (`tcpip 5555`) for units without Wireless debugging. It never offers Unknown apps. 20 tests against a simulated adbd and a simulated unit. Not yet tested on real hardware.
 - The classifier (`Rules.java`) and data loader moved to `shared/java`, used by both apps
 - Recommended apps (RetroDeck, Webmote, LocalSend) at the top of the Community Hub and in the README; LocalSend added to the catalog (links only, since it ships one APK per processor)
+- The real Android version (from the API level) everywhere: the app's dashboard, `cyhu status` and the companion show "8.1 (Settings say 13)" on units that edit the version string. Found on the first real unit.
+- Launchers show each Home app's package, since several often share one name, and label Android's start-up screen as not a launcher
+- The FYT profile is just "FYT firmware"; its chip list gains SC7731E / UIS8141E, seen on a real unit
 - Themes: Midnight, Amber Dash, Daylight, plus an accent colour you choose (ten presets or any #RRGGBB) that works with every theme
-- Tests: 45 Python tests, 20 Java tests for the head-unit app and 20 for the companion (including shared classification vectors and screen renders at five resolutions)
+- Tests: 47 Python tests, 21 Java tests for the head-unit app and 20 for the companion (including shared classification vectors and screen renders at five resolutions)
 - Docs: README, INSTALL, COMPATIBILITY, DEBLOAT, PRIVACY, MODULES, THEMES, COMMUNITY, CONTRIBUTING, SAFETY, RESTORE, CREDITS, SECURITY, plus the hardware checklist, test report, release readiness and specs
 
 ### Removed (from CleanYourTV)

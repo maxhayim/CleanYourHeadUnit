@@ -59,6 +59,7 @@ public final class Snapshot {
             JSONObject o = new JSONObject();
             o.put("time", System.currentTimeMillis());
             o.put("android", u.android());
+            o.put("android_claimed", u.claimedAndroid());
             JSONObject pk = new JSONObject();
             for (Unit.Pkg p : u.packages.values()) pk.put(p.name, p.enabled);
             o.put("packages", pk);

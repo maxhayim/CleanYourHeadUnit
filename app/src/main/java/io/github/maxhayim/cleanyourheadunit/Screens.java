@@ -83,7 +83,7 @@ final class Screens {
 
             List<Privacy.Finding> findings = Privacy.findings(a, u);
             Ui.Grid stats = new Ui.Grid(a, 150);
-            stats.addView(Ui.stat(a, "Android " + u.android(), "API " + u.sdk(), th.text));
+            stats.addView(Ui.stat(a, "Android " + u.android(), u.androidSpoofed() ? "Settings say " + u.claimedAndroid() + " · API " + u.sdk() : "API " + u.sdk(), th.text));
             stats.addView(Ui.stat(a, String.valueOf(u.packages.size()), u.disabledCount() + " disabled", th.text));
             stats.addView(Ui.stat(a, String.valueOf(findings.size()), findings.isEmpty() ? "catalogued trackers found" : "privacy findings",
                     findings.isEmpty() ? th.ok : th.warn));
@@ -94,7 +94,7 @@ final class Screens {
             dev.addView(Ui.text(a, "Device", 17, th.text, true));
             Ui.add(dev, Ui.kv(a, "Manufacturer", u.props.get("ro.product.manufacturer")), 8);
             dev.addView(Ui.kv(a, "Model", u.props.get("ro.product.model")));
-            dev.addView(Ui.kv(a, "Android", u.android() + " (API " + u.sdk() + ")"));
+            dev.addView(Ui.kv(a, "Android", u.androidLabel() + " · API " + u.sdk()));
             dev.addView(Ui.kv(a, "MCU", u.mcu().isEmpty() ? null : android.text.TextUtils.join(", ", u.mcu().values())));
             dev.addView(Ui.kv(a, "Chipset", u.chipset() == null ? null : u.chipset() + (u.abi() == null ? "" : " · " + u.abi())));
             dev.addView(Ui.kv(a, "Screen", u.width + " × " + u.height + " · " + u.dpi + " dpi · " + u.orientation()));
@@ -365,7 +365,10 @@ final class Screens {
             }
             for (ComponentName cn : u.homes) {
                 Unit.Pkg p = u.packages.get(cn.getPackageName());
-                cur.addView(Ui.kv(a, "Installed", (p == null ? cn.getPackageName() : p.label) + (cn.equals(u.home) ? "  (current)" : "")));
+                boolean fallback = "com.android.settings".equals(cn.getPackageName()) && cn.getClassName().endsWith("FallbackHome");
+                String label = fallback ? "Android's start-up screen (not a launcher)" : (p == null ? cn.getPackageName() : p.label);
+                // Several launchers often share one name on head units: the package tells them apart.
+                cur.addView(Ui.kv(a, "Can be Home", label + (cn.equals(u.home) ? "  (current)" : "") + "  ·  " + cn.getPackageName()));
             }
             Ui.Flow b = new Ui.Flow(a);
             b.addView(Ui.button(a, "Choose Home app", true, v -> chooseHome(a)));
@@ -638,7 +641,7 @@ final class Screens {
             id.addView(Ui.kv(a, "Model", u.props.get("ro.product.model")));
             id.addView(Ui.kv(a, "Device", u.props.get("ro.product.device")));
             id.addView(Ui.kv(a, "Build", u.props.get("ro.build.display.id")));
-            id.addView(Ui.kv(a, "Android", u.android() + " (API " + u.sdk() + ")"));
+            id.addView(Ui.kv(a, "Android", u.androidLabel() + " · API " + u.sdk()));
             id.addView(Ui.kv(a, "Platform", u.props.get("ro.board.platform")));
             id.addView(Ui.kv(a, "Hardware", u.props.get("ro.hardware")));
             id.addView(Ui.kv(a, "ABI", u.abi()));
