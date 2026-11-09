@@ -326,7 +326,7 @@ class TestCatalog(unittest.TestCase):
 
     def test_recommended_apps(self):
         rec = [r["id"] for r in data.catalog()["recommended"]]
-        self.assertEqual(rec, ["retrodeck", "webmote", "localsend"])
+        self.assertEqual(rec, ["retrodeck", "webmote", "localsend", "agama-car-launcher"])
         ls = catalog.item("localsend")
         self.assertEqual(ls["install"], "none")          # one APK per processor: links only
         self.assertEqual(ls["package"], "org.localsend.localsend_app")
