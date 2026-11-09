@@ -35,6 +35,7 @@ The first run found three bugs, all fixed and confirmed on this unit in v0.1.0: 
 ## Works on this unit
 
 - **CleanYourHeadUnit** (the head-unit app): installs from a flash drive or LocalSend, runs, fits the screen.
+- **Check for updates**: updated an earlier release to 0.1.3 in place over the unit's Wi-Fi (2026-11-09). Automatic updates arrived in 0.1.3 and haven't run here yet.
 - **LocalSend**: receives APKs sent from a phone, which then install.
 - **AGAMA Car Launcher**: the daily Home app.
 
