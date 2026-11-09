@@ -795,7 +795,11 @@ final class Screens {
             ab.addView(Ui.kv(a, "Tracking", "None. No account, no analytics, no ads."));
             Ui.add(ab, Ui.body(a, "Derived from CleanYourTV by @Gathin23, which is not affiliated with this project and has not endorsed it. "
                     + "CleanYourHeadUnit by @maxhayim. Outfit typeface: The Outfit Project Authors (OFL 1.1)."), 8);
-            Ui.add(ab, Ui.button(a, "Project page", false, v -> a.openUrl(REPO_URL)), 10);
+            Ui.Flow abb = new Ui.Flow(a);
+            abb.addView(Ui.button(a, "Check for updates", true, v -> SelfUpdate.check(a)));
+            Ui.add(abb, Ui.button(a, "Project page", false, v -> a.openUrl(REPO_URL)), 10);
+            Ui.add(ab, abb, 10);
+            Ui.add(ab, Ui.dim(a, "Updates come only from the project's GitHub releases, only when you press the button. Android asks before installing."), 6);
             Ui.add(l, ab, 12);
             return l;
         }

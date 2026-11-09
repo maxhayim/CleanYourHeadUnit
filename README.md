@@ -96,7 +96,7 @@ python3 tools/cyhu.py status       # read-only: identifies the unit
 python3 tools/cyhu.py backup       # records the unit as it is now
 </pre>
 
-<p>For the app, build it (<code>./gradlew :app:assembleDebug</code>) and install it with <code>adb install</code>. The phone companion has a pre-release APK on the <a href="https://github.com/maxhayim/CleanYourHeadUnit/releases">Releases</a> page (see <a href="COMPANION.md">COMPANION.md</a>), or build it with <code>./gradlew :companion:assembleDebug</code>. The head-unit app and the computer tool have no published release yet.</p>
+<p>For the head-unit app, get <code>CleanYourHeadUnit-&lt;version&gt;.apk</code> from <a href="https://github.com/maxhayim/CleanYourHeadUnit/releases">Releases</a> and install it on the unit: open the page in the unit's browser, send the APK with LocalSend, or use a flash drive (<a href="INSTALL.md">INSTALL.md</a>). After that, <em>Settings → About → Check for updates</em> fetches new versions from GitHub when you press it. The phone companion has its own pre-release (<code>companion-v*</code>, see <a href="COMPANION.md">COMPANION.md</a>). The computer tool runs from the repository.</p>
 
 <h2>Usage</h2>
 

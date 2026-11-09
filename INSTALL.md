@@ -40,7 +40,21 @@ If more than one device is connected, add `--serial <serial-or-ip:port>` to ever
 
 ## The app
 
-There is no published release yet. To build one:
+Download `CleanYourHeadUnit-<version>.apk` from the [Releases](https://github.com/maxhayim/CleanYourHeadUnit/releases) page (tags `v*`; the `companion-v*` releases are the phone app). Ways to get it onto the head unit, no computer needed:
+
+- open the Releases page in the unit's browser and tap the APK, or
+- send it from your phone with [LocalSend](https://localsend.org) (tested on a real unit), or
+- copy it to a flash drive and open it with the unit's file manager.
+
+Android asks you to allow installs from that app first. Releases are signed with the project's key; the certificate's SHA-256 is:
+
+```
+6f4a226183ba4639bc53938417d440957edad394825596394511b0af6c8c1329
+```
+
+Later versions install over earlier ones: **Settings → About → Check for updates** looks for a newer release on GitHub when you press it (never on its own), checks it, and hands it to Android's installer. A copy you built yourself has a different signature: uninstall it once before installing a release.
+
+To build it yourself instead:
 
 ```
 ./gradlew :app:assembleDebug        # needs JDK 17 and the Android SDK
