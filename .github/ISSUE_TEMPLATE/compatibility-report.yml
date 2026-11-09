@@ -5,8 +5,16 @@ body:
   - type: markdown
     attributes:
       value: |
-        Thank you! Reports from real units are what make profiles "tested". Please follow docs/hardware-checklist.md while **parked**.
+        Thank you! Reports from real units are what make profiles "tested" and add the unit to [docs/units](https://github.com/maxhayim/CleanYourHeadUnit/tree/main/docs/units). Please follow docs/hardware-checklist.md while **parked**.
+        Easiest: in the app, Diagnostics → **Report this unit** opens this form already filled in.
         Remove anything personal (VIN, phone numbers, Wi-Fi names) before posting; `cyhu diagnostics` already strips serials and MAC addresses.
+  - type: input
+    id: car
+    attributes:
+      label: Car
+      description: Make, model and years, e.g. "Toyota Camry 2012-2014". Leave out the VIN and plate.
+    validations:
+      required: true
   - type: input
     id: unit
     attributes:
@@ -47,5 +55,5 @@ body:
     id: diagnostics
     attributes:
       label: Diagnostics
-      description: Paste `python3 tools/cyhu.py diagnostics` output (read it first).
+      description: Filled in by the app's Report this unit button, or paste `python3 tools/cyhu.py diagnostics` output (read it first).
       render: json

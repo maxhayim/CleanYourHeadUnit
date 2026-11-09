@@ -155,6 +155,17 @@ public class ScreensTest {
         String report = Report.build(a);
         assertFalse(report, report.contains("FAKE1234567890"));
         assertFalse(report.contains("02:00:00:aa:bb:cc"));
+        assertTrue(all(a).contains("Report this unit"));
+        String url = UnitReport.url(a, a.unit);
+        assertTrue(url, url.startsWith("https://github.com/maxhayim/CleanYourHeadUnit/issues/new?template=compatibility-report.yml&title="));
+        assertTrue("too long for GitHub: " + url.length(), url.length() <= UnitReport.MAX_URL);
+        String decoded = java.net.URLDecoder.decode(url, "UTF-8");
+        assertTrue(decoded, decoded.contains("HU-7862 (simulated)"));
+        assertTrue(decoded, decoded.contains("\"api\": 29"));
+        assertTrue(decoded, decoded.contains("SIM-MCU-1.0"));
+        assertFalse("serial in report link", decoded.contains("FAKE1234567890"));
+        assertFalse("MAC in report link", decoded.toLowerCase(java.util.Locale.ROOT).contains("aa:bb:cc"));
+        assertFalse("fingerprint in report link", decoded.contains("release-keys"));
         shot(a, "diagnostics-1280x720");
 
         a.show("backup");

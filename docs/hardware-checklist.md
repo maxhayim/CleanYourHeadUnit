@@ -47,6 +47,6 @@ Record the result of each step (pass, fail or not applicable) in a Compatibility
 ## F. Report
 
 - [ ] F1. `cyhu restore --all`; A5 once more.
-- [ ] F2. File a Compatibility report with `cyhu diagnostics --out report.json` (read it first), the results above, and the unit's make and model as sold.
+- [ ] F2. File a Compatibility report: Diagnostics → Report this unit in the app, or `cyhu diagnostics --out report.json` (read it first), the results above, and the unit's make and model as sold.
 
 A profile can become `tested` after a passing run of A–C and F on at least one named unit.

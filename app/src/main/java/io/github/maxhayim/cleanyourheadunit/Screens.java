@@ -624,10 +624,11 @@ final class Screens {
 
         public View build(MainActivity a) {
             LinearLayout l = Ui.vbox(a);
-            l.addView(Ui.header(a, "Diagnostics", "What this unit reports. Export a sanitised report to share when asking for help; nothing is ever uploaded."));
+            l.addView(Ui.header(a, "Diagnostics", "What this unit reports. Report it to the project's unit list, or export a sanitised report to share when asking for help. The app never uploads anything."));
             Ui.add(l, device(a), 14);
             Ui.Flow b = new Ui.Flow(a);
-            b.addView(Ui.button(a, "Export sanitised report", true, v -> {
+            b.addView(Ui.button(a, "Report this unit", true, v -> UnitReport.open(a)));
+            b.addView(Ui.button(a, "Export sanitised report", false, v -> {
                 String rep = Report.build(a);
                 File f = a.export("cleanyourheadunit-diagnostics.json", rep);
                 if (f != null) {
