@@ -49,9 +49,8 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled true
-            shrinkResources true
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            // No shrinking: R8's output could only be checked on real units, and the APK is small anyway.
+            minifyEnabled false
             signingConfig signingConfigs.findByName('release') ?: signingConfigs.debug
         }
     }
