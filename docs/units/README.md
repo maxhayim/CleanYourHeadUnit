@@ -8,7 +8,7 @@ Pages only say what was observed on that unit. A unit listed here is not "suppor
 
 | Unit | Chip | Real Android | Checked | Page |
 |---|---|---|---|---|
-| Fortdows for Toyota Camry 2012–2014 (JBL), 10.1" | SC7731E / UIS8141E | 8.1 (Settings say 13) | App runs, read-only. No ADB (USB port is host-only). | [fortdows-camry-2012-2014](fortdows-camry-2012-2014.md) |
+| Fortdows for Toyota Camry 2012–2014 (JBL), 10.1" | SC7731E / UIS8141E | 8.1 (Settings say 13) | App runs; Market Feedback Agent disabled through it, radio, camera, climate, door display and steering keys still work. No ADB (USB port is host-only). | [fortdows-camry-2012-2014](fortdows-camry-2012-2014.md) |
 
 ## Sergey Kozlov firmware (declared)
 

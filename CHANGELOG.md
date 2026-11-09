@@ -2,6 +2,18 @@
 
 All notable changes to this project are listed here. Versions follow [Semantic Versioning](https://semver.org/).
 
+## [0.2.0] - 2026-11-09
+
+The first full release (not a pre-release).
+
+### Verified on a real unit
+
+- On a 2012–2014 Camry unit (FYT, Android 8.1), Market Feedback Agent was disabled through Debloater → **Disable in Android Settings**. Afterwards the radio, reversing camera, climate display, open-door display and steering-wheel buttons all worked. A Bluetooth call, a restart and the restore haven't been checked yet ([docs/units](docs/units/fortdows-camry-2012-2014.md)).
+
+### Changed
+
+- The Camry page and compatibility notes: Disable in Android Settings works for some apps on that unit and is greyed out for others (the earlier note said it couldn't be debloated at all).
+
 ## [0.1.4] - 2026-11-09
 
 ### Added
