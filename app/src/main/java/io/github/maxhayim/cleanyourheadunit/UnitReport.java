@@ -4,7 +4,13 @@ import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.net.Uri;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+
+import io.nayuki.qrcodegen.QrCode;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -19,7 +25,8 @@ import java.util.Map;
  * "Report this unit": opens GitHub's Compatibility report form in the browser, filled in with what
  * the Dashboard shows. Only a fixed list of non-identifying facts goes in (never serials, MAC or IP
  * addresses, network or account names). Nothing is sent by the app: the owner reads the form,
- * adds the car and what worked, and presses Submit on GitHub themselves.
+ * adds the car and what worked, and presses Submit on GitHub themselves. To avoid signing in to GitHub
+ * on the car, a QR code opens the same form on a phone, or Share sends the whole report (LocalSend, etc.).
  */
 final class UnitReport {
     private UnitReport() {}
@@ -102,22 +109,60 @@ final class UnitReport {
             + "- [ ] Radio, camera, Bluetooth calls, steering-wheel keys still fine afterwards\n";
 
     static String url(Context c, Unit u) throws JSONException {
+        Map<String, String> q = fields(c, u);
+        String full = link(q);
+        if (full.length() <= MAX_URL) return full;
+        // Drop the long part rather than send a link GitHub would reject.
+        q.remove("diagnostics");
+        return link(q);
+    }
+
+    /** For the QR code: the form with the title, unit and firmware filled in, short enough to scan from a car screen. */
+    static String shortUrl(Context c, Unit u) throws JSONException {
+        Map<String, String> q = fields(c, u);
+        q.remove("checklist");
+        q.remove("diagnostics");
+        return link(q);
+    }
+
+    private static Map<String, String> fields(Context c, Unit u) throws JSONException {
         Map<String, String> q = new LinkedHashMap<>();
         q.put("title", "Unit report: " + unitLine(u) + ", Android " + u.android());
         q.put("unit", unitLine(u));
         q.put("firmware", firmwareLine(u));
         q.put("checklist", CHECKLIST);
         q.put("diagnostics", summary(c, u).toString(2));
+        return q;
+    }
+
+    private static String link(Map<String, String> q) {
         StringBuilder s = new StringBuilder(FORM);
         for (Map.Entry<String, String> e : q.entrySet()) s.append('&').append(e.getKey()).append('=').append(enc(e.getValue()));
-        if (s.length() > MAX_URL) {
-            // Drop the long part rather than send a link GitHub would reject.
-            s.setLength(0);
-            s.append(FORM);
-            q.remove("diagnostics");
-            for (Map.Entry<String, String> e : q.entrySet()) s.append('&').append(e.getKey()).append('=').append(enc(e.getValue()));
-        }
         return s.toString();
+    }
+
+    /** What Share sends: the form link first (tap it on the phone), then the report to paste if needed. */
+    static String shareText(Context c, Unit u) throws JSONException {
+        return "CleanYourHeadUnit unit report. Open this on a phone signed in to GitHub, add your car and what worked, then Submit:\n"
+                + url(c, u) + "\n\n" + plain(c, u);
+    }
+
+    static String plain(Context c, Unit u) throws JSONException {
+        return "Unit: " + unitLine(u) + "\nFirmware: " + firmwareLine(u) + "\n\n" + summary(c, u).toString(2) + "\n";
+    }
+
+    /** Dark modules on white, with the standard 4-module quiet zone. */
+    static Bitmap qr(String text, int px) {
+        QrCode code = QrCode.encodeText(text, QrCode.Ecc.LOW);
+        int border = 4, n = code.size + 2 * border, scale = Math.max(1, px / n);
+        Bitmap b = Bitmap.createBitmap(n * scale, n * scale, Bitmap.Config.RGB_565);
+        for (int y = 0; y < n; y++) {
+            for (int x = 0; x < n; x++) {
+                int color = code.getModule(x - border, y - border) ? Color.BLACK : Color.WHITE;
+                for (int dy = 0; dy < scale; dy++) for (int dx = 0; dx < scale; dx++) b.setPixel(x * scale + dx, y * scale + dy, color);
+            }
+        }
+        return b;
     }
 
     static String enc(String v) {
@@ -128,23 +173,69 @@ final class UnitReport {
         }
     }
 
-    /** Shows exactly what goes in, then opens the form only if the owner agrees. */
+    /** Shows exactly what goes in, then lets the owner choose how to send it: this unit's browser, a QR code, or Share. */
     static void open(final MainActivity a) {
         final String url, preview;
         try {
             url = url(a, a.unit);
-            preview = "Unit: " + unitLine(a.unit) + "\nFirmware: " + firmwareLine(a.unit) + "\n\n" + summary(a, a.unit).toString(2);
+            preview = plain(a, a.unit);
         } catch (JSONException e) {
             a.info("Couldn't build the report", String.valueOf(e.getMessage()));
             return;
         }
         new AlertDialog.Builder(a).setTitle("Report this unit?")
-                .setMessage("This opens GitHub's Compatibility report form in the browser, already filled in with:\n\n" + preview
-                        + "\n\nNo serial numbers, MAC or IP addresses, network or account names. Nothing is sent until you press Submit on GitHub, "
-                        + "after adding your car and what worked. Reporting needs a free GitHub account.")
-                .setPositiveButton("Open the form", (d, w) -> launch(a, url))
-                .setNegativeButton("Cancel", null)
+                .setMessage("This fills in GitHub's Compatibility report form with:\n\n" + preview
+                        + "\nNo serial numbers, MAC or IP addresses, network or account names. Nothing is sent until you press Submit on GitHub, "
+                        + "after adding your car and what worked. Reporting needs a free GitHub account.\n\n"
+                        + "Rather not sign in on the car? Use QR code or Share to finish on your phone.")
+                .setPositiveButton("Open here", (d, w) -> launch(a, url))
+                .setNeutralButton("QR code", (d, w) -> showQr(a))
+                .setNegativeButton("Share", (d, w) -> share(a))
                 .show();
+    }
+
+    static void showQr(MainActivity a) {
+        String link;
+        try {
+            link = shortUrl(a, a.unit);
+        } catch (JSONException e) {
+            a.info("Couldn't build the report", String.valueOf(e.getMessage()));
+            return;
+        }
+        int px = Math.min(a.getResources().getDisplayMetrics().heightPixels, a.getResources().getDisplayMetrics().widthPixels) * 3 / 5;
+        ImageView img = new ImageView(a);
+        img.setImageBitmap(qr(link, px));
+        img.setAdjustViewBounds(true);
+        LinearLayout box = new LinearLayout(a);
+        box.setGravity(android.view.Gravity.CENTER);
+        int pad = Ui.dp(a, 12);
+        box.setPadding(pad, pad, pad, pad);
+        box.addView(img);
+        new AlertDialog.Builder(a).setTitle("Scan with your phone")
+                .setMessage("Opens the form on your phone with the unit, firmware and title filled in. "
+                        + "The longer diagnostics part doesn't fit in a QR code: send it with Share if you'd like to add it.")
+                .setView(box)
+                .setPositiveButton("Done", null)
+                .setNeutralButton("Share", (d, w) -> share(a))
+                .show();
+    }
+
+    static void share(MainActivity a) {
+        String text;
+        try {
+            text = shareText(a, a.unit);
+        } catch (JSONException e) {
+            a.info("Couldn't build the report", String.valueOf(e.getMessage()));
+            return;
+        }
+        Intent send = new Intent(Intent.ACTION_SEND).setType("text/plain")
+                .putExtra(Intent.EXTRA_SUBJECT, "CleanYourHeadUnit unit report")
+                .putExtra(Intent.EXTRA_TEXT, text);
+        try {
+            a.startActivity(Intent.createChooser(send, "Send the report to your phone"));
+        } catch (ActivityNotFoundException e) {
+            saveInstead(a, text, "Nothing on this unit can share text");
+        }
     }
 
     static void launch(MainActivity a, String url) {
@@ -153,14 +244,18 @@ final class UnitReport {
         } catch (ActivityNotFoundException e) {
             String text;
             try {
-                text = "Unit: " + unitLine(a.unit) + "\nFirmware: " + firmwareLine(a.unit) + "\n\n" + summary(a, a.unit).toString(2) + "\n";
+                text = shareText(a, a.unit);
             } catch (JSONException x) {
                 text = "";
             }
-            File f = a.export("cleanyourheadunit-unit-report.txt", text);
-            a.info("No browser on this unit", (f == null ? "" : "The report is saved at " + f.getAbsolutePath() + ".\n\n")
-                    + "On your phone, open github.com/" + SelfUpdate.REPO + "/issues, choose New issue → Compatibility report, "
-                    + "and paste the report (LocalSend can carry the file over).");
+            saveInstead(a, text, "No browser on this unit");
         }
+    }
+
+    private static void saveInstead(MainActivity a, String text, String title) {
+        File f = a.export("cleanyourheadunit-unit-report.txt", text);
+        a.info(title, (f == null ? "" : "The report is saved at " + f.getAbsolutePath() + ".\n\n")
+                + "Use QR code to open the form on your phone, or carry the file over (LocalSend or a flash drive) "
+                + "and open github.com/" + SelfUpdate.REPO + "/issues → New issue → Compatibility report.");
     }
 }

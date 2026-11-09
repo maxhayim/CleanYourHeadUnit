@@ -2,6 +2,18 @@
 
 All notable changes to this project are listed here. Versions follow [Semantic Versioning](https://semver.org/).
 
+## [Unreleased]
+
+### Added
+
+- **Report this unit** without signing in to GitHub on the car: **QR code** opens the form on a phone with the unit, firmware and title filled in, and **Share** sends the whole report (form link plus diagnostics) through Android's share menu, for example with LocalSend. Without a browser or anything to share with, the report is saved to a file.
+- QR codes use Project Nayuki's QR Code generator library (MIT), unmodified.
+
+### Changed
+
+- The Disable dialog says that some firmware greys out or hides Disable for built-in apps (as on the Camry), that ADB is then the only way, and that Force stop is not the same.
+- `docs/units`: the Camry can't disable apps without root; Check for updates verified there.
+
 ## [0.1.3] - 2026-11-09
 
 ### Changed

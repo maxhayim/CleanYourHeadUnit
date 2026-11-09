@@ -6,7 +6,7 @@ Please read [SAFETY.md](SAFETY.md) first, and follow the [Code of Conduct](CODE_
 
 ## Most wanted: reports from real units
 
-In the app, press **Diagnostics → Report this unit**: it opens the Compatibility report form already filled in, for you to complete and submit. From a computer, run the [hardware checklist](docs/hardware-checklist.md) and open a **Compatibility report** issue with `python3 tools/cyhu.py diagnostics --out report.json`. The report is sanitised, but read it before you post it. Reports of what *didn't* work are just as useful as what did.
+In the app, press **Diagnostics → Report this unit**: it opens the Compatibility report form already filled in, for you to complete and submit, on the unit or (with QR code or Share) on your phone. From a computer, run the [hardware checklist](docs/hardware-checklist.md) and open a **Compatibility report** issue with `python3 tools/cyhu.py diagnostics --out report.json`. The report is sanitised, but read it before you post it. Reports of what *didn't* work are just as useful as what did.
 
 ## Device profiles
 

@@ -32,6 +32,7 @@ What came from CleanYourTV, and what was changed, is listed file by file in [doc
 
 - **Outfit** typeface (static Regular and SemiBold from [Outfitio/Outfit-Fonts](https://github.com/Outfitio/Outfit-Fonts)): The Outfit Project Authors, SIL Open Font License 1.1 ([app/FONT-LICENSE-OFL.txt](app/FONT-LICENSE-OFL.txt))
 - Icons and logo: drawn for this project (MIT)
+- QR codes (Report this unit → QR code): Project Nayuki's [QR Code generator library](https://github.com/nayuki/QR-Code-generator) (MIT), unmodified in `app/src/main/java/io/nayuki/qrcodegen`
 - Block lists, downloaded only when you choose one: [StevenBlack/hosts](https://github.com/StevenBlack/hosts) (MIT), [AdGuard DNS filter](https://github.com/AdguardTeam/AdGuardSDNSFilter) (GPL-3.0)
 
 ## CleanYourHeadUnit

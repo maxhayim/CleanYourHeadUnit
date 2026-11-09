@@ -53,6 +53,6 @@ One page per unit, grouped by firmware family: [docs/units](docs/units/README.md
 
 ## Reporting a unit
 
-In the app, **Diagnostics → Report this unit** opens the form in the unit's browser, already filled in with the model, chip, real and claimed Android, firmware, screen and package counts (never serials, MAC or IP addresses, or network and account names); you add the car and what worked, and press Submit. It needs a free GitHub account. 
+In the app, **Diagnostics → Report this unit** opens the form in the unit's browser, already filled in with the model, chip, real and claimed Android, firmware, screen and package counts (never serials, MAC or IP addresses, or network and account names); you add the car and what worked, and press Submit. It needs a free GitHub account. Rather not sign in on the car? **QR code** opens the same form on your phone, and **Share** sends the whole report (LocalSend works). 
 
 From a computer, use the **Compatibility report** issue template and attach `cyhu diagnostics` output, which is sanitised: serial numbers, MAC addresses and account and network names are removed. Read it before you post it. Say which checklist items you ran and what happened, including anything that *didn't* work.

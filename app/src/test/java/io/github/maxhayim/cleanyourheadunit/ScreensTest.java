@@ -166,6 +166,22 @@ public class ScreensTest {
         assertFalse("serial in report link", decoded.contains("FAKE1234567890"));
         assertFalse("MAC in report link", decoded.toLowerCase(java.util.Locale.ROOT).contains("aa:bb:cc"));
         assertFalse("fingerprint in report link", decoded.contains("release-keys"));
+        String qrLink = UnitReport.shortUrl(a, a.unit);
+        assertTrue("QR link too dense to scan from a car screen: " + qrLink.length(), qrLink.length() < 800);
+        assertTrue(java.net.URLDecoder.decode(qrLink, "UTF-8").contains("HU-7862 (simulated)"));
+        android.graphics.Bitmap qr = UnitReport.qr(qrLink, 480);
+        assertTrue(qr.getWidth() > 0 && qr.getWidth() <= 480);
+        // Kept under build/ so it can be decoded by a real scanner (not committed).
+        try (FileOutputStream out = new FileOutputStream(new File("build/report-qr.png"))) {
+            qr.compress(android.graphics.Bitmap.CompressFormat.PNG, 100, out);
+        }
+        try (FileOutputStream out = new FileOutputStream(new File("build/report-qr.txt"))) {
+            out.write(qrLink.getBytes("UTF-8"));
+        }
+        String shared = UnitReport.shareText(a, a.unit);
+        assertTrue(shared, shared.contains(url));
+        assertFalse("serial in shared report", shared.contains("FAKE1234567890"));
+        assertFalse("MAC in shared report", shared.toLowerCase(java.util.Locale.ROOT).contains("aa:bb:cc"));
         shot(a, "diagnostics-1280x720");
 
         a.show("backup");
