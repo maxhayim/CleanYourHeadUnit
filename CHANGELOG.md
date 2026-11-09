@@ -2,6 +2,13 @@
 
 All notable changes to this project are listed here. Versions follow [Semantic Versioning](https://semver.org/).
 
+## [Unreleased]
+
+### Added
+
+- Diagnostics → **Report this unit**: opens GitHub's Compatibility report form in the browser, filled in with the model, chip, real and claimed Android, firmware, MCU, screen and package counts per category. It shows exactly what goes in first, never includes serials, MAC or IP addresses, or network and account names, and sends nothing itself: the owner adds the car and presses Submit. Without a browser it saves the report to a file instead.
+- The Compatibility report form asks for the car (make, model, years)
+
 ## [0.1.1] - 2026-11-08
 
 ### Added

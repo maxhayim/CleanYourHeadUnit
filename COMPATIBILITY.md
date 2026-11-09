@@ -1,6 +1,6 @@
 # Compatibility
 
-**No real head unit has been tested yet.** This page says what the code supports, what it has been tested against (simulated units only), and what's still unknown. It will only claim a unit works once someone has run the [hardware checklist](docs/hardware-checklist.md) on it and filed a [compatibility report](https://github.com/maxhayim/CleanYourHeadUnit/issues/new/choose).
+**One real head unit has been tried so far** (read-only; see [docs/units](docs/units/README.md)). This page says what the code supports, what it has been tested against, and what's still unknown. It will only claim a unit works once someone has run the [hardware checklist](docs/hardware-checklist.md) on it and filed a [compatibility report](https://github.com/maxhayim/CleanYourHeadUnit/issues/new/choose).
 
 ## Android versions
 
@@ -53,4 +53,6 @@ One page per unit, grouped by firmware family: [docs/units](docs/units/README.md
 
 ## Reporting a unit
 
-Please use the **Compatibility report** issue template and attach `cyhu diagnostics` output, which is sanitised: serial numbers, MAC addresses and account and network names are removed. Read it before you post it. Say which checklist items you ran and what happened, including anything that *didn't* work.
+In the app, **Diagnostics → Report this unit** opens the form in the unit's browser, already filled in with the model, chip, real and claimed Android, firmware, screen and package counts (never serials, MAC or IP addresses, or network and account names); you add the car and what worked, and press Submit. It needs a free GitHub account. 
+
+From a computer, use the **Compatibility report** issue template and attach `cyhu diagnostics` output, which is sanitised: serial numbers, MAC addresses and account and network names are removed. Read it before you post it. Say which checklist items you ran and what happened, including anything that *didn't* work.

@@ -156,7 +156,7 @@ com.adups.fota  [advanced]
 
 <p>Every real unit has its own page, grouped by firmware family, in <a href="docs/units/README.md">docs/units</a>.</p>
 
-<p>The test suite runs against four simulated units (FYT Android 10 at 1280×720, ALPS Android 8 at 1024×600, DoFun Android 12 in portrait at 1080×1920, and Android 4.4 at 800×480), plus 1920×720. To report a real unit, use the <a href="https://github.com/maxhayim/CleanYourHeadUnit/issues/new/choose">compatibility report</a> template.</p>
+<p>The test suite runs against four simulated units (FYT Android 10 at 1280×720, ALPS Android 8 at 1024×600, DoFun Android 12 in portrait at 1080×1920, and Android 4.4 at 800×480), plus 1920×720. To report a real unit, press <strong>Diagnostics → Report this unit</strong> in the app (it opens the <a href="https://github.com/maxhayim/CleanYourHeadUnit/issues/new?template=compatibility-report.yml">compatibility report</a> form already filled in), and it gets a page in <a href="docs/units/README.md">docs/units</a>.</p>
 
 <h2>License</h2>
 

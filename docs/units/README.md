@@ -22,7 +22,9 @@ No real unit reported yet.
 
 ## Adding a unit
 
-Open a **compatibility report** issue, or a pull request adding a page here. A page needs:
+The easy way: In the app, **Diagnostics → Report this unit** opens the form in the unit's browser, already filled in with the model, chip, real and claimed Android, firmware, screen and package counts (never serials, MAC or IP addresses, or network and account names); you add the car and what worked, and press Submit. It needs a free GitHub account. Each report becomes a page here.
+
+Or open a **Compatibility report** issue by hand, or a pull request adding a page here. A page needs:
 
 - the retail name and the car it's made for
 - what CleanYourHeadUnit's Dashboard shows: model, chip, Android (real and claimed), screen, firmware family
