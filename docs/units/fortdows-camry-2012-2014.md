@@ -34,7 +34,8 @@ The first run found three bugs, all fixed and confirmed on this unit in v0.1.0: 
 
 ## Disabling apps
 
-- **Not possible without root on this unit.** In Android Settings → Apps, **Disable** is greyed out for built-in apps (tried with Android Easter Egg, `com.android.egg`, 2026-11-09). With no ADB either (see Connecting), CleanYourHeadUnit can only show and plan here, not change anything.
+- **Some apps, from Android Settings.** CleanYourHeadUnit's **Disable in Android Settings** opens the app's page, and Android's **Disable** works for some apps: Market Feedback Agent (`com.google.android.feedback`, the unit's one privacy finding) was disabled this way (2026-11-09). For others the button is greyed out, for example Android Easter Egg (`com.android.egg`). Those can't be changed here, since there's no ADB (see Connecting).
+- Restoring after a restart and an ignition cycle hasn't been checked yet.
 - Optional on this unit (6): Default Print Service, Calculator, Basic Daydreams, Android Easter Egg, Print Spooler, Market Feedback Agent (`com.google.android.feedback`, the one privacy finding: Google's feedback reporter).
 - Counts in the Debloater: Recommended 0, Optional 6, Advanced 1, Unknown 90, Protected 65, user apps 4.
 
