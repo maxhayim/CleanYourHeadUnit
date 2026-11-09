@@ -61,6 +61,35 @@ public final class Prefs {
         sp(c).edit().putBoolean("lowMotion", on).apply();
     }
 
+    /** Off by default: look for a new CleanYourHeadUnit release when the app opens (at most daily). Never downloads. */
+    public static boolean autoCheckUpdates(Context c) {
+        return sp(c).getBoolean("autoCheckUpdates", false);
+    }
+
+    public static void setAutoCheckUpdates(Context c, boolean on) {
+        SharedPreferences.Editor e = sp(c).edit().putBoolean("autoCheckUpdates", on);
+        if (!on) e.remove("updateAvailable").remove("lastUpdateCheck");
+        e.apply();
+    }
+
+    public static long lastUpdateCheck(Context c) {
+        return sp(c).getLong("lastUpdateCheck", 0);
+    }
+
+    public static void setLastUpdateCheck(Context c, long when) {
+        sp(c).edit().putLong("lastUpdateCheck", when).apply();
+    }
+
+    /** The newer version the last automatic check found, or null. */
+    public static String updateAvailable(Context c) {
+        return sp(c).getString("updateAvailable", null);
+    }
+
+    public static void setUpdateAvailable(Context c, String version) {
+        if (version == null) sp(c).edit().remove("updateAvailable").apply();
+        else sp(c).edit().putString("updateAvailable", version).apply();
+    }
+
     public static Set<String> favourites(Context c) {
         return new HashSet<>(sp(c).getStringSet("favourites", new HashSet<String>()));
     }
