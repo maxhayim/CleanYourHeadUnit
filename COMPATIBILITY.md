@@ -1,6 +1,6 @@
 # Compatibility
 
-**One real head unit has been tried so far** (read-only; see [docs/units](docs/units/README.md)). This page says what the code supports, what it has been tested against, and what's still unknown. It will only claim a unit works once someone has run the [hardware checklist](docs/hardware-checklist.md) on it and filed a [compatibility report](https://github.com/maxhayim/CleanYourHeadUnit/issues/new/choose).
+**One real head unit has been tried so far** (see [docs/units](docs/units/README.md)): an app was disabled on it through the head-unit app and the car's functions checked afterwards. This page says what the code supports, what it has been tested against, and what's still unknown. It will only claim a unit works once someone has run the [hardware checklist](docs/hardware-checklist.md) on it and filed a [compatibility report](https://github.com/maxhayim/CleanYourHeadUnit/issues/new/choose).
 
 ## Android versions
 
@@ -18,7 +18,7 @@
 
 | Profile | Recognised by | Status | Simulated test unit |
 |---|---|---|---|
-| FYT | `com.syu.ms` installed | unverified (recognised correctly on one real unit, read-only) | Android 10, 1280×720 |
+| FYT | `com.syu.ms` installed | unverified (recognised correctly on one real unit; one app disabled there) | Android 10, 1280×720 |
 | MTCD/MTCE | a `microntek` package installed | unverified | none |
 | DoFun / TW | `com.tw.core` installed | unverified | Android 12, 1080×1920 portrait |
 | ALPS / YT9216 | `yt9216` in build properties | unverified | Android 8, 1024×600 |
@@ -49,7 +49,7 @@ One page per unit, grouped by firmware family: [docs/units](docs/units/README.md
 
 | Unit | Software | Real Android | What was checked | Result |
 |---|---|---|---|---|
-| Fortdows, Toyota Camry 2012–2014, 10.1" 1280×800 | FYT (`com.syu.ms`), SC7731E / UIS8141E, 2 GB | 8.1 (API 27); Settings say 13 | Head-unit app, read-only: Dashboard, Debloater, Launchers | Runs and fits the screen; FYT recognised; 166 packages: 65 Protected, 90 Unknown, 6 Optional, 1 Advanced. Its USB port is host-only (Android Auto), so ADB over USB from a computer or the phone companion isn't possible. No changes made. Second run (commit 11ac7311): real version "8.1, Settings say 13", "FYT firmware" and launcher packages confirmed on the unit. |
+| Fortdows, Toyota Camry 2012–2014, 10.1" 1280×800 | FYT (`com.syu.ms`), SC7731E / UIS8141E, 2 GB | 8.1 (API 27); Settings say 13 | Head-unit app: Dashboard, Debloater, Launchers, Report this unit, Check for updates | Runs and fits the screen; FYT recognised; 166 packages: 65 Protected, 90 Unknown, 6 Optional, 1 Advanced. Its USB port is host-only (Android Auto), so ADB over USB from a computer or the phone companion isn't possible. Market Feedback Agent disabled through **Disable in Android Settings** (Disable is greyed out for some other built-in apps); radio, reversing camera, climate, door display and steering keys checked afterwards. Bluetooth call, restart and restore not checked yet. Second run (commit 11ac7311): real version "8.1, Settings say 13", "FYT firmware" and launcher packages confirmed on the unit. |
 
 ## Reporting a unit
 
