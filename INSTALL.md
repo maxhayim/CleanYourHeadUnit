@@ -52,7 +52,13 @@ Android asks you to allow installs from that app first. Releases are signed with
 6f4a226183ba4639bc53938417d440957edad394825596394511b0af6c8c1329
 ```
 
-Later versions install over earlier ones: **Settings → About → Check for updates** looks for a newer release on GitHub when you press it (never on its own), checks it, and hands it to Android's installer. A copy you built yourself has a different signature: uninstall it once before installing a release.
+Later versions install over earlier ones. **Settings → About → Check for updates** looks for a newer release on GitHub when you press it, checks it, and hands it to Android's installer. Under **Updates** you choose what happens on its own:
+
+- **Off** (the default): GitHub is only contacted when you press Check for updates.
+- **Notify only**: when the app opens, at most once a day, it looks for a newer release and shows a card on the Dashboard. Nothing is downloaded.
+- **Automatic**: the same check, then it downloads the release, checks GitHub's checksum and the signature, and installs it. On Android 12 and later this happens without a prompt once CleanYourHeadUnit has installed one of its own updates; older Android asks you, and only while the app is on screen. The app closes when it's replaced.
+
+Whichever you choose, updates come only from this project's GitHub releases and must carry the same signature as your copy. A copy you built yourself has a different signature: uninstall it once before installing a release.
 
 To build it yourself instead:
 

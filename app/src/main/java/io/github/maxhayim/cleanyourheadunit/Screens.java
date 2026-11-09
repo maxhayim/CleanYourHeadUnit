@@ -85,7 +85,9 @@ final class Screens {
             if (upd != null) {
                 LinearLayout uc = Ui.card(a);
                 uc.addView(Ui.text(a, "CleanYourHeadUnit " + upd + " is available", 17, th.text, true));
-                Ui.add(uc, Ui.dim(a, "You have " + SelfUpdate.installedVersion(a) + ". Nothing has been downloaded: update when you're parked."), 4);
+                String st = Prefs.UPDATES_AUTO.equals(Prefs.updateMode(a)) ? Prefs.updateStatus(a) : null;
+                Ui.add(uc, Ui.dim(a, "You have " + SelfUpdate.installedVersion(a) + ". "
+                        + (st != null ? st + "." : "Nothing has been downloaded: update when you're parked.")), 4);
                 Ui.add(uc, Ui.button(a, "Update", true, v -> SelfUpdate.check(a)), 10);
                 Ui.add(l, uc, 12);
             }
@@ -809,16 +811,31 @@ final class Screens {
             abb.addView(Ui.button(a, "Check for updates", true, v -> SelfUpdate.check(a)));
             Ui.add(abb, Ui.button(a, "Project page", false, v -> a.openUrl(REPO_URL)), 10);
             Ui.add(ab, abb, 10);
-            final boolean auto = Prefs.autoCheckUpdates(a);
-            Ui.add(ab, Ui.button(a, auto ? "Check when the app opens: On" : "Check when the app opens: Off", auto, v -> {
-                Prefs.setAutoCheckUpdates(a, !auto);
-                a.show("settings");
-            }), 10);
-            Ui.add(ab, Ui.dim(a, auto
-                    ? "When the app opens (at most once a day) it asks GitHub for a newer release and shows a note on the Dashboard. It never downloads or installs by itself."
-                    : "Off: the app only contacts GitHub when you press Check for updates. Updates come only from the project's GitHub releases, and Android asks before installing."), 6);
+            Ui.add(ab, Ui.text(a, "Updates", 15, th.text, true), 14);
+            final String mode = Prefs.updateMode(a);
+            Ui.Flow um = new Ui.Flow(a);
+            for (final String[] m : new String[][]{{Prefs.UPDATES_OFF, "Off"}, {Prefs.UPDATES_NOTIFY, "Notify only"}, {Prefs.UPDATES_AUTO, "Automatic"}}) {
+                um.addView(Ui.button(a, m[1], m[0].equals(mode), v -> { Prefs.setUpdateMode(a, m[0]); a.show("settings"); }));
+            }
+            Ui.add(ab, um, 6);
+            Ui.add(ab, Ui.dim(a, updateModeText(mode)), 6);
+            String us = Prefs.updateStatus(a);
+            if (us != null && !Prefs.UPDATES_OFF.equals(mode)) Ui.add(ab, Ui.kv(a, "Last update", us), 6);
             Ui.add(l, ab, 12);
             return l;
+        }
+    }
+
+    static String updateModeText(String mode) {
+        switch (mode) {
+            case Prefs.UPDATES_NOTIFY:
+                return "When the app opens (at most once a day) it asks GitHub for a newer release and shows a card on the Dashboard. It never downloads or installs by itself.";
+            case Prefs.UPDATES_AUTO:
+                return "When the app opens (at most once a day) it downloads a newer release, checks GitHub's checksum and the signature, and installs it. "
+                        + "Android 12 and later install it without asking once CleanYourHeadUnit has updated itself once; older Android asks you, only while the app is on screen. "
+                        + "The app closes when it's replaced: open it again.";
+            default:
+                return "The app only contacts GitHub when you press Check for updates. Updates come only from the project's GitHub releases, and Android asks before installing.";
         }
     }
 

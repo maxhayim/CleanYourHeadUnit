@@ -89,8 +89,15 @@ public final class MainActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
+        SelfUpdate.visible = true;
         // Back from Android Settings (App info, Home, VPN): read the unit again.
         if (unit != null) rescan();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        SelfUpdate.visible = false;
     }
 
     void rescan() {

@@ -173,7 +173,14 @@ public class ScreensTest {
         a.show("themes");
         shot(a, "themes-1280x720");
         a.show("settings");
+        t = all(a);
+        assertTrue(t, t.contains("Notify only") && t.contains("Automatic"));
+        assertTrue(t, t.contains("The app only contacts GitHub when you press Check for updates"));
         shot(a, "settings-1280x720");
+        Prefs.setUpdateMode(a, Prefs.UPDATES_AUTO);
+        a.show("settings");
+        assertTrue(all(a).contains("installs it"));
+        Prefs.setUpdateMode(a, Prefs.UPDATES_OFF);
     }
 
     @Test
