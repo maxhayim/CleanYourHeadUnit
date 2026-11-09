@@ -32,6 +32,12 @@ The first run found three bugs, all fixed and confirmed on this unit in v0.1.0: 
 - ADB over the network (port 5555) is closed.
 - So far, the computer tool and the companion can't reach this unit, and nothing can be disabled on it.
 
+## Disabling apps
+
+- **Not possible without root on this unit.** In Android Settings → Apps, **Disable** is greyed out for built-in apps (tried with Android Easter Egg, `com.android.egg`, 2026-11-09). With no ADB either (see Connecting), CleanYourHeadUnit can only show and plan here, not change anything.
+- Optional on this unit (6): Default Print Service, Calculator, Basic Daydreams, Android Easter Egg, Print Spooler, Market Feedback Agent (`com.google.android.feedback`, the one privacy finding: Google's feedback reporter).
+- Counts in the Debloater: Recommended 0, Optional 6, Advanced 1, Unknown 90, Protected 65, user apps 4.
+
 ## Works on this unit
 
 - **CleanYourHeadUnit** (the head-unit app): installs from a flash drive or LocalSend, runs, fits the screen.
