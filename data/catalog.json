@@ -6,12 +6,14 @@
     {"id": "maxhayim", "github": "maxhayim", "name": null, "projects": ["CleanYourHeadUnit", "RetroDeck", "Webmote"]},
     {"id": "tdater", "github": "tdater", "name": null, "projects": ["KITT Launcher", "KITT Launcher.2"]},
     {"id": "sergey-kozlov", "github": null, "name": "Sergey Kozlov", "website": "https://boosty.to/teslafw", "projects": ["Custom firmware for Tesla-style head units"], "note": "Official page on Boosty. No GitHub username could be verified."},
-    {"id": "localsend", "github": "localsend", "name": null, "website": "https://localsend.org", "projects": ["LocalSend"], "note": "GitHub organisation; most commits are by @Tienisto."}
+    {"id": "localsend", "github": "localsend", "name": null, "website": "https://localsend.org", "projects": ["LocalSend"], "note": "GitHub organisation; most commits are by @Tienisto."},
+    {"id": "altercars", "github": null, "name": "altercars.ru", "projects": ["AGAMA Car Launcher"], "note": "Developer as listed on Google Play. No GitHub page found."}
   ],
   "recommended": [
     {"id": "retrodeck", "why": "Turns the screen into a classic car stereo, with every hardware and steering-wheel key mappable."},
     {"id": "webmote", "why": "Control the unit from your phone's browser. Built for Android TV today; automotive support is planned."},
-    {"id": "localsend", "why": "Send music, maps and APKs from a phone or computer to the head unit over Wi-Fi, without a cable, account or internet."}
+    {"id": "localsend", "why": "Send music, maps and APKs from a phone or computer to the head unit over Wi-Fi, without a cable, account or internet."},
+    {"id": "agama-car-launcher", "why": "A car-style home screen with big widgets and app shortcuts. The launcher on every one of the maintainer's cars."}
   ],
   "items": [
     {
@@ -98,6 +100,31 @@
         "Official sources: Google Play or F-Droid (both pick the right build for the unit), or the GitHub releases. The GitHub release has one APK per processor type: pick the one that matches the unit's processor (shown in Diagnostics), for example arm32v7 for a 32-bit unit and arm64v8 for a 64-bit one.",
         "Needs Android 7.0 or newer; LocalSend 1.17.0 is the last version for Android 5 and 6. Check the real Android version: many units claim a newer one.",
         "The unit and the other device must be on the same Wi-Fi."
+      ]
+    },
+    {
+      "id": "agama-car-launcher",
+      "kind": "launcher",
+      "name": "AGAMA Car Launcher",
+      "featured": true,
+      "developer": "altercars",
+      "description": "A car-style home screen for head units and phones: large widgets and quick shortcuts to your apps, in landscape or portrait.",
+      "category": "Launcher",
+      "package": "altergames.carlauncher",
+      "open_source": false,
+      "license": "Proprietary, free to download with in-app purchases",
+      "android": {"min_sdk": 21, "min_version": "5.0"},
+      "orientations": ["landscape", "portrait"],
+      "links": {
+        "google play": "https://play.google.com/store/apps/details?id=altergames.carlauncher"
+      },
+      "install": "none",
+      "compatibility": {"status": "verified", "verified": ["Fortdows unit for the 2012-2014 Toyota Camry (FYT software, SC7731E, Android 8.1, 1280x800): the Home app in daily use, 2026-11-08."], "reports": ["Used as the launcher on all of the CleanYourHeadUnit maintainer's cars."]},
+      "screenshots": ["https://play.google.com/store/apps/details?id=altergames.carlauncher"],
+      "warnings": [
+        "Closed source, from Google Play. CleanYourHeadUnit links to it only; it never downloads, mirrors or repackages it.",
+        "Its trackers and permissions haven't been reviewed by CleanYourHeadUnit yet.",
+        "Some FYT units ship it preinstalled, sometimes more than once under different package names. Only the Play Store version is this listing."
       ]
     },
     {

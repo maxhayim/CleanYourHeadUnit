@@ -26,6 +26,7 @@ First version of CleanYourHeadUnit, derived from CleanYourTV `f47c893d` by @Gath
 - Launchers show each Home app's package, since several often share one name, and label Android's start-up screen as not a launcher
 - The FYT profile is just "FYT firmware"; its chip list gains SC7731E / UIS8141E, seen on a real unit
 - LocalSend marked as working on a real unit: the Camry received an APK sent from a phone and installed it
+- AGAMA Car Launcher in the launcher catalog and Recommended apps (Google Play link only; closed source; works on the Camry)
 - Themes: Midnight, Amber Dash, Daylight, plus an accent colour you choose (ten presets or any #RRGGBB) that works with every theme
 - Tests: 47 Python tests, 21 Java tests for the head-unit app and 20 for the companion (including shared classification vectors and screen renders at five resolutions)
 - Docs: README, INSTALL, COMPATIBILITY, DEBLOAT, PRIVACY, MODULES, THEMES, COMMUNITY, CONTRIBUTING, SAFETY, RESTORE, CREDITS, SECURITY, plus the hardware checklist, test report, release readiness and specs

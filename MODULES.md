@@ -11,9 +11,10 @@ Modules are independent apps that work well on head units. Each is its own proje
 | [KITT Launcher](https://github.com/tdater/KITT-Launcher-releases) | launcher, portrait | [@tdater](https://github.com/tdater) | GitHub releases, closed source (all rights reserved) | untested on head units |
 | [KITT Launcher.2](https://github.com/tdater/KITT-Launcher.2-releases) | launcher, landscape | [@tdater](https://github.com/tdater) | GitHub releases, closed source (all rights reserved) | untested on head units |
 | [LocalSend](https://localsend.org) | module (recommended) | [@localsend](https://github.com/localsend) | [Google Play](https://play.google.com/store/apps/details?id=org.localsend.localsend_app), [F-Droid](https://f-droid.org/packages/org.localsend.localsend_app), [GitHub releases](https://github.com/localsend/localsend/releases/latest), Apache-2.0 | **works on one real unit** (2012–2014 Camry, FYT, Android 8.1: received and installed an APK). Links only: the release has one APK per processor type, so no install is offered |
+| [AGAMA Car Launcher](https://play.google.com/store/apps/details?id=altergames.carlauncher) | launcher (recommended) | altercars.ru (no GitHub) | Google Play, closed source | **works on one real unit** (the Camry's daily launcher). Links only |
 | CleanYourHeadUnit Home | launcher | [@maxhayim](https://github.com/maxhayim) | built into the app | untested on head units |
 
-**Recommended apps:** RetroDeck, Webmote and LocalSend, in that order. The list is `recommended` in `data/catalog.json`, each with a one-line reason; `catalog validate` checks that every entry exists and has a reason.
+**Recommended apps:** RetroDeck, Webmote, LocalSend and AGAMA Car Launcher, in that order. The list is `recommended` in `data/catalog.json`, each with a one-line reason; `catalog validate` checks that every entry exists and has a reason.
 
 KITT Launcher and KITT Launcher.2 are proprietary. CleanYourHeadUnit links to and downloads from @tdater's official release repositories only, and is not affiliated with or endorsed by @tdater.
 
