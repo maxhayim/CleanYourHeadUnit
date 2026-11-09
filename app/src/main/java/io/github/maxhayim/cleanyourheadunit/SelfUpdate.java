@@ -69,6 +69,41 @@ final class SelfUpdate {
         return out;
     }
 
+    static final long DAY = 24L * 60 * 60 * 1000;
+
+    /** Is an automatic check due? Only when the owner turned it on, and at most once a day. */
+    static boolean due(boolean enabled, long last, long now) {
+        return enabled && (last <= 0 || now - last >= DAY || now < last);
+    }
+
+    /**
+     * The optional check when the app opens: off by default, at most once a day, quiet on errors.
+     * It only notes a newer version for the dashboard; downloading still needs the owner's tap,
+     * and Android's installer still asks.
+     */
+    static void autoCheck(final MainActivity a) {
+        final Context app = a.getApplicationContext();
+        long now = System.currentTimeMillis();
+        if (!due(Prefs.autoCheckUpdates(app), Prefs.lastUpdateCheck(app), now)) return;
+        Prefs.setLastUpdateCheck(app, now);
+        new Thread(() -> {
+            try {
+                Object[] rel = latest(new JSONArray(Installer.readText("https://api.github.com/repos/" + REPO + "/releases?per_page=30")));
+                String mine = installedVersion(app);
+                Prefs.setUpdateAvailable(app, rel != null && compare((String) rel[1], mine) > 0 ? (String) rel[1] : null);
+                a.runOnUiThread(a::refreshDashboard);
+            } catch (Exception ignored) {
+                // Offline in a car is normal: try again next time the app opens after a day.
+            }
+        }, "cyhu-autoupdate").start();
+    }
+
+    /** The version to announce on the dashboard, if it's newer than what's installed. */
+    static String pending(Context c) {
+        String v = Prefs.updateAvailable(c);
+        return v != null && compare(v, installedVersion(c)) > 0 ? v : null;
+    }
+
     static String installedVersion(Context c) {
         return Screens.BuildConfigHolder.version(c);
     }

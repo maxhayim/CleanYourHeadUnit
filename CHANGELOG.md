@@ -2,10 +2,11 @@
 
 All notable changes to this project are listed here. Versions follow [Semantic Versioning](https://semver.org/).
 
-## [Unreleased]
+## [0.1.1] - 2026-11-08
 
 ### Added
 
+- Settings → About → **Check when the app opens** (off by default): at most once a day, asks GitHub for a newer release and shows an "Update available" card on the Dashboard. It never downloads or installs by itself; Update still asks, and so does Android. Turning it off clears the note.
 - `docs/units/`: a page per real head unit, grouped by firmware family (first: the Fortdows Camry unit)
 
 ## [0.1.0] - 2026-11-08

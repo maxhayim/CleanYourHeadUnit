@@ -29,6 +29,26 @@ public class SelfUpdateTest {
     }
 
     @Test
+    public void automaticCheckIsOffByDefaultAndDaily() {
+        android.content.Context c = org.robolectric.RuntimeEnvironment.getApplication();
+        org.junit.Assert.assertFalse("off unless the owner turns it on", Prefs.autoCheckUpdates(c));
+        long day = SelfUpdate.DAY, now = 10 * day;
+        org.junit.Assert.assertFalse(SelfUpdate.due(false, 0, now));
+        assertTrue(SelfUpdate.due(true, 0, now));
+        org.junit.Assert.assertFalse("not twice a day", SelfUpdate.due(true, now - day / 2, now));
+        assertTrue(SelfUpdate.due(true, now - day, now));
+        assertTrue("clock went back", SelfUpdate.due(true, now + day, now));
+        Prefs.setAutoCheckUpdates(c, true);
+        Prefs.setUpdateAvailable(c, "99.0.0");
+        org.junit.Assert.assertEquals("99.0.0", SelfUpdate.pending(c));
+        Prefs.setUpdateAvailable(c, "0.0.1");
+        assertNull("older than installed: no note", SelfUpdate.pending(c));
+        Prefs.setUpdateAvailable(c, "99.0.0");
+        Prefs.setAutoCheckUpdates(c, false);
+        assertNull("turning it off clears the note", Prefs.updateAvailable(c));
+    }
+
+    @Test
     public void comparesVersionsNumerically() {
         assertTrue(SelfUpdate.compare("0.1.10", "0.1.9") > 0);
         assertTrue(SelfUpdate.compare("1.0.0", "0.9.9") > 0);

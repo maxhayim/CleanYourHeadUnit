@@ -81,6 +81,15 @@ final class Screens {
             head.addView(Ui.pill(a, profileStatus(prof), statusColor(a, prof == null ? "" : prof.optString("status"))));
             l.addView(head);
 
+            final String upd = SelfUpdate.pending(a);
+            if (upd != null) {
+                LinearLayout uc = Ui.card(a);
+                uc.addView(Ui.text(a, "CleanYourHeadUnit " + upd + " is available", 17, th.text, true));
+                Ui.add(uc, Ui.dim(a, "You have " + SelfUpdate.installedVersion(a) + ". Nothing has been downloaded: update when you're parked."), 4);
+                Ui.add(uc, Ui.button(a, "Update", true, v -> SelfUpdate.check(a)), 10);
+                Ui.add(l, uc, 12);
+            }
+
             List<Privacy.Finding> findings = Privacy.findings(a, u);
             Ui.Grid stats = new Ui.Grid(a, 150);
             stats.addView(Ui.stat(a, "Android " + u.android(), u.androidSpoofed() ? "Settings say " + u.claimedAndroid() + " · API " + u.sdk() : "API " + u.sdk(), th.text));
@@ -799,7 +808,14 @@ final class Screens {
             abb.addView(Ui.button(a, "Check for updates", true, v -> SelfUpdate.check(a)));
             Ui.add(abb, Ui.button(a, "Project page", false, v -> a.openUrl(REPO_URL)), 10);
             Ui.add(ab, abb, 10);
-            Ui.add(ab, Ui.dim(a, "Updates come only from the project's GitHub releases, only when you press the button. Android asks before installing."), 6);
+            final boolean auto = Prefs.autoCheckUpdates(a);
+            Ui.add(ab, Ui.button(a, auto ? "Check when the app opens: On" : "Check when the app opens: Off", auto, v -> {
+                Prefs.setAutoCheckUpdates(a, !auto);
+                a.show("settings");
+            }), 10);
+            Ui.add(ab, Ui.dim(a, auto
+                    ? "When the app opens (at most once a day) it asks GitHub for a newer release and shows a note on the Dashboard. It never downloads or installs by itself."
+                    : "Off: the app only contacts GitHub when you press Check for updates. Updates come only from the project's GitHub releases, and Android asks before installing."), 6);
             Ui.add(l, ab, 12);
             return l;
         }

@@ -62,6 +62,12 @@ public final class MainActivity extends Activity {
         if (asked != null) current = asked;
         rebuild();
         rescan();
+        if (saved == null) SelfUpdate.autoCheck(this);
+    }
+
+    /** Redraws the dashboard if it's on screen (for the automatic update check's note). */
+    void refreshDashboard() {
+        if (stack.isEmpty() && "dashboard".equals(current) && unit != null) show(current);
     }
 
     @Override
