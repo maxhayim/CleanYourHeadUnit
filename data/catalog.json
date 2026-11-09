@@ -92,7 +92,7 @@
         "f-droid": "https://f-droid.org/packages/org.localsend.localsend_app"
       },
       "install": "none",
-      "compatibility": {"status": "untested", "verified": [], "reports": ["Not yet reported on a car head unit."]},
+      "compatibility": {"status": "verified", "verified": ["Fortdows unit for the 2012-2014 Toyota Camry (FYT software, SC7731E, Android 8.1, 1280x800): received an APK sent from a phone and installed it, 2026-11-08. LocalSend version not recorded."], "reports": []},
       "screenshots": ["https://localsend.org"],
       "warnings": [
         "Official sources: Google Play or F-Droid (both pick the right build for the unit), or the GitHub releases. The GitHub release has one APK per processor type: pick the one that matches the unit's processor (shown in Diagnostics), for example arm32v7 for a 32-bit unit and arm64v8 for a 64-bit one.",

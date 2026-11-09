@@ -166,7 +166,7 @@ com.adups.fota  [advanced]
 
 <h2>Recommended Apps</h2>
 
-<p>Independent apps that suit a head unit. Each is its own project, installed and updated on its own. They're also at the top of the app's Community Hub. None has been tested on a car head unit yet.</p>
+<p>Independent apps that suit a head unit. Each is its own project, installed and updated on its own. They're also at the top of the app's Community Hub. LocalSend works on a real unit (the Camry: it received an APK from a phone, which then installed); RetroDeck and Webmote haven't been tried on one yet.</p>
 
 <table>
   <tr><th>App</th><th>Developer</th><th>Why</th><th>Get it</th></tr>

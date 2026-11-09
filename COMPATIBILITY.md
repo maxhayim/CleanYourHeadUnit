@@ -40,6 +40,7 @@ The layout adapts between a side rail (landscape), an icon-only rail (under 900d
 | KITT Launcher.2 (landscape) | @tdater | untested on head units |
 | RetroDeck | @maxhayim | untested on head units (tested by its developer on an Android TV) |
 | Webmote | @maxhayim | automotive support planned |
+| LocalSend | @localsend | verified on one unit: the 2012–2014 Camry (FYT, Android 8.1) received and installed an APK sent from a phone |
 
 ## Real units
 
