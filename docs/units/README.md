@@ -1,0 +1,32 @@
+# Head units
+
+One page per head unit that someone has actually checked with CleanYourHeadUnit, grouped by the firmware it runs. Brand names on the box vary; the firmware family is what decides which [device profile](../../data/profiles) applies.
+
+Pages only say what was observed on that unit. A unit listed here is not "supported" beyond what its page says. Never put a serial number, MAC address, IP address, radio PIN or QR code on a page.
+
+## FYT (`com.syu.ms`)
+
+| Unit | Chip | Real Android | Checked | Page |
+|---|---|---|---|---|
+| Fortdows for Toyota Camry 2012–2014 (JBL), 10.1" | SC7731E / UIS8141E | 8.1 (Settings say 13) | App runs, read-only. No ADB (USB port is host-only). | [fortdows-camry-2012-2014](fortdows-camry-2012-2014.md) |
+
+## Sergey Kozlov firmware (declared)
+
+| Unit | Chip | Real Android | Checked | Page |
+|---|---|---|---|---|
+| Phoenix Radio for Ford F-150 2009–2014 (vertical, "Tesla-style"), owner-reported Sergey Kozlov firmware | not yet read | not yet read | First report pending | none yet |
+
+## MTCD / MTCE, DoFun / TW, ALPS / YT9216, other
+
+No real unit reported yet.
+
+## Adding a unit
+
+Open a **compatibility report** issue, or a pull request adding a page here. A page needs:
+
+- the retail name and the car it's made for
+- what CleanYourHeadUnit's Dashboard shows: model, chip, Android (real and claimed), screen, firmware family
+- the Debloater's counts per category
+- how you connected (or couldn't): USB debugging, Wireless debugging, USB port role
+- what you changed, if anything, and whether it survived a reboot and an ignition cycle
+- which apps from the catalog work on it
