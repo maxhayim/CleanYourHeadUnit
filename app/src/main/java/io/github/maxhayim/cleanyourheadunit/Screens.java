@@ -318,7 +318,8 @@ final class Screens {
                 Ui.add(b, Ui.button(a, "Disable in Android Settings", false, x -> a.confirm("Disable " + p.label + "?",
                         "Android Settings opens on this app's page. Press Disable there if it's offered.\n\nRisk: "
                                 + (v.risk.isEmpty() ? "not documented" : v.risk)
-                                + "\n\nIf Settings has no Disable button, use the plan with the computer tool.",
+                                + "\n\nSome firmware greys out or hides Disable for built-in apps. Then this unit can only be changed over ADB "
+                                + "(the plan with the computer tool or the phone companion). Force stop is not the same: the app starts again later.",
                         () -> a.openAppInfo(v.pkg))), 10);
             } else if (!p.enabled) {
                 b.addView(Ui.button(a, "Re-enable in Android Settings", true, x -> a.openAppInfo(v.pkg)));
