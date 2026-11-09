@@ -22,7 +22,7 @@ No real unit reported yet.
 
 ## Adding a unit
 
-The easy way: In the app, **Diagnostics → Report this unit** opens the form in the unit's browser, already filled in with the model, chip, real and claimed Android, firmware, screen and package counts (never serials, MAC or IP addresses, or network and account names); you add the car and what worked, and press Submit. It needs a free GitHub account. Each report becomes a page here.
+The easy way: In the app, **Diagnostics → Report this unit** opens the form in the unit's browser, already filled in with the model, chip, real and claimed Android, firmware, screen and package counts (never serials, MAC or IP addresses, or network and account names); you add the car and what worked, and press Submit. It needs a free GitHub account. Rather not sign in on the car? **QR code** opens the same form on your phone, and **Share** sends the whole report (LocalSend works). Each report becomes a page here.
 
 Or open a **Compatibility report** issue by hand, or a pull request adding a page here. A page needs:
 
