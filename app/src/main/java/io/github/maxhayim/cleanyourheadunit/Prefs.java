@@ -61,15 +61,31 @@ public final class Prefs {
         sp(c).edit().putBoolean("lowMotion", on).apply();
     }
 
-    /** Off by default: look for a new CleanYourHeadUnit release when the app opens (at most daily). Never downloads. */
-    public static boolean autoCheckUpdates(Context c) {
-        return sp(c).getBoolean("autoCheckUpdates", false);
+    /** Updates: Off (the default; only Check for updates contacts GitHub), Notify only, or Automatic. */
+    public static final String UPDATES_OFF = "off", UPDATES_NOTIFY = "notify", UPDATES_AUTO = "auto";
+
+    public static String updateMode(Context c) {
+        SharedPreferences p = sp(c);
+        String m = p.getString("updateMode", null);
+        if (m != null) return m;
+        // 0.1.1 had one switch, "Check when the app opens": On meant what Notify only does now.
+        return p.getBoolean("autoCheckUpdates", false) ? UPDATES_NOTIFY : UPDATES_OFF;
     }
 
-    public static void setAutoCheckUpdates(Context c, boolean on) {
-        SharedPreferences.Editor e = sp(c).edit().putBoolean("autoCheckUpdates", on);
-        if (!on) e.remove("updateAvailable").remove("lastUpdateCheck");
+    public static void setUpdateMode(Context c, String mode) {
+        SharedPreferences.Editor e = sp(c).edit().putString("updateMode", mode).remove("autoCheckUpdates");
+        if (UPDATES_OFF.equals(mode)) e.remove("updateAvailable").remove("lastUpdateCheck").remove("updateStatus");
         e.apply();
+    }
+
+    /** What the last automatic update did ("Downloaded 0.1.3, waiting for you to confirm"), or null. */
+    public static String updateStatus(Context c) {
+        return sp(c).getString("updateStatus", null);
+    }
+
+    public static void setUpdateStatus(Context c, String s) {
+        if (s == null) sp(c).edit().remove("updateStatus").apply();
+        else sp(c).edit().putString("updateStatus", s).apply();
     }
 
     public static long lastUpdateCheck(Context c) {

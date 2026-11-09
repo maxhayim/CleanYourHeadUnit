@@ -31,21 +31,34 @@ public class SelfUpdateTest {
     @Test
     public void automaticCheckIsOffByDefaultAndDaily() {
         android.content.Context c = org.robolectric.RuntimeEnvironment.getApplication();
-        org.junit.Assert.assertFalse("off unless the owner turns it on", Prefs.autoCheckUpdates(c));
+        org.junit.Assert.assertEquals("off unless the owner turns it on", Prefs.UPDATES_OFF, Prefs.updateMode(c));
         long day = SelfUpdate.DAY, now = 10 * day;
         org.junit.Assert.assertFalse(SelfUpdate.due(false, 0, now));
         assertTrue(SelfUpdate.due(true, 0, now));
         org.junit.Assert.assertFalse("not twice a day", SelfUpdate.due(true, now - day / 2, now));
         assertTrue(SelfUpdate.due(true, now - day, now));
         assertTrue("clock went back", SelfUpdate.due(true, now + day, now));
-        Prefs.setAutoCheckUpdates(c, true);
+        Prefs.setUpdateMode(c, Prefs.UPDATES_NOTIFY);
         Prefs.setUpdateAvailable(c, "99.0.0");
         org.junit.Assert.assertEquals("99.0.0", SelfUpdate.pending(c));
         Prefs.setUpdateAvailable(c, "0.0.1");
         assertNull("older than installed: no note", SelfUpdate.pending(c));
         Prefs.setUpdateAvailable(c, "99.0.0");
-        Prefs.setAutoCheckUpdates(c, false);
+        Prefs.setUpdateStatus(c, "Downloading 99.0.0…");
+        Prefs.setUpdateMode(c, Prefs.UPDATES_OFF);
         assertNull("turning it off clears the note", Prefs.updateAvailable(c));
+        assertNull(Prefs.updateStatus(c));
+    }
+
+    @Test
+    public void switchFrom011CarriesOver() {
+        android.content.Context c = org.robolectric.RuntimeEnvironment.getApplication();
+        // 0.1.1's single switch, On: becomes Notify only, never Automatic.
+        Prefs.sp(c).edit().putBoolean("autoCheckUpdates", true).commit();
+        org.junit.Assert.assertEquals(Prefs.UPDATES_NOTIFY, Prefs.updateMode(c));
+        Prefs.setUpdateMode(c, Prefs.UPDATES_AUTO);
+        org.junit.Assert.assertEquals(Prefs.UPDATES_AUTO, Prefs.updateMode(c));
+        org.junit.Assert.assertFalse(Prefs.sp(c).contains("autoCheckUpdates"));
     }
 
     @Test

@@ -1,7 +1,9 @@
 package io.github.maxhayim.cleanyourheadunit;
 
-import android.app.Activity;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageInstaller;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
@@ -10,16 +12,22 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * "Check for updates" for CleanYourHeadUnit itself. Only when the owner presses the button, never
- * on its own. The update comes only from this project's GitHub releases (tags vX.Y.Z; the phone
- * companion's companion-v* releases are skipped), is checked against the checksum GitHub publishes,
- * and must be signed with the same certificate as the copy that's installed. Android's installer
- * then asks the owner; nothing is installed silently.
+ * Updates for CleanYourHeadUnit itself, in three modes (Settings → About → Updates):
+ * Off (the default): only the Check for updates button contacts GitHub.
+ * Notify only: when the app opens, at most daily, look for a newer release and show a Dashboard card.
+ * Automatic: the same check, then download and install. Android 12+ installs silently once this app
+ * installed itself before; older Android asks once, and only while the app is on screen.
+ * Every path takes only this project's GitHub releases (tags vX.Y.Z; the phone companion's
+ * companion-v* releases are skipped), checks GitHub's checksum and requires the same signing
+ * certificate as the installed copy.
  */
 final class SelfUpdate {
     private SelfUpdate() {}
@@ -71,31 +79,83 @@ final class SelfUpdate {
 
     static final long DAY = 24L * 60 * 60 * 1000;
 
-    /** Is an automatic check due? Only when the owner turned it on, and at most once a day. */
+    /** Is an automatic check due? Only in Notify only or Automatic, and at most once a day. */
     static boolean due(boolean enabled, long last, long now) {
         return enabled && (last <= 0 || now - last >= DAY || now < last);
     }
 
+    /** True while a CleanYourHeadUnit screen is showing: Android's install prompt is only shown then. */
+    static volatile boolean visible;
+
     /**
-     * The optional check when the app opens: off by default, at most once a day, quiet on errors.
-     * It only notes a newer version for the dashboard; downloading still needs the owner's tap,
-     * and Android's installer still asks.
+     * The check when the app opens, in Notify only and Automatic: at most once a day, quiet on
+     * errors (offline is normal in a car). Notify only just notes the version for the Dashboard.
      */
     static void autoCheck(final MainActivity a) {
         final Context app = a.getApplicationContext();
+        final String mode = Prefs.updateMode(app);
         long now = System.currentTimeMillis();
-        if (!due(Prefs.autoCheckUpdates(app), Prefs.lastUpdateCheck(app), now)) return;
+        if (!due(!Prefs.UPDATES_OFF.equals(mode), Prefs.lastUpdateCheck(app), now)) return;
         Prefs.setLastUpdateCheck(app, now);
         new Thread(() -> {
+            Object[] rel;
             try {
-                Object[] rel = latest(new JSONArray(Installer.readText("https://api.github.com/repos/" + REPO + "/releases?per_page=30")));
-                String mine = installedVersion(app);
-                Prefs.setUpdateAvailable(app, rel != null && compare((String) rel[1], mine) > 0 ? (String) rel[1] : null);
-                a.runOnUiThread(a::refreshDashboard);
+                rel = latest(new JSONArray(Installer.readText("https://api.github.com/repos/" + REPO + "/releases?per_page=30")));
             } catch (Exception ignored) {
-                // Offline in a car is normal: try again next time the app opens after a day.
+                return; // try again next time the app opens after a day
             }
+            String mine = installedVersion(app);
+            boolean newer = rel != null && compare((String) rel[1], mine) > 0;
+            Prefs.setUpdateAvailable(app, newer ? (String) rel[1] : null);
+            if (!newer) Prefs.setUpdateStatus(app, null);
+            a.runOnUiThread(a::refreshDashboard);
+            if (newer && Prefs.UPDATES_AUTO.equals(mode)) automatic(a, (String) rel[1], (JSONObject) rel[2]);
         }, "cyhu-autoupdate").start();
+    }
+
+    /** Automatic mode: download, verify, install. Runs on the background thread. */
+    static void automatic(final MainActivity a, String version, JSONObject asset) {
+        final Context app = a.getApplicationContext();
+        try {
+            Prefs.setUpdateStatus(app, "Downloading " + version + "…");
+            File apk = fetch(app, asset, m -> { });
+            if (Build.VERSION.SDK_INT >= 21) {
+                Prefs.setUpdateStatus(app, "Installing " + version + "…");
+                commit(app, apk);
+            } else {
+                // Android 4.4 has no PackageInstaller sessions: hand it to the installer screen.
+                Prefs.setUpdateStatus(app, "Downloaded " + version + ": confirm the install");
+                a.runOnUiThread(() -> {
+                    if (visible) Installer.handOff(a, apk);
+                });
+            }
+        } catch (Exception e) {
+            Prefs.setUpdateStatus(app, "Automatic update to " + version + " failed: " + (e.getMessage() == null ? e.toString() : e.getMessage()));
+        }
+        a.runOnUiThread(a::refreshDashboard);
+    }
+
+    /** Writes the verified APK into a PackageInstaller session. UpdateReceiver hears the result. */
+    @android.annotation.TargetApi(21)
+    static void commit(Context c, File apk) throws IOException {
+        PackageInstaller pi = c.getPackageManager().getPackageInstaller();
+        PackageInstaller.SessionParams params = new PackageInstaller.SessionParams(PackageInstaller.SessionParams.MODE_FULL_INSTALL);
+        params.setAppPackageName(c.getPackageName());
+        if (Build.VERSION.SDK_INT >= 31) {
+            // Silent only when this app installed the current copy; otherwise Android still asks.
+            params.setRequireUserAction(PackageInstaller.SessionParams.USER_ACTION_NOT_REQUIRED);
+        }
+        int id = pi.createSession(params);
+        try (PackageInstaller.Session session = pi.openSession(id)) {
+            try (OutputStream out = session.openWrite("base.apk", 0, apk.length()); InputStream in = new FileInputStream(apk)) {
+                byte[] buf = new byte[64 * 1024];
+                for (int n; (n = in.read(buf)) > 0; ) out.write(buf, 0, n);
+                session.fsync(out);
+            }
+            int flags = PendingIntent.FLAG_UPDATE_CURRENT | (Build.VERSION.SDK_INT >= 31 ? PendingIntent.FLAG_MUTABLE : 0);
+            PendingIntent done = PendingIntent.getBroadcast(c, id, new Intent(c, UpdateReceiver.class), flags);
+            session.commit(done.getIntentSender());
+        }
     }
 
     /** The version to announce on the dashboard, if it's newer than what's installed. */
@@ -182,7 +242,7 @@ final class SelfUpdate {
     }
 
     /** Downloads and verifies the release APK. Refuses anything not signed like the installed copy. */
-    static File fetch(Activity a, JSONObject asset, Progress p) throws Exception {
+    static File fetch(Context a, JSONObject asset, Progress p) throws Exception {
         String url = asset.getString("browser_download_url");
         if (!url.startsWith("https://github.com/" + REPO + "/releases/download/")) throw new IOException("Download is not on the project's own release page.");
         p.say("Downloading " + asset.optString("name") + " (" + Unit.mb(asset.optLong("size")) + ")");

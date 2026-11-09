@@ -2,6 +2,13 @@
 
 All notable changes to this project are listed here. Versions follow [Semantic Versioning](https://semver.org/).
 
+## [Unreleased]
+
+### Changed
+
+- Settings → About → **Updates** is now Off / Notify only / Automatic, replacing the single "Check when the app opens" switch (On becomes Notify only). Off stays the default.
+- **Automatic** downloads a newer release when the app opens (at most once a day), checks GitHub's checksum and the signature, and installs it through Android's PackageInstaller. Android 12 and later install it without a prompt once CleanYourHeadUnit installed one of its own updates; older Android asks, and only while the app is on screen, never over the radio or camera. The last result shows under Updates and on the Dashboard card.
+
 ## [0.1.2] - 2026-11-09
 
 ### Added
