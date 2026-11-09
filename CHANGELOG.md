@@ -2,6 +2,12 @@
 
 All notable changes to this project are listed here. Versions follow [Semantic Versioning](https://semver.org/).
 
+## [Unreleased]
+
+### Added
+
+- `docs/units/`: a page per real head unit, grouped by firmware family (first: the Fortdows Camry unit)
+
 ## [0.1.0] - 2026-11-08
 
 First version of CleanYourHeadUnit, derived from CleanYourTV `f47c893d` by @Gathin23. A pre-release: the head-unit app has run read-only on one real unit (a 2012–2014 Camry with FYT software); nothing has been disabled on real hardware yet. The phone companion was released separately as `companion-v0.1.0` on 2026-11-05.
