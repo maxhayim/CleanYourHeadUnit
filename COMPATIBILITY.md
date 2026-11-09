@@ -45,7 +45,7 @@ The layout adapts between a side rail (landscape), an icon-only rail (under 900d
 
 | Unit | Software | Real Android | What was checked | Result |
 |---|---|---|---|---|
-| Fortdows, Toyota Camry 2012–2014, 10.1" 1280×800 | FYT (`com.syu.ms`), SC7731E / UIS8141E, 2 GB | 8.1 (API 27); Settings say 13 | Head-unit app, read-only: Dashboard, Debloater, Launchers | Runs and fits the screen; FYT recognised; 166 packages: 65 Protected, 90 Unknown, 6 Optional, 1 Advanced. Its USB port is host-only (Android Auto), so ADB over USB from a computer or the phone companion isn't possible. No changes made. |
+| Fortdows, Toyota Camry 2012–2014, 10.1" 1280×800 | FYT (`com.syu.ms`), SC7731E / UIS8141E, 2 GB | 8.1 (API 27); Settings say 13 | Head-unit app, read-only: Dashboard, Debloater, Launchers | Runs and fits the screen; FYT recognised; 166 packages: 65 Protected, 90 Unknown, 6 Optional, 1 Advanced. Its USB port is host-only (Android Auto), so ADB over USB from a computer or the phone companion isn't possible. No changes made. Second run (commit 11ac7311): real version "8.1, Settings say 13", "FYT firmware" and launcher packages confirmed on the unit. |
 
 ## Reporting a unit
 
