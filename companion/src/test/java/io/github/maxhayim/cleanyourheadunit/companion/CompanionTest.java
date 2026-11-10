@@ -9,7 +9,7 @@ import android.content.Context;
 
 import io.github.maxhayim.cleanyourheadunit.Data;
 import io.github.maxhayim.cleanyourheadunit.Rules;
-import io.github.maxhayim.cleanyourheadunit.companion.adb.AdbConnection;
+import io.github.maxhayim.cleanyourheadunit.adb.AdbConnection;
 
 import org.json.JSONArray;
 import org.json.JSONObject;

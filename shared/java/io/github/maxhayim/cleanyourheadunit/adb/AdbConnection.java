@@ -1,4 +1,4 @@
-package io.github.maxhayim.cleanyourheadunit.companion.adb;
+package io.github.maxhayim.cleanyourheadunit.adb;
 
 import java.io.ByteArrayOutputStream;
 import java.io.Closeable;
@@ -8,7 +8,8 @@ import java.security.GeneralSecurityException;
 /**
  * A minimal ADB client: connect and authenticate, run shell commands one at a time, and ask adbd
  * to listen on TCP (the bridge). It speaks the original protocol, which every head unit from
- * Android 4.4 up understands. It does not do Android 11+ wireless-debugging pairing (TLS).
+ * Android 4.4 up understands, and switches to TLS for Android 11+ Wireless debugging once paired
+ * (see AdbPairing and TcpTransport.withTls).
  *
  * Nothing here gets round Android's protection: the unit must have USB debugging on, and the
  * first time it shows "Allow USB debugging?" for this phone's key, which the owner must accept.
@@ -53,7 +54,16 @@ public final class AdbConnection implements Closeable {
                 return;
             }
             if (m.command == AdbMessage.STLS) {
-                throw new IOException("This port wants Android 11+ wireless-debugging pairing, which the companion doesn't do yet. Use the bridge (port 5555) instead.");
+                if (!(t instanceof TcpTransport) || !((TcpTransport) t).canTls()) {
+                    throw new IOException("This port uses Android 11+ Wireless debugging, which needs pairing first. Or use port 5555 (the bridge).");
+                }
+                t.send(new AdbMessage(AdbMessage.STLS, AdbMessage.STLS_VERSION, 0, null));
+                try {
+                    ((TcpTransport) t).startTls();
+                } catch (javax.net.ssl.SSLException e) {
+                    throw new IOException("The unit didn't accept this app over Wireless debugging. Pair it again (Developer options → Wireless debugging → Pair device with pairing code).");
+                }
+                continue;       // adbd now sends CNXN over TLS; the key in the certificate is the approval
             }
             if (m.command != AdbMessage.AUTH || m.arg0 != AdbMessage.AUTH_TOKEN) {
                 throw new IOException("Unexpected answer from the unit: " + m);

@@ -1,4 +1,4 @@
-package io.github.maxhayim.cleanyourheadunit.companion.adb;
+package io.github.maxhayim.cleanyourheadunit.adb;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -93,6 +93,11 @@ public final class AdbKey {
 
     public RSAPublicKey publicKey() {
         return pub;
+    }
+
+    /** For the TLS certificate (Android 11+ Wireless debugging). Never leaves the app. */
+    java.security.PrivateKey privateKey() {
+        return priv;
     }
 
     /**
