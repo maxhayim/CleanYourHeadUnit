@@ -60,11 +60,23 @@ public final class AdbTls {
         return s;
     }
 
-    // adbd's certificate is self-signed and changes per device; the pairing code authenticates it.
+    /*
+     * adbd's certificate is self-signed and different on every unit, so no certificate authority can
+     * vouch for it. That's safe here because:
+     *  - the app only ever connects to 127.0.0.1, the unit itself (LocalAdb), never across a network;
+     *  - when pairing, the six-digit code is mixed with keying material exported from this very TLS
+     *    session, so anyone in the middle would hold a different session and SPAKE2 would fail;
+     *  - adbd in turn only accepts the key that was paired.
+     * The same is true of Google's adb, which also accepts adbd's self-signed certificate.
+     */
     private static final X509TrustManager ACCEPT_SELF_SIGNED = new X509TrustManager() {
-        public void checkClientTrusted(X509Certificate[] chain, String authType) {}
+        public void checkClientTrusted(X509Certificate[] chain, String authType) throws java.security.cert.CertificateException {
+            if (chain == null || chain.length == 0) throw new java.security.cert.CertificateException("no certificate");
+        }
 
-        public void checkServerTrusted(X509Certificate[] chain, String authType) {}
+        public void checkServerTrusted(X509Certificate[] chain, String authType) throws java.security.cert.CertificateException {
+            if (chain == null || chain.length == 0) throw new java.security.cert.CertificateException("no certificate");
+        }
 
         public X509Certificate[] getAcceptedIssuers() {
             return new X509Certificate[0];

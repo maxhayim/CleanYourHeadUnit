@@ -249,7 +249,8 @@ final class Screens {
 
             LinearLayout foot = Ui.hbox(a);
             foot.addView(Ui.text(a, plan.isEmpty() ? "Plan: empty" : "Plan: " + plan.size() + " package(s)", 15, th.text, true), Ui.weight(1));
-            foot.addView(Ui.button(a, "Export plan for computer", plan.isEmpty(), v -> exportPlan(a)));
+            if (LocalAdb.connected() && !plan.isEmpty()) foot.addView(Ui.button(a, "Apply plan now", true, v -> Direct.applyPlan(a, plan)));
+            Ui.add(foot, Ui.button(a, "Export plan for computer", plan.isEmpty() && !LocalAdb.connected(), v -> exportPlan(a)), 10);
             Ui.add(l, foot, 16);
             return l;
         }
@@ -308,21 +309,27 @@ final class Screens {
             }
             Ui.add(l, c, 12);
             Ui.Flow b = new Ui.Flow(a);
+            final String riskText = v.risk.isEmpty() ? "not documented" : v.risk;
+            if (offer && LocalAdb.connected() && LocalAdb.refuseDisable(a, a.unit, v.pkg) == null) {
+                b.addView(Ui.button(a, "Disable now", true, x -> Direct.disable(a, v, p.label, riskText)));
+            } else if (!p.enabled && LocalAdb.connected()) {
+                b.addView(Ui.button(a, "Re-enable now", true, x -> Direct.enable(a, v.pkg, p.label)));
+            }
             if (offer) {
                 final boolean inPlan = plan.contains(v.pkg);
-                b.addView(Ui.button(a, inPlan ? "Remove from plan" : "Add to plan", true, x -> {
+                Ui.add(b, Ui.button(a, inPlan ? "Remove from plan" : "Add to plan", !LocalAdb.connected(), x -> {
                     if (inPlan) plan.remove(v.pkg);
                     else plan.add(v.pkg);
                     a.back();
-                }));
+                }), b.getChildCount() > 0 ? 10 : 0);
                 Ui.add(b, Ui.button(a, "Disable in Android Settings", false, x -> a.confirm("Disable " + p.label + "?",
                         "Android Settings opens on this app's page. Press Disable there if it's offered.\n\nRisk: "
                                 + (v.risk.isEmpty() ? "not documented" : v.risk)
-                                + "\n\nSome firmware greys out or hides Disable for built-in apps. Then this unit can only be changed over ADB "
-                                + "(the plan with the computer tool or the phone companion). Force stop is not the same: the app starts again later.",
+                                + "\n\nSome firmware greys out or hides Disable for built-in apps. Then this unit can only be changed over ADB: "
+                                + "Diagnostics → Direct changes, or the plan with the computer tool or the phone companion. Force stop is not the same: the app starts again later.",
                         () -> a.openAppInfo(v.pkg))), 10);
             } else if (!p.enabled) {
-                b.addView(Ui.button(a, "Re-enable in Android Settings", true, x -> a.openAppInfo(v.pkg)));
+                Ui.add(b, Ui.button(a, "Re-enable in Android Settings", !LocalAdb.connected(), x -> a.openAppInfo(v.pkg)), b.getChildCount() > 0 ? 10 : 0);
             } else if (Rules.UNKNOWN.equals(v.category)) {
                 b.addView(Ui.button(a, "Help identify it", false, x -> a.openUrl(SUBMIT_URL)));
             }
@@ -629,6 +636,7 @@ final class Screens {
             LinearLayout l = Ui.vbox(a);
             l.addView(Ui.header(a, "Diagnostics", "What this unit reports. Report it to the project's unit list, or export a sanitised report to share when asking for help. The app never uploads anything."));
             Ui.add(l, device(a), 14);
+            Ui.add(l, Direct.card(a), 14);
             Ui.Flow b = new Ui.Flow(a);
             b.addView(Ui.button(a, "Report this unit", true, v -> UnitReport.open(a)));
             b.addView(Ui.button(a, "Export sanitised report", false, v -> {
@@ -715,7 +723,11 @@ final class Screens {
                 t.addView(Ui.text(a, p != null ? p.label : c.target, 15, th.text, true));
                 t.addView(Ui.dim(a, (p != null ? c.target + " · " : "") + "was " + c.before + ", now " + c.now));
                 r.addView(t, Ui.weight(1));
-                if ("package".equals(c.kind) && p != null) r.addView(Ui.button(a, "App info", false, v -> a.openAppInfo(c.target)));
+                if ("package".equals(c.kind) && p != null && LocalAdb.connected() && "disabled".equals(c.now)) {
+                    final String label = p.label;
+                    r.addView(Ui.button(a, "Restore now", true, v -> Direct.enable(a, c.target, label)));
+                }
+                if ("package".equals(c.kind) && p != null) Ui.add(r, Ui.button(a, "App info", false, v -> a.openAppInfo(c.target)), 8);
                 if ("home".equals(c.kind)) r.addView(Ui.button(a, "Choose Home", false, v -> Launchers.chooseHome(a)));
                 if ("dns".equals(c.kind)) r.addView(Ui.button(a, "Network settings", false, v -> PrivacyScreen.openDnsSettings(a)));
                 if ("theme".equals(c.kind)) {
