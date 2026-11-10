@@ -1,4 +1,4 @@
-package io.github.maxhayim.cleanyourheadunit.companion.adb;
+package io.github.maxhayim.cleanyourheadunit.adb;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -15,6 +15,8 @@ public final class AdbMessage {
 
     /** The original protocol version. Every adbd since Android 4.2 accepts it. */
     public static final int VERSION = 0x01000000;
+    /** The STLS version adbd and the adb host use (A_STLS_VERSION). */
+    public static final int STLS_VERSION = 0x01000000;
     /** What we offer; the unit answers with its own limit and we never send more than that. */
     public static final int MAX_PAYLOAD = 256 * 1024;
 

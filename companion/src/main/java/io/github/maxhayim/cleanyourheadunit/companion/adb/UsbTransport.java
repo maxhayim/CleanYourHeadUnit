@@ -7,6 +7,9 @@ import android.hardware.usb.UsbEndpoint;
 import android.hardware.usb.UsbInterface;
 import android.hardware.usb.UsbManager;
 
+import io.github.maxhayim.cleanyourheadunit.adb.AdbMessage;
+import io.github.maxhayim.cleanyourheadunit.adb.Transport;
+
 import java.io.IOException;
 
 /**

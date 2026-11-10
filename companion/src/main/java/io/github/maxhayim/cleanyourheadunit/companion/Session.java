@@ -7,9 +7,9 @@ import android.os.Build;
 
 import io.github.maxhayim.cleanyourheadunit.Data;
 import io.github.maxhayim.cleanyourheadunit.Rules;
-import io.github.maxhayim.cleanyourheadunit.companion.adb.AdbConnection;
-import io.github.maxhayim.cleanyourheadunit.companion.adb.AdbKey;
-import io.github.maxhayim.cleanyourheadunit.companion.adb.TcpTransport;
+import io.github.maxhayim.cleanyourheadunit.adb.AdbConnection;
+import io.github.maxhayim.cleanyourheadunit.adb.AdbKey;
+import io.github.maxhayim.cleanyourheadunit.adb.TcpTransport;
 import io.github.maxhayim.cleanyourheadunit.companion.adb.UsbTransport;
 
 import org.json.JSONException;

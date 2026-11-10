@@ -1,7 +1,7 @@
 package io.github.maxhayim.cleanyourheadunit.companion;
 
 import io.github.maxhayim.cleanyourheadunit.Rules;
-import io.github.maxhayim.cleanyourheadunit.companion.adb.AdbConnection;
+import io.github.maxhayim.cleanyourheadunit.adb.AdbConnection;
 
 import org.json.JSONException;
 import org.json.JSONObject;

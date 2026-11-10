@@ -1,4 +1,4 @@
-package io.github.maxhayim.cleanyourheadunit.companion.adb;
+package io.github.maxhayim.cleanyourheadunit.adb;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

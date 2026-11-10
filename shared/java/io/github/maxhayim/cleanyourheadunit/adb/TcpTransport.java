@@ -1,4 +1,4 @@
-package io.github.maxhayim.cleanyourheadunit.companion.adb;
+package io.github.maxhayim.cleanyourheadunit.adb;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -6,13 +6,23 @@ import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 
-/** ADB over the network: the head unit's adbd listening on a TCP port (5555 after the bridge). */
+import javax.net.ssl.SSLContext;
+
+/**
+ * ADB over the network: adbd listening on a TCP port (5555 after the bridge or `adb tcpip`), or
+ * Android 11+ Wireless debugging, which switches the same connection to TLS when adbd asks (STLS).
+ */
 public final class TcpTransport implements Transport {
-    private final Socket socket;
-    private final InputStream in;
-    private final OutputStream out;
+    private final String host;
+    private final int port;
+    private Socket socket;
+    private InputStream in;
+    private OutputStream out;
+    private SSLContext tls;
 
     public TcpTransport(String host, int port, int timeoutMs) throws IOException {
+        this.host = host;
+        this.port = port;
         socket = new Socket();
         socket.setTcpNoDelay(true);
         socket.connect(new InetSocketAddress(host, port), timeoutMs);
@@ -40,7 +50,25 @@ public final class TcpTransport implements Transport {
 
     @Override
     public String kind() {
-        return "Wi-Fi";
+        return tls != null && socket instanceof javax.net.ssl.SSLSocket ? "Wireless debugging" : "Wi-Fi";
+    }
+
+    /** Allows the switch to TLS when adbd asks for it (Wireless debugging, after pairing). */
+    public TcpTransport withTls(SSLContext ctx) {
+        this.tls = ctx;
+        return this;
+    }
+
+    boolean canTls() {
+        return tls != null;
+    }
+
+    /** Called by AdbConnection after both sides sent STLS. */
+    void startTls() throws IOException {
+        javax.net.ssl.SSLSocket s = AdbTls.client(tls, socket, host, port);
+        socket = s;
+        in = s.getInputStream();
+        out = s.getOutputStream();
     }
 
     /** Longer reads while the owner answers the "Allow debugging?" prompt on the unit. */

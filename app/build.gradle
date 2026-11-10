@@ -27,6 +27,8 @@ android {
         main.assets.srcDirs += sharedAssets
         // The classifier and data loader are shared with the phone companion (companion/).
         main.java.srcDirs += rootProject.file('shared/java')
+        // Tests of the shared code (the ADB client), run in both modules.
+        test.java.srcDirs += rootProject.file('shared/test-java')
         test.resources.srcDirs += rootProject.file('tests/vectors')
     }
 
