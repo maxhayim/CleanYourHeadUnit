@@ -48,9 +48,12 @@ public final class FakeWirelessAdbd implements AutoCloseable {
         java.security.KeyStore ks = java.security.KeyStore.getInstance(java.security.KeyStore.getDefaultType());
         ks.load(null, null);
         ks.setKeyEntry("adbd", own.privateKey(), "x".toCharArray(), new java.security.cert.Certificate[]{cert});
-        KeyManagerFactory kmf = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
+        // The stand-in unit always uses the JDK's own TLS (SunJSSE). Robolectric can install Conscrypt
+        // for the whole JVM; then the client below runs on Conscrypt, as it does on Android, while the
+        // server stays independent of it (Conscrypt as a server fails on JDK 17's module rules).
+        KeyManagerFactory kmf = KeyManagerFactory.getInstance("SunX509", "SunJSSE");
         kmf.init(ks, "x".toCharArray());
-        ctx = SSLContext.getInstance("TLSv1.3");
+        ctx = SSLContext.getInstance("TLSv1.3", "SunJSSE");
         ctx.init(kmf.getKeyManagers(), new TrustManager[]{AdbTls.acceptAll()}, new SecureRandom());
         SSLServerSocket ps = (SSLServerSocket) ctx.getServerSocketFactory().createServerSocket(0, 5, InetAddress.getLoopbackAddress());
         ps.setEnabledProtocols(new String[]{"TLSv1.3"});
