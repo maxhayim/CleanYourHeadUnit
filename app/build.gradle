@@ -19,8 +19,8 @@ android {
         applicationId 'io.github.maxhayim.cleanyourheadunit'
         minSdk rootProject.ext.minSdk
         targetSdk rootProject.ext.targetSdk
-        versionCode 7
-        versionName '0.3.0'
+        versionCode 8
+        versionName '0.3.1'
     }
 
     sourceSets {
