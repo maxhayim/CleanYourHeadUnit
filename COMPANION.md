@@ -30,13 +30,26 @@ Many budget head units say "Android 13" but really run Android 8.1 or 9 (the bui
 
 Before the first change, the unit's state is saved on the phone, one folder per unit. Every change is recorded with its before and after state. Restore works newest first, and leaves alone anything you changed by hand since. The files are the same as the computer tool's (`baseline.json`, `changes.json`, `log.jsonl`). The unit's serial number is never stored; the folder name is a hash.
 
+## Wireless debugging (Android 11+ units)
+
+On an Android 11+ unit, the Companion pairs and connects without a cable:
+
+1. On the unit: Developer options → **Wireless debugging** → On, then **Pair device with pairing code**. Keep that window open.
+2. On the phone: **Find on this Wi-Fi**, then the **Pair** entry, and type the six-digit code. (Or **Pair with code** and type the address and port from that window.)
+3. The Companion then finds the unit's Wireless debugging and connects over TLS. Next time, **Find on this Wi-Fi** → **Connect** is enough.
+
+Pairing needs the **phone** to run Android 12 or newer. This is also the way to reach **Android 11** units, which can't pair with themselves. Some networks and phone hotspots block the search: then type the address and port shown under Wireless debugging.
+
+## ADB console
+
+Once connected (USB, port 5555 or Wireless debugging), **Open console** runs shell commands on the unit, as `adb shell` does from a computer: quick buttons for device details, disabled apps, the Wi-Fi address, memory, storage and the recent log. Commands stop after 30 seconds. Changes made in the console skip the Debloater's rules and aren't recorded for Restore; a command that would disable, remove, hide or clear a **Protected** or **Unknown** app (or the unit's Home app) asks first. Commands are logged on the phone only.
+
 ## Security note
 
 With wireless ADB on, the unit accepts ADB connections from the network. A normal unit still asks *"Allow USB debugging?"* for every new device. Some budget units have that check switched off (`ro.adb.secure=0`); the Companion warns you when it sees this, because then anyone on the same Wi-Fi could control the unit. Use the bridge on a network you trust, and turn wireless ADB off when you're done.
 
 ## Not supported yet
 
-- Android 11+ **Wireless debugging pairing** (pairing code, TLS). For those units, use the computer tool's `adb pair`, or the bridge over USB.
 - Launcher switching, Private DNS and the privacy audit (they're in the head-unit app and the computer tool).
 
 ## Download

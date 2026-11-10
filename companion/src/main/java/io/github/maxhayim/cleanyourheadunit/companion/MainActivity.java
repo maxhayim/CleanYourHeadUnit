@@ -27,6 +27,8 @@ import android.widget.TextView;
 import io.github.maxhayim.cleanyourheadunit.Data;
 import io.github.maxhayim.cleanyourheadunit.Rules;
 import io.github.maxhayim.cleanyourheadunit.companion.adb.UsbTransport;
+import io.github.maxhayim.cleanyourheadunit.wireless.ConsoleDialog;
+import io.github.maxhayim.cleanyourheadunit.wireless.Discovery;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -150,7 +152,11 @@ public class MainActivity extends Activity {
 
         LinearLayout wifi = card();
         wifi.addView(text("Wi-Fi", 17, TEXT, true));
-        wifi.addView(dim("For a unit whose ADB already listens on the network: after the bridge (port 5555), or one with a network-ADB switch. Phone and unit must be on the same Wi-Fi. Android 11+ wireless-debugging pairing is not supported yet."), lp(4));
+        wifi.addView(dim("Phone and unit on the same Wi-Fi.\n"
+                + "• Android 11+ unit: turn on Developer options → Wireless debugging. The first time, choose Pair device with pairing code on the unit, "
+                + "then Find on this Wi-Fi (or Pair with code) here" + (Session.canPair() ? "" : " (pairing needs this phone to run Android 12 or newer)")
+                + ". After that, Find on this Wi-Fi connects.\n"
+                + "• Older unit: port 5555, after the bridge over USB or with the firmware's ADB-over-network switch. Type its IP address."), lp(4));
         final EditText addr = new EditText(this);
         addr.setHint("10.0.0.115 or 10.0.0.115:5555");
         addr.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_URI);
@@ -159,6 +165,11 @@ public class MainActivity extends Activity {
         addr.setHintTextColor(DIM);
         wifi.addView(addr, lp(8));
         wifi.addView(button("Connect over Wi-Fi", true, v -> connectWifi(addr.getText().toString().trim())), lp(8));
+        final LinearLayout services = new LinearLayout(this);
+        services.setOrientation(LinearLayout.VERTICAL);
+        wifi.addView(button("Find on this Wi-Fi", false, v -> find(services)), lp(8));
+        if (Session.canPair()) wifi.addView(button("Pair with code", false, v -> pairDialog(null)), lp(8));
+        wifi.addView(services, lp(4));
         page.addView(wifi, lp(12));
 
         LinearLayout about = card();
@@ -215,6 +226,111 @@ public class MainActivity extends Activity {
         });
     }
 
+    /** Lists Wireless debugging services on this Wi-Fi: pair with one, or connect to one. */
+    private void find(final LinearLayout into) {
+        say("Looking for Wireless debugging on this Wi-Fi…", DIM);
+        into.removeAllViews();
+        work(() -> {
+            final List<Discovery.Found> all = Discovery.find(this, new String[]{Discovery.CONNECT, Discovery.PAIRING}, 4000);
+            main.post(() -> {
+                into.removeAllViews();
+                int n = 0;
+                for (final Discovery.Found f : all) {
+                    if (f.local) continue;
+                    n++;
+                    if (f.pairing()) {
+                        into.addView(button("Pair: " + f.label() + " at " + f.address(), true, v -> pairDialog(f.address())), lp(8));
+                    } else {
+                        into.addView(button("Connect: " + f.label() + " at " + f.address(), true, v -> connectWifi(f.address())), lp(8));
+                    }
+                }
+                if (n == 0) {
+                    say("Nothing found. Check that Wireless debugging is on and both are on the same Wi-Fi; some networks (and phone hotspots) "
+                            + "block this search. You can also type the IP address and port shown under Wireless debugging.", WARN);
+                } else {
+                    say("Found " + n + ". A Pair entry appears only while Pair device with pairing code is open on the unit.", OK);
+                }
+            });
+        });
+    }
+
+    /** Pair with the six-digit code; then connect to the same unit's Wireless debugging. */
+    private void pairDialog(String address) {
+        LinearLayout box = new LinearLayout(this);
+        box.setOrientation(LinearLayout.VERTICAL);
+        int p = dp(20);
+        box.setPadding(p, p / 2, p, 0);
+        final EditText where = new EditText(this);
+        where.setHint("IP address:port under Pair device with pairing code");
+        where.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_URI);
+        if (address != null) where.setText(address);
+        final EditText code = new EditText(this);
+        code.setHint("Six-digit Wi-Fi pairing code");
+        code.setInputType(InputType.TYPE_CLASS_NUMBER);
+        box.addView(where);
+        box.addView(code);
+        new AlertDialog.Builder(this).setTitle("Pair with Wireless debugging")
+                .setMessage("On the unit: Developer options → Wireless debugging → Pair device with pairing code. Keep that window open.")
+                .setView(box)
+                .setPositiveButton("Pair", (d, w) -> {
+                    final String a = where.getText().toString().trim();
+                    final String c = code.getText().toString();
+                    int colon = a.lastIndexOf(':');
+                    if (colon <= 0) {
+                        say("Type the address and port, like 10.0.0.115:37123.", BAD);
+                        return;
+                    }
+                    final String host = a.substring(0, colon);
+                    final int port;
+                    try {
+                        port = Integer.parseInt(a.substring(colon + 1));
+                    } catch (NumberFormatException e) {
+                        say("That port isn't a number.", BAD);
+                        return;
+                    }
+                    say("Pairing with " + a + "…", DIM);
+                    work(() -> {
+                        Session.pair(this, host, port, c);
+                        say("Paired. Looking for the unit's Wireless debugging to connect…", OK);
+                        for (Discovery.Found f : Discovery.find(this, new String[]{Discovery.CONNECT}, 5000)) {
+                            if (!f.host.equals(host)) continue;
+                            Store.setLastAddress(this, f.address());
+                            Session.wifi(this, f.host, f.port, null);
+                            main.post(() -> show("unit"));
+                            return;
+                        }
+                        main.post(() -> say("Paired. Now type the IP address and port shown at the top of the unit's Wireless debugging screen "
+                                + "(not the pairing port) and press Connect over Wi-Fi.", OK));
+                    });
+                })
+                .setNegativeButton("Cancel", null)
+                .show();
+    }
+
+    private void console() {
+        final Session s = Session.current();
+        if (s == null) return;
+        final HeadUnit u = s.unit;
+        final String home = u.home == null ? null : u.home.split("/")[0];
+        ConsoleDialog.show(this, "ADB console", u.model() + " over " + s.address,
+                new ConsoleDialog.Colors(BG, SURFACE, TEXT, DIM, ACCENT, BAD),
+                cmd -> s.adb.shell(cmd),
+                pkg -> {
+                    if (pkg.equals(home)) return "the unit's current Home app";
+                    HeadUnit.Pkg p = u.packages.get(pkg);
+                    if (p == null) return null;
+                    Rules.Verdict v = s.rules(this).classify(pkg, p.system);
+                    if (Rules.PROTECTED.equals(v.category)) return "Protected (" + v.reason + ")";
+                    if (Rules.UNKNOWN.equals(v.category)) return "Unknown (purpose not documented)";
+                    return null;
+                },
+                new java.io.File(getFilesDir(), "console-log.txt"))
+                .setOnDismissListener(d -> work(() -> {
+                    s.read(this);
+                    main.post(() -> show("unit"));
+                }));
+    }
+
     private void unitScreen() {
         final Session s = Session.current();
         if (s == null) {
@@ -267,9 +383,19 @@ public class MainActivity extends Activity {
         act.addView(button("Restore", false, v -> show("restore")), lp(8));
         page.addView(act, lp(12));
 
+        LinearLayout con = card();
+        con.addView(text("ADB console", 17, TEXT, true));
+        con.addView(dim("Run shell commands on the unit, as adb shell does from a computer: device details, logs, package lists. "
+                + "Changes made there skip the Debloater's rules, and changing a Protected or Unknown app asks first."), lp(4));
+        con.addView(button("Open console", false, v -> console()), lp(10));
+        page.addView(con, lp(12));
+
         LinearLayout br = card();
         br.addView(text("Wireless ADB", 17, TEXT, true));
-        if ("USB".equals(s.address)) {
+        if (s.wirelessDebugging()) {
+            br.addView(dim("Connected over Android 11+ Wireless debugging (encrypted, paired). It stays available while Wireless debugging is on; "
+                    + "turn it off on the unit when you're done."), lp(4));
+        } else if ("USB".equals(s.address)) {
             br.addView(dim("Turn on ADB over Wi-Fi (port " + Session.BRIDGE_PORT + ") so this phone, or a computer, can reach the unit without the cable. It lasts until the unit restarts; you can turn it off again here."), lp(4));
             if (s.adbUnsecured()) {
                 br.addView(colored("Warning: this unit lets any device connect to ADB without asking (ro.adb.secure=0). With wireless ADB on, anyone on the same Wi-Fi could control it. Use it on a network you trust, and turn it off when you're done.", BAD), lp(6));

@@ -2,8 +2,6 @@ package io.github.maxhayim.cleanyourheadunit;
 
 import android.annotation.TargetApi;
 import android.content.Context;
-import android.net.nsd.NsdManager;
-import android.net.nsd.NsdServiceInfo;
 import android.os.Build;
 
 import io.github.maxhayim.cleanyourheadunit.adb.AdbConnection;
@@ -19,19 +17,12 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.ConnectException;
-import java.net.InetAddress;
-import java.net.NetworkInterface;
 import java.nio.charset.StandardCharsets;
 import java.security.GeneralSecurityException;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Pattern;
 
 /**
@@ -51,7 +42,8 @@ final class LocalAdb {
     private LocalAdb() {}
 
     static final int LEGACY_PORT = 5555;
-    static final String CONNECT_SERVICE = "_adb-tls-connect._tcp", PAIRING_SERVICE = "_adb-tls-pairing._tcp";
+    static final String CONNECT_SERVICE = io.github.maxhayim.cleanyourheadunit.wireless.Discovery.CONNECT,
+            PAIRING_SERVICE = io.github.maxhayim.cleanyourheadunit.wireless.Discovery.PAIRING;
     static final Pattern PACKAGE = Pattern.compile("^[A-Za-z][A-Za-z0-9_]*(\\.[A-Za-z0-9_]+)*$");
 
     private static AdbConnection conn;
@@ -149,7 +141,7 @@ final class LocalAdb {
     @TargetApi(31)
     static String pair(Context c, int port, String code) throws IOException {
         if (!canPair()) throw new IOException("Pairing from the unit itself needs Android 12 or newer.");
-        if (port <= 0) port = findPort(c, PAIRING_SERVICE, 8000);
+        if (port <= 0) port = findPort(c, PAIRING_SERVICE, 6000);
         if (port <= 0) {
             throw new IOException("Couldn't find the pairing service. On the Wireless debugging screen, press Pair device with pairing code and keep that window open.");
         }
@@ -163,66 +155,9 @@ final class LocalAdb {
         }
     }
 
-    /**
-     * Finds this unit's own Wireless debugging port on the local network (adbd announces it with
-     * mDNS). Services from other devices on the same Wi-Fi are ignored. 0 if none in time.
-     */
-    @SuppressWarnings("deprecation") // resolveService: its replacement needs API 34
+    /** This unit's own Wireless debugging port (adbd announces it with mDNS); 0 if none in time. */
     static int findPort(Context c, String type, long timeoutMs) {
-        final NsdManager nsd = (NsdManager) c.getApplicationContext().getSystemService(Context.NSD_SERVICE);
-        if (nsd == null) return 0;
-        final Set<InetAddress> mine = ownAddresses();
-        final BlockingQueue<NsdServiceInfo> found = new LinkedBlockingQueue<>();
-        NsdManager.DiscoveryListener dl = new NsdManager.DiscoveryListener() {
-            public void onStartDiscoveryFailed(String t, int e) {}
-            public void onStopDiscoveryFailed(String t, int e) {}
-            public void onDiscoveryStarted(String t) {}
-            public void onDiscoveryStopped(String t) {}
-            public void onServiceFound(NsdServiceInfo s) { found.add(s); }
-            public void onServiceLost(NsdServiceInfo s) {}
-        };
-        try {
-            nsd.discoverServices(type, NsdManager.PROTOCOL_DNS_SD, dl);
-        } catch (RuntimeException e) {
-            return 0;
-        }
-        long end = System.currentTimeMillis() + timeoutMs;
-        try {
-            while (System.currentTimeMillis() < end) {
-                NsdServiceInfo s = found.poll(end - System.currentTimeMillis(), TimeUnit.MILLISECONDS);
-                if (s == null) break;
-                final CountDownLatch done = new CountDownLatch(1);
-                final AtomicInteger port = new AtomicInteger();
-                nsd.resolveService(s, new NsdManager.ResolveListener() {
-                    public void onResolveFailed(NsdServiceInfo i, int e) { done.countDown(); }
-                    public void onServiceResolved(NsdServiceInfo i) {
-                        if (i.getHost() != null && mine.contains(i.getHost())) port.set(i.getPort());
-                        done.countDown();
-                    }
-                });
-                done.await(3, TimeUnit.SECONDS);
-                if (port.get() > 0) return port.get();
-            }
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-        } finally {
-            try {
-                nsd.stopServiceDiscovery(dl);
-            } catch (RuntimeException ignored) {
-            }
-        }
-        return 0;
-    }
-
-    static Set<InetAddress> ownAddresses() {
-        Set<InetAddress> out = new HashSet<>();
-        try {
-            for (NetworkInterface n : Collections.list(NetworkInterface.getNetworkInterfaces())) {
-                out.addAll(Collections.list(n.getInetAddresses()));
-            }
-        } catch (Exception ignored) {
-        }
-        return out;
+        return io.github.maxhayim.cleanyourheadunit.wireless.Discovery.ownPort(c, type, timeoutMs);
     }
 
     // --- changes ----------------------------------------------------------------------------------
@@ -282,7 +217,19 @@ final class LocalAdb {
         return s;
     }
 
-    private static AdbConnection.Result shell(String cmd) throws IOException {
+    /** For the ADB console: why a command touching this package should ask first, or null. */
+    static String consoleGuard(Context c, Unit u, String pkg) {
+        if (pkg.equals(c.getPackageName())) return "CleanYourHeadUnit itself";
+        if (u.home != null && pkg.equals(u.home.getPackageName())) return "the current Home app";
+        Unit.Pkg p = u.packages.get(pkg);
+        if (p == null) return null;
+        Rules.Verdict v = u.rules(c).classify(pkg, p.system);
+        if (Rules.PROTECTED.equals(v.category)) return "Protected (" + v.reason + ")";
+        if (Rules.UNKNOWN.equals(v.category)) return "Unknown (purpose not documented)";
+        return null;
+    }
+
+    static AdbConnection.Result shell(String cmd) throws IOException {
         AdbConnection a;
         synchronized (LocalAdb.class) {
             a = conn;

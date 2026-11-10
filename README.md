@@ -71,6 +71,7 @@
   <li><strong>Themes</strong> are plain JSON (colours and layout, never code), validated on import. Three are built in: Midnight, Amber Dash and Daylight.</li>
   <li><strong>Modules and the Community Hub</strong> list independent projects that suit head units, with credit to each developer's GitHub. Installs come only from the developer's own GitHub release, and are checked against the release checksum and the developer's signing certificate before Android's installer asks you.</li>
   <li><strong>Direct changes on the unit</strong> (Diagnostics → Direct changes): the app can talk to the unit's own ADB, as a computer would, and then disable and restore apps itself, still never Protected, Unknown, your own apps or the current Home app. On Android 12 and newer, pair it once with <em>Wireless debugging</em> (the six-digit code goes into a notification). On older units, it uses port 5555 when the firmware has <em>ADB over network</em> or after a one-time <code>adb tcpip 5555</code> from a computer or the companion's bridge. Untested on a real unit so far.</li>
+  <li><strong>ADB console</strong> in both apps: run shell commands on the unit over the existing connection (USB, port 5555 or Wireless debugging), with quick buttons and a check before changing any Protected or Unknown app.</li>
   <li><strong>Companion phone app</strong> (<a href="COMPANION.md">COMPANION.md</a>): does the computer tool's job from an Android phone, over USB (OTG) or Wi-Fi. It's also a <strong>bridge</strong>: plugged into a unit over USB, it switches the unit's ADB to Wi-Fi, so units with no Wireless debugging (many "Android 13" units really run 8.1 or 9) can then be reached without a cable. It shows the real Android version when the unit's settings claim a newer one.</li>
   <li><strong>Diagnostics</strong> with a sanitised export: serial numbers, MAC addresses, account names and network names are removed. Nothing is ever uploaded.</li>
   <li>No account, no analytics, no ads, no tracking.</li>
@@ -147,7 +148,7 @@ com.adups.fota  [advanced]
   <li>Some firmware blocks <code>pm disable-user</code> for certain packages, or restores them on reboot. <code>cyhu</code> verifies every change and reports these.</li>
   <li>An empty telemetry list means none of the <em>catalogued</em> packages is installed. It doesn't mean nothing on the unit talks to the internet. Per-app network activity can't be observed over ADB without root.</li>
   <li>DNS filtering doesn't stop apps that use their own DNS or fixed IP addresses. The local firewall counts what it blocks; it can't see everything an app sends. Android allows only one VPN at a time.</li>
-  <li>The phone companion doesn't do Android 11+ wireless-debugging pairing yet, and it needs a head unit whose USB port can act as a device for the bridge.</li>
+  <li>The phone companion's Wireless debugging pairing needs the phone to run Android 12+; its USB bridge needs a head unit whose USB port can act as a device.</li>
   <li>Sergey Kozlov firmware can't be recognised automatically, so you declare it (<code>--firmware sergey-kozlov</code>, or the switch in the app's Settings).</li>
   <li>Many cars have a separate telematics module outside Android. CleanYourHeadUnit can't see or control it.</li>
 </ul>
