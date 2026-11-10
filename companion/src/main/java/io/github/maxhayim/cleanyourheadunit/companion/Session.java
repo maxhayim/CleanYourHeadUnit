@@ -9,6 +9,8 @@ import io.github.maxhayim.cleanyourheadunit.Data;
 import io.github.maxhayim.cleanyourheadunit.Rules;
 import io.github.maxhayim.cleanyourheadunit.adb.AdbConnection;
 import io.github.maxhayim.cleanyourheadunit.adb.AdbKey;
+import io.github.maxhayim.cleanyourheadunit.adb.AdbPairing;
+import io.github.maxhayim.cleanyourheadunit.adb.AdbTls;
 import io.github.maxhayim.cleanyourheadunit.adb.TcpTransport;
 import io.github.maxhayim.cleanyourheadunit.companion.adb.UsbTransport;
 
@@ -61,8 +63,29 @@ public final class Session {
     }
 
     public static Session wifi(Context c, String host, int port, AdbConnection.Listener l) throws IOException, GeneralSecurityException {
-        AdbConnection a = AdbConnection.connect(new TcpTransport(host, port, 5000), key(c), keyName(), l);
+        AdbKey key = key(c);
+        // TLS is only used if the unit asks for it (Android 11+ Wireless debugging); port 5555 stays plain.
+        TcpTransport t = new TcpTransport(host, port, 5000).withTls(AdbTls.context(key));
+        AdbConnection a = AdbConnection.connect(t, key, keyName(), l);
         return open(c, a, host + ":" + port);
+    }
+
+    /** Pairing needs the phone to export TLS keying material: Android 12+. */
+    public static boolean canPair() {
+        return Build.VERSION.SDK_INT >= 31;
+    }
+
+    /** Blocking. Pairs this phone with a unit's Wireless debugging; returns the unit's ID. */
+    @android.annotation.TargetApi(31)
+    public static String pair(Context c, String host, int port, String code) throws IOException, GeneralSecurityException {
+        if (!canPair()) throw new IOException("Pairing needs this phone to run Android 12 or newer.");
+        AdbTls.KeyExporter exporter = (socket, label, length) -> android.net.ssl.SSLSockets.exportKeyingMaterial(socket, label, null, length);
+        return AdbPairing.pair(host, port, code, key(c), keyName(), exporter, 15000);
+    }
+
+    /** True when connected over Android 11+ Wireless debugging (TLS) rather than port 5555 or USB. */
+    public boolean wirelessDebugging() {
+        return "Wireless debugging".equals(adb.kind());
     }
 
     private static Session open(Context c, AdbConnection a, String address) throws IOException {

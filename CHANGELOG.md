@@ -2,6 +2,21 @@
 
 All notable changes to this project are listed here. Versions follow [Semantic Versioning](https://semver.org/).
 
+## [Unreleased]
+
+### Added
+
+- **ADB console** in both apps: shell commands over the connection the app already has, with quick buttons (device, disabled apps, Wi-Fi address, memory, storage, recent log), a 30-second limit per command and capped output. A command that would disable, uninstall, hide, suspend or clear a Protected or Unknown app, the Home app or CleanYourHeadUnit asks first. Commands are logged on the device only. Head-unit app: Diagnostics → Direct changes → **ADB console** once connected.
+- **Companion: Android 11+ Wireless debugging.** **Find on this Wi-Fi** lists units announcing Wireless debugging (mDNS); **Pair** with the six-digit code (the phone needs Android 12+), then it connects over TLS by itself. This also reaches Android 11 units, which can't pair with themselves.
+
+### Changed
+
+- Wireless debugging discovery is shared by both apps (`shared/java/.../wireless`).
+
+### Not yet verified
+
+- The console and the companion's pairing haven't run on real devices; they're tested against stand-in units (pairing against the same stand-in Google's adb pairs with).
+
 ## [0.3.0] - 2026-11-09
 
 ### Added

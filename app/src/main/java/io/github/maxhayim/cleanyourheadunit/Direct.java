@@ -63,7 +63,8 @@ final class Direct {
         Ui.add(c, Ui.dim(a, howText()), 8);
         Ui.Flow b = new Ui.Flow(a);
         if (on) {
-            b.addView(Ui.button(a, "Disconnect", false, v -> { LocalAdb.disconnect(); a.show("diagnostics"); }));
+            b.addView(Ui.button(a, "ADB console", true, v -> console(a)));
+            Ui.add(b, Ui.button(a, "Disconnect", false, v -> { LocalAdb.disconnect(); a.show("diagnostics"); }), 10);
         } else {
             b.addView(Ui.button(a, "Connect", true, v -> connect(a)));
             if (LocalAdb.canPair()) {
@@ -157,6 +158,14 @@ final class Direct {
                 })
                 .setNegativeButton("Cancel", null)
                 .show();
+    }
+
+    static void console(final MainActivity a) {
+        Theme th = Ui.t(a);
+        io.github.maxhayim.cleanyourheadunit.wireless.ConsoleDialog.show(a, "ADB console", "this unit over " + LocalAdb.how(),
+                new io.github.maxhayim.cleanyourheadunit.wireless.ConsoleDialog.Colors(th.bg, th.surface, th.text, th.dim, th.accent, th.warn),
+                LocalAdb::shell, pkg -> LocalAdb.consoleGuard(a, a.unit, pkg), new java.io.File(a.getFilesDir(), "console-log.txt"))
+                .setOnDismissListener(d -> a.rescan());
     }
 
     // --- changes ------------------------------------------------------------------------------------
