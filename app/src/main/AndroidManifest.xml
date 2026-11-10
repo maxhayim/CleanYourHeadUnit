@@ -72,6 +72,10 @@
             android:exported="false" />
 
         <receiver
+            android:name=".PairingReceiver"
+            android:exported="false" />
+
+        <receiver
             android:name=".UpdateReceiver"
             android:exported="false">
             <intent-filter>

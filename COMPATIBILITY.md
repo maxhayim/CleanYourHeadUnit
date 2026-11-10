@@ -43,6 +43,16 @@ The layout adapts between a side rail (landscape), an icon-only rail (under 900d
 | AGAMA Car Launcher | altercars.ru | verified on one unit: the Camry's daily launcher (FYT, Android 8.1) |
 | LocalSend | @localsend | verified on one unit: the 2012–2014 Camry (FYT, Android 8.1) received and installed an APK sent from a phone |
 
+## Direct changes (ADB on the unit)
+
+| Unit's real Android | How the app connects | Needs |
+|---|---|---|
+| 12 and newer | Wireless debugging, paired once with the six-digit code | Wi-Fi, Developer options → Wireless debugging |
+| 11 | Port 5555 | *ADB over network* in the firmware, or `adb tcpip 5555` once from a computer or the companion's bridge (until restart) |
+| 4.4 to 10 | Port 5555 | The same as Android 11 |
+
+The pairing and TLS code is checked against Google's adb with a stand-in unit (`tools/check-adb-pairing.sh`). None of these paths has run on a real head unit yet.
+
 ## Real units
 
 One page per unit, grouped by firmware family: [docs/units](docs/units/README.md).

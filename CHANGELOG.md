@@ -2,6 +2,23 @@
 
 All notable changes to this project are listed here. Versions follow [Semantic Versioning](https://semver.org/).
 
+## [Unreleased]
+
+### Added
+
+- **Direct changes** (Diagnostics → Direct changes): the head-unit app connects to the unit's own adbd and disables, re-enables and applies the plan itself (**Disable now**, **Re-enable now**, **Apply plan now**, and **Restore now** in Backup & Restore). The same rules as everywhere: never Protected, Unknown, your own apps, the current Home app or the app itself; every change is checked against the unit's package list and logged.
+  - **Android 12 and newer:** pairs with *Wireless debugging* once (the six-digit code is typed into a notification, so Android's pairing window stays open), then connects over TLS. The service is found on the local network (mDNS), only on the unit itself.
+  - **Older units, and Android 11:** connects to port 5555 when the firmware has *ADB over network*, or after `adb tcpip 5555` from a computer or the phone companion's bridge (until the unit restarts). Android 11 can't pair from the unit itself: apps only got the TLS function pairing needs in Android 12.
+- Android 11+ Wireless debugging pairing and TLS, written from AOSP's adb pairing code: SPAKE2 over edwards25519 compatible with BoringSSL, HKDF and AES-128-GCM, and a self-signed certificate from the app's ADB key. `tools/check-adb-pairing.sh` points Google's own adb (37.0.1) at a stand-in unit: it pairs, connects over TLS and runs a shell command.
+
+### Changed
+
+- The companion's ADB client is now shared by both apps (`shared/java/.../adb`).
+
+### Not yet verified
+
+- None of the direct-change paths has run on a real head unit.
+
 ## [0.2.0] - 2026-11-09
 
 The first full release (not a pre-release).
