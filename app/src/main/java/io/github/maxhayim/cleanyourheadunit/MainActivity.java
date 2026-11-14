@@ -25,8 +25,9 @@ import java.util.List;
 import java.util.concurrent.Executor;
 
 /**
- * The management app: ten sections in a rail (landscape) or a bottom bar (portrait).
- * Reading the unit happens off the main thread; nothing runs in the background afterwards.
+ * The management app: eleven sections in a rail (landscape) or a bottom bar (portrait).
+ * Reading the unit happens off the main thread. Nothing runs in the background afterwards unless
+ * the owner turns on a Drive feature that needs to keep watching (DriveService, with a notification).
  */
 public final class MainActivity extends Activity {
 
@@ -42,7 +43,7 @@ public final class MainActivity extends Activity {
     }
 
     static final List<Section> SECTIONS = Arrays.asList(
-            new Screens.Dashboard(), new Screens.Debloater(), new PrivacyScreen(), new Screens.Launchers(),
+            new Screens.Dashboard(), new Screens.Debloater(), new PrivacyScreen(), new DriveScreen(), new Screens.Launchers(),
             new Screens.Themes(), new Screens.Modules(), new Screens.Hub(), new Screens.Diagnostics(),
             new Screens.Backup(), new Screens.SettingsScreen());
 
@@ -92,6 +93,15 @@ public final class MainActivity extends Activity {
         SelfUpdate.visible = true;
         // Back from Android Settings (App info, Home, VPN): read the unit again.
         if (unit != null) rescan();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int code, String[] perms, int[] results) {
+        super.onRequestPermissionsResult(code, perms, results);
+        if (code == 52) {                       // Drive: location
+            Drive.sync(this);
+            if (stack.isEmpty() && "drive".equals(current)) show(current);
+        }
     }
 
     @Override

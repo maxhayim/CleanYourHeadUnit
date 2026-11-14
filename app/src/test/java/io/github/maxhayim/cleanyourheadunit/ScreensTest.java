@@ -150,6 +150,10 @@ public class ScreensTest {
         assertTrue(t.contains("Automotive support planned"));
         shot(a, "modules-1280x720");
 
+        a.show("drive");
+        assertTrue(all(a).contains("Speed-based volume"));
+        shot(a, "drive-1280x720");
+
         a.show("diagnostics");
         assertFalse(all(a).contains("02:00:00:aa:bb:cc"));
         String report = Report.build(a);

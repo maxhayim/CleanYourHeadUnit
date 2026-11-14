@@ -66,6 +66,10 @@ A profile only *proposes*. Nothing is applied until you confirm.
 
 Receiving GPS sends nothing anywhere, so CleanYourHeadUnit never turns GPS off: navigation needs it. An app needs the location permission to read where the car is, and network access to send it. The permission audit shows both.
 
+## Location used by Drive
+
+Drive's speed-based volume reads the GPS speed, and day/night brightness needs a position for sunrise and sunset. Both are off until you turn them on, and both ask for the location permission then. Speed is used as it arrives and not kept. The position is stored on the unit rounded to two decimals (about a kilometre), only for sunrise and sunset. Nothing is sent anywhere.
+
 ## Privacy of CleanYourHeadUnit itself
 
 No account, analytics, ads or tracking. The app connects to the internet only when you press something that needs it: downloading a catalog app from its developer's GitHub release, checking for new releases, or downloading a block list. The local firewall also forwards DNS lookups for you. Diagnostics are written to a file on the unit and are never uploaded.

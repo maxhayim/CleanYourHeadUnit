@@ -28,7 +28,7 @@
 <p>CleanYourHeadUnit is derived from <a href="https://github.com/Gathin23/cleanyourtv">CleanYourTV</a> by <a href="https://github.com/Gathin23">@Gathin23</a>. It keeps the same approach (reversible, non-root, explain everything) and adapts it to cars. CleanYourTV is not affiliated with this project and has not endorsed it. See <a href="CREDITS.md">CREDITS.md</a> and <a href="docs/reuse-audit.md">docs/reuse-audit.md</a>.</p>
 
 > [!IMPORTANT]
-> **Nothing here has been tested on a real head unit yet.** All the code below has passing tests against *simulated* units (see [docs/test-report.md](docs/test-report.md)), but no head unit has been through the [hardware checklist](docs/hardware-checklist.md). That's why no device profile is "tested" and the **Recommended** category is empty everywhere. Use it while parked, and keep the [restore steps](RESTORE.md) at hand.
+> **Tested on real head units:** the app runs on a 2012–2014 Toyota Camry unit (FYT software, really Android 8.1) and a 2009–2014 Ford F-150 unit (MTC software on Rockchip PX6, Android 8.1). On the Camry, an app was disabled through it, and the radio, reversing camera, climate display, open-door display and steering-wheel buttons all kept working. Updates install in place over Wi-Fi. See [Tested On](#tested-on) and [docs/units](docs/units/README.md) for exactly what was checked. Newer features (Direct changes, the ADB console, the phone's Wireless debugging pairing) are so far tested against *simulated* units only ([docs/test-report.md](docs/test-report.md)). No device profile is "tested" yet, so the **Recommended** category is still empty. Use it while parked, and keep the [restore steps](RESTORE.md) at hand.
 
 <h2>Screenshots</h2>
 
@@ -46,6 +46,10 @@
   <tr>
     <td><img src="docs/screenshots/telemetry-portrait-1080x1920.png" alt="Telemetry detection, portrait" width="200"/><br/><sub>Telemetry detection: 1080×1920 portrait</sub></td>
     <td><img src="docs/screenshots/dashboard-800x480.png" alt="Dashboard, 800x480" width="420"/><br/><sub>800×480, Android 4.4 (icon-only rail)</sub></td>
+  </tr>
+  <tr>
+    <td><img src="docs/screenshots/drive-1280x720.png" alt="Drive" width="420"/><br/><sub>Drive: features for older units</sub></td>
+    <td></td>
   </tr>
 </table>
 
@@ -70,6 +74,15 @@
   <li><strong>CleanYourHeadUnit Home</strong>, an optional launcher with a dock, favourites, an app library and themes. It's off until you turn it on.</li>
   <li><strong>Themes</strong> are plain JSON (colours and layout, never code), validated on import. Three are built in: Midnight, Amber Dash and Daylight.</li>
   <li><strong>Modules and the Community Hub</strong> list independent projects that suit head units, with credit to each developer's GitHub. Installs come only from the developer's own GitHub release, and are checked against the release checksum and the developer's signing certificate before Android's installer asks you.</li>
+  <li><strong>Drive: features for older units</strong>, with no ADB or root, each off until you turn it on (see <a href="DRIVE.md">DRIVE.md</a>):
+    <ul>
+      <li><strong>Speed-based volume:</strong> the music goes up a step as GPS speed rises, and back down as you slow, on top of your own volume.</li>
+      <li><strong>Startup actions:</strong> after power-up (and, if you like, after waking from sleep), set the volume, open your music or navigation app, and press Play.</li>
+      <li><strong>Day and night brightness</strong> by sunrise and sunset, worked out on the unit from where you are.</li>
+      <li><strong>Phone hotspot helper:</strong> reconnects to your phone's hotspot after power-up and says clearly when there's no internet.</li>
+      <li><strong>Slowness check:</strong> memory, storage and the apps that start at power-up, with the ones the rules offer to disable.</li>
+    </ul>
+  </li>
   <li><strong>Direct changes on the unit</strong> (Diagnostics → Direct changes): the app can talk to the unit's own ADB, as a computer would, and then disable and restore apps itself, still never Protected, Unknown, your own apps or the current Home app. On Android 12 and newer, pair it once with <em>Wireless debugging</em> (the six-digit code goes into a notification). On older units, it uses port 5555 when the firmware has <em>ADB over network</em> or after a one-time <code>adb tcpip 5555</code> from a computer or the companion's bridge. Untested on a real unit so far.</li>
   <li><strong>ADB console</strong> in both apps: run shell commands on the unit over the existing connection (USB, port 5555 or Wireless debugging), with quick buttons and a check before changing any Protected or Unknown app.</li>
   <li><strong>Companion phone app</strong> (<a href="COMPANION.md">COMPANION.md</a>): does the computer tool's job from an Android phone, over USB (OTG) or Wi-Fi. It's also a <strong>bridge</strong>: plugged into a unit over USB, it switches the unit's ADB to Wi-Fi, so units with no Wireless debugging (many "Android 13" units really run 8.1 or 9) can then be reached without a cable. It shows the real Android version when the unit's settings claim a newer one.</li>
@@ -157,7 +170,7 @@ com.adups.fota  [advanced]
 
 <p><strong>One real unit so far:</strong> a Fortdows unit for the 2012–2014 Toyota Camry (SC7731E / UIS8141E, 2 GB, 1280×800, FYT software). Its Settings say Android 13, but it runs 8.1 (API 27). The head-unit app installed and ran, recognised the FYT software, sorted 166 packages (65 Protected, 90 Unknown) and fitted the screen. The computer tool and the phone companion couldn't connect, because the unit's USB port only works as a host (it offers Android Auto to a phone). That first run found three bugs, fixed in the next commit: the dashboard showed the claimed Android version, the FYT profile name listed other chips, and launchers that share a name couldn't be told apart. All three fixes were then confirmed on the unit: it shows "Android 8.1, Settings say 13", "FYT firmware", and each launcher's package. Later, Market Feedback Agent (the unit's one privacy finding) was disabled through the app, and the radio, reversing camera, climate display, open-door display and steering-wheel buttons all still worked. A Bluetooth call, a restart and the restore haven't been checked yet.</p>
 
-<p><strong>Read, not run yet:</strong> a Phoenix PX6 unit for the 2009–2014 Ford F-150 (Android 8.1, vertical screen). Its page lists what its Settings show.</p>
+<p><strong>Second unit:</strong> a Phoenix unit for the 2009–2014 Ford F-150 (Rockchip PX6 / RK3399, 3.7 GB, vertical 768×890 screen, really Android 8.1). The app installs and runs, recognises the MTC software, and sorts 120 packages (37 Protected, 60 Unknown, 10 Optional). Nothing has been changed on it yet.</p>
 
 <p>Every real unit has its own page, grouped by firmware family, in <a href="docs/units/README.md">docs/units</a>.</p>
 

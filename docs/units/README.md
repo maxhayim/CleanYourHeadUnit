@@ -12,11 +12,16 @@ Pages only say what was observed on that unit. A unit listed here is not "suppor
 
 ## Sergey Kozlov firmware (declared)
 
+No unit with this declared yet. The F-150 below is reported by its owner to run it; it's listed under MTC, which the app recognises.
+
+
+## MTCD / MTCE (`com.microntek`)
+
 | Unit | Chip | Real Android | Checked | Page |
 |---|---|---|---|---|
-| Phoenix Radio for Ford F-150 2009–2014 (vertical, "Tesla-style"), owner-reported Sergey Kozlov firmware | Rockchip PX6 (`rkpx6`) | 8.1 (userdebug build) | Settings read only. USB debugging present (off), no Wireless debugging. App not run yet. | [phoenix-f150-2009-2014](phoenix-f150-2009-2014.md) |
+| Phoenix Radio for Ford F-150 2009–2014 (vertical, "Tesla-style"); owner reports Sergey Kozlov firmware | Rockchip PX6 (RK3399), 64-bit | 8.1 (userdebug build) | App 0.3.1 runs; MTC recognised; 120 packages (Optional 10, Protected 37, Unknown 60). Nothing changed yet. ADB not checked. | [phoenix-f150-2009-2014](phoenix-f150-2009-2014.md) |
 
-## MTCD / MTCE, DoFun / TW, ALPS / YT9216, other
+## DoFun / TW, ALPS / YT9216, other
 
 No real unit reported yet.
 

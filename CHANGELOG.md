@@ -2,6 +2,26 @@
 
 All notable changes to this project are listed here. Versions follow [Semantic Versioning](https://semver.org/).
 
+## [Unreleased]
+
+### Added
+
+- **Drive** (new section): features for older units, without ADB or root, each off until turned on. See [DRIVE.md](DRIVE.md).
+  - **Speed-based volume:** media volume steps up with GPS speed and back down, on top of the owner's volume, with hysteresis.
+  - **Startup actions:** after power-up (or waking from sleep), set the volume, open an app and send Play, after a chosen delay.
+  - **Day and night brightness** at sunrise and sunset, computed on the unit (USNO sunrise equation; tested against published times for New York, London and Sydney to within four minutes).
+  - **Phone hotspot helper:** reconnects a chosen saved network after power-up and when it drops (Android 9 and older), and notifies when there's no internet.
+  - **Slowness check:** memory, storage and power-up apps sorted by the rules, linking to the Debloater; per-app memory when Direct changes is connected.
+- New permissions for these (location, modify system settings, start at power-up, change Wi-Fi, foreground service), each used only by a Drive feature the owner turns on.
+
+### Changed
+
+- README: the top note now says what has been tested on a real unit (the Camry) instead of "nothing tested yet".
+
+### Not yet verified
+
+- None of the Drive features has run on a real head unit. Speed-based volume may not reach the amplifier on units whose volume is kept by the MCU.
+
 ## [0.3.1] - 2026-11-09 (head-unit app) / companion 0.2.0
 
 ### Added
