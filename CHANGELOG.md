@@ -2,7 +2,7 @@
 
 All notable changes to this project are listed here. Versions follow [Semantic Versioning](https://semver.org/).
 
-## [Unreleased]
+## [0.4.0] - 2026-11-14
 
 ### Added
 
@@ -16,7 +16,8 @@ All notable changes to this project are listed here. Versions follow [Semantic V
 
 ### Changed
 
-- README: the top note now says what has been tested on a real unit (the Camry) instead of "nothing tested yet".
+- README: the top note now says what has been tested on real units instead of "nothing tested yet".
+- Second real unit: a Phoenix PX6 (RK3399) for the 2009–2014 Ford F-150 runs 0.3.1; the app recognises its MTC software. See docs/units.
 
 ### Not yet verified
 
