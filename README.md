@@ -70,7 +70,7 @@
       <li>An optional <em>local firewall</em> (Android 4.4+ for DNS filtering, 5.0+ for blocking apps). It uses Android's own VPN permission, shows a notification while it runs, and never starts by itself.</li>
     </ul>
   </li>
-  <li><strong>Launchers.</strong> Keep the factory launcher or switch. The factory launcher is never disabled to force a switch, and the launcher you started with is remembered so you can go back. The catalog includes <a href="https://github.com/tdater/KITT-Launcher-releases">KITT Launcher</a> (portrait) and <a href="https://github.com/tdater/KITT-Launcher.2-releases">KITT Launcher.2</a> (landscape) by <a href="https://github.com/tdater">@tdater</a>.</li>
+  <li><strong>Launchers.</strong> Keep the factory launcher or switch. The factory launcher is never disabled to force a switch, and the launcher you started with is remembered so you can go back. The catalog includes <a href="https://github.com/tdater/KITT-Launcher-releases">KITT Launcher</a> (portrait) and <a href="https://github.com/tdater/KITT-Launcher.2-releases">KITT Launcher.2</a> (landscape), plus the 3D hologram editions <a href="https://github.com/tdater/KITT-Holo-Landscape-releases">KITT Holo Landscape</a> and <a href="https://github.com/tdater/KITT-Holo-Portrait-releases">KITT Holo Portrait</a> with live OBD-II readings, by <a href="https://github.com/tdater">@tdater</a>.</li>
   <li><strong>CleanYourHeadUnit Home</strong>, an optional launcher with a dock, favourites, an app library and themes. It's off until you turn it on.</li>
   <li><strong>Themes</strong> are plain JSON (colours and layout, never code), validated on import. Three are built in: Midnight, Amber Dash and Daylight.</li>
   <li><strong>Modules and the Community Hub</strong> list independent projects that suit head units, with credit to each developer's GitHub. Installs come only from the developer's own GitHub release, and are checked against the release checksum and the developer's signing certificate before Android's installer asks you.</li>
@@ -202,14 +202,14 @@ com.adups.fota  [advanced]
   <li><a href="https://github.com/Gathin23/cleanyourtv">CleanYourTV</a> by <a href="https://github.com/Gathin23">@Gathin23</a>: the same idea for Android TV, and where this started.</li>
   <li><a href="https://github.com/maxhayim/RetroDeck">RetroDeck</a> by <a href="https://github.com/maxhayim">@maxhayim</a>: a retro car-stereo app with interchangeable skins (featured module).</li>
   <li><a href="https://github.com/maxhayim/webmote">Webmote</a> by <a href="https://github.com/maxhayim">@maxhayim</a>: a browser remote for Android TV. Automotive support is planned.</li>
-  <li><a href="https://github.com/tdater/KITT-Launcher-releases">KITT Launcher</a> and <a href="https://github.com/tdater/KITT-Launcher.2-releases">KITT Launcher.2</a> by <a href="https://github.com/tdater">@tdater</a>.</li>
+  <li><a href="https://github.com/tdater/KITT-Launcher-releases">KITT Launcher</a> and <a href="https://github.com/tdater/KITT-Launcher.2-releases">KITT Launcher.2</a>, <a href="https://github.com/tdater/KITT-Holo-Landscape-releases">KITT Holo Landscape</a> and <a href="https://github.com/tdater/KITT-Holo-Portrait-releases">KITT Holo Portrait</a> by <a href="https://github.com/tdater">@tdater</a>.</li>
 </ul>
 
 <h2>Acknowledgments</h2>
 
 <ul>
   <li><a href="https://github.com/Gathin23">@Gathin23</a> for CleanYourTV, its protected-package rules and its privacy catalogue approach.</li>
-  <li><a href="https://github.com/tdater">@tdater</a> for KITT Launcher and KITT Launcher.2.</li>
+  <li><a href="https://github.com/tdater">@tdater</a> for KITT Launcher, KITT Launcher.2 and the KITT Holo editions.</li>
   <li><a href="https://boosty.to/teslafw">Sergey Kozlov</a> for custom firmware for Tesla-style head units (official page on Boosty; no GitHub username could be verified).</li>
   <li>The researchers whose published work the telemetry catalogue cites: Kryptowire, Malwarebytes and Kaspersky.</li>
   <li><a href="https://github.com/PimpinPumpkin/fyt7862-mods">@PimpinPumpkin</a> and the XDA head-unit community, whose public notes the FYT and MTC profiles cite.</li>

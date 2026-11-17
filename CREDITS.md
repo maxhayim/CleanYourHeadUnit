@@ -17,6 +17,8 @@ What came from CleanYourTV, and what was changed, is listed file by file in [doc
 |---|---|---|
 | [KITT Launcher](https://github.com/tdater/KITT-Launcher-releases) | [@tdater](https://github.com/tdater) | Proprietary (all rights reserved). Linked, never redistributed |
 | [KITT Launcher.2](https://github.com/tdater/KITT-Launcher.2-releases) | [@tdater](https://github.com/tdater) | Proprietary (all rights reserved). Linked, never redistributed |
+| [KITT Holo Landscape](https://github.com/tdater/KITT-Holo-Landscape-releases) | [@tdater](https://github.com/tdater) | Proprietary (all rights reserved). Linked, never redistributed |
+| [KITT Holo Portrait](https://github.com/tdater/KITT-Holo-Portrait-releases) | [@tdater](https://github.com/tdater) | Proprietary (all rights reserved). Linked, never redistributed |
 | [RetroDeck](https://github.com/maxhayim/RetroDeck) | [@maxhayim](https://github.com/maxhayim) | MIT |
 | [Webmote](https://github.com/maxhayim/webmote) | [@maxhayim](https://github.com/maxhayim) | MIT |
 | Custom firmware for Tesla-style head units | [Sergey Kozlov](https://boosty.to/teslafw) (Boosty; no GitHub username verified) | Paid firmware from the developer. Never redistributed; only his official page is linked |

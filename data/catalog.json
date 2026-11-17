@@ -4,7 +4,7 @@
   "developers": [
     {"id": "gathin23", "github": "Gathin23", "name": null, "projects": ["CleanYourTV"], "note": "Author of CleanYourTV, the project CleanYourHeadUnit is derived from."},
     {"id": "maxhayim", "github": "maxhayim", "name": null, "projects": ["CleanYourHeadUnit", "RetroDeck", "Webmote"]},
-    {"id": "tdater", "github": "tdater", "name": null, "projects": ["KITT Launcher", "KITT Launcher.2"]},
+    {"id": "tdater", "github": "tdater", "name": null, "projects": ["KITT Launcher", "KITT Launcher.2", "KITT Holo Landscape", "KITT Holo Portrait"]},
     {"id": "sergey-kozlov", "github": null, "name": "Sergey Kozlov", "website": "https://boosty.to/teslafw", "projects": ["Custom firmware for Tesla-style head units"], "note": "Official page on Boosty. No GitHub username could be verified."},
     {"id": "localsend", "github": "localsend", "name": null, "website": "https://localsend.org", "projects": ["LocalSend"], "note": "GitHub organisation; most commits are by @Tienisto."},
     {"id": "teamamaze", "github": "TeamAmaze", "name": null, "projects": ["Amaze File Manager"], "note": "GitHub organisation; most commits are by @VishalNehra, @EmmanuelMess and @TranceLove."},
@@ -211,6 +211,62 @@
       "warnings": [
         "Closed source. CleanYourHeadUnit links to and downloads from the developer's own releases page only; it never mirrors or repackages the app.",
         "Asks for location, microphone and Bluetooth permissions; it has its own updater."
+      ]
+    },
+    {
+      "id": "kitt-holo-landscape",
+      "kind": "launcher",
+      "name": "KITT Holo Landscape",
+      "featured": false,
+      "developer": "tdater",
+      "description": "A KITT Launcher edition whose home screen is a 3D hologram of your car or truck, with live OBD-II readings called out on the model. Landscape edition for 7 to 10-inch head units.",
+      "category": "Launcher",
+      "package": "com.aiconsole.kitthololandscape",
+      "open_source": false,
+      "license": "Proprietary, free to download and use (all rights reserved, source not published)",
+      "android": {"min_sdk": 24, "min_version": "7.0"},
+      "orientations": ["landscape"],
+      "screens": ["1024x600", "1280x720", "1280x800"],
+      "links": {
+        "website": "https://tdater.github.io/KITT-Launcher-releases/",
+        "repository": "https://github.com/tdater/KITT-Holo-Landscape-releases",
+        "releases": "https://github.com/tdater/KITT-Holo-Landscape-releases/releases/latest"
+      },
+      "install": "none",
+      "compatibility": {"status": "untested", "verified": [], "reports": []},
+      "screenshots": ["https://tdater.github.io/KITT-Launcher-releases/"],
+      "warnings": [
+        "Closed source. CleanYourHeadUnit links to the developer's own releases page only; it never mirrors or repackages the app.",
+        "Not offered as an in-app download yet: its signing certificate has not been checked. Install the APK from the developer's releases page.",
+        "A large download (about 80 MB) with a 3D view; slower units may struggle. Asks for location, microphone and Bluetooth permissions; it has its own updater."
+      ]
+    },
+    {
+      "id": "kitt-holo-portrait",
+      "kind": "launcher",
+      "name": "KITT Holo Portrait",
+      "featured": false,
+      "developer": "tdater",
+      "description": "A KITT Launcher edition whose home screen is a 3D hologram of your car or truck, with live OBD-II readings called out on the model. Portrait edition for tall vertical head units.",
+      "category": "Launcher",
+      "package": "com.aiconsole.kittholoportrait",
+      "open_source": false,
+      "license": "Proprietary, free to download and use (all rights reserved, source not published)",
+      "android": {"min_sdk": 24, "min_version": "7.0"},
+      "orientations": ["portrait"],
+      "screens": ["tall 9:16 portrait"],
+      "links": {
+        "website": "https://tdater.github.io/KITT-Launcher-releases/",
+        "repository": "https://github.com/tdater/KITT-Holo-Portrait-releases",
+        "releases": "https://github.com/tdater/KITT-Holo-Portrait-releases/releases/latest"
+      },
+      "install": "none",
+      "compatibility": {"status": "untested", "verified": [], "reports": []},
+      "screenshots": ["https://tdater.github.io/KITT-Launcher-releases/"],
+      "warnings": [
+        "Closed source. CleanYourHeadUnit links to the developer's own releases page only; it never mirrors or repackages the app.",
+        "Not offered as an in-app download yet: its signing certificate has not been checked. Install the APK from the developer's releases page.",
+        "A large download (about 80 MB) with a 3D view; slower units may struggle. Asks for location, microphone and Bluetooth permissions; it has its own updater."
       ]
     },
     {

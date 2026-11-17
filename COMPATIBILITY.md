@@ -38,6 +38,8 @@ The layout adapts between a side rail (landscape), an icon-only rail (under 900d
 | CleanYourHeadUnit Home | @maxhayim | untested on head units |
 | KITT Launcher (portrait) | @tdater | untested on head units |
 | KITT Launcher.2 (landscape) | @tdater | untested on head units |
+| KITT Holo Landscape | @tdater | untested on head units |
+| KITT Holo Portrait | @tdater | untested on head units |
 | RetroDeck | @maxhayim | untested on head units (tested by its developer on an Android TV) |
 | Webmote | @maxhayim | automotive support planned |
 | AGAMA Car Launcher | altercars.ru | verified on one unit: the Camry's daily launcher (FYT, Android 8.1) |

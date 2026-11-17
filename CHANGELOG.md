@@ -2,6 +2,12 @@
 
 All notable changes to this project are listed here. Versions follow [Semantic Versioning](https://semver.org/).
 
+## [Unreleased]
+
+### Added
+
+- **KITT Holo Landscape** and **KITT Holo Portrait** by @tdater in the launcher catalog: KITT editions with a 3D hologram of your car or truck and live OBD-II readings. Listed with @tdater's permission; links only for now (signing certificate not yet checked), untested on head units.
+
 ## [0.4.0] - 2026-11-14
 
 ### Added
