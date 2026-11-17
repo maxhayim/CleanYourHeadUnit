@@ -90,6 +90,19 @@
   <li>No account, no analytics, no ads, no tracking.</li>
 </ul>
 
+<h2>Recommended Apps</h2>
+
+<p>Independent apps that suit a head unit, the same list and order as <strong>Recommended</strong> at the top of the app's Community Hub (from <a href="data/catalog.json">data/catalog.json</a>; a test keeps the two in step). Each is its own project, installed and updated on its own. LocalSend works on a real unit (the Camry: it received an APK from a phone, which then installed) and AGAMA is the launcher on all the maintainer's cars; RetroDeck, Webmote and Amaze haven't been tried on one yet.</p>
+
+<table>
+  <tr><th>App</th><th>Developer</th><th>Why</th><th>Get it</th></tr>
+  <tr><td><!-- catalog:retrodeck --><a href="https://github.com/maxhayim/RetroDeck">RetroDeck</a></td><td><a href="https://github.com/maxhayim">@maxhayim</a></td><td>Turns the screen into a classic car stereo, with every hardware and steering-wheel key mappable.</td><td>Download and install in the app (signature-checked), or <a href="https://github.com/maxhayim/RetroDeck/releases/latest">GitHub releases</a></td></tr>
+  <tr><td><!-- catalog:webmote --><a href="https://github.com/maxhayim/webmote">Webmote</a></td><td><a href="https://github.com/maxhayim">@maxhayim</a></td><td>Control the unit from your phone's browser. Built for Android TV today; automotive support is planned.</td><td><a href="https://github.com/maxhayim/webmote/releases/latest">GitHub releases</a> (no install offered for head units yet)</td></tr>
+  <tr><td><!-- catalog:localsend --><a href="https://localsend.org">LocalSend</a></td><td><a href="https://github.com/localsend">@localsend</a></td><td>Send music, maps and APKs from a phone or computer to the head unit over Wi-Fi, without a cable, account or internet.</td><td><a href="https://play.google.com/store/apps/details?id=org.localsend.localsend_app">Google Play</a>, <a href="https://f-droid.org/packages/org.localsend.localsend_app">F-Droid</a>, or <a href="https://github.com/localsend/localsend/releases/latest">GitHub releases</a> (pick the APK for the unit's processor). Needs Android 7.0+ (1.17.0 for Android 5 and 6)</td></tr>
+  <tr><td><!-- catalog:amaze-file-manager --><a href="https://github.com/TeamAmaze/AmazeFileManager">Amaze File Manager</a></td><td><a href="https://github.com/TeamAmaze">@TeamAmaze</a></td><td>A full file manager for the unit: copy music and APKs from a flash drive, browse storage, and open archives. Open source, no ads.</td><td><a href="https://f-droid.org/packages/com.amaze.filemanager">F-Droid</a>, <a href="https://play.google.com/store/apps/details?id=com.amaze.filemanager">Google Play</a>, or <a href="https://github.com/TeamAmaze/AmazeFileManager/releases/latest">GitHub releases</a>. Needs Android 6.0+</td></tr>
+  <tr><td><!-- catalog:agama-car-launcher --><a href="https://play.google.com/store/apps/details?id=altergames.carlauncher">AGAMA Car Launcher</a></td><td>altercars.ru (no GitHub)</td><td>A car-style home screen with big widgets and app shortcuts. The launcher on every one of the maintainer's cars.</td><td><a href="https://play.google.com/store/apps/details?id=altergames.carlauncher">Google Play</a>. Closed source</td></tr>
+</table>
+
 <h2>Requirements</h2>
 
 <ul>
@@ -183,18 +196,6 @@ com.adups.fota  [advanced]
 <h2>Contributing</h2>
 
 <p>The most useful contributions are <strong>device profiles and compatibility reports from real units</strong>. Launchers, modules and themes are welcome too. See <a href="CONTRIBUTING.md">CONTRIBUTING.md</a>, <a href="COMMUNITY.md">COMMUNITY.md</a> and the <a href="https://github.com/maxhayim/CleanYourHeadUnit/issues/new/choose">issue templates</a>. Please read <a href="SAFETY.md">SAFETY.md</a> first.</p>
-
-<h2>Recommended Apps</h2>
-
-<p>Independent apps that suit a head unit. Each is its own project, installed and updated on its own. They're also at the top of the app's Community Hub. LocalSend works on a real unit (the Camry: it received an APK from a phone, which then installed); RetroDeck and Webmote haven't been tried on one yet.</p>
-
-<table>
-  <tr><th>App</th><th>Developer</th><th>Why</th><th>Get it</th></tr>
-  <tr><td><a href="https://github.com/maxhayim/RetroDeck">RetroDeck</a></td><td><a href="https://github.com/maxhayim">@maxhayim</a></td><td>Turns the screen into a classic car stereo, with every hardware and steering-wheel key mappable.</td><td>Download and install in the app (signature-checked), or <a href="https://github.com/maxhayim/RetroDeck/releases/latest">GitHub releases</a></td></tr>
-  <tr><td><a href="https://github.com/maxhayim/webmote">Webmote</a></td><td><a href="https://github.com/maxhayim">@maxhayim</a></td><td>Control the unit from your phone's browser. Built for Android TV today; automotive support is planned.</td><td><a href="https://github.com/maxhayim/webmote/releases/latest">GitHub releases</a> (no install offered for head units yet)</td></tr>
-  <tr><td><a href="https://play.google.com/store/apps/details?id=altergames.carlauncher">AGAMA Car Launcher</a></td><td>altercars.ru (no GitHub)</td><td>A car-style home screen with big widgets and app shortcuts. The launcher on all the maintainer's cars, including the Camry test unit. Closed source.</td><td><a href="https://play.google.com/store/apps/details?id=altergames.carlauncher">Google Play</a></td></tr>
-  <tr><td><a href="https://localsend.org">LocalSend</a></td><td><a href="https://github.com/localsend">@localsend</a></td><td>Send music, maps and APKs from a phone or computer to the head unit over Wi-Fi: no cable, account or internet, and transfers are encrypted. Needs Android 7.0+ (1.17.0 for Android 5 and 6).</td><td><a href="https://play.google.com/store/apps/details?id=org.localsend.localsend_app">Google Play</a>, <a href="https://f-droid.org/packages/org.localsend.localsend_app">F-Droid</a>, or <a href="https://github.com/localsend/localsend/releases/latest">GitHub releases</a> (pick the APK for the unit's processor)</td></tr>
-</table>
 
 <h2>Related Projects</h2>
 

@@ -336,6 +336,19 @@ class TestCatalog(unittest.TestCase):
         self.assertTrue(any("nope: not an item" in e for e in errs))
         self.assertTrue(any("needs a 'why'" in e for e in errs))
 
+    def test_readme_recommended_apps_match_catalog(self):
+        # The README's Recommended Apps table must list the app's Recommended entries, in the same order and wording.
+        import html
+        import re
+        with open(os.path.join(data.ROOT, "README.md"), encoding="utf-8") as f:
+            readme = f.read()
+        rows = re.findall(r"<tr><td><!-- catalog:([a-z0-9-]+) -->(.*?)</tr>", readme)
+        rec = data.catalog()["recommended"]
+        self.assertEqual([r[0] for r in rows], [r["id"] for r in rec])
+        for (_, row), r in zip(rows, rec):
+            self.assertIn(html.escape(r["why"], quote=False), row, r["id"])
+            self.assertIn(html.escape(catalog.item(r["id"])["name"]), row, r["id"])
+
     def test_attribution_github_first(self):
         self.assertEqual(catalog.credit("tdater"), "@tdater")
         self.assertEqual(catalog.credit("maxhayim"), "@maxhayim")
