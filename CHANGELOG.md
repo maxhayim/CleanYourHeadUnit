@@ -2,6 +2,12 @@
 
 All notable changes to this project are listed here. Versions follow [Semantic Versioning](https://semver.org/).
 
+## [Unreleased]
+
+### Added
+
+- **Rethink DNS + Firewall + VPN** by @celzero in the catalog and in Recommended: a per-app firewall, connection log and encrypted DNS, open source and without root. Links only (F-Droid, Google Play, GitHub); untested on head units. It uses Android's single VPN slot, so it can't run at the same time as CleanYourHeadUnit's local firewall.
+
 ## [0.4.1] - 2026-11-18
 
 ### Added
