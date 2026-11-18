@@ -2,11 +2,15 @@
 
 All notable changes to this project are listed here. Versions follow [Semantic Versioning](https://semver.org/).
 
-## [Unreleased]
+## [0.4.1] - 2026-11-18
 
 ### Added
 
 - **KITT Holo Landscape** and **KITT Holo Portrait** by @tdater in the launcher catalog: KITT editions with a 3D hologram of your car or truck and live OBD-II readings. Listed with @tdater's permission; links only for now (signing certificate not yet checked), untested on head units.
+
+### Changed
+
+- README: **Recommended Apps** moved up under Features and now matches the app's Recommended list exactly (adds Amaze File Manager); a test keeps the two in step.
 
 ## [0.4.0] - 2026-11-14
 
